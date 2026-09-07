@@ -3,10 +3,10 @@
  * only needed as long as not all pages are integrated into the Vue.js frontend (which might be forever...)
  */
 export function useDjangoUrls() {
-    const basePath = localStorage.getItem('BASE_PATH')
+    const basePath = new URL(document.baseURI).pathname.replace(/\/+$/, '')
 
     /**
-     * given a path return the full server url to that url respecting possible sub path setups
+     * given a path return the absolute path to that url respecting possible sub path setups
      * @param path
      * @param appendSlash automatically append a slash to the end of the url (default true)
      */
@@ -21,5 +21,15 @@ export function useDjangoUrls() {
         return `${basePath}/${path}`
     }
 
-    return {basePath, getDjangoUrl}
+    /**
+     * given a path return the full URL (with origin) for use in external contexts
+     * (bookmarklets, clipboard copy, iCal links, etc.)
+     * @param path
+     * @param appendSlash automatically append a slash to the end of the url (default true)
+     */
+    function getFullUrl(path: string, appendSlash = true) {
+        return window.location.origin + getDjangoUrl(path, appendSlash)
+    }
+
+    return {basePath, getDjangoUrl, getFullUrl}
 }

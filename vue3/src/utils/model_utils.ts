@@ -1,6 +1,14 @@
 import {Food, Ingredient, Recipe, Unit} from "@/openapi";
 
 /**
+ * Returns true if the amount should be treated as singular (exactly 1).
+ * Uses epsilon comparison to handle floating point imprecision.
+ */
+export function isSingularAmount(amount: number): boolean {
+    return Math.abs(amount - 1) < 0.0001
+}
+
+/**
  * returns a string representing an ingredient
  * @param ingredient
  */
@@ -34,7 +42,7 @@ export function ingredientToString(ingredient: Ingredient) {
  */
 export function ingredientToFoodString(ingredient: Ingredient, ingredientFactor: number) {
     if (ingredient.food) {
-        return pluralString(ingredient.food, ingredient.noAmount ? 0 : ingredient.amount * ingredientFactor, ingredient.alwaysUsePluralFood)
+        return pluralString(ingredient.food, ingredient.amount * ingredientFactor, ingredient.noAmount)
     } else {
         return ''
     }
@@ -44,17 +52,16 @@ export function ingredientToFoodString(ingredient: Ingredient, ingredientFactor:
  * determines if food or unit should be shown as plural or not
  * @param object object to show (food or unit)
  * @param amount amount given in display
- * @param alwaysUsePlural for printing of ingredients if always plural is enabled
+ * @param noAmount if true, always return singular
  */
-export function pluralString(object: Food | Unit, amount: number = 1, alwaysUsePlural: boolean = false) {
-    if (object.pluralName == '' || object.pluralName == undefined) {
-        return object.name
+export function pluralString(object: Food | Unit, amount: number = 1, noAmount: boolean = false) {
+    if (noAmount || !object.pluralName) {
+        return object.name ?? ''
     }
-    if (amount > 1) {
-        return object.pluralName
-    } else {
-        return object.name
+    if (isSingularAmount(amount)) {
+        return object.name ?? ''
     }
+    return object.pluralName
 }
 
 /**
@@ -64,19 +71,10 @@ export function pluralString(object: Food | Unit, amount: number = 1, alwaysUseP
  * @return unit name or empty string if no food is available for the given ingredient
  */
 export function ingredientToUnitString(ingredient: Ingredient, ingredientFactor: number) {
-    if (ingredient.unit) {
-        if (ingredient.unit.pluralName == '' || ingredient.unit.pluralName == undefined || ingredient.noAmount) {
-            return ingredient.unit.name
-        } else {
-            if (ingredient.alwaysUsePluralUnit || ingredient.amount * ingredientFactor > 1) {
-                return ingredient.unit.pluralName
-            } else {
-                return ingredient.unit.name
-            }
-        }
-    } else {
-        return ''
-    }
+    if (!ingredient.unit) return ''
+    if (!ingredient.unit.pluralName || ingredient.noAmount) return ingredient.unit.name ?? ''
+    if (isSingularAmount(ingredient.amount * ingredientFactor)) return ingredient.unit.name ?? ''
+    return ingredient.unit.pluralName
 }
 
 /**

@@ -18,18 +18,21 @@ import {
     AlignmentEnumFromJSON,
     AlignmentEnumFromJSONTyped,
     AlignmentEnumToJSON,
+    AlignmentEnumToJSONTyped,
 } from './AlignmentEnum';
 import type { EnterpriseSocialEmbedTypeEnum } from './EnterpriseSocialEmbedTypeEnum';
 import {
     EnterpriseSocialEmbedTypeEnumFromJSON,
     EnterpriseSocialEmbedTypeEnumFromJSONTyped,
     EnterpriseSocialEmbedTypeEnumToJSON,
+    EnterpriseSocialEmbedTypeEnumToJSONTyped,
 } from './EnterpriseSocialEmbedTypeEnum';
 import type { Keyword } from './Keyword';
 import {
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
+    KeywordToJSONTyped,
 } from './Keyword';
 
 /**
@@ -73,13 +76,13 @@ export interface EnterpriseSocialEmbed {
      * @type {string}
      * @memberof EnterpriseSocialEmbed
      */
-    backgroundColor?: string;
+    backgroundColor?: string | null;
     /**
      * 
      * @type {string}
      * @memberof EnterpriseSocialEmbed
      */
-    accentColor?: string;
+    accentColor?: string | null;
     /**
      * 
      * @type {string}
@@ -87,6 +90,8 @@ export interface EnterpriseSocialEmbed {
      */
     uuid?: string;
 }
+
+
 
 /**
  * Check if a given object implements the EnterpriseSocialEmbed interface.
@@ -119,10 +124,15 @@ export function EnterpriseSocialEmbedFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function EnterpriseSocialEmbedToJSON(value?: EnterpriseSocialEmbed | null): any {
+export function EnterpriseSocialEmbedToJSON(json: any): EnterpriseSocialEmbed {
+    return EnterpriseSocialEmbedToJSONTyped(json, false);
+}
+
+export function EnterpriseSocialEmbedToJSONTyped(value?: EnterpriseSocialEmbed | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

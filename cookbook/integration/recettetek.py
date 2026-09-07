@@ -3,12 +3,9 @@ import re
 from io import BytesIO
 from zipfile import ZipFile
 
-import requests
-from PIL import Image
-
 from django.utils.translation import gettext as _
 
-from cookbook.helper.HelperFunctions import validate_import_url
+from cookbook.helper.HelperFunctions import safe_request
 from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.integration.integration import Integration
@@ -121,17 +118,17 @@ class RecetteTek(Integration):
                 image_file_name = file['pictures'][0].split('/')[-1]
                 for f in self.files:
                     if '.rtk' in f['name']:
-                        import_zip = ZipFile(f['file'])
-                        self.import_recipe_image(recipe, BytesIO(import_zip.read(image_file_name)), filetype=get_filetype(image_file_name))
+                        import_zip = self.get_zip_file(f['file'])
+                        self.import_recipe_image(recipe, BytesIO(self.safe_read(import_zip, image_file_name)), filetype=get_filetype(image_file_name))
             else:
                 if file['originalPicture'] != '':
                     url = file['originalPicture']
-                    if validate_import_url(url):
-                        response = requests.get(url)
-                        if Image.open(BytesIO(response.content)).verify():
-                            self.import_recipe_image(recipe, BytesIO(response.content), filetype=get_filetype(file['originalPicture']))
-                        else:
-                            raise Exception("Original image failed to download.")
+                    response = safe_request('GET', url)
+                    from PIL import Image
+                    if Image.open(BytesIO(response.content)).verify():
+                        self.import_recipe_image(recipe, BytesIO(response.content), filetype=get_filetype(file['originalPicture']))
+                    else:
+                        raise Exception("Original image failed to download.")
         except Exception as e:
             print(recipe.name, ': failed to import image ', str(e))
 

@@ -399,7 +399,7 @@ def parse_servings(servings):
 def parse_servings_text(servings):
     if isinstance(servings, str):
         try:
-            servings = re.sub("\\d+", '', servings, 1).strip()
+            servings = re.sub("\\d+", '', servings, count=1).strip()
         except Exception:
             servings = ''
     if isinstance(servings, list):

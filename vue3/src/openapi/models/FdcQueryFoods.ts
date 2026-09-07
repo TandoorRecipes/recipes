@@ -65,10 +65,15 @@ export function FdcQueryFoodsFromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function FdcQueryFoodsToJSON(value?: FdcQueryFoods | null): any {
+export function FdcQueryFoodsToJSON(json: any): FdcQueryFoods {
+    return FdcQueryFoodsToJSONTyped(json, false);
+}
+
+export function FdcQueryFoodsToJSONTyped(value?: FdcQueryFoods | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'fdcId': value['fdcId'],

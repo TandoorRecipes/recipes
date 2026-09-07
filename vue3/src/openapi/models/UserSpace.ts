@@ -18,13 +18,22 @@ import {
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
+    GroupToJSONTyped,
 } from './Group';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
+import type { Household } from './Household';
+import {
+    HouseholdFromJSON,
+    HouseholdFromJSONTyped,
+    HouseholdToJSON,
+    HouseholdToJSONTyped,
+} from './Household';
 
 /**
  * Adds nested create feature
@@ -58,6 +67,12 @@ export interface UserSpace {
     groups: Array<Group>;
     /**
      * 
+     * @type {Household}
+     * @memberof UserSpace
+     */
+    household?: Household | null;
+    /**
+     * 
      * @type {boolean}
      * @memberof UserSpace
      */
@@ -67,7 +82,7 @@ export interface UserSpace {
      * @type {string}
      * @memberof UserSpace
      */
-    internalNote?: string;
+    internalNote?: string | null;
     /**
      * 
      * @type {number}
@@ -115,6 +130,7 @@ export function UserSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean):
         'user': UserFromJSON(json['user']),
         'space': json['space'],
         'groups': ((json['groups'] as Array<any>).map(GroupFromJSON)),
+        'household': json['household'] == null ? undefined : HouseholdFromJSON(json['household']),
         'active': json['active'] == null ? undefined : json['active'],
         'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
         'inviteLink': json['invite_link'],
@@ -123,14 +139,20 @@ export function UserSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean):
     };
 }
 
-export function UserSpaceToJSON(value?: Omit<UserSpace, 'user'|'space'|'inviteLink'|'createdAt'|'updatedAt'> | null): any {
+export function UserSpaceToJSON(json: any): UserSpace {
+    return UserSpaceToJSONTyped(json, false);
+}
+
+export function UserSpaceToJSONTyped(value?: Omit<UserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
         'groups': ((value['groups'] as Array<any>).map(GroupToJSON)),
+        'household': HouseholdToJSON(value['household']),
         'active': value['active'],
         'internal_note': value['internalNote'],
     };

@@ -49,7 +49,7 @@ The main, and also recommended, installation option for this application is Dock
     ```shell
     wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O .env
     ```
-3. **Edit it accordingly** (you NEED to set `SECRET_KEY` and `POSTGRES_PASSWORD`), see [configuration page](https://docs.tandoor.dev/system/configuration/).
+3. **Edit it accordingly** (you NEED to set `SECRET_KEY`, `ALLOWED_HOSTS` and `POSTGRES_PASSWORD`), see [configuration page](https://docs.tandoor.dev/system/configuration/).
 4. Start your container using `docker-compose up -d`.
 
 ### **Plain**

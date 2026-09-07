@@ -15,7 +15,7 @@ from cookbook.helper.mdx_attributes import MarkdownFormatExtension
 from cookbook.helper.mdx_urlize import UrlizeExtension
 from cookbook.models import get_model_name
 from recipes import settings
-from recipes.settings import PLUGINS, STATIC_URL
+from recipes.settings import PLUGINS
 
 register = template.Library()
 
@@ -191,16 +191,6 @@ def bookmarklet(request):
                + server + prefix + static('js/bookmarklet_v3.js') + "? \
             r=\'+Math.floor(Math.random()*999999999);}})();'>Test</a>"
     return re.sub(r"[\n\t]*", "", bookmark)
-
-
-@register.simple_tag
-def base_path(request, path_type):
-    if path_type == 'base':
-        return request._current_scheme_host + request.META.get('HTTP_X_SCRIPT_NAME', '')
-    elif path_type == 'script':
-        return request.META.get('HTTP_X_SCRIPT_NAME', '')
-    elif path_type == 'static_base':
-        return STATIC_URL
 
 
 @register.simple_tag

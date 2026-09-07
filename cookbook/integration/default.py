@@ -14,24 +14,45 @@ from cookbook.serializer import RecipeExportSerializer
 class Default(Integration):
 
     def get_recipe_from_file(self, file):
-        recipe_zip = ZipFile(file)
+        recipe_zip = self.get_zip_file(file)
 
-        recipe_string = recipe_zip.read('recipe.json').decode("utf-8")
+        recipe_string = self.safe_read(recipe_zip, 'recipe.json').decode("utf-8")
         recipe = self.decode_recipe(recipe_string)
         images = list(filter(lambda v: match('image.*', v), recipe_zip.namelist()))
         if images:
             try:
-                self.import_recipe_image(recipe, BytesIO(recipe_zip.read(images[0])), filetype=get_filetype(images[0]))
+                self.import_recipe_image(recipe, BytesIO(self.safe_read(recipe_zip, images[0])), filetype=get_filetype(images[0]))
             except AttributeError:
                 traceback.print_exc()
         return recipe
 
     def decode_recipe(self, string):
+        def extract_error_messages(data, path=""):
+            errors = []
+            if isinstance(data, dict):
+                for key, value in data.items():
+                    new_path = f"{path}.{key}" if path else key
+                    errors.extend(extract_error_messages(value, new_path))
+            elif isinstance(data, list):
+                for i, item in enumerate(data):
+                    new_path = f"{path}[{i}]"
+                    errors.extend(extract_error_messages(item, new_path))
+            else:
+                if hasattr(data, 'title'):
+                    if path.endswith(']') and '[' in path:
+                        last_bracket = path.rindex('[')
+                        path = path[:last_bracket]
+                    errors.append(f"{path}: {data.title()}")
+            return errors
+
         data = json.loads(string)
         serialized_recipe = RecipeExportSerializer(data=data, context={'request': self.request})
         if serialized_recipe.is_valid():
             recipe = serialized_recipe.save()
             return recipe
+        else:
+            errors = extract_error_messages(serialized_recipe.errors)
+            raise Exception("\n".join(errors))
 
         return None
 

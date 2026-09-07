@@ -18,6 +18,7 @@ import {
     EnterpriseKeywordFromJSON,
     EnterpriseKeywordFromJSONTyped,
     EnterpriseKeywordToJSON,
+    EnterpriseKeywordToJSONTyped,
 } from './EnterpriseKeyword';
 
 /**
@@ -79,10 +80,15 @@ export function EnterpriseSocialRecipeSearchFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function EnterpriseSocialRecipeSearchToJSON(value?: Omit<EnterpriseSocialRecipeSearch, 'name'|'image'|'keywords'> | null): any {
+export function EnterpriseSocialRecipeSearchToJSON(json: any): EnterpriseSocialRecipeSearch {
+    return EnterpriseSocialRecipeSearchToJSONTyped(json, false);
+}
+
+export function EnterpriseSocialRecipeSearchToJSONTyped(value?: Omit<EnterpriseSocialRecipeSearch, 'name'|'image'|'keywords'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

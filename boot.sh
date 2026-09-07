@@ -20,9 +20,9 @@ display_warning() {
 # prepare nginx config
 envsubst '$MEDIA_ROOT $STATIC_ROOT $TANDOOR_PORT' < /opt/recipes/http.d/Recipes.conf.template > /opt/recipes/http.d/Recipes.conf
 
-# start nginx early to display error pages
+# start nginx early to display error pages with writable location as non-root
 echo "Starting nginx"
-nginx
+nginx -g 'pid /tmp/nginx.pid;'
 
 echo "Checking configuration..."
 
@@ -104,5 +104,7 @@ chmod -R 755 ${MEDIA_ROOT:-/opt/recipes/mediafiles}
 ipv6_disable=$(cat /sys/module/ipv6/parameters/disable)
 
 echo "Starting gunicorn"
-exec gunicorn --bind unix:/run/tandoor.sock --workers $GUNICORN_WORKERS --threads $GUNICORN_THREADS --timeout ${GUNICORN_TIMEOUT:-30} --access-logfile - --error-logfile - --log-level $GUNICORN_LOG_LEVEL recipes.wsgi
-
+# --umask parameter isn't respected when gunicorn is running in foreground, needed for when users change to non root users
+# use /tmp as directory since that is writable as a non-root user
+# https://github.com/benoitc/gunicorn/issues/2245
+umask 0 && exec gunicorn --bind unix:/tmp/tandoor.sock --workers $GUNICORN_WORKERS --threads $GUNICORN_THREADS --timeout ${GUNICORN_TIMEOUT:-30} --access-logfile - --error-logfile - --log-level $GUNICORN_LOG_LEVEL recipes.wsgi

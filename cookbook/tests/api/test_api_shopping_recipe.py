@@ -7,7 +7,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Food, Ingredient, ShoppingListEntry
+from cookbook.models import Food, Ingredient, ShoppingListEntry, Household, UserSpace
 from cookbook.tests.factories import (MealPlanFactory, RecipeFactory,
                                       StepFactory, UserFactory)
 
@@ -49,9 +49,9 @@ def recipe(request, space_1, u1_s1):
 
 @pytest.mark.parametrize("arg", [
     ['g1_s1', 403],
-    ['u1_s1', 204],
+    ['u1_s1', 200],
     ['u1_s2', 404],
-    ['a1_s1', 204],
+    ['a1_s1', 200],
 ])
 @pytest.mark.parametrize("recipe, sle_count", [
     ({}, 10),
@@ -62,7 +62,7 @@ def recipe(request, space_1, u1_s1):
     # shopping list from recipe with StepRecipe and food recipe
     ({'steps__food_recipe_count': {'step': 0, 'count': 1}, 'steps__recipe_count': 1}, 29),
 ], indirect=['recipe'])
-def test_shopping_recipe_method(request, arg, recipe, sle_count, u1_s1, u2_s1):
+def test_shopping_recipe_method(request, arg, recipe, sle_count, u1_s1, u2_s1, space_1):
     c = request.getfixturevalue(arg[0])
     user = auth.get_user(c)
     user.userpreference.mealplan_autoadd_shopping = True
@@ -74,7 +74,7 @@ def test_shopping_recipe_method(request, arg, recipe, sle_count, u1_s1, u2_s1):
     r = c.put(url)
     assert r.status_code == arg[1]
     # only PUT method should work
-    if r.status_code == 204:  # skip anonymous user
+    if r.status_code == 200:  # skip anonymous user
 
         r = json.loads(c.get(reverse(SHOPPING_LIST_URL)).content)
         # recipe factory creates 10 ingredients by default
@@ -82,7 +82,12 @@ def test_shopping_recipe_method(request, arg, recipe, sle_count, u1_s1, u2_s1):
         assert [x['created_by']['id'] for x in r['results']].count(user.id) == sle_count
         # user in space can't see shopping list
         assert json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)['count'] == 0
-        user.userpreference.shopping_share.add(auth.get_user(u2_s1))
+
+        with scopes_disabled():
+            household = Household.objects.create(name='test', space=space_1)
+            UserSpace.objects.filter(user=user).update(household=household)
+            UserSpace.objects.filter(user=auth.get_user(u2_s1)).update(household=household)
+
         # after share, user in space can see shopping list
         assert json.loads(u2_s1.get(reverse(SHOPPING_LIST_URL)).content)['count'] == sle_count
         # confirm that the author of the recipe doesn't have access to shopping list

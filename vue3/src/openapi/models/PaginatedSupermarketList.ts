@@ -18,6 +18,7 @@ import {
     SupermarketFromJSON,
     SupermarketFromJSONTyped,
     SupermarketToJSON,
+    SupermarketToJSONTyped,
 } from './Supermarket';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedSupermarketList {
      * @type {string}
      * @memberof PaginatedSupermarketList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedSupermarketList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Supermarket>}
@@ -85,17 +86,22 @@ export function PaginatedSupermarketListFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function PaginatedSupermarketListToJSON(value?: PaginatedSupermarketList | null): any {
+export function PaginatedSupermarketListToJSON(json: any): PaginatedSupermarketList {
+    return PaginatedSupermarketListToJSONTyped(json, false);
+}
+
+export function PaginatedSupermarketListToJSONTyped(value?: PaginatedSupermarketList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(SupermarketToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

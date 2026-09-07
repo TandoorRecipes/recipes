@@ -59,8 +59,8 @@ class Saffron(Integration):
 
     def get_file_from_recipe(self, recipe):
 
-        data = "Title: " + recipe.name if recipe.name else "" + "\n"
-        data += "Description: " + recipe.description if recipe.description else "" + "\n"
+        data = "Title: " + (recipe.name if recipe.name else "") + "\n"
+        data += "Description: " + (recipe.description if recipe.description else "") + "\n"
         data += "Source: \n"
         data += "Original URL: \n"
         data += "Yield: " + str(recipe.servings) + "\n"

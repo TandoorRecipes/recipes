@@ -23,7 +23,7 @@ class Mealie1(Integration):
     """
 
     def get_recipe_from_file(self, file):
-        mealie_database = json.loads(BytesIO(file.read('database.json')).getvalue().decode("utf-8"))
+        mealie_database = json.loads(BytesIO(self.safe_read(file, 'database.json')).getvalue().decode("utf-8"))
         self.import_log.total_recipes = len(mealie_database['recipes'])
         self.import_log.msg += f"Importing {len(mealie_database["categories"]) + len(mealie_database["tags"])} tags and categories as keywords...\n"
         self.import_log.save()
@@ -92,8 +92,14 @@ class Mealie1(Integration):
         recipes = []
         recipe_keyword_relation = []
         for r in mealie_database['recipes']:
-            if Recipe.objects.filter(space=self.request.space, name=r['name']).exists() and not self.import_duplicates:
-                self.import_log.msg += f"Ignoring {r['name']} because a recipe with this name already exists.\n"
+            raw_name = r.get('name') or ""
+            clean_name = raw_name.strip()
+            if not clean_name:
+                clean_name = "Untitled Recipe"
+            if len(clean_name) > 128:
+                clean_name = clean_name[:128]
+            if Recipe.objects.filter(space=self.request.space, name=clean_name).exists() and not self.import_duplicates:
+                self.import_log.msg += f"Ignoring {clean_name} because a recipe with this name already exists.\n"
                 self.import_log.save()
             else:
                 servings = 1
@@ -106,7 +112,7 @@ class Mealie1(Integration):
                     waiting_time=parse_time(r['perform_time']),
                     working_time=parse_time(r['prep_time']),
                     description=r['description'][:512],
-                    name=r['name'],
+                    name=clean_name,
                     source_url=r['org_url'],
                     servings=servings,
                     servings_text=r['recipe_yield'].strip()[:32] if r['recipe_yield'] else "",
@@ -139,7 +145,7 @@ class Mealie1(Integration):
             if s['recipe_id'] in recipes_dict:
                 step = Step.objects.create(instruction=(s['text'] if s['text'] else "") + (f" \n {s['summary']}" if 'summary' in s and s['summary'] else ""),
                                            order=s['position'],
-                                           name=s['title'],
+                                           name=(s['title'] or '')[:128],
                                            space=self.request.space)
                 steps_relation.append(Recipe.steps.through(recipe_id=recipes_dict[s['recipe_id']], step_id=step.pk))
                 step_id_dict[s["id"]] = step.pk
@@ -176,13 +182,16 @@ class Mealie1(Integration):
         for ref in mealie_database['recipe_ingredient_ref_link']:
             recipe_ingredient_ref_link_dict[ref["reference_id"]] = ref["instruction_id"]
 
+        # Process ingredients in (recipe_id, position) order so section headers and ingredients keep correct order
+        ingredients_sorted = sorted(mealie_database['recipes_ingredients'], key=lambda x: (x['recipe_id'], x['position']))
         ingredients_relation = []
-        for i in mealie_database['recipes_ingredients']:
+        for i in ingredients_sorted:
             if i['recipe_id'] in recipes_dict:
                 if i['title']:
                     title_ingredient = Ingredient.objects.create(
                         note=i['title'],
                         is_header=True,
+                        order=i['position'],
                         space=self.request.space,
                     )
                     ingredients_relation.append(Step.ingredients.through(step_id=get_step_id(i, first_step_of_recipe_dict, step_id_dict,recipe_ingredient_ref_link_dict), ingredient_id=title_ingredient.pk))
@@ -197,7 +206,7 @@ class Mealie1(Integration):
                         space=self.request.space,
                     )
                     ingredients_relation.append(Step.ingredients.through(step_id=get_step_id(i, first_step_of_recipe_dict, step_id_dict,recipe_ingredient_ref_link_dict), ingredient_id=ingredient.pk))
-                elif i['note'].strip():
+                elif i['note'] and i['note'].strip():
                     amount, unit, food, note = ingredient_parser.parse(i['note'].strip())
                     f = ingredient_parser.get_food(food)
                     u = ingredient_parser.get_unit(unit)
@@ -354,8 +363,9 @@ class Mealie1(Integration):
         self.import_log.save()
         for r in mealie_database['recipes']:
             try:
-                if recipe := Recipe.objects.filter(pk=recipes_dict[r['id']]).first():
-                    self.import_recipe_image(recipe, BytesIO(file.read(f'data/recipes/{str(uuid.UUID(str(r['id'])))}/images/original.webp')), filetype='.webp')
+                if r['id'] in recipes_dict:
+                    if recipe := Recipe.objects.filter(pk=recipes_dict[r['id']]).first():
+                        self.import_recipe_image(recipe, BytesIO(self.safe_read(file, f'data/recipes/{str(uuid.UUID(str(r["id"])))}/images/original.webp')), filetype='.webp')
             except Exception:
                 pass
 

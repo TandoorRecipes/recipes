@@ -24,6 +24,10 @@ import type {
   ConnectorConfig,
   CookLog,
   CustomFilter,
+  EnterpriseBillingInvoice,
+  EnterpriseBillingPlan,
+  EnterpriseBillingProduct,
+  EnterpriseBillingReferralLink,
   EnterpriseSocialEmbed,
   EnterpriseSpace,
   ExportLog,
@@ -34,12 +38,17 @@ import type {
   FoodInheritField,
   FoodShoppingUpdate,
   Group,
+  Household,
   ImportLog,
   ImportOpenData,
   ImportOpenDataMetaData,
   ImportOpenDataResponse,
   Ingredient,
-  IngredientString,
+  IngredientParserRequest,
+  IngredientParserResponse,
+  InventoryEntry,
+  InventoryLocation,
+  InventoryLog,
   InviteLink,
   Keyword,
   Localization,
@@ -59,14 +68,22 @@ import type {
   PaginatedConnectorConfigList,
   PaginatedCookLogList,
   PaginatedCustomFilterList,
+  PaginatedEnterpriseBillingInvoiceList,
+  PaginatedEnterpriseBillingPlanList,
+  PaginatedEnterpriseBillingProductList,
+  PaginatedEnterpriseBillingReferralLinkList,
   PaginatedEnterpriseSocialEmbedList,
   PaginatedEnterpriseSocialRecipeSearchList,
   PaginatedEnterpriseSpaceList,
   PaginatedExportLogList,
   PaginatedFoodList,
   PaginatedGenericModelReferenceList,
+  PaginatedHouseholdList,
   PaginatedImportLogList,
   PaginatedIngredientList,
+  PaginatedInventoryEntryList,
+  PaginatedInventoryLocationList,
+  PaginatedInventoryLogList,
   PaginatedInviteLinkList,
   PaginatedKeywordList,
   PaginatedMealPlanList,
@@ -100,7 +117,6 @@ import type {
   PaginatedUserFileList,
   PaginatedUserSpaceList,
   PaginatedViewLogList,
-  ParsedIngredient,
   PatchedAccessToken,
   PatchedAiProvider,
   PatchedAutomation,
@@ -108,12 +124,19 @@ import type {
   PatchedConnectorConfig,
   PatchedCookLog,
   PatchedCustomFilter,
+  PatchedEnterpriseBillingInvoice,
+  PatchedEnterpriseBillingPlan,
+  PatchedEnterpriseBillingProduct,
+  PatchedEnterpriseBillingReferralLink,
   PatchedEnterpriseSocialEmbed,
   PatchedEnterpriseSpace,
   PatchedExportLog,
   PatchedFood,
+  PatchedHousehold,
   PatchedImportLog,
   PatchedIngredient,
+  PatchedInventoryEntry,
+  PatchedInventoryLocation,
   PatchedInviteLink,
   PatchedKeyword,
   PatchedMealPlan,
@@ -173,6 +196,9 @@ import type {
   Space,
   Step,
   Storage,
+  StripeCheckoutSessionRequest,
+  StripeCheckoutSessionResponse,
+  StripePortal,
   Supermarket,
   SupermarketCategory,
   SupermarketCategoryRelation,
@@ -184,6 +210,7 @@ import type {
   UserFile,
   UserPreference,
   UserSpace,
+  UserSpaceBatchUpdate,
   ViewLog,
 } from '../models/index';
 import {
@@ -205,6 +232,14 @@ import {
     CookLogToJSON,
     CustomFilterFromJSON,
     CustomFilterToJSON,
+    EnterpriseBillingInvoiceFromJSON,
+    EnterpriseBillingInvoiceToJSON,
+    EnterpriseBillingPlanFromJSON,
+    EnterpriseBillingPlanToJSON,
+    EnterpriseBillingProductFromJSON,
+    EnterpriseBillingProductToJSON,
+    EnterpriseBillingReferralLinkFromJSON,
+    EnterpriseBillingReferralLinkToJSON,
     EnterpriseSocialEmbedFromJSON,
     EnterpriseSocialEmbedToJSON,
     EnterpriseSpaceFromJSON,
@@ -225,6 +260,8 @@ import {
     FoodShoppingUpdateToJSON,
     GroupFromJSON,
     GroupToJSON,
+    HouseholdFromJSON,
+    HouseholdToJSON,
     ImportLogFromJSON,
     ImportLogToJSON,
     ImportOpenDataFromJSON,
@@ -235,8 +272,16 @@ import {
     ImportOpenDataResponseToJSON,
     IngredientFromJSON,
     IngredientToJSON,
-    IngredientStringFromJSON,
-    IngredientStringToJSON,
+    IngredientParserRequestFromJSON,
+    IngredientParserRequestToJSON,
+    IngredientParserResponseFromJSON,
+    IngredientParserResponseToJSON,
+    InventoryEntryFromJSON,
+    InventoryEntryToJSON,
+    InventoryLocationFromJSON,
+    InventoryLocationToJSON,
+    InventoryLogFromJSON,
+    InventoryLogToJSON,
     InviteLinkFromJSON,
     InviteLinkToJSON,
     KeywordFromJSON,
@@ -275,6 +320,14 @@ import {
     PaginatedCookLogListToJSON,
     PaginatedCustomFilterListFromJSON,
     PaginatedCustomFilterListToJSON,
+    PaginatedEnterpriseBillingInvoiceListFromJSON,
+    PaginatedEnterpriseBillingInvoiceListToJSON,
+    PaginatedEnterpriseBillingPlanListFromJSON,
+    PaginatedEnterpriseBillingPlanListToJSON,
+    PaginatedEnterpriseBillingProductListFromJSON,
+    PaginatedEnterpriseBillingProductListToJSON,
+    PaginatedEnterpriseBillingReferralLinkListFromJSON,
+    PaginatedEnterpriseBillingReferralLinkListToJSON,
     PaginatedEnterpriseSocialEmbedListFromJSON,
     PaginatedEnterpriseSocialEmbedListToJSON,
     PaginatedEnterpriseSocialRecipeSearchListFromJSON,
@@ -287,10 +340,18 @@ import {
     PaginatedFoodListToJSON,
     PaginatedGenericModelReferenceListFromJSON,
     PaginatedGenericModelReferenceListToJSON,
+    PaginatedHouseholdListFromJSON,
+    PaginatedHouseholdListToJSON,
     PaginatedImportLogListFromJSON,
     PaginatedImportLogListToJSON,
     PaginatedIngredientListFromJSON,
     PaginatedIngredientListToJSON,
+    PaginatedInventoryEntryListFromJSON,
+    PaginatedInventoryEntryListToJSON,
+    PaginatedInventoryLocationListFromJSON,
+    PaginatedInventoryLocationListToJSON,
+    PaginatedInventoryLogListFromJSON,
+    PaginatedInventoryLogListToJSON,
     PaginatedInviteLinkListFromJSON,
     PaginatedInviteLinkListToJSON,
     PaginatedKeywordListFromJSON,
@@ -357,8 +418,6 @@ import {
     PaginatedUserSpaceListToJSON,
     PaginatedViewLogListFromJSON,
     PaginatedViewLogListToJSON,
-    ParsedIngredientFromJSON,
-    ParsedIngredientToJSON,
     PatchedAccessTokenFromJSON,
     PatchedAccessTokenToJSON,
     PatchedAiProviderFromJSON,
@@ -373,6 +432,14 @@ import {
     PatchedCookLogToJSON,
     PatchedCustomFilterFromJSON,
     PatchedCustomFilterToJSON,
+    PatchedEnterpriseBillingInvoiceFromJSON,
+    PatchedEnterpriseBillingInvoiceToJSON,
+    PatchedEnterpriseBillingPlanFromJSON,
+    PatchedEnterpriseBillingPlanToJSON,
+    PatchedEnterpriseBillingProductFromJSON,
+    PatchedEnterpriseBillingProductToJSON,
+    PatchedEnterpriseBillingReferralLinkFromJSON,
+    PatchedEnterpriseBillingReferralLinkToJSON,
     PatchedEnterpriseSocialEmbedFromJSON,
     PatchedEnterpriseSocialEmbedToJSON,
     PatchedEnterpriseSpaceFromJSON,
@@ -381,10 +448,16 @@ import {
     PatchedExportLogToJSON,
     PatchedFoodFromJSON,
     PatchedFoodToJSON,
+    PatchedHouseholdFromJSON,
+    PatchedHouseholdToJSON,
     PatchedImportLogFromJSON,
     PatchedImportLogToJSON,
     PatchedIngredientFromJSON,
     PatchedIngredientToJSON,
+    PatchedInventoryEntryFromJSON,
+    PatchedInventoryEntryToJSON,
+    PatchedInventoryLocationFromJSON,
+    PatchedInventoryLocationToJSON,
     PatchedInviteLinkFromJSON,
     PatchedInviteLinkToJSON,
     PatchedKeywordFromJSON,
@@ -503,6 +576,12 @@ import {
     StepToJSON,
     StorageFromJSON,
     StorageToJSON,
+    StripeCheckoutSessionRequestFromJSON,
+    StripeCheckoutSessionRequestToJSON,
+    StripeCheckoutSessionResponseFromJSON,
+    StripeCheckoutSessionResponseToJSON,
+    StripePortalFromJSON,
+    StripePortalToJSON,
     SupermarketFromJSON,
     SupermarketToJSON,
     SupermarketCategoryFromJSON,
@@ -525,6 +604,8 @@ import {
     UserPreferenceToJSON,
     UserSpaceFromJSON,
     UserSpaceToJSON,
+    UserSpaceBatchUpdateFromJSON,
+    UserSpaceBatchUpdateToJSON,
     ViewLogFromJSON,
     ViewLogToJSON,
 } from '../models/index';
@@ -791,6 +872,122 @@ export interface ApiDownloadFileRetrieveRequest {
     fileId: number;
 }
 
+export interface ApiEnterpriseBillingInvoiceCreateRequest {
+    enterpriseBillingInvoice: Omit<EnterpriseBillingInvoice, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingInvoiceDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingInvoiceDownloadRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingInvoiceListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseBillingInvoicePartialUpdateRequest {
+    id: number;
+    patchedEnterpriseBillingInvoice?: Omit<PatchedEnterpriseBillingInvoice, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingInvoiceRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingInvoiceUpdateRequest {
+    id: number;
+    enterpriseBillingInvoice: Omit<EnterpriseBillingInvoice, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingPlanCreateRequest {
+    enterpriseBillingPlan: EnterpriseBillingPlan;
+}
+
+export interface ApiEnterpriseBillingPlanDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingPlanListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseBillingPlanPartialUpdateRequest {
+    id: number;
+    patchedEnterpriseBillingPlan?: PatchedEnterpriseBillingPlan;
+}
+
+export interface ApiEnterpriseBillingPlanRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingPlanUpdateRequest {
+    id: number;
+    enterpriseBillingPlan: EnterpriseBillingPlan;
+}
+
+export interface ApiEnterpriseBillingProductCreateRequest {
+    enterpriseBillingProduct: EnterpriseBillingProduct;
+}
+
+export interface ApiEnterpriseBillingProductDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingProductListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseBillingProductPartialUpdateRequest {
+    id: number;
+    patchedEnterpriseBillingProduct?: PatchedEnterpriseBillingProduct;
+}
+
+export interface ApiEnterpriseBillingProductRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingProductUpdateRequest {
+    id: number;
+    enterpriseBillingProduct: EnterpriseBillingProduct;
+}
+
+export interface ApiEnterpriseBillingReferralLinkCreateRequest {
+    enterpriseBillingReferralLink: Omit<EnterpriseBillingReferralLink, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingReferralLinkDestroyRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingReferralLinkListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiEnterpriseBillingReferralLinkPartialUpdateRequest {
+    id: number;
+    patchedEnterpriseBillingReferralLink?: Omit<PatchedEnterpriseBillingReferralLink, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingReferralLinkRetrieveRequest {
+    id: number;
+}
+
+export interface ApiEnterpriseBillingReferralLinkUpdateRequest {
+    id: number;
+    enterpriseBillingReferralLink: Omit<EnterpriseBillingReferralLink, 'createdAt'>;
+}
+
+export interface ApiEnterpriseBillingStripeCheckoutSessionCreateRequest {
+    stripeCheckoutSessionRequest?: StripeCheckoutSessionRequest;
+}
+
 export interface ApiEnterpriseSocialEmbedCreateRequest {
     enterpriseSocialEmbed: EnterpriseSocialEmbed;
 }
@@ -918,8 +1115,8 @@ export interface ApiEnterpriseSocialRecipeDestroyRequest {
 
 export interface ApiEnterpriseSocialRecipeImageUpdateRequest {
     id: number;
-    image?: string;
-    imageUrl?: string;
+    image?: string | null;
+    imageUrl?: string | null;
 }
 
 export interface ApiEnterpriseSocialRecipeListRequest {
@@ -940,6 +1137,7 @@ export interface ApiEnterpriseSocialRecipeListRequest {
     foodsAndNot?: Array<number>;
     foodsOr?: Array<number>;
     foodsOrNot?: Array<number>;
+    includeChildren?: boolean;
     internal?: boolean;
     keyword?: number;
     keywords?: Array<number>;
@@ -1010,7 +1208,7 @@ export interface ApiEnterpriseSocialRecipeUpdateRequest {
 }
 
 export interface ApiEnterpriseSpaceCreateRequest {
-    enterpriseSpace: EnterpriseSpace;
+    enterpriseSpace?: Omit<EnterpriseSpace, 'space'|'billingLicensedModules'|'billingCustomerId'|'billingPlan'|'billingSubscriptionId'|'billingSubscriptionStatus'|'billingMonthlyPrice'>;
 }
 
 export interface ApiEnterpriseSpaceDestroyRequest {
@@ -1024,7 +1222,7 @@ export interface ApiEnterpriseSpaceListRequest {
 
 export interface ApiEnterpriseSpacePartialUpdateRequest {
     space: number;
-    patchedEnterpriseSpace?: PatchedEnterpriseSpace;
+    patchedEnterpriseSpace?: Omit<PatchedEnterpriseSpace, 'space'|'billingLicensedModules'|'billingCustomerId'|'billingPlan'|'billingSubscriptionId'|'billingSubscriptionStatus'|'billingMonthlyPrice'>;
 }
 
 export interface ApiEnterpriseSpaceRetrieveRequest {
@@ -1033,7 +1231,7 @@ export interface ApiEnterpriseSpaceRetrieveRequest {
 
 export interface ApiEnterpriseSpaceUpdateRequest {
     space: number;
-    enterpriseSpace: EnterpriseSpace;
+    enterpriseSpace?: Omit<EnterpriseSpace, 'space'|'billingLicensedModules'|'billingCustomerId'|'billingPlan'|'billingSubscriptionId'|'billingSubscriptionStatus'|'billingMonthlyPrice'>;
 }
 
 export interface ApiExportCreateRequest {
@@ -1175,6 +1373,33 @@ export interface ApiGroupRetrieveRequest {
     id: number;
 }
 
+export interface ApiHouseholdCreateRequest {
+    household: Omit<Household, 'createdAt'|'updatedAt'>;
+}
+
+export interface ApiHouseholdDestroyRequest {
+    id: number;
+}
+
+export interface ApiHouseholdListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiHouseholdPartialUpdateRequest {
+    id: number;
+    patchedHousehold?: Omit<PatchedHousehold, 'createdAt'|'updatedAt'>;
+}
+
+export interface ApiHouseholdRetrieveRequest {
+    id: number;
+}
+
+export interface ApiHouseholdUpdateRequest {
+    id: number;
+    household: Omit<Household, 'createdAt'|'updatedAt'>;
+}
+
 export interface ApiImportCreateRequest {
     aiProviderId: number;
     file: string | null;
@@ -1214,15 +1439,11 @@ export interface ApiImportOpenDataCreateRequest {
 }
 
 export interface ApiIngredientCreateRequest {
-    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'>;
+    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'|'checked'>;
 }
 
 export interface ApiIngredientDestroyRequest {
     id: number;
-}
-
-export interface ApiIngredientFromStringCreateRequest {
-    ingredientString: IngredientString;
 }
 
 export interface ApiIngredientListRequest {
@@ -1232,9 +1453,13 @@ export interface ApiIngredientListRequest {
     unit?: number;
 }
 
+export interface ApiIngredientParserPostCreateRequest {
+    ingredientParserRequest?: IngredientParserRequest;
+}
+
 export interface ApiIngredientPartialUpdateRequest {
     id: number;
-    patchedIngredient?: Omit<PatchedIngredient, 'conversions'|'usedInRecipes'>;
+    patchedIngredient?: Omit<PatchedIngredient, 'conversions'|'usedInRecipes'|'checked'>;
 }
 
 export interface ApiIngredientRetrieveRequest {
@@ -1243,11 +1468,129 @@ export interface ApiIngredientRetrieveRequest {
 
 export interface ApiIngredientUpdateRequest {
     id: number;
-    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'>;
+    ingredient: Omit<Ingredient, 'conversions'|'usedInRecipes'|'checked'>;
+}
+
+export interface ApiInventoryEntryCascadingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryEntryCreateRequest {
+    inventoryEntry: Omit<InventoryEntry, 'label'|'createdAt'|'createdBy'>;
+}
+
+export interface ApiInventoryEntryDestroyRequest {
+    id: number;
+}
+
+export interface ApiInventoryEntryListRequest {
+    code?: string;
+    empty?: boolean;
+    foodId?: number;
+    inventoryLocationId?: number;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryEntryNullingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryEntryPartialUpdateRequest {
+    id: number;
+    patchedInventoryEntry?: Omit<PatchedInventoryEntry, 'label'|'createdAt'|'createdBy'>;
+}
+
+export interface ApiInventoryEntryProtectingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryEntryRetrieveRequest {
+    id: number;
+}
+
+export interface ApiInventoryEntryUpdateRequest {
+    id: number;
+    inventoryEntry: Omit<InventoryEntry, 'label'|'createdAt'|'createdBy'>;
+}
+
+export interface ApiInventoryLocationCascadingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLocationCreateRequest {
+    inventoryLocation: InventoryLocation;
+}
+
+export interface ApiInventoryLocationDestroyRequest {
+    id: number;
+}
+
+export interface ApiInventoryLocationListRequest {
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLocationNullingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLocationPartialUpdateRequest {
+    id: number;
+    patchedInventoryLocation?: PatchedInventoryLocation;
+}
+
+export interface ApiInventoryLocationProtectingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLocationRetrieveRequest {
+    id: number;
+}
+
+export interface ApiInventoryLocationUpdateRequest {
+    id: number;
+    inventoryLocation: InventoryLocation;
+}
+
+export interface ApiInventoryLogListRequest {
+    entryId?: number;
+    foodId?: number;
+    page?: number;
+    pageSize?: number;
+}
+
+export interface ApiInventoryLogRetrieveRequest {
+    id: number;
+}
+
+export interface ApiInviteLinkCascadingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiInviteLinkCreateRequest {
-    inviteLink: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'>;
+    inviteLink: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'>;
 }
 
 export interface ApiInviteLinkDestroyRequest {
@@ -1265,9 +1608,23 @@ export interface ApiInviteLinkListRequest {
     updatedAt?: string;
 }
 
+export interface ApiInviteLinkNullingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
+}
+
 export interface ApiInviteLinkPartialUpdateRequest {
     id: number;
-    patchedInviteLink?: Omit<PatchedInviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'>;
+    patchedInviteLink?: Omit<PatchedInviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'>;
+}
+
+export interface ApiInviteLinkProtectingListRequest {
+    id: number;
+    cache?: boolean;
+    page?: number;
+    pageSize?: number;
 }
 
 export interface ApiInviteLinkRetrieveRequest {
@@ -1276,7 +1633,7 @@ export interface ApiInviteLinkRetrieveRequest {
 
 export interface ApiInviteLinkUpdateRequest {
     id: number;
-    inviteLink: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'>;
+    inviteLink: Omit<InviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'|'emailSent'>;
 }
 
 export interface ApiKeywordCascadingListRequest {
@@ -1823,8 +2180,8 @@ export interface ApiRecipeFromSourceCreateRequest {
 
 export interface ApiRecipeImageUpdateRequest {
     id: number;
-    image?: string;
-    imageUrl?: string;
+    image?: string | null;
+    imageUrl?: string | null;
 }
 
 export interface ApiRecipeImportCreateRequest {
@@ -1881,6 +2238,7 @@ export interface ApiRecipeListRequest {
     foodsAndNot?: Array<number>;
     foodsOr?: Array<number>;
     foodsOrNot?: Array<number>;
+    includeChildren?: boolean;
     internal?: boolean;
     keywords?: Array<number>;
     keywordsAnd?: Array<number>;
@@ -2567,9 +2925,8 @@ export interface ApiUserRetrieveRequest {
     id: number;
 }
 
-export interface ApiUserSpaceAllPersonalListRequest {
-    page?: number;
-    pageSize?: number;
+export interface ApiUserSpaceBatchUpdateUpdateRequest {
+    userSpaceBatchUpdate: UserSpaceBatchUpdate;
 }
 
 export interface ApiUserSpaceDestroyRequest {
@@ -2649,8 +3006,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/access-token/`;
+
         const response = await this.request({
-            path: `/api/access-token/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -2687,8 +3047,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/access-token/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/access-token/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -2716,8 +3080,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/access-token/`;
+
         const response = await this.request({
-            path: `/api/access-token/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -2755,8 +3122,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/access-token/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/access-token/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -2793,8 +3164,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/access-token/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/access-token/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -2839,8 +3214,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/access-token/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/access-token/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -2928,8 +3307,11 @@ export class ApiApi extends runtime.BaseAPI {
             formParams.append('recipe_id', requestParameters['recipeId'] as any);
         }
 
+
+        let urlPath = `/api/ai-import/`;
+
         const response = await this.request({
-            path: `/api/ai-import/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -2967,8 +3349,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ai-log/`;
+
         const response = await this.request({
-            path: `/api/ai-log/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -3004,8 +3389,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ai-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/ai-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -3053,8 +3442,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ai-provider/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/ai-provider/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -3092,8 +3485,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ai-provider/`;
+
         const response = await this.request({
-            path: `/api/ai-provider/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -3130,8 +3526,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ai-provider/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/ai-provider/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -3167,8 +3567,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ai-provider/`;
+
         const response = await this.request({
-            path: `/api/ai-provider/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -3216,8 +3619,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ai-provider/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/ai-provider/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -3255,8 +3662,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ai-provider/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/ai-provider/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -3305,8 +3716,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ai-provider/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/ai-provider/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -3342,8 +3757,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ai-provider/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/ai-provider/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -3388,8 +3807,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ai-provider/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/ai-provider/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -3432,8 +3855,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ai-step-sort/`;
+
         const response = await this.request({
-            path: `/api/ai-step-sort/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -3472,8 +3898,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/auto-plan/`;
+
         const response = await this.request({
-            path: `/api/auto-plan/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -3512,8 +3941,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/automation/`;
+
         const response = await this.request({
-            path: `/api/automation/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -3550,8 +3982,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/automation/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/automation/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -3591,8 +4027,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/automation/`;
+
         const response = await this.request({
-            path: `/api/automation/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -3630,8 +4069,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/automation/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/automation/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -3668,8 +4111,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/automation/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/automation/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -3714,8 +4161,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/automation/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/automation/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -3754,8 +4205,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/bookmarklet-import/`;
+
         const response = await this.request({
-            path: `/api/bookmarklet-import/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -3792,8 +4246,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/bookmarklet-import/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/bookmarklet-import/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -3829,8 +4287,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/bookmarklet-import/`;
+
         const response = await this.request({
-            path: `/api/bookmarklet-import/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -3868,8 +4329,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/bookmarklet-import/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/bookmarklet-import/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -3906,8 +4371,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/bookmarklet-import/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/bookmarklet-import/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -3952,8 +4421,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/bookmarklet-import/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/bookmarklet-import/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -4002,8 +4475,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/connector-config/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/connector-config/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -4041,8 +4518,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/connector-config/`;
+
         const response = await this.request({
-            path: `/api/connector-config/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -4079,8 +4559,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/connector-config/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/connector-config/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -4116,8 +4600,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/connector-config/`;
+
         const response = await this.request({
-            path: `/api/connector-config/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -4165,8 +4652,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/connector-config/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/connector-config/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -4204,8 +4695,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/connector-config/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/connector-config/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -4254,8 +4749,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/connector-config/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/connector-config/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -4291,8 +4790,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/connector-config/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/connector-config/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -4337,8 +4840,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/connector-config/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/connector-config/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -4377,8 +4884,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/cook-log/`;
+
         const response = await this.request({
-            path: `/api/cook-log/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -4415,8 +4925,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/cook-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/cook-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -4456,8 +4970,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/cook-log/`;
+
         const response = await this.request({
-            path: `/api/cook-log/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -4495,8 +5012,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/cook-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/cook-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -4533,8 +5054,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/cook-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/cook-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -4579,8 +5104,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/cook-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/cook-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -4619,8 +5148,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/custom-filter/`;
+
         const response = await this.request({
-            path: `/api/custom-filter/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -4657,8 +5189,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/custom-filter/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/custom-filter/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -4714,8 +5250,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/custom-filter/`;
+
         const response = await this.request({
-            path: `/api/custom-filter/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -4753,8 +5292,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/custom-filter/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/custom-filter/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -4791,8 +5334,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/custom-filter/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/custom-filter/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -4837,8 +5384,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/custom-filter/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/custom-filter/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -4875,8 +5426,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/download-file/{fileId}/`;
+        urlPath = urlPath.replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters['fileId'])));
+
         const response = await this.request({
-            path: `/api/download-file/{fileId}/`.replace(`{${"fileId"}}`, encodeURIComponent(String(requestParameters['fileId']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -4890,6 +5445,1133 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiDownloadFileRetrieve(requestParameters: ApiDownloadFileRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiDownloadFileRetrieveRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceCreateRaw(requestParameters: ApiEnterpriseBillingInvoiceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['enterpriseBillingInvoice'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingInvoice',
+                'Required parameter "enterpriseBillingInvoice" was null or undefined when calling apiEnterpriseBillingInvoiceCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-invoice/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingInvoiceToJSON(requestParameters['enterpriseBillingInvoice']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceCreate(requestParameters: ApiEnterpriseBillingInvoiceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoiceCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceDestroyRaw(requestParameters: ApiEnterpriseBillingInvoiceDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoiceDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-invoice/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceDestroy(requestParameters: ApiEnterpriseBillingInvoiceDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseBillingInvoiceDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceDownloadRetrieveRaw(requestParameters: ApiEnterpriseBillingInvoiceDownloadRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoiceDownloadRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-invoice/{id}/download/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceDownloadRetrieve(requestParameters: ApiEnterpriseBillingInvoiceDownloadRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoiceDownloadRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceListRaw(requestParameters: ApiEnterpriseBillingInvoiceListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseBillingInvoiceList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-invoice/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseBillingInvoiceListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceList(requestParameters: ApiEnterpriseBillingInvoiceListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseBillingInvoiceList> {
+        const response = await this.apiEnterpriseBillingInvoiceListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoicePartialUpdateRaw(requestParameters: ApiEnterpriseBillingInvoicePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoicePartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-invoice/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseBillingInvoiceToJSON(requestParameters['patchedEnterpriseBillingInvoice']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoicePartialUpdate(requestParameters: ApiEnterpriseBillingInvoicePartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoicePartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceRetrieveRaw(requestParameters: ApiEnterpriseBillingInvoiceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoiceRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-invoice/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceRetrieve(requestParameters: ApiEnterpriseBillingInvoiceRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoiceRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceUpdateRaw(requestParameters: ApiEnterpriseBillingInvoiceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingInvoice>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingInvoiceUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseBillingInvoice'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingInvoice',
+                'Required parameter "enterpriseBillingInvoice" was null or undefined when calling apiEnterpriseBillingInvoiceUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-invoice/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingInvoiceToJSON(requestParameters['enterpriseBillingInvoice']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingInvoiceFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingInvoiceUpdate(requestParameters: ApiEnterpriseBillingInvoiceUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingInvoice> {
+        const response = await this.apiEnterpriseBillingInvoiceUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanCreateRaw(requestParameters: ApiEnterpriseBillingPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['enterpriseBillingPlan'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingPlan',
+                'Required parameter "enterpriseBillingPlan" was null or undefined when calling apiEnterpriseBillingPlanCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-plan/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingPlanToJSON(requestParameters['enterpriseBillingPlan']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanCreate(requestParameters: ApiEnterpriseBillingPlanCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanDestroyRaw(requestParameters: ApiEnterpriseBillingPlanDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-plan/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanDestroy(requestParameters: ApiEnterpriseBillingPlanDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseBillingPlanDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanListRaw(requestParameters: ApiEnterpriseBillingPlanListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseBillingPlanList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-plan/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseBillingPlanListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanList(requestParameters: ApiEnterpriseBillingPlanListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseBillingPlanList> {
+        const response = await this.apiEnterpriseBillingPlanListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanPartialUpdateRaw(requestParameters: ApiEnterpriseBillingPlanPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-plan/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseBillingPlanToJSON(requestParameters['patchedEnterpriseBillingPlan']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanPartialUpdate(requestParameters: ApiEnterpriseBillingPlanPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanRetrieveRaw(requestParameters: ApiEnterpriseBillingPlanRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-plan/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanRetrieve(requestParameters: ApiEnterpriseBillingPlanRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanUpdateRaw(requestParameters: ApiEnterpriseBillingPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingPlan>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingPlanUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseBillingPlan'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingPlan',
+                'Required parameter "enterpriseBillingPlan" was null or undefined when calling apiEnterpriseBillingPlanUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-plan/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingPlanToJSON(requestParameters['enterpriseBillingPlan']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingPlanFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingPlanUpdate(requestParameters: ApiEnterpriseBillingPlanUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingPlan> {
+        const response = await this.apiEnterpriseBillingPlanUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductCreateRaw(requestParameters: ApiEnterpriseBillingProductCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingProduct>> {
+        if (requestParameters['enterpriseBillingProduct'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingProduct',
+                'Required parameter "enterpriseBillingProduct" was null or undefined when calling apiEnterpriseBillingProductCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-product/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingProductToJSON(requestParameters['enterpriseBillingProduct']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductCreate(requestParameters: ApiEnterpriseBillingProductCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingProduct> {
+        const response = await this.apiEnterpriseBillingProductCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductDestroyRaw(requestParameters: ApiEnterpriseBillingProductDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingProductDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-product/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductDestroy(requestParameters: ApiEnterpriseBillingProductDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseBillingProductDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductListRaw(requestParameters: ApiEnterpriseBillingProductListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseBillingProductList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-product/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseBillingProductListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductList(requestParameters: ApiEnterpriseBillingProductListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseBillingProductList> {
+        const response = await this.apiEnterpriseBillingProductListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductPartialUpdateRaw(requestParameters: ApiEnterpriseBillingProductPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingProduct>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingProductPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-product/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseBillingProductToJSON(requestParameters['patchedEnterpriseBillingProduct']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductPartialUpdate(requestParameters: ApiEnterpriseBillingProductPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingProduct> {
+        const response = await this.apiEnterpriseBillingProductPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductRetrieveRaw(requestParameters: ApiEnterpriseBillingProductRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingProduct>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingProductRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-product/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductRetrieve(requestParameters: ApiEnterpriseBillingProductRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingProduct> {
+        const response = await this.apiEnterpriseBillingProductRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductUpdateRaw(requestParameters: ApiEnterpriseBillingProductUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingProduct>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingProductUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseBillingProduct'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingProduct',
+                'Required parameter "enterpriseBillingProduct" was null or undefined when calling apiEnterpriseBillingProductUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-product/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingProductToJSON(requestParameters['enterpriseBillingProduct']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingProductFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingProductUpdate(requestParameters: ApiEnterpriseBillingProductUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingProduct> {
+        const response = await this.apiEnterpriseBillingProductUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkCreateRaw(requestParameters: ApiEnterpriseBillingReferralLinkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        if (requestParameters['enterpriseBillingReferralLink'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingReferralLink',
+                'Required parameter "enterpriseBillingReferralLink" was null or undefined when calling apiEnterpriseBillingReferralLinkCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-referral-link/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingReferralLinkToJSON(requestParameters['enterpriseBillingReferralLink']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkCreate(requestParameters: ApiEnterpriseBillingReferralLinkCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkDestroyRaw(requestParameters: ApiEnterpriseBillingReferralLinkDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingReferralLinkDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-referral-link/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkDestroy(requestParameters: ApiEnterpriseBillingReferralLinkDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiEnterpriseBillingReferralLinkDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkGetLinkRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-referral-link/get_link/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkGetLinkRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkGetLinkRetrieveRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkListRaw(requestParameters: ApiEnterpriseBillingReferralLinkListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedEnterpriseBillingReferralLinkList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-referral-link/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedEnterpriseBillingReferralLinkListFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkList(requestParameters: ApiEnterpriseBillingReferralLinkListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedEnterpriseBillingReferralLinkList> {
+        const response = await this.apiEnterpriseBillingReferralLinkListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkPartialUpdateRaw(requestParameters: ApiEnterpriseBillingReferralLinkPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingReferralLinkPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-referral-link/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedEnterpriseBillingReferralLinkToJSON(requestParameters['patchedEnterpriseBillingReferralLink']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkPartialUpdate(requestParameters: ApiEnterpriseBillingReferralLinkPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkRetrieveRaw(requestParameters: ApiEnterpriseBillingReferralLinkRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingReferralLinkRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-referral-link/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkRetrieve(requestParameters: ApiEnterpriseBillingReferralLinkRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkUpdateRaw(requestParameters: ApiEnterpriseBillingReferralLinkUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseBillingReferralLink>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiEnterpriseBillingReferralLinkUpdate().'
+            );
+        }
+
+        if (requestParameters['enterpriseBillingReferralLink'] == null) {
+            throw new runtime.RequiredError(
+                'enterpriseBillingReferralLink',
+                'Required parameter "enterpriseBillingReferralLink" was null or undefined when calling apiEnterpriseBillingReferralLinkUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-referral-link/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EnterpriseBillingReferralLinkToJSON(requestParameters['enterpriseBillingReferralLink']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EnterpriseBillingReferralLinkFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingReferralLinkUpdate(requestParameters: ApiEnterpriseBillingReferralLinkUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseBillingReferralLink> {
+        const response = await this.apiEnterpriseBillingReferralLinkUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripeCheckoutSessionCreateRaw(requestParameters: ApiEnterpriseBillingStripeCheckoutSessionCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StripeCheckoutSessionResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-stripe/checkout_session/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: StripeCheckoutSessionRequestToJSON(requestParameters['stripeCheckoutSessionRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => StripeCheckoutSessionResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripeCheckoutSessionCreate(requestParameters: ApiEnterpriseBillingStripeCheckoutSessionCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StripeCheckoutSessionResponse> {
+        const response = await this.apiEnterpriseBillingStripeCheckoutSessionCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripePortalRetrieveRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<StripePortal>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/enterprise-billing-stripe/portal/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => StripePortalFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiEnterpriseBillingStripePortalRetrieve(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<StripePortal> {
+        const response = await this.apiEnterpriseBillingStripePortalRetrieveRaw(initOverrides);
+        return await response.value();
     }
 
     /**
@@ -4912,8 +6594,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-embed/`;
+
         const response = await this.request({
-            path: `/api/enterprise-social-embed/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -4948,8 +6633,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-embed/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-embed/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -4987,8 +6676,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-embed/`;
+
         const response = await this.request({
-            path: `/api/enterprise-social-embed/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -5024,8 +6716,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-embed/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-embed/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -5060,8 +6756,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-embed/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-embed/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -5104,8 +6804,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-embed/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-embed/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -5153,8 +6857,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-keyword/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-keyword/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -5192,8 +6900,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-keyword/`;
+
         const response = await this.request({
-            path: `/api/enterprise-social-keyword/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -5230,8 +6941,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-keyword/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-keyword/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -5295,8 +7010,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-keyword/`;
+
         const response = await this.request({
-            path: `/api/enterprise-social-keyword/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -5348,8 +7066,13 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-keyword/{id}/merge/{target}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+        urlPath = urlPath.replace(`{${"target"}}`, encodeURIComponent(String(requestParameters['target'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-keyword/{id}/merge/{target}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))).replace(`{${"target"}}`, encodeURIComponent(String(requestParameters['target']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -5402,8 +7125,13 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-keyword/{id}/move/{parent}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+        urlPath = urlPath.replace(`{${"parent"}}`, encodeURIComponent(String(requestParameters['parent'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-keyword/{id}/move/{parent}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))).replace(`{${"parent"}}`, encodeURIComponent(String(requestParameters['parent']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -5452,8 +7180,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-keyword/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-keyword/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -5491,8 +7223,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-keyword/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-keyword/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -5541,8 +7277,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-keyword/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-keyword/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -5578,8 +7318,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-keyword/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-keyword/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -5624,8 +7368,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-keyword/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-keyword/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -5675,8 +7423,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/{id}/aiproperties/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/{id}/aiproperties/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -5715,8 +7467,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/batch_update/`;
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/batch_update/`,
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -5765,8 +7520,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -5804,8 +7563,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/`;
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -5844,8 +7606,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/{id}/delete_external/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/{id}/delete_external/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -5882,8 +7648,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -5911,8 +7681,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/flat/`;
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/flat/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -5970,8 +7743,12 @@ export class ApiApi extends runtime.BaseAPI {
             formParams.append('image_url', requestParameters['imageUrl'] as any);
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/{id}/image/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/{id}/image/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -6061,6 +7838,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['foodsOrNot'] != null) {
             queryParameters['foods_or_not'] = requestParameters['foodsOrNot'];
+        }
+
+        if (requestParameters['includeChildren'] != null) {
+            queryParameters['include_children'] = requestParameters['includeChildren'];
         }
 
         if (requestParameters['internal'] != null) {
@@ -6181,8 +7962,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/`;
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -6230,8 +8014,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -6269,8 +8057,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -6319,8 +8111,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -6356,8 +8152,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/{id}/related/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/{id}/related/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -6401,8 +8201,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -6447,8 +8251,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/{id}/shopping/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/{id}/shopping/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -6494,8 +8302,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-social-recipe/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/enterprise-social-recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -6516,13 +8328,6 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      */
     async apiEnterpriseSpaceCreateRaw(requestParameters: ApiEnterpriseSpaceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<EnterpriseSpace>> {
-        if (requestParameters['enterpriseSpace'] == null) {
-            throw new runtime.RequiredError(
-                'enterpriseSpace',
-                'Required parameter "enterpriseSpace" was null or undefined when calling apiEnterpriseSpaceCreate().'
-            );
-        }
-
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -6533,8 +8338,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-space/`;
+
         const response = await this.request({
-            path: `/api/enterprise-space/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -6546,7 +8354,7 @@ export class ApiApi extends runtime.BaseAPI {
 
     /**
      */
-    async apiEnterpriseSpaceCreate(requestParameters: ApiEnterpriseSpaceCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
+    async apiEnterpriseSpaceCreate(requestParameters: ApiEnterpriseSpaceCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<EnterpriseSpace> {
         const response = await this.apiEnterpriseSpaceCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -6562,8 +8370,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-space/current/`;
+
         const response = await this.request({
-            path: `/api/enterprise-space/current/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -6597,8 +8408,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-space/{space}/`;
+        urlPath = urlPath.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space'])));
+
         const response = await this.request({
-            path: `/api/enterprise-space/{space}/`.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -6632,8 +8447,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-space/`;
+
         const response = await this.request({
-            path: `/api/enterprise-space/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -6669,8 +8487,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-space/{space}/`;
+        urlPath = urlPath.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space'])));
+
         const response = await this.request({
-            path: `/api/enterprise-space/{space}/`.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -6705,8 +8527,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-space/{space}/`;
+        urlPath = urlPath.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space'])));
+
         const response = await this.request({
-            path: `/api/enterprise-space/{space}/`.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -6732,13 +8558,6 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['enterpriseSpace'] == null) {
-            throw new runtime.RequiredError(
-                'enterpriseSpace',
-                'Required parameter "enterpriseSpace" was null or undefined when calling apiEnterpriseSpaceUpdate().'
-            );
-        }
-
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -6749,8 +8568,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/enterprise-space/{space}/`;
+        urlPath = urlPath.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space'])));
+
         const response = await this.request({
-            path: `/api/enterprise-space/{space}/`.replace(`{${"space"}}`, encodeURIComponent(String(requestParameters['space']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -6787,8 +8610,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/export/`;
+
         const response = await this.request({
-            path: `/api/export/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -6826,8 +8652,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/export-log/`;
+
         const response = await this.request({
-            path: `/api/export-log/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -6864,8 +8693,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/export-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/export-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -6901,8 +8734,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/export-log/`;
+
         const response = await this.request({
-            path: `/api/export-log/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -6940,8 +8776,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/export-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/export-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -6978,8 +8818,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/export-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/export-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7024,8 +8868,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/export-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/export-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -7062,8 +8910,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/fdc-search/`;
+
         const response = await this.request({
-            path: `/api/fdc-search/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7111,8 +8962,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/{id}/aiproperties/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/food/{id}/aiproperties/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -7151,8 +9006,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/batch_update/`;
+
         const response = await this.request({
-            path: `/api/food/batch_update/`,
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -7201,8 +9059,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/food/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7240,8 +9102,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/`;
+
         const response = await this.request({
-            path: `/api/food/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -7278,8 +9143,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/food/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -7323,8 +9192,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/{id}/fdc/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/food/{id}/fdc/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -7354,8 +9227,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food-inherit-field/`;
+
         const response = await this.request({
-            path: `/api/food-inherit-field/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7391,8 +9267,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food-inherit-field/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/food-inherit-field/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7457,8 +9337,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/`;
+
         const response = await this.request({
-            path: `/api/food/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7510,8 +9393,13 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/{id}/merge/{target}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+        urlPath = urlPath.replace(`{${"target"}}`, encodeURIComponent(String(requestParameters['target'])));
+
         const response = await this.request({
-            path: `/api/food/{id}/merge/{target}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))).replace(`{${"target"}}`, encodeURIComponent(String(requestParameters['target']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -7564,8 +9452,13 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/{id}/move/{parent}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+        urlPath = urlPath.replace(`{${"parent"}}`, encodeURIComponent(String(requestParameters['parent'])));
+
         const response = await this.request({
-            path: `/api/food/{id}/move/{parent}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))).replace(`{${"parent"}}`, encodeURIComponent(String(requestParameters['parent']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -7614,8 +9507,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/food/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7653,8 +9550,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/food/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -7703,8 +9604,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/food/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7740,8 +9645,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/food/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7786,8 +9695,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/{id}/shopping/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/food/{id}/shopping/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -7833,8 +9746,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/food/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/food/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -7870,8 +9787,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/get_external_file_link/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/get_external_file_link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7904,8 +9825,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/get_recipe_file/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/get_recipe_file/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7932,8 +9857,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/group/`;
+
         const response = await this.request({
-            path: `/api/group/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7969,8 +9897,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/group/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/group/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -7984,6 +9916,266 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiGroupRetrieve(requestParameters: ApiGroupRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Group> {
         const response = await this.apiGroupRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdCreateRaw(requestParameters: ApiHouseholdCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Household>> {
+        if (requestParameters['household'] == null) {
+            throw new runtime.RequiredError(
+                'household',
+                'Required parameter "household" was null or undefined when calling apiHouseholdCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/household/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: HouseholdToJSON(requestParameters['household']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HouseholdFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdCreate(requestParameters: ApiHouseholdCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Household> {
+        const response = await this.apiHouseholdCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdDestroyRaw(requestParameters: ApiHouseholdDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiHouseholdDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/household/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdDestroy(requestParameters: ApiHouseholdDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiHouseholdDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdListRaw(requestParameters: ApiHouseholdListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedHouseholdList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/household/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedHouseholdListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdList(requestParameters: ApiHouseholdListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedHouseholdList> {
+        const response = await this.apiHouseholdListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdPartialUpdateRaw(requestParameters: ApiHouseholdPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Household>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiHouseholdPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/household/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedHouseholdToJSON(requestParameters['patchedHousehold']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HouseholdFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdPartialUpdate(requestParameters: ApiHouseholdPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Household> {
+        const response = await this.apiHouseholdPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdRetrieveRaw(requestParameters: ApiHouseholdRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Household>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiHouseholdRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/household/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HouseholdFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdRetrieve(requestParameters: ApiHouseholdRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Household> {
+        const response = await this.apiHouseholdRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdUpdateRaw(requestParameters: ApiHouseholdUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Household>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiHouseholdUpdate().'
+            );
+        }
+
+        if (requestParameters['household'] == null) {
+            throw new runtime.RequiredError(
+                'household',
+                'Required parameter "household" was null or undefined when calling apiHouseholdUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/household/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: HouseholdToJSON(requestParameters['household']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => HouseholdFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiHouseholdUpdate(requestParameters: ApiHouseholdUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Household> {
+        const response = await this.apiHouseholdUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -8056,8 +10248,11 @@ export class ApiApi extends runtime.BaseAPI {
             formParams.append('recipe_id', requestParameters['recipeId'] as any);
         }
 
+
+        let urlPath = `/api/import/`;
+
         const response = await this.request({
-            path: `/api/import/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -8095,8 +10290,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/import-log/`;
+
         const response = await this.request({
-            path: `/api/import-log/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -8133,8 +10331,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/import-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/import-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -8170,8 +10372,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/import-log/`;
+
         const response = await this.request({
-            path: `/api/import-log/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -8209,8 +10414,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/import-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/import-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -8247,8 +10456,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/import-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/import-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -8293,8 +10506,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/import-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/import-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -8332,8 +10549,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/import-open-data/`;
+
         const response = await this.request({
-            path: `/api/import-open-data/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -8361,8 +10581,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/import-open-data/`;
+
         const response = await this.request({
-            path: `/api/import-open-data/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -8399,8 +10622,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ingredient/`;
+
         const response = await this.request({
-            path: `/api/ingredient/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -8437,8 +10663,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ingredient/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/ingredient/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -8452,44 +10682,6 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiIngredientDestroy(requestParameters: ApiIngredientDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
         await this.apiIngredientDestroyRaw(requestParameters, initOverrides);
-    }
-
-    /**
-     */
-    async apiIngredientFromStringCreateRaw(requestParameters: ApiIngredientFromStringCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<ParsedIngredient>> {
-        if (requestParameters['ingredientString'] == null) {
-            throw new runtime.RequiredError(
-                'ingredientString',
-                'Required parameter "ingredientString" was null or undefined when calling apiIngredientFromStringCreate().'
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters['Content-Type'] = 'application/json';
-
-        if (this.configuration && this.configuration.apiKey) {
-            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
-        }
-
-        const response = await this.request({
-            path: `/api/ingredient-from-string/`,
-            method: 'POST',
-            headers: headerParameters,
-            query: queryParameters,
-            body: IngredientStringToJSON(requestParameters['ingredientString']),
-        }, initOverrides);
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => ParsedIngredientFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiIngredientFromStringCreate(requestParameters: ApiIngredientFromStringCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<ParsedIngredient> {
-        const response = await this.apiIngredientFromStringCreateRaw(requestParameters, initOverrides);
-        return await response.value();
     }
 
     /**
@@ -8520,8 +10712,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ingredient/`;
+
         const response = await this.request({
-            path: `/api/ingredient/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -8535,6 +10730,40 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiIngredientList(requestParameters: ApiIngredientListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedIngredientList> {
         const response = await this.apiIngredientListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiIngredientParserPostCreateRaw(requestParameters: ApiIngredientParserPostCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<IngredientParserResponse>> {
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/ingredient-parser/post/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: IngredientParserRequestToJSON(requestParameters['ingredientParserRequest']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => IngredientParserResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiIngredientParserPostCreate(requestParameters: ApiIngredientParserPostCreateRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<IngredientParserResponse> {
+        const response = await this.apiIngredientParserPostCreateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -8559,8 +10788,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ingredient/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/ingredient/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -8597,8 +10830,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ingredient/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/ingredient/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -8643,8 +10880,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/ingredient/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/ingredient/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -8659,6 +10900,1003 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiIngredientUpdate(requestParameters: ApiIngredientUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Ingredient> {
         const response = await this.apiIngredientUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInventoryEntryCascadingListRaw(requestParameters: ApiInventoryEntryCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-entry/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInventoryEntryCascadingList(requestParameters: ApiInventoryEntryCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryEntryCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryCreateRaw(requestParameters: ApiInventoryEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryEntry>> {
+        if (requestParameters['inventoryEntry'] == null) {
+            throw new runtime.RequiredError(
+                'inventoryEntry',
+                'Required parameter "inventoryEntry" was null or undefined when calling apiInventoryEntryCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-entry/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InventoryEntryToJSON(requestParameters['inventoryEntry']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryEntryFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryCreate(requestParameters: ApiInventoryEntryCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryEntry> {
+        const response = await this.apiInventoryEntryCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryDestroyRaw(requestParameters: ApiInventoryEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-entry/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryDestroy(requestParameters: ApiInventoryEntryDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiInventoryEntryDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryListRaw(requestParameters: ApiInventoryEntryListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedInventoryEntryList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['code'] != null) {
+            queryParameters['code'] = requestParameters['code'];
+        }
+
+        if (requestParameters['empty'] != null) {
+            queryParameters['empty'] = requestParameters['empty'];
+        }
+
+        if (requestParameters['foodId'] != null) {
+            queryParameters['food_id'] = requestParameters['foodId'];
+        }
+
+        if (requestParameters['inventoryLocationId'] != null) {
+            queryParameters['inventory_location_id'] = requestParameters['inventoryLocationId'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-entry/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedInventoryEntryListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryList(requestParameters: ApiInventoryEntryListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedInventoryEntryList> {
+        const response = await this.apiInventoryEntryListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInventoryEntryNullingListRaw(requestParameters: ApiInventoryEntryNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-entry/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInventoryEntryNullingList(requestParameters: ApiInventoryEntryNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryEntryNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryPartialUpdateRaw(requestParameters: ApiInventoryEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryEntry>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-entry/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedInventoryEntryToJSON(requestParameters['patchedInventoryEntry']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryEntryFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryPartialUpdate(requestParameters: ApiInventoryEntryPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryEntry> {
+        const response = await this.apiInventoryEntryPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInventoryEntryProtectingListRaw(requestParameters: ApiInventoryEntryProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-entry/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInventoryEntryProtectingList(requestParameters: ApiInventoryEntryProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryEntryProtectingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryRetrieveRaw(requestParameters: ApiInventoryEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryEntry>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-entry/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryEntryFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryRetrieve(requestParameters: ApiInventoryEntryRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryEntry> {
+        const response = await this.apiInventoryEntryRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryUpdateRaw(requestParameters: ApiInventoryEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryEntry>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryEntryUpdate().'
+            );
+        }
+
+        if (requestParameters['inventoryEntry'] == null) {
+            throw new runtime.RequiredError(
+                'inventoryEntry',
+                'Required parameter "inventoryEntry" was null or undefined when calling apiInventoryEntryUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-entry/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InventoryEntryToJSON(requestParameters['inventoryEntry']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryEntryFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryEntryUpdate(requestParameters: ApiInventoryEntryUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryEntry> {
+        const response = await this.apiInventoryEntryUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInventoryLocationCascadingListRaw(requestParameters: ApiInventoryLocationCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-location/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInventoryLocationCascadingList(requestParameters: ApiInventoryLocationCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryLocationCascadingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationCreateRaw(requestParameters: ApiInventoryLocationCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLocation>> {
+        if (requestParameters['inventoryLocation'] == null) {
+            throw new runtime.RequiredError(
+                'inventoryLocation',
+                'Required parameter "inventoryLocation" was null or undefined when calling apiInventoryLocationCreate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-location/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InventoryLocationToJSON(requestParameters['inventoryLocation']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLocationFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationCreate(requestParameters: ApiInventoryLocationCreateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLocation> {
+        const response = await this.apiInventoryLocationCreateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationDestroyRaw(requestParameters: ApiInventoryLocationDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationDestroy().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-location/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationDestroy(requestParameters: ApiInventoryLocationDestroyRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<void> {
+        await this.apiInventoryLocationDestroyRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationListRaw(requestParameters: ApiInventoryLocationListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedInventoryLocationList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-location/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedInventoryLocationListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationList(requestParameters: ApiInventoryLocationListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedInventoryLocationList> {
+        const response = await this.apiInventoryLocationListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInventoryLocationNullingListRaw(requestParameters: ApiInventoryLocationNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-location/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInventoryLocationNullingList(requestParameters: ApiInventoryLocationNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryLocationNullingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationPartialUpdateRaw(requestParameters: ApiInventoryLocationPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLocation>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationPartialUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-location/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PATCH',
+            headers: headerParameters,
+            query: queryParameters,
+            body: PatchedInventoryLocationToJSON(requestParameters['patchedInventoryLocation']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLocationFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationPartialUpdate(requestParameters: ApiInventoryLocationPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLocation> {
+        const response = await this.apiInventoryLocationPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInventoryLocationProtectingListRaw(requestParameters: ApiInventoryLocationProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-location/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInventoryLocationProtectingList(requestParameters: ApiInventoryLocationProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInventoryLocationProtectingListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationRetrieveRaw(requestParameters: ApiInventoryLocationRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLocation>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-location/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLocationFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationRetrieve(requestParameters: ApiInventoryLocationRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLocation> {
+        const response = await this.apiInventoryLocationRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationUpdateRaw(requestParameters: ApiInventoryLocationUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLocation>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLocationUpdate().'
+            );
+        }
+
+        if (requestParameters['inventoryLocation'] == null) {
+            throw new runtime.RequiredError(
+                'inventoryLocation',
+                'Required parameter "inventoryLocation" was null or undefined when calling apiInventoryLocationUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-location/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: InventoryLocationToJSON(requestParameters['inventoryLocation']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLocationFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLocationUpdate(requestParameters: ApiInventoryLocationUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLocation> {
+        const response = await this.apiInventoryLocationUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLogListRaw(requestParameters: ApiInventoryLogListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedInventoryLogList>> {
+        const queryParameters: any = {};
+
+        if (requestParameters['entryId'] != null) {
+            queryParameters['entry_id'] = requestParameters['entryId'];
+        }
+
+        if (requestParameters['foodId'] != null) {
+            queryParameters['food_id'] = requestParameters['foodId'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-log/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedInventoryLogListFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLogList(requestParameters: ApiInventoryLogListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedInventoryLogList> {
+        const response = await this.apiInventoryLogListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLogRetrieveRaw(requestParameters: ApiInventoryLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<InventoryLog>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInventoryLogRetrieve().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/inventory-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => InventoryLogFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiInventoryLogRetrieve(requestParameters: ApiInventoryLogRetrieveRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InventoryLog> {
+        const response = await this.apiInventoryLogRetrieveRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInviteLinkCascadingListRaw(requestParameters: ApiInviteLinkCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInviteLinkCascadingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/invite-link/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that will be cascaded (deleted) when deleting the selected object
+     */
+    async apiInviteLinkCascadingList(requestParameters: ApiInviteLinkCascadingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInviteLinkCascadingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -8683,8 +11921,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/invite-link/`;
+
         const response = await this.request({
-            path: `/api/invite-link/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -8721,8 +11962,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/invite-link/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/invite-link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -8782,8 +12027,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/invite-link/`;
+
         const response = await this.request({
-            path: `/api/invite-link/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -8797,6 +12045,59 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiInviteLinkList(requestParameters: ApiInviteLinkListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedInviteLinkList> {
         const response = await this.apiInviteLinkListRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInviteLinkNullingListRaw(requestParameters: ApiInviteLinkNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInviteLinkNullingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/invite-link/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects where the selected object will be removed whe its deleted
+     */
+    async apiInviteLinkNullingList(requestParameters: ApiInviteLinkNullingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInviteLinkNullingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -8821,8 +12122,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/invite-link/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/invite-link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -8837,6 +12142,59 @@ export class ApiApi extends runtime.BaseAPI {
      */
     async apiInviteLinkPartialUpdate(requestParameters: ApiInviteLinkPartialUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<InviteLink> {
         const response = await this.apiInviteLinkPartialUpdateRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInviteLinkProtectingListRaw(requestParameters: ApiInviteLinkProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedGenericModelReferenceList>> {
+        if (requestParameters['id'] == null) {
+            throw new runtime.RequiredError(
+                'id',
+                'Required parameter "id" was null or undefined when calling apiInviteLinkProtectingList().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        if (requestParameters['cache'] != null) {
+            queryParameters['cache'] = requestParameters['cache'];
+        }
+
+        if (requestParameters['page'] != null) {
+            queryParameters['page'] = requestParameters['page'];
+        }
+
+        if (requestParameters['pageSize'] != null) {
+            queryParameters['page_size'] = requestParameters['pageSize'];
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/invite-link/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedGenericModelReferenceListFromJSON(jsonValue));
+    }
+
+    /**
+     * get a paginated list of objects that are protecting the selected object form being deleted
+     */
+    async apiInviteLinkProtectingList(requestParameters: ApiInviteLinkProtectingListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedGenericModelReferenceList> {
+        const response = await this.apiInviteLinkProtectingListRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -8859,8 +12217,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/invite-link/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/invite-link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -8905,8 +12267,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/invite-link/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/invite-link/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -8955,8 +12321,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/keyword/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/keyword/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -8994,8 +12364,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/keyword/`;
+
         const response = await this.request({
-            path: `/api/keyword/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -9032,8 +12405,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/keyword/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/keyword/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -9097,8 +12474,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/keyword/`;
+
         const response = await this.request({
-            path: `/api/keyword/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -9150,8 +12530,13 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/keyword/{id}/merge/{target}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+        urlPath = urlPath.replace(`{${"target"}}`, encodeURIComponent(String(requestParameters['target'])));
+
         const response = await this.request({
-            path: `/api/keyword/{id}/merge/{target}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))).replace(`{${"target"}}`, encodeURIComponent(String(requestParameters['target']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -9204,8 +12589,13 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/keyword/{id}/move/{parent}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+        urlPath = urlPath.replace(`{${"parent"}}`, encodeURIComponent(String(requestParameters['parent'])));
+
         const response = await this.request({
-            path: `/api/keyword/{id}/move/{parent}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))).replace(`{${"parent"}}`, encodeURIComponent(String(requestParameters['parent']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -9254,8 +12644,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/keyword/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/keyword/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -9293,8 +12687,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/keyword/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/keyword/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -9343,8 +12741,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/keyword/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/keyword/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -9380,8 +12782,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/keyword/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/keyword/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -9426,8 +12832,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/keyword/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/keyword/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -9456,8 +12866,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/localization/`;
+
         const response = await this.request({
-            path: `/api/localization/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -9494,8 +12907,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-plan/`;
+
         const response = await this.request({
-            path: `/api/meal-plan/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -9532,8 +12948,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-plan/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/meal-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -9573,8 +12993,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-plan/ical/`;
+
         const response = await this.request({
-            path: `/api/meal-plan/ical/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -9627,8 +13050,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-plan/`;
+
         const response = await this.request({
-            path: `/api/meal-plan/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -9666,8 +13092,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-plan/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/meal-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -9704,8 +13134,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-plan/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/meal-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -9750,8 +13184,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-plan/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/meal-plan/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -9800,8 +13238,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-type/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/meal-type/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -9839,8 +13281,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-type/`;
+
         const response = await this.request({
-            path: `/api/meal-type/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -9877,8 +13322,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-type/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/meal-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -9914,8 +13363,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-type/`;
+
         const response = await this.request({
-            path: `/api/meal-type/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -9963,8 +13415,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-type/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/meal-type/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -10002,8 +13458,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-type/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/meal-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -10052,8 +13512,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-type/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/meal-type/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -10089,8 +13553,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-type/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/meal-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -10135,8 +13603,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/meal-type/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/meal-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -10174,8 +13646,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-category/`;
+
         const response = await this.request({
-            path: `/api/open-data-category/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -10210,8 +13685,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-category/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-category/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -10245,8 +13724,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-category/`;
+
         const response = await this.request({
-            path: `/api/open-data-category/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -10282,8 +13764,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-category/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-category/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -10318,8 +13804,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-category/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-category/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -10362,8 +13852,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-category/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-category/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -10400,8 +13894,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-conversion/`;
+
         const response = await this.request({
-            path: `/api/open-data-conversion/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -10436,8 +13933,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-conversion/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-conversion/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -10471,8 +13972,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-conversion/`;
+
         const response = await this.request({
-            path: `/api/open-data-conversion/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -10508,8 +14012,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-conversion/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-conversion/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -10544,8 +14052,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-conversion/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-conversion/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -10588,8 +14100,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-conversion/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-conversion/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -10624,8 +14140,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-FDC/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-FDC/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -10660,8 +14180,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-food/`;
+
         const response = await this.request({
-            path: `/api/open-data-food/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -10696,8 +14219,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-food/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-food/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -10740,8 +14267,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-food/{id}/fdc/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-food/{id}/fdc/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -10778,8 +14309,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-food/`;
+
         const response = await this.request({
-            path: `/api/open-data-food/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -10815,8 +14349,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-food/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-food/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -10851,8 +14389,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-food/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-food/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -10895,8 +14437,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-food/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-food/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -10933,8 +14479,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-property/`;
+
         const response = await this.request({
-            path: `/api/open-data-property/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -10969,8 +14518,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-property/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -11004,8 +14557,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-property/`;
+
         const response = await this.request({
-            path: `/api/open-data-property/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -11041,8 +14597,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-property/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -11077,8 +14637,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-property/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -11121,8 +14685,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-property/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -11150,8 +14718,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-stats/`;
+
         const response = await this.request({
-            path: `/api/open-data-stats/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -11186,8 +14757,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-store/`;
+
         const response = await this.request({
-            path: `/api/open-data-store/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -11222,8 +14796,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-store/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-store/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -11257,8 +14835,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-store/`;
+
         const response = await this.request({
-            path: `/api/open-data-store/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -11294,8 +14875,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-store/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-store/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -11330,8 +14915,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-store/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-store/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -11374,8 +14963,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-store/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-store/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -11412,8 +15005,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-unit/`;
+
         const response = await this.request({
-            path: `/api/open-data-unit/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -11448,8 +15044,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-unit/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-unit/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -11483,8 +15083,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-unit/`;
+
         const response = await this.request({
-            path: `/api/open-data-unit/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -11520,8 +15123,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-unit/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-unit/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -11556,8 +15163,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-unit/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-unit/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -11600,8 +15211,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-unit/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-unit/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -11638,8 +15253,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-version/`;
+
         const response = await this.request({
-            path: `/api/open-data-version/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -11674,8 +15292,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-version/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-version/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -11709,8 +15331,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-version/`;
+
         const response = await this.request({
-            path: `/api/open-data-version/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -11746,8 +15371,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-version/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-version/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -11782,8 +15411,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-version/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-version/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -11826,8 +15459,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/open-data-version/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/open-data-version/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -11865,8 +15502,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property/`;
+
         const response = await this.request({
-            path: `/api/property/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -11903,8 +15543,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -11940,8 +15584,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property/`;
+
         const response = await this.request({
-            path: `/api/property/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -11979,8 +15626,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -12017,8 +15668,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -12066,8 +15721,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property-type/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/property-type/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -12105,8 +15764,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property-type/`;
+
         const response = await this.request({
-            path: `/api/property-type/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -12143,8 +15805,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property-type/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/property-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -12184,8 +15850,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property-type/`;
+
         const response = await this.request({
-            path: `/api/property-type/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -12233,8 +15902,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property-type/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/property-type/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -12272,8 +15945,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property-type/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/property-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -12322,8 +15999,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property-type/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/property-type/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -12359,8 +16040,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property-type/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/property-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -12405,8 +16090,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property-type/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/property-type/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -12452,8 +16141,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/property/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/property/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -12503,8 +16196,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/{id}/aiproperties/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe/{id}/aiproperties/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -12543,8 +16240,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/batch_update/`;
+
         const response = await this.request({
-            path: `/api/recipe/batch_update/`,
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -12593,8 +16293,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-book/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -12632,8 +16336,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book/`;
+
         const response = await this.request({
-            path: `/api/recipe-book/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -12670,8 +16377,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-book/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -12708,8 +16419,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book-entry/`;
+
         const response = await this.request({
-            path: `/api/recipe-book-entry/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -12746,8 +16460,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book-entry/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-book-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -12791,8 +16509,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book-entry/`;
+
         const response = await this.request({
-            path: `/api/recipe-book-entry/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -12830,8 +16551,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book-entry/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-book-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -12868,8 +16593,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book-entry/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-book-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -12914,8 +16643,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book-entry/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-book-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -12977,8 +16710,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book/`;
+
         const response = await this.request({
-            path: `/api/recipe-book/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -13026,8 +16762,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-book/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -13065,8 +16805,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-book/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -13115,8 +16859,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-book/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -13152,8 +16900,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-book/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -13198,8 +16950,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-book/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-book/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -13248,8 +17004,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -13287,8 +17047,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/`;
+
         const response = await this.request({
-            path: `/api/recipe/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -13327,8 +17090,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/{id}/delete_external/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe/{id}/delete_external/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -13365,8 +17132,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -13394,8 +17165,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/flat/`;
+
         const response = await this.request({
-            path: `/api/recipe/flat/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -13426,8 +17200,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-from-source/`;
+
         const response = await this.request({
-            path: `/api/recipe-from-source/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -13486,8 +17263,12 @@ export class ApiApi extends runtime.BaseAPI {
             formParams.append('image_url', requestParameters['imageUrl'] as any);
         }
 
+
+        let urlPath = `/api/recipe/{id}/image/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe/{id}/image/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -13526,8 +17307,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-import/`;
+
         const response = await this.request({
-            path: `/api/recipe-import/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -13564,8 +17348,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-import/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-import/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -13602,8 +17390,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-import/import_all/`;
+
         const response = await this.request({
-            path: `/api/recipe-import/import_all/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -13649,8 +17440,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-import/{id}/import_recipe/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-import/{id}/import_recipe/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -13688,8 +17483,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-import/`;
+
         const response = await this.request({
-            path: `/api/recipe-import/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -13727,8 +17525,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-import/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-import/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -13765,8 +17567,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-import/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-import/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -13811,8 +17617,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe-import/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe-import/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -13902,6 +17712,10 @@ export class ApiApi extends runtime.BaseAPI {
 
         if (requestParameters['foodsOrNot'] != null) {
             queryParameters['foods_or_not'] = requestParameters['foodsOrNot'];
+        }
+
+        if (requestParameters['includeChildren'] != null) {
+            queryParameters['include_children'] = requestParameters['includeChildren'];
         }
 
         if (requestParameters['internal'] != null) {
@@ -14014,8 +17828,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/`;
+
         const response = await this.request({
-            path: `/api/recipe/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14063,8 +17880,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14102,8 +17923,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -14152,8 +17977,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14189,8 +18018,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/{id}/related/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe/{id}/related/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14230,8 +18063,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14276,8 +18113,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/{id}/shopping/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe/{id}/shopping/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -14323,8 +18164,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/recipe/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -14354,8 +18199,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/reset-food-inheritance/`;
+
         const response = await this.request({
-            path: `/api/reset-food-inheritance/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -14383,8 +18231,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/search-fields/`;
+
         const response = await this.request({
-            path: `/api/search-fields/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14420,8 +18271,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/search-fields/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/search-fields/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14450,8 +18305,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/search-preference/`;
+
         const response = await this.request({
-            path: `/api/search-preference/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14489,8 +18347,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/search-preference/{user}/`;
+        urlPath = urlPath.replace(`{${"user"}}`, encodeURIComponent(String(requestParameters['user'])));
+
         const response = await this.request({
-            path: `/api/search-preference/{user}/`.replace(`{${"user"}}`, encodeURIComponent(String(requestParameters['user']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -14527,8 +18389,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/search-preference/{user}/`;
+        urlPath = urlPath.replace(`{${"user"}}`, encodeURIComponent(String(requestParameters['user'])));
+
         const response = await this.request({
-            path: `/api/search-preference/{user}/`.replace(`{${"user"}}`, encodeURIComponent(String(requestParameters['user']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14556,8 +18422,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/server-settings/current/`;
+
         const response = await this.request({
-            path: `/api/server-settings/current/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14591,8 +18460,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/share-link/{id}`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/share-link/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14639,8 +18512,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14671,8 +18548,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list/`;
+
         const response = await this.request({
-            path: `/api/shopping-list/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -14709,8 +18589,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -14747,8 +18631,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-entry/bulk/`;
+
         const response = await this.request({
-            path: `/api/shopping-list-entry/bulk/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -14787,8 +18674,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-entry/`;
+
         const response = await this.request({
-            path: `/api/shopping-list-entry/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -14825,8 +18715,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-entry/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -14870,8 +18764,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-entry/`;
+
         const response = await this.request({
-            path: `/api/shopping-list-entry/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14909,8 +18806,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-entry/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -14947,8 +18848,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-entry/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -14993,8 +18898,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-entry/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list-entry/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -15032,8 +18941,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list/`;
+
         const response = await this.request({
-            path: `/api/shopping-list/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -15081,8 +18993,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -15120,8 +19036,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -15170,8 +19090,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -15216,8 +19140,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-recipe/{id}/bulk_create_entries/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list-recipe/{id}/bulk_create_entries/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -15256,8 +19184,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-recipe/`;
+
         const response = await this.request({
-            path: `/api/shopping-list-recipe/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -15294,8 +19225,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-recipe/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list-recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -15335,8 +19270,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-recipe/`;
+
         const response = await this.request({
-            path: `/api/shopping-list-recipe/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -15374,8 +19312,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-recipe/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list-recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -15412,8 +19354,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-recipe/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list-recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -15458,8 +19404,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list-recipe/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list-recipe/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -15496,8 +19446,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -15535,8 +19489,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/shopping-list/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/shopping-list/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -15568,8 +19526,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/space/`;
+
         const response = await this.request({
-            path: `/api/space/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -15599,8 +19560,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/space/current/`;
+
         const response = await this.request({
-            path: `/api/space/current/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -15637,8 +19601,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/space/`;
+
         const response = await this.request({
-            path: `/api/space/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -15676,8 +19643,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/space/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/space/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -15714,8 +19685,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/space/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/space/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -15753,8 +19728,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/space/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/space/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -15793,8 +19772,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/step/`;
+
         const response = await this.request({
-            path: `/api/step/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -15831,8 +19813,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/step/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/step/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -15876,8 +19862,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/step/`;
+
         const response = await this.request({
-            path: `/api/step/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -15915,8 +19904,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/step/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/step/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -15953,8 +19946,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/step/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/step/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -15999,8 +19996,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/step/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/step/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -16049,8 +20050,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/storage/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/storage/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -16088,8 +20093,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/storage/`;
+
         const response = await this.request({
-            path: `/api/storage/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -16126,8 +20134,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/storage/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/storage/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -16163,8 +20175,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/storage/`;
+
         const response = await this.request({
-            path: `/api/storage/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -16212,8 +20227,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/storage/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/storage/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -16251,8 +20270,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/storage/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/storage/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -16301,8 +20324,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/storage/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/storage/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -16338,8 +20365,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/storage/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/storage/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -16384,8 +20415,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/storage/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/storage/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -16434,8 +20469,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -16483,8 +20522,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket-category/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -16522,8 +20565,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category/`;
+
         const response = await this.request({
-            path: `/api/supermarket-category/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -16560,8 +20606,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket-category/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -16613,8 +20663,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category/`;
+
         const response = await this.request({
-            path: `/api/supermarket-category/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -16666,8 +20719,13 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category/{id}/merge/{target}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+        urlPath = urlPath.replace(`{${"target"}}`, encodeURIComponent(String(requestParameters['target'])));
+
         const response = await this.request({
-            path: `/api/supermarket-category/{id}/merge/{target}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))).replace(`{${"target"}}`, encodeURIComponent(String(requestParameters['target']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -16716,8 +20774,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket-category/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -16755,8 +20817,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket-category/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -16805,8 +20871,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket-category/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -16844,8 +20914,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category-relation/`;
+
         const response = await this.request({
-            path: `/api/supermarket-category-relation/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -16882,8 +20955,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category-relation/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket-category-relation/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -16935,8 +21012,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category-relation/`;
+
         const response = await this.request({
-            path: `/api/supermarket-category-relation/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -16974,8 +21054,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category-relation/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket-category-relation/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -17012,8 +21096,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category-relation/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket-category-relation/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -17058,8 +21146,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category-relation/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket-category-relation/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -17096,8 +21188,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket-category/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -17142,8 +21238,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket-category/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket-category/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -17182,8 +21282,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket/`;
+
         const response = await this.request({
-            path: `/api/supermarket/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -17220,8 +21323,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -17273,8 +21380,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket/`;
+
         const response = await this.request({
-            path: `/api/supermarket/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -17322,8 +21432,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -17361,8 +21475,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -17411,8 +21529,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -17448,8 +21570,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -17494,8 +21620,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/supermarket/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/supermarket/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -17532,8 +21662,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/switch-active-space/{spaceId}/`;
+        urlPath = urlPath.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters['spaceId'])));
+
         const response = await this.request({
-            path: `/api/switch-active-space/{spaceId}/`.replace(`{${"spaceId"}}`, encodeURIComponent(String(requestParameters['spaceId']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -17580,8 +21714,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/sync/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/sync/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -17619,8 +21757,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/sync/`;
+
         const response = await this.request({
-            path: `/api/sync/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -17657,8 +21798,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/sync/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/sync/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -17694,8 +21839,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/sync/`;
+
         const response = await this.request({
-            path: `/api/sync/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -17732,8 +21880,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/sync-log/`;
+
         const response = await this.request({
-            path: `/api/sync-log/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -17769,8 +21920,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/sync-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/sync-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -17818,8 +21973,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/sync/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/sync/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -17857,8 +22016,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/sync/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/sync/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -17907,8 +22070,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/sync/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/sync/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -17953,8 +22120,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/sync/{id}/query_synced_folder/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/sync/{id}/query_synced_folder/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -17991,8 +22162,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/sync/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/sync/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -18037,8 +22212,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/sync/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/sync/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -18087,8 +22266,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/unit/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -18126,8 +22309,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit-conversion/`;
+
         const response = await this.request({
-            path: `/api/unit-conversion/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -18164,8 +22350,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit-conversion/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/unit-conversion/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -18209,8 +22399,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit-conversion/`;
+
         const response = await this.request({
-            path: `/api/unit-conversion/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -18248,8 +22441,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit-conversion/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/unit-conversion/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -18286,8 +22483,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit-conversion/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/unit-conversion/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -18332,8 +22533,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit-conversion/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/unit-conversion/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -18372,8 +22577,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit/`;
+
         const response = await this.request({
-            path: `/api/unit/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -18410,8 +22618,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/unit/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -18463,8 +22675,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit/`;
+
         const response = await this.request({
-            path: `/api/unit/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -18516,8 +22731,13 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit/{id}/merge/{target}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+        urlPath = urlPath.replace(`{${"target"}}`, encodeURIComponent(String(requestParameters['target'])));
+
         const response = await this.request({
-            path: `/api/unit/{id}/merge/{target}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))).replace(`{${"target"}}`, encodeURIComponent(String(requestParameters['target']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -18566,8 +22786,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/unit/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -18605,8 +22829,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/unit/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -18655,8 +22883,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/unit/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -18692,8 +22924,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/unit/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -18738,8 +22974,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/unit/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/unit/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -18788,8 +23028,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-file/{id}/cascading/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/user-file/{id}/cascading/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -18903,11 +23147,14 @@ export class ApiApi extends runtime.BaseAPI {
                     }
 
         if (requestParameters['createdAt'] != null) {
-            formParams.append('created_at', requestParameters['createdAt'] as any);
+            formParams.append('created_at', (requestParameters['createdAt'] as any).toISOString());
         }
 
+
+        let urlPath = `/api/user-file/`;
+
         const response = await this.request({
-            path: `/api/user-file/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -18944,8 +23191,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-file/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/user-file/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -18997,8 +23248,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-file/`;
+
         const response = await this.request({
-            path: `/api/user-file/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -19046,8 +23300,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-file/{id}/nulling/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/user-file/{id}/nulling/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -19126,11 +23384,15 @@ export class ApiApi extends runtime.BaseAPI {
                     }
 
         if (requestParameters['createdAt'] != null) {
-            formParams.append('created_at', requestParameters['createdAt'] as any);
+            formParams.append('created_at', (requestParameters['createdAt'] as any).toISOString());
         }
 
+
+        let urlPath = `/api/user-file/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/user-file/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -19179,8 +23441,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-file/{id}/protecting/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/user-file/{id}/protecting/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -19216,8 +23482,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-file/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/user-file/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -19338,11 +23608,15 @@ export class ApiApi extends runtime.BaseAPI {
                     }
 
         if (requestParameters['createdAt'] != null) {
-            formParams.append('created_at', requestParameters['createdAt'] as any);
+            formParams.append('created_at', (requestParameters['createdAt'] as any).toISOString());
         }
 
+
+        let urlPath = `/api/user-file/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/user-file/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -19376,8 +23650,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user/`;
+
         const response = await this.request({
-            path: `/api/user/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -19415,8 +23692,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/user/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -19446,8 +23727,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-preference/`;
+
         const response = await this.request({
-            path: `/api/user-preference/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -19485,8 +23769,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-preference/{user}/`;
+        urlPath = urlPath.replace(`{${"user"}}`, encodeURIComponent(String(requestParameters['user'])));
+
         const response = await this.request({
-            path: `/api/user-preference/{user}/`.replace(`{${"user"}}`, encodeURIComponent(String(requestParameters['user']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -19523,8 +23811,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-preference/{user}/`;
+        urlPath = urlPath.replace(`{${"user"}}`, encodeURIComponent(String(requestParameters['user'])));
+
         const response = await this.request({
-            path: `/api/user-preference/{user}/`.replace(`{${"user"}}`, encodeURIComponent(String(requestParameters['user']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -19560,8 +23852,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/user/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -19581,16 +23877,8 @@ export class ApiApi extends runtime.BaseAPI {
     /**
      * return all userspaces for the user requesting the endpoint :param request: :return:
      */
-    async apiUserSpaceAllPersonalListRaw(requestParameters: ApiUserSpaceAllPersonalListRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<PaginatedUserSpaceList>> {
+    async apiUserSpaceAllPersonalListRaw(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<Array<UserSpace>>> {
         const queryParameters: any = {};
-
-        if (requestParameters['page'] != null) {
-            queryParameters['page'] = requestParameters['page'];
-        }
-
-        if (requestParameters['pageSize'] != null) {
-            queryParameters['page_size'] = requestParameters['pageSize'];
-        }
 
         const headerParameters: runtime.HTTPHeaders = {};
 
@@ -19598,21 +23886,67 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-space/all_personal/`;
+
         const response = await this.request({
-            path: `/api/user-space/all_personal/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
         }, initOverrides);
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PaginatedUserSpaceListFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(UserSpaceFromJSON));
     }
 
     /**
      * return all userspaces for the user requesting the endpoint :param request: :return:
      */
-    async apiUserSpaceAllPersonalList(requestParameters: ApiUserSpaceAllPersonalListRequest = {}, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<PaginatedUserSpaceList> {
-        const response = await this.apiUserSpaceAllPersonalListRaw(requestParameters, initOverrides);
+    async apiUserSpaceAllPersonalList(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<UserSpace>> {
+        const response = await this.apiUserSpaceAllPersonalListRaw(initOverrides);
+        return await response.value();
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiUserSpaceBatchUpdateUpdateRaw(requestParameters: ApiUserSpaceBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<runtime.ApiResponse<UserSpaceBatchUpdate>> {
+        if (requestParameters['userSpaceBatchUpdate'] == null) {
+            throw new runtime.RequiredError(
+                'userSpaceBatchUpdate',
+                'Required parameter "userSpaceBatchUpdate" was null or undefined when calling apiUserSpaceBatchUpdateUpdate().'
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        if (this.configuration && this.configuration.apiKey) {
+            headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
+        }
+
+
+        let urlPath = `/api/user-space/batch_update/`;
+
+        const response = await this.request({
+            path: urlPath,
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: UserSpaceBatchUpdateToJSON(requestParameters['userSpaceBatchUpdate']),
+        }, initOverrides);
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => UserSpaceBatchUpdateFromJSON(jsonValue));
+    }
+
+    /**
+     * logs request counts to redis cache total/per user/
+     */
+    async apiUserSpaceBatchUpdateUpdate(requestParameters: ApiUserSpaceBatchUpdateUpdateRequest, initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<UserSpaceBatchUpdate> {
+        const response = await this.apiUserSpaceBatchUpdateUpdateRaw(requestParameters, initOverrides);
         return await response.value();
     }
 
@@ -19635,8 +23969,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-space/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/user-space/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -19676,8 +24014,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-space/`;
+
         const response = await this.request({
-            path: `/api/user-space/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -19715,8 +24056,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-space/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/user-space/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -19753,8 +24098,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-space/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/user-space/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -19799,8 +24148,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/user-space/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/user-space/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,
@@ -19839,8 +24192,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/view-log/`;
+
         const response = await this.request({
-            path: `/api/view-log/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
@@ -19877,8 +24233,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/view-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/view-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'DELETE',
             headers: headerParameters,
             query: queryParameters,
@@ -19914,8 +24274,11 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/view-log/`;
+
         const response = await this.request({
-            path: `/api/view-log/`,
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -19953,8 +24316,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/view-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/view-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PATCH',
             headers: headerParameters,
             query: queryParameters,
@@ -19991,8 +24358,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/view-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/view-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'GET',
             headers: headerParameters,
             query: queryParameters,
@@ -20037,8 +24408,12 @@ export class ApiApi extends runtime.BaseAPI {
             headerParameters["Authorization"] = await this.configuration.apiKey("Authorization"); // ApiKeyAuth authentication
         }
 
+
+        let urlPath = `/api/view-log/{id}/`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
+
         const response = await this.request({
-            path: `/api/view-log/{id}/`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id']))),
+            path: urlPath,
             method: 'PUT',
             headers: headerParameters,
             query: queryParameters,

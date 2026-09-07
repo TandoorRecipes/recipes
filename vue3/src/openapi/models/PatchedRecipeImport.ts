@@ -13,8 +13,16 @@
  */
 
 import { mapValues } from '../runtime';
+import type { Storage } from './Storage';
+import {
+    StorageFromJSON,
+    StorageFromJSONTyped,
+    StorageToJSON,
+    StorageToJSONTyped,
+} from './Storage';
+
 /**
- * 
+ * Adds nested create feature
  * @export
  * @interface PatchedRecipeImport
  */
@@ -25,6 +33,12 @@ export interface PatchedRecipeImport {
      * @memberof PatchedRecipeImport
      */
     id?: number;
+    /**
+     * 
+     * @type {Storage}
+     * @memberof PatchedRecipeImport
+     */
+    storage?: Storage;
     /**
      * 
      * @type {string}
@@ -49,18 +63,6 @@ export interface PatchedRecipeImport {
      * @memberof PatchedRecipeImport
      */
     readonly createdAt?: Date;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedRecipeImport
-     */
-    storage?: number;
-    /**
-     * 
-     * @type {number}
-     * @memberof PatchedRecipeImport
-     */
-    space?: number;
 }
 
 /**
@@ -81,27 +83,30 @@ export function PatchedRecipeImportFromJSONTyped(json: any, ignoreDiscriminator:
     return {
         
         'id': json['id'] == null ? undefined : json['id'],
+        'storage': json['storage'] == null ? undefined : StorageFromJSON(json['storage']),
         'name': json['name'] == null ? undefined : json['name'],
         'fileUid': json['file_uid'] == null ? undefined : json['file_uid'],
         'filePath': json['file_path'] == null ? undefined : json['file_path'],
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
-        'storage': json['storage'] == null ? undefined : json['storage'],
-        'space': json['space'] == null ? undefined : json['space'],
     };
 }
 
-export function PatchedRecipeImportToJSON(value?: Omit<PatchedRecipeImport, 'createdAt'> | null): any {
+export function PatchedRecipeImportToJSON(json: any): PatchedRecipeImport {
+    return PatchedRecipeImportToJSONTyped(json, false);
+}
+
+export function PatchedRecipeImportToJSONTyped(value?: Omit<PatchedRecipeImport, 'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
+        'storage': StorageToJSON(value['storage']),
         'name': value['name'],
         'file_uid': value['fileUid'],
         'file_path': value['filePath'],
-        'storage': value['storage'],
-        'space': value['space'],
     };
 }
 

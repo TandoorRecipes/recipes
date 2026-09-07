@@ -36,7 +36,7 @@ export interface FoodSimple {
      * @type {string}
      * @memberof FoodSimple
      */
-    pluralName?: string;
+    pluralName?: string | null;
 }
 
 /**
@@ -63,10 +63,15 @@ export function FoodSimpleFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function FoodSimpleToJSON(value?: FoodSimple | null): any {
+export function FoodSimpleToJSON(json: any): FoodSimple {
+    return FoodSimpleToJSONTyped(json, false);
+}
+
+export function FoodSimpleToJSONTyped(value?: FoodSimple | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

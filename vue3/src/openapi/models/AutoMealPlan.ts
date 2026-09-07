@@ -18,7 +18,15 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
+import type { KeywordModeEnum } from './KeywordModeEnum';
+import {
+    KeywordModeEnumFromJSON,
+    KeywordModeEnumFromJSONTyped,
+    KeywordModeEnumToJSON,
+    KeywordModeEnumToJSONTyped,
+} from './KeywordModeEnum';
 
 /**
  * 
@@ -46,10 +54,16 @@ export interface AutoMealPlan {
     mealTypeId: number;
     /**
      * 
-     * @type {Array<any>}
+     * @type {Array<number>}
      * @memberof AutoMealPlan
      */
-    keywordIds: Array<any>;
+    keywords?: Array<number>;
+    /**
+     * 
+     * @type {KeywordModeEnum}
+     * @memberof AutoMealPlan
+     */
+    keywordMode?: KeywordModeEnum;
     /**
      * 
      * @type {number}
@@ -61,7 +75,7 @@ export interface AutoMealPlan {
      * @type {Array<User>}
      * @memberof AutoMealPlan
      */
-    shared?: Array<User>;
+    shared?: Array<User> | null;
     /**
      * 
      * @type {boolean}
@@ -70,6 +84,8 @@ export interface AutoMealPlan {
     addshopping: boolean;
 }
 
+
+
 /**
  * Check if a given object implements the AutoMealPlan interface.
  */
@@ -77,7 +93,6 @@ export function instanceOfAutoMealPlan(value: object): value is AutoMealPlan {
     if (!('startDate' in value) || value['startDate'] === undefined) return false;
     if (!('endDate' in value) || value['endDate'] === undefined) return false;
     if (!('mealTypeId' in value) || value['mealTypeId'] === undefined) return false;
-    if (!('keywordIds' in value) || value['keywordIds'] === undefined) return false;
     if (!('servings' in value) || value['servings'] === undefined) return false;
     if (!('addshopping' in value) || value['addshopping'] === undefined) return false;
     return true;
@@ -96,23 +111,30 @@ export function AutoMealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'startDate': (new Date(json['start_date'])),
         'endDate': (new Date(json['end_date'])),
         'mealTypeId': json['meal_type_id'],
-        'keywordIds': json['keyword_ids'],
+        'keywords': json['keywords'] == null ? undefined : json['keywords'],
+        'keywordMode': json['keyword_mode'] == null ? undefined : KeywordModeEnumFromJSON(json['keyword_mode']),
         'servings': json['servings'],
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
         'addshopping': json['addshopping'],
     };
 }
 
-export function AutoMealPlanToJSON(value?: AutoMealPlan | null): any {
+export function AutoMealPlanToJSON(json: any): AutoMealPlan {
+    return AutoMealPlanToJSONTyped(json, false);
+}
+
+export function AutoMealPlanToJSONTyped(value?: AutoMealPlan | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
-        'start_date': ((value['startDate']).toISOString()),
-        'end_date': ((value['endDate']).toISOString()),
+        'start_date': value['startDate'].toISOString(),
+        'end_date': value['endDate'].toISOString(),
         'meal_type_id': value['mealTypeId'],
-        'keyword_ids': value['keywordIds'],
+        'keywords': value['keywords'],
+        'keyword_mode': KeywordModeEnumToJSON(value['keywordMode']),
         'servings': value['servings'],
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
         'addshopping': value['addshopping'],

@@ -18,6 +18,7 @@ import {
     AutomationFromJSON,
     AutomationFromJSONTyped,
     AutomationToJSON,
+    AutomationToJSONTyped,
 } from './Automation';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedAutomationList {
      * @type {string}
      * @memberof PaginatedAutomationList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedAutomationList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Automation>}
@@ -85,17 +86,22 @@ export function PaginatedAutomationListFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PaginatedAutomationListToJSON(value?: PaginatedAutomationList | null): any {
+export function PaginatedAutomationListToJSON(json: any): PaginatedAutomationList {
+    return PaginatedAutomationListToJSONTyped(json, false);
+}
+
+export function PaginatedAutomationListToJSONTyped(value?: PaginatedAutomationList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(AutomationToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

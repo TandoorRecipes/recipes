@@ -18,30 +18,35 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { Keyword } from './Keyword';
 import {
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
+    KeywordToJSONTyped,
 } from './Keyword';
 import type { Step } from './Step';
 import {
     StepFromJSON,
     StepFromJSONTyped,
     StepToJSON,
+    StepToJSONTyped,
 } from './Step';
 import type { Property } from './Property';
 import {
     PropertyFromJSON,
     PropertyFromJSONTyped,
     PropertyToJSON,
+    PropertyToJSONTyped,
 } from './Property';
 import type { NutritionInformation } from './NutritionInformation';
 import {
     NutritionInformationFromJSON,
     NutritionInformationFromJSONTyped,
     NutritionInformationToJSON,
+    NutritionInformationToJSONTyped,
 } from './NutritionInformation';
 
 /**
@@ -67,7 +72,7 @@ export interface Recipe {
      * @type {string}
      * @memberof Recipe
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
@@ -121,7 +126,7 @@ export interface Recipe {
      * @type {string}
      * @memberof Recipe
      */
-    sourceUrl?: string;
+    sourceUrl?: string | null;
     /**
      * 
      * @type {boolean}
@@ -139,7 +144,7 @@ export interface Recipe {
      * @type {NutritionInformation}
      * @memberof Recipe
      */
-    nutrition?: NutritionInformation;
+    nutrition?: NutritionInformation | null;
     /**
      * 
      * @type {Array<Property>}
@@ -170,6 +175,18 @@ export interface Recipe {
      * @memberof Recipe
      */
     servingsText?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof Recipe
+     */
+    diameter?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof Recipe
+     */
+    diameterText?: string;
     /**
      * 
      * @type {number}
@@ -242,6 +259,8 @@ export function RecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): Re
         'servings': json['servings'] == null ? undefined : json['servings'],
         'filePath': json['file_path'] == null ? undefined : json['file_path'],
         'servingsText': json['servings_text'] == null ? undefined : json['servings_text'],
+        'diameter': json['diameter'] == null ? undefined : json['diameter'],
+        'diameterText': json['diameter_text'] == null ? undefined : json['diameter_text'],
         'rating': json['rating'],
         'lastCooked': (json['last_cooked'] == null ? null : new Date(json['last_cooked'])),
         '_private': json['private'] == null ? undefined : json['private'],
@@ -249,10 +268,15 @@ export function RecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): Re
     };
 }
 
-export function RecipeToJSON(value?: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'> | null): any {
+export function RecipeToJSON(json: any): Recipe {
+    return RecipeToJSONTyped(json, false);
+}
+
+export function RecipeToJSONTyped(value?: Omit<Recipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -270,6 +294,8 @@ export function RecipeToJSON(value?: Omit<Recipe, 'image'|'createdBy'|'createdAt
         'servings': value['servings'],
         'file_path': value['filePath'],
         'servings_text': value['servingsText'],
+        'diameter': value['diameter'],
+        'diameter_text': value['diameterText'],
         'private': value['_private'],
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
     };

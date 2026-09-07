@@ -5,6 +5,7 @@
                 <!-- TODO add hint about CTRL key while drag/drop -->
                 <!-- TODO multi selection? date range selection ? -->
                 <calendar-view
+                    :locale="locale"
                     :show-date="calendarDate"
                     :items="planItems"
                     class="theme-default"
@@ -18,7 +19,8 @@
                     :current-period-label="$t('Today')"
                     @click-date="(date : Date, calendarItems: [], windowEvent: any) => { newPlanDialogDefaultItem.fromDate = date; newPlanDialogDefaultItem.toDate = date; newPlanDialog = true }">
                     <template #header="{ headerProps }">
-                        <calendar-view-header :header-props="headerProps" @input="(d:Date) => calendarDate = d"></calendar-view-header>
+                        <!--                        <calendar-view-header :header-props="headerProps" @input="(d:Date) => calendarDate = d"></calendar-view-header>-->
+                        <meal-plan-calendar-header :header-props="headerProps" @input="(d:Date) => calendarDate = d"></meal-plan-calendar-header>
                     </template>
                     <template #item="{ value, weekStartDate, top }">
                         <meal-plan-calendar-item
@@ -55,8 +57,11 @@ import {useMealPlanStore} from "@/stores/MealPlanStore";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {MealPlan} from "@/openapi";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
+import MealPlanCalendarHeader from "@/components/display/MealPlanCalendarHeader.vue";
+import {useI18n} from "vue-i18n";
 
 const {lgAndUp} = useDisplay()
+const {locale} = useI18n()
 
 const calendarDate = ref(new Date())
 
@@ -72,20 +77,9 @@ const newPlanDialogDefaultItem = ref({} as MealPlan)
 const planItems = computed(() => {
     let items = [] as IMealPlanCalendarItem[]
     useMealPlanStore().planList.forEach(mp => {
-        let startDate = mp.fromDate
-        let endDate = mp.toDate ? mp.toDate : mp.fromDate
-
-        if (mp.mealType.time) {
-            let hour = parseInt(mp.mealType.time.split(':')[0])
-            let minutes = parseInt(mp.mealType.time.split(':')[1])
-            let seconds = parseInt(mp.mealType.time.split(':')[2])
-            startDate.setHours(hour, minutes, seconds)
-            endDate.setHours(hour, minutes, seconds)
-        }
-
         items.push({
-            startDate: startDate,
-            endDate: endDate,
+            startDate: mp.fromDate,
+            endDate: mp.toDate ? mp.toDate : mp.fromDate,
             id: mp.id,
             mealPlan: mp,
         } as IMealPlanCalendarItem)
@@ -152,16 +146,25 @@ function dropCalendarItemOnDate(undefinedItem: IMealPlanNormalizedCalendarItem, 
             if (mealPlan.toDate && mealPlan.toDate > mealPlan.fromDate) {
                 fromToDiff = DateTime.fromJSDate(mealPlan.toDate).diff(DateTime.fromJSDate(mealPlan.fromDate), 'days')
             }
+
+            const existingTime = DateTime.fromJSDate(mealPlan.fromDate)
+            const newFrom = DateTime.fromJSDate(targetDate).set({
+                hour: existingTime.hour, minute: existingTime.minute, second: existingTime.second
+            }).toJSDate()
+            const newTo = DateTime.fromJSDate(targetDate).plus(fromToDiff).set({
+                hour: existingTime.hour, minute: existingTime.minute, second: existingTime.second
+            }).toJSDate()
+
             // create copy of item if control is pressed
             if (event.ctrlKey) {
                 let new_entry = Object.assign({}, mealPlan)
-                new_entry.fromDate = targetDate
-                new_entry.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
+                new_entry.fromDate = newFrom
+                new_entry.toDate = newTo
                 new_entry.addshopping = mealPlan.shopping
                 useMealPlanStore().createObject(new_entry)
             } else {
-                mealPlan.fromDate = targetDate
-                mealPlan.toDate = DateTime.fromJSDate(targetDate).plus(fromToDiff).toJSDate()
+                mealPlan.fromDate = newFrom
+                mealPlan.toDate = newTo
                 useMealPlanStore().updateObject(mealPlan)
             }
         }

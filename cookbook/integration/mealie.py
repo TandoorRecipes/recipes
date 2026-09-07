@@ -86,9 +86,9 @@ class Mealie(Integration):
 
         for f in self.files:
             if '.zip' in f['name']:
-                import_zip = ZipFile(f['file'])
+                import_zip = self.get_zip_file(f['file'])
                 try:
-                    self.import_recipe_image(recipe, BytesIO(import_zip.read(f'recipes/{recipe_json["slug"]}/images/min-original.webp')),
+                    self.import_recipe_image(recipe, BytesIO(self.safe_read(import_zip, f'recipes/{recipe_json["slug"]}/images/min-original.webp')),
                                              filetype=get_filetype(f'recipes/{recipe_json["slug"]}/images/original'))
                 except Exception:
                     pass

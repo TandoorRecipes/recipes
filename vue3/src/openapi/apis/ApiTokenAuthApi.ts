@@ -93,8 +93,11 @@ export class ApiTokenAuthApi extends runtime.BaseAPI {
             formParams.append('token', requestParameters['token'] as any);
         }
 
+
+        let urlPath = `/api-token-auth/`;
+
         const response = await this.request({
-            path: `/api-token-auth/`,
+            path: urlPath,
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,

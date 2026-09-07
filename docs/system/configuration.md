@@ -165,6 +165,16 @@ MEDIA_URL=/media/
 Where mediafiles should be stored on disk. The default location is a
 `mediafiles` subfolder at the root of the application directory.
 
+#### Local Storage Paths
+
+> default `<MEDIA_ROOT>/local_provider` - options: `/path/to/local/recipes,/another/path` (comma separated list)
+
+Allowed paths for the local provider. The local provider will only serve files that are within these paths.
+
+```
+LOCAL_STORAGE_PATHS=/path/to/local/recipes
+```
+
 #### Gunicorn Workers
 
 > default `3` - options `1-X`
@@ -196,7 +206,7 @@ GUNICORN_THREADS=2
 
 Set the timeout in seconds of gunicorn when starting using `boot.sh` (all container installations).
 The default is likely appropriate for most installations. However, if you are using a LLM which high response times gunicornmight time out during the wait until the LLM finished, in such cases you might want to increase the timeout.
-See [Gunicorn docs]([https://docs.gunicorn.org/en/stable/design.html#how-many-workers](https://docs.gunicorn.org/en/stable/settings.html#timeout)) for default settings.
+See [Gunicorn docs](https://docs.gunicorn.org/en/stable/settings.html#timeout) for default settings.
 
 ```
 GUNICORN_TIMEOUT=30
@@ -295,16 +305,11 @@ SORT_TREE_BY_NAME=0
 
 #### PDF Export
 
-> default `0` - options `0`, `1`
+> **Removed.** The pyppeteer-based PDF export has been removed. Use your browser's print function (Ctrl+P) to save recipes as PDF.
 
-Exporting PDF's is a community contributed feature to export recipes as PDF files. This requires the server to download
-a chromium binary and is generally implemented only rudimentary and somewhat slow depending on your server device.
-
-See [Export feature docs](https://docs.tandoor.dev/features/import_export/#pdf) for additional information.
-
-```
+<!--
 ENABLE_PDF_EXPORT=1
-```
+-->
 
 #### Legal URLS
 
@@ -341,9 +346,9 @@ access to the data.
 !!! warning
     This feature might be deprecated in favor of a space join and public viewing system in the future
 
-> default `0` (disabled) - options `0`, `1-X` (space id)
+> default `0` (disabled) - options `0`, `1`
 
-When enabled will join user into space and apply group configured in `SOCIAL_DEFAULT_GROUP`.
+When enabled, new social login users will automatically join the first existing space with the group configured in `SOCIAL_DEFAULT_GROUP`.
 
 ```
 SOCIAL_DEFAULT_ACCESS = 1
@@ -363,7 +368,8 @@ Allow everyone to create local accounts on your application instance (without an
 You might want to setup HCAPTCHA to prevent bots from creating accounts/spam.
 
 !!! info
-    Social accounts will always be able to sign up, if providers are configured
+    `ENABLE_SIGNUP` only controls the local registration form. Social login can still create accounts
+    unless `SOCIALACCOUNT_AUTO_SIGNUP=0` is also set. See the [authentication docs](../features/authentication.md#controlling-social-signup) for details.
 
 ```
 ENABLE_SIGNUP=0
@@ -371,10 +377,45 @@ ENABLE_SIGNUP=0
 
 #### Social Auth
 
-Allows you to set up external OAuth providers.
+Allows you to set up external OAuth providers. See the [authentication feature docs](../features/authentication.md) for detailed configuration guides.
 
 ```
-SOCIAL_PROVIDERS = allauth.socialaccount.providers.github, allauth.socialaccount.providers.nextcloud,
+SOCIAL_PROVIDERS=allauth.socialaccount.providers.openid_connect
+SOCIALACCOUNT_PROVIDERS='{"openid_connect":{"APPS":[{"provider_id":"myidp","name":"My Provider","client_id":"...","secret":"...","settings":{"server_url":"https://idp.example.com/.well-known/openid-configuration"}}]}}'
+```
+
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `SOCIALACCOUNT_PROVIDERS` | — | Provider configuration (JSON or Python dict) |
+| `SOCIALACCOUNT_PROVIDERS_FILE` | — | Path to file containing provider configuration |
+| `HIDE_LOGIN_FORM` | `0` | Hide local login form, break-glass via `?form=1` ([details](../features/authentication.md#social-only-authentication)) |
+| `SOCIALACCOUNT_ONLY` | `0` | Fully disable local auth ([details](../features/authentication.md#social-only-authentication)) |
+| `SOCIALACCOUNT_LOGIN_ON_GET` | `0` | Skip confirmation page ([details](../features/authentication.md#skipping-the-confirmation-page)) |
+| `SOCIALACCOUNT_AUTO_SIGNUP` | `1` | Auto-create accounts on social login ([details](../features/authentication.md#controlling-social-signup)) |
+| `SOCIALACCOUNT_EMAIL_AUTHENTICATION` | `0` | Match social logins to existing accounts by email ([details](../features/authentication.md#email-based-account-matching)) |
+| `SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT` | `0` | Skip email verification when matching ([details](../features/authentication.md#email-based-account-matching)) |
+
+#### Trusted Proxy Count
+
+> default `1`
+
+Tandoor uses IP-based rate limiting on login, signup, and password reset to prevent brute-force attacks.
+Because Tandoor's built-in nginx proxies to the application server via a unix socket, the application
+cannot see client IP addresses directly and must read them from the `X-Forwarded-For` header.
+
+This setting tells Tandoor how many reverse proxies sit between the client and the application server.
+The default value of `1` accounts for Tandoor's built-in nginx and works for most deployments. If you
+run additional reverse proxies, increase this value to match your total proxy count so that rate limiting
+uses the real client IP instead of a proxy IP.
+
+| Setup | Value |
+| :--- | :--- |
+| Direct access (no external proxy) | `1` |
+| One external reverse proxy | `2` |
+| Two external reverse proxies (e.g. CDN + local proxy) | `3` |
+
+```
+ALLAUTH_TRUSTED_PROXY_COUNT=1
 ```
 
 #### Remote User Auth
@@ -488,7 +529,7 @@ S3_CUSTOM_DOMAIN= # when using a CDN/proxy to S3 (see https://github.com/Tandoor
 
 #### AI Integration
 
-Most AI features are configured trough the AI Provider settings in the Tandoor web interface. Some defaults can be set for new spaces on your instance.
+Most AI features are configured through the AI Provider settings in the Tandoor web interface. Some defaults can be set for new spaces on your instance.
 
 Enables AI features for spaces by default
 ```
@@ -503,6 +544,13 @@ SPACE_AI_CREDITS_MONTHLY=100
 Ratelimit for AI API
 ```
 AI_RATELIMIT=60/hour
+```
+
+If you want to use your own AI provider/AI Server/AI Proxy you need to configure the allowed remote endpoints using the following setting.
+This prevents malicious users from providing a malicious endpoint that might cause SSRF attacks.
+> default `[]`
+```
+AI_ALLOWED_URLS=https://my-ai-server.com/api/v1/,https://my-ai-proxy.com/api/v1/
 ```
 
 #### FDC Api
@@ -585,7 +633,7 @@ Please set to `DEBUG` when making a bug report.
 
 #### Gunicorn Log Level
 
-> default `info` - options: [see Gunicorn Docs](https://docs.gunicorn.org/en/stable/settings.html#loglevel)
+> default `info` - options: [see Gunicorn Docs](https://gunicorn.org/reference/settings/#loglevel)
 
 Increase or decrease the logging done by gunicorn (the python wsgi application).
 
@@ -721,4 +769,48 @@ SPACE_DEFAULT_ALLOW_SHARING=1 # Allow users to share recipes with public links
 Recipe exports are cached for a certain time (in seconds) by default, adjust time if needed
 ```
 EXPORT_FILE_CACHE_DURATION=600
+```
+
+### Zip Import Settings
+
+Configuration options for importing recipes from zip files.
+
+#### Max zip file size
+
+> default `10` (10MB) - options: size in MB
+
+Maximum size of a single file within a zip archive.
+
+```
+MAX_ZIP_FILE_SIZE=10
+```
+
+#### Max zip total size
+
+> default `500` (500MB) - options: size in MB
+
+Maximum total decompressed size of all files in a zip archive.
+
+```
+MAX_ZIP_TOTAL_SIZE=500
+```
+
+#### Max zip file count
+
+> default `2000` - options: number of files
+
+Maximum number of files allowed in a zip archive.
+
+```
+MAX_ZIP_FILE_COUNT=2000
+```
+
+#### Max zip nesting depth
+
+> default `2` - options: depth level
+
+Maximum allowed nesting depth of zip files (archives within archives).
+
+```
+MAX_ZIP_NESTING_DEPTH=2
 ```

@@ -11,6 +11,7 @@
                 <v-window-item v-for="(w, i) in mealPlanWindows" :value="i" class="pt-1 pb-1">
                     <v-row>
                         <v-col v-for="mealPlanGridItem in w">
+
                             <v-list density="compact" class="pt-0 pb-0">
                                 <v-list-item class="text-center">
                                     <div class="d-flex ">
@@ -26,6 +27,7 @@
                                         </div>
                                     </div>
                                 </v-list-item>
+                                <v-progress-linear v-if="loading" height="1" indeterminate></v-progress-linear>
                                 <v-divider v-if="mealPlanGridItem.plan_entries.length > 0"></v-divider>
                                 <v-list-item v-for="p in mealPlanGridItem.plan_entries" :key="p.id" @click="clickMealPlan(p)" link>
                                     <template #prepend>
@@ -148,8 +150,8 @@ function clickMealPlan(plan: MealPlan) {
     if (plan.recipe) {
         router.push({
             name: 'RecipeViewPage',
-            params: { id: String(plan.recipe.id) },          // keep id in params
-            query: { servings: String(plan.servings ?? '') } // pass servings as query
+            params: {id: String(plan.recipe.id)},          // keep id in params
+            query: {servings: String(plan.servings ?? '')} // pass servings as query
         })
     }
 }

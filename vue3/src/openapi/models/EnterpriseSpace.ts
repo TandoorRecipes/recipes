@@ -13,6 +13,21 @@
  */
 
 import { mapValues } from '../runtime';
+import type { EnterpriseBillingPlan } from './EnterpriseBillingPlan';
+import {
+    EnterpriseBillingPlanFromJSON,
+    EnterpriseBillingPlanFromJSONTyped,
+    EnterpriseBillingPlanToJSON,
+    EnterpriseBillingPlanToJSONTyped,
+} from './EnterpriseBillingPlan';
+import type { BillingRegionEnum } from './BillingRegionEnum';
+import {
+    BillingRegionEnumFromJSON,
+    BillingRegionEnumFromJSONTyped,
+    BillingRegionEnumToJSON,
+    BillingRegionEnumToJSONTyped,
+} from './BillingRegionEnum';
+
 /**
  * 
  * @export
@@ -24,21 +39,64 @@ export interface EnterpriseSpace {
      * @type {number}
      * @memberof EnterpriseSpace
      */
-    space: number;
+    readonly space: number;
     /**
      * 
      * @type {string}
      * @memberof EnterpriseSpace
      */
-    licensedModules: string;
+    readonly billingLicensedModules: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof EnterpriseSpace
+     */
+    readonly billingCustomerId: string | null;
+    /**
+     * 
+     * @type {EnterpriseBillingPlan}
+     * @memberof EnterpriseSpace
+     */
+    readonly billingPlan: EnterpriseBillingPlan;
+    /**
+     * 
+     * @type {string}
+     * @memberof EnterpriseSpace
+     */
+    readonly billingSubscriptionId: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof EnterpriseSpace
+     */
+    readonly billingSubscriptionStatus: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof EnterpriseSpace
+     */
+    readonly billingMonthlyPrice: number;
+    /**
+     * 
+     * @type {BillingRegionEnum}
+     * @memberof EnterpriseSpace
+     */
+    billingRegion?: BillingRegionEnum | null;
 }
+
+
 
 /**
  * Check if a given object implements the EnterpriseSpace interface.
  */
 export function instanceOfEnterpriseSpace(value: object): value is EnterpriseSpace {
     if (!('space' in value) || value['space'] === undefined) return false;
-    if (!('licensedModules' in value) || value['licensedModules'] === undefined) return false;
+    if (!('billingLicensedModules' in value) || value['billingLicensedModules'] === undefined) return false;
+    if (!('billingCustomerId' in value) || value['billingCustomerId'] === undefined) return false;
+    if (!('billingPlan' in value) || value['billingPlan'] === undefined) return false;
+    if (!('billingSubscriptionId' in value) || value['billingSubscriptionId'] === undefined) return false;
+    if (!('billingSubscriptionStatus' in value) || value['billingSubscriptionStatus'] === undefined) return false;
+    if (!('billingMonthlyPrice' in value) || value['billingMonthlyPrice'] === undefined) return false;
     return true;
 }
 
@@ -53,18 +111,28 @@ export function EnterpriseSpaceFromJSONTyped(json: any, ignoreDiscriminator: boo
     return {
         
         'space': json['space'],
-        'licensedModules': json['licensed_modules'],
+        'billingLicensedModules': json['billing_licensed_modules'],
+        'billingCustomerId': json['billing_customer_id'],
+        'billingPlan': EnterpriseBillingPlanFromJSON(json['billing_plan']),
+        'billingSubscriptionId': json['billing_subscription_id'],
+        'billingSubscriptionStatus': json['billing_subscription_status'],
+        'billingMonthlyPrice': json['billing_monthly_price'],
+        'billingRegion': json['billing_region'] == null ? undefined : BillingRegionEnumFromJSON(json['billing_region']),
     };
 }
 
-export function EnterpriseSpaceToJSON(value?: EnterpriseSpace | null): any {
+export function EnterpriseSpaceToJSON(json: any): EnterpriseSpace {
+    return EnterpriseSpaceToJSONTyped(json, false);
+}
+
+export function EnterpriseSpaceToJSONTyped(value?: Omit<EnterpriseSpace, 'space'|'billing_licensed_modules'|'billing_customer_id'|'billing_plan'|'billing_subscription_id'|'billing_subscription_status'|'billing_monthly_price'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
-        'space': value['space'],
-        'licensed_modules': value['licensedModules'],
+        'billing_region': BillingRegionEnumToJSON(value['billingRegion']),
     };
 }
 

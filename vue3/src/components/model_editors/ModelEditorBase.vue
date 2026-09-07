@@ -1,5 +1,5 @@
 <template>
-    <v-card :loading="loading">
+    <v-card :loading="loading"  class="mb-10">
         <v-closable-card-title
             :sub-title="$t(modelClass.model.localizationKey) + ((isChanged) ? ` (${$t('unsaved')})` : '')"
             :title="objectName"
@@ -13,7 +13,7 @@
 
         </slot>
         <v-divider></v-divider>
-        <v-card-actions>
+        <v-card-actions v-if="!(modelClass.model.name.toLowerCase() == 'recipe' && mobile)">
             <v-btn color="delete" prepend-icon="$delete" v-if="isUpdate && !modelClass.model.disableDelete && !modelClass.model.isAdvancedDelete" :disabled="loading">
                 {{ $t('Delete') }}
                 <delete-confirm-dialog :object-name="objectName" :model-name="$t(modelClass.model.localizationKey)" @delete="emit('delete')"></delete-confirm-dialog>
@@ -50,6 +50,9 @@ import {EditorSupportedTypes, GenericModel} from "@/types/Models";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import {onBeforeRouteLeave, RouteLocationNormalized} from "vue-router";
 import {onBeforeUnmount, onMounted, PropType, ref} from "vue";
+import {useDisplay} from "vuetify";
+
+const {mobile} = useDisplay()
 
 const emit = defineEmits(['save', 'delete', 'close'])
 

@@ -18,6 +18,7 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 
 /**
@@ -86,10 +87,15 @@ export function CustomFilterFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function CustomFilterToJSON(value?: Omit<CustomFilter, 'createdBy'> | null): any {
+export function CustomFilterToJSON(json: any): CustomFilter {
+    return CustomFilterToJSONTyped(json, false);
+}
+
+export function CustomFilterToJSONTyped(value?: Omit<CustomFilter, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

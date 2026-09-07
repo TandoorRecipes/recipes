@@ -18,18 +18,14 @@ import {
     MealTypeFromJSON,
     MealTypeFromJSONTyped,
     MealTypeToJSON,
+    MealTypeToJSONTyped,
 } from './MealType';
-import type { User } from './User';
-import {
-    UserFromJSON,
-    UserFromJSONTyped,
-    UserToJSON,
-} from './User';
 import type { RecipeOverview } from './RecipeOverview';
 import {
     RecipeOverviewFromJSON,
     RecipeOverviewFromJSONTyped,
     RecipeOverviewToJSON,
+    RecipeOverviewToJSONTyped,
 } from './RecipeOverview';
 
 /**
@@ -55,7 +51,7 @@ export interface MealPlan {
      * @type {RecipeOverview}
      * @memberof MealPlan
      */
-    recipe?: RecipeOverview;
+    recipe?: RecipeOverview | null;
     /**
      * 
      * @type {number}
@@ -98,12 +94,6 @@ export interface MealPlan {
      * @memberof MealPlan
      */
     readonly createdBy: number;
-    /**
-     * 
-     * @type {Array<User>}
-     * @memberof MealPlan
-     */
-    shared?: Array<User>;
     /**
      * 
      * @type {string}
@@ -165,7 +155,6 @@ export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'toDate': json['to_date'] == null ? undefined : (new Date(json['to_date'])),
         'mealType': MealTypeFromJSON(json['meal_type']),
         'createdBy': json['created_by'],
-        'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
         'recipeName': json['recipe_name'],
         'mealTypeName': json['meal_type_name'],
         'shopping': json['shopping'],
@@ -173,10 +162,15 @@ export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     };
 }
 
-export function MealPlanToJSON(value?: Omit<MealPlan, 'noteMarkdown'|'createdBy'|'recipeName'|'mealTypeName'|'shopping'> | null): any {
+export function MealPlanToJSON(json: any): MealPlan {
+    return MealPlanToJSONTyped(json, false);
+}
+
+export function MealPlanToJSONTyped(value?: Omit<MealPlan, 'note_markdown'|'created_by'|'recipe_name'|'meal_type_name'|'shopping'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -184,10 +178,9 @@ export function MealPlanToJSON(value?: Omit<MealPlan, 'noteMarkdown'|'createdBy'
         'recipe': RecipeOverviewToJSON(value['recipe']),
         'servings': value['servings'],
         'note': value['note'],
-        'from_date': ((value['fromDate']).toISOString()),
-        'to_date': value['toDate'] == null ? undefined : ((value['toDate']).toISOString()),
+        'from_date': value['fromDate'].toISOString(),
+        'to_date': value['toDate'] == null ? value['toDate'] : value['toDate'].toISOString(),
         'meal_type': MealTypeToJSON(value['mealType']),
-        'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
         'addshopping': value['addshopping'],
     };
 }

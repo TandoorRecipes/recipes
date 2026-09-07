@@ -25,11 +25,12 @@
                 <v-list-item link :title="$t('Books')" @click="window = 'books'" prepend-icon="$books"></v-list-item>
                 <v-list-item link :title="$t('Shopping')" @click="window = 'shopping'" prepend-icon="$shopping"></v-list-item>
                 <v-list-item link :title="$t('Meal_Plan')" @click="window = 'meal_plan'" prepend-icon="$mealplan"></v-list-item>
+                <v-list-item link :title="$t('Translations')" @click="window = 'translations'" prepend-icon="fa-solid fa-language"></v-list-item>
             </v-list>
 
         </v-navigation-drawer>
 
-        <v-main>
+        <v-main scrollable>
             <v-container>
                 <v-select v-model="window" :items="mobileMenuItems" class="d-block d-lg-none">  </v-select>
 
@@ -155,7 +156,7 @@
                         <p class="mt-3">Setting a base unit allows you to name your Unit however you want (e.g. grams, g, G, gram) while allowing Tandoor
                             to automatically convert between the units in the same system (weight/volume, e.g. from g to kg or from cup to pint).
                         </p>
-                        <p class="mt-3">Additionally you can use custom unit conversion to convert between volume and weight trough the specific density
+                        <p class="mt-3">Additionally you can use custom unit conversion to convert between volume and weight through the specific density
                             of a food (e.g. 1 cup of flour = 120 g). These conversions are used to calculate the Properties for a Recipe
                             and might allow cosmetic display changes later.
                         </p>
@@ -189,7 +190,7 @@
                     <v-window-item value="keyword">
                         <p class="mt-3">Keywords are a very flexible Tool to help you organize your recipe collection.
                             Keywords can quickly be created when editing a Recipe by just typing into the Keywords field or they can
-                            be created trough the Keyword Editor.
+                            be created through the Keyword Editor.
                         </p>
 
                         <p class="mt-3">Typical keywords include meal types (breakfast, lunch, dinner, ...), couise (american, italian, ...) or diet (vegan, vegetarian, ..).
@@ -241,7 +242,7 @@
                         </v-btn>
                         <h3>Editor</h3>
                         <p class="mt-3">Adding Properties manually to every food can be cumbersome. To make it easier you can import the Community curated
-                            Open Data Database. If that is not enough you can open the Property Editor trough the context menu on your recipe.
+                            Open Data Database. If that is not enough you can open the Property Editor through the context menu on your recipe.
                         </p>
 
                         <p class="mt-3">Here you can view all Foods in a Recipe and their respective properties. You can also quickly assign FDC ID's to both
@@ -263,7 +264,7 @@
                         </p>
 
                         <p class="mt-3">The global quick search can be opened from any page in Tandoor by pressing the search icon in the top right corner.
-                            Here you can quickly search trough your recipes and open them.
+                            Here you can quickly search through your recipes and open them.
                         </p>
                         <p class="mt-3">
                             If you need a bit more fine tuning for your search you can open the advances search and search for all kinds of different things like keywords,
@@ -289,7 +290,7 @@
                     </v-window-item>
                     <v-window-item value="books">
                         <p class="mt-3">Books are a a way to structure and explore your recipe collection. They are similar to keywords but show you a bit more details when
-                            looking trough them.
+                            looking through them.
                         </p>
 
                         <p class="mt-3">After creating a new Book on the books page you can either add recipes manually or you can add a Saved Search Filter to automatically
@@ -307,7 +308,7 @@
                         </p>
 
                         <p class="mt-3">
-                            You can assign Supermarket Categories to your Foods, either trough the Food Editor or directly by clicking on a Shopping List Entry, to automatically
+                            You can assign Supermarket Categories to your Foods, either through the Food Editor or directly by clicking on a Shopping List Entry, to automatically
                             sort the list
                             according to the Category Order defined in the Supermarket.
                         </p>
@@ -328,7 +329,7 @@
                             The Shopping list automatically syncronizes when multiple people have it open so you can shop with multiple devices.
                         </p>
                         <p class="mt-3">
-                            Trough the menu you can also configure which information you want to be displayed or how the list should be sorted.
+                            Through the menu you can also configure which information you want to be displayed or how the list should be sorted.
                         </p>
                         <v-btn color="primary" variant="tonal" prepend-icon="$shopping" class="me-2" :to="{name: 'ShoppingListPage', }">
                             {{ $t('Shopping') }}
@@ -346,7 +347,7 @@
                         </p>
 
                         <p class="mt-3">
-                            When selecting a Recipe in a Meal Plan you can automatically add its ingredients to the shopping list. You can also manually add more entries trough the
+                            When selecting a Recipe in a Meal Plan you can automatically add its ingredients to the shopping list. You can also manually add more entries through the
                             shopping tab in the Meal Plan editor. When deleting a Meal Plan all Shopping List Entries associated with that Meal Plan are deleted as well. When
                             changing the
                             number of servings in a Meal Plan the Servings of the connected Recipe in the Shopping list are automatically changed as well.
@@ -371,6 +372,79 @@
                         </v-btn>
 
                     </v-window-item>
+                    <v-window-item value="translations">
+                        <div class="d-flex align-center justify-space-between">
+                            <h2>{{ $t('Translations') }}</h2>
+                            <v-btn variant="tonal" color="primary" href="https://translate.tandoor.dev" target="_blank" prepend-icon="fa-solid fa-language">
+                                {{ $t('help_translate') }}
+                            </v-btn>
+                        </div>
+                        <p class="mt-3">
+                            Tandoor is translated by volunteers using
+                            <a href="https://translate.tandoor.dev" target="_blank">Weblate</a>.
+                            Languages with at least {{ minCoverage }}% frontend translation are available in the language picker.
+                        </p>
+
+                        <v-table density="compact" class="mt-4">
+                            <thead>
+                                <tr>
+                                    <th>{{ $t('Language') }}</th>
+                                    <th>Frontend</th>
+                                    <th>Backend</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="lang in sortedCoverage" :key="lang.filename">
+                                    <td>
+                                        <span :class="{'text-disabled': lang.fe < minCoverage}">
+                                            {{ lang.name }}
+                                        </span>
+                                    </td>
+                                    <td style="min-width: 160px">
+                                        <div class="d-flex align-center ga-2">
+                                            <v-progress-linear
+                                                :model-value="lang.fe"
+                                                :color="barColor(lang.fe)"
+                                                height="14"
+                                                rounded
+                                                style="max-width: 100px"
+                                            >
+                                                <template #default>
+                                                    <span class="text-caption" style="font-size: 10px !important">{{ lang.fe }}%</span>
+                                                </template>
+                                            </v-progress-linear>
+                                        </div>
+                                    </td>
+                                    <td style="min-width: 160px">
+                                        <div class="d-flex align-center ga-2">
+                                            <v-progress-linear
+                                                :model-value="lang.be"
+                                                :color="barColor(lang.be)"
+                                                height="14"
+                                                rounded
+                                                style="max-width: 100px"
+                                            >
+                                                <template #default>
+                                                    <span class="text-caption" style="font-size: 10px !important">{{ lang.be }}%</span>
+                                                </template>
+                                            </v-progress-linear>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <v-btn
+                                            size="x-small"
+                                            variant="text"
+                                            icon="fa-solid fa-pen"
+                                            :href="weblateUrl(lang.filename)"
+                                            target="_blank"
+                                            :aria-label="'Translate ' + lang.name"
+                                        ></v-btn>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </v-table>
+                    </v-window-item>
                 </v-window>
             </v-container>
         </v-main>
@@ -381,13 +455,23 @@
 
 <script setup lang="ts">
 
-import {ref} from "vue";
+import {ref, computed} from "vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {useI18n} from "vue-i18n";
+import {useRoute} from "vue-router";
+import {localeCoverage, LOCALE_MIN_COVERAGE as minCoverage} from "@/i18n.ts";
+
+const props = withDefaults(defineProps<{
+    defaultSection?: string
+}>(), {
+    defaultSection: undefined,
+})
 
 const {t} = useI18n()
+const route = useRoute()
 const drawer = defineModel()
-const window = ref('start')
+const section = props.defaultSection || (typeof route.query.section === 'string' ? route.query.section : null)
+const window = ref(section || 'start')
 
 const mobileMenuItems = ref([
     {title: t('Start'), props: {prependIcon: 'fa-solid fa-house'}, value: 'start'},
@@ -404,8 +488,39 @@ const mobileMenuItems = ref([
     {title: t('SavedSearch'), props: {prependIcon: 'fa-solid fa-sd-card'}, value: 'search_filter'},
     {title: t('Books'), props: {prependIcon: '$books'}, value: 'books'},
     {title: t('Shopping'), props: {prependIcon: '$shopping'}, value: 'shopping'},
-    {title: t('Meal_Plan'), props: {prependIcon: '$mealplan'}, value: 'meal_plan'}
+    {title: t('Meal_Plan'), props: {prependIcon: '$mealplan'}, value: 'meal_plan'},
+    {title: t('Translations'), props: {prependIcon: 'fa-solid fa-language'}, value: 'translations'}
 ])
+
+// Weblate directory names use underscore format (nb_NO, zh_Hant)
+function weblateUrl(filename: string): string {
+    return `https://translate.tandoor.dev/projects/tandoor/-/${filename}/`
+}
+
+function barColor(pct: number): string {
+    if (pct >= 80) return 'success'
+    if (pct >= minCoverage) return 'warning'
+    return 'error'
+}
+
+// Use Intl.DisplayNames to get native language names
+const displayNames = new Intl.DisplayNames(['en'], {type: 'language'})
+
+const sortedCoverage = computed(() => {
+    return Object.entries(localeCoverage)
+        .filter(([filename]) => filename !== 'en')  // exclude source language
+        .map(([filename, data]) => {
+            const code = filename.replaceAll('_', '-').toLowerCase()
+            let name: string
+            try {
+                name = displayNames.of(code) || filename
+            } catch {
+                name = filename
+            }
+            return {filename, code, name, fe: data.fe, be: data.be}
+        })
+        .sort((a, b) => b.fe - a.fe || b.be - a.be)
+})
 
 </script>
 

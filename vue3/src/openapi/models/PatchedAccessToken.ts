@@ -83,14 +83,19 @@ export function PatchedAccessTokenFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function PatchedAccessTokenToJSON(value?: Omit<PatchedAccessToken, 'token'|'created'|'updated'> | null): any {
+export function PatchedAccessTokenToJSON(json: any): PatchedAccessToken {
+    return PatchedAccessTokenToJSONTyped(json, false);
+}
+
+export function PatchedAccessTokenToJSONTyped(value?: Omit<PatchedAccessToken, 'token'|'created'|'updated'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
-        'expires': value['expires'] == null ? undefined : ((value['expires']).toISOString()),
+        'expires': value['expires'] == null ? value['expires'] : value['expires'].toISOString(),
         'scope': value['scope'],
     };
 }

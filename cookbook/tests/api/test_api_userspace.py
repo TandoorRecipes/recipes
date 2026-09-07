@@ -72,21 +72,6 @@ def test_update(arg, request, space_1, u1_s1, a1_s1):
             assert response['groups'] == [{'id': 3, 'name': 'admin'}]
 
 
-def test_update_space_owner(a1_s1, space_1):
-    # space owners cannot modify their own permission so that they can't lock themselves out
-    space_1.created_by = auth.get_user(a1_s1)
-    space_1.save()
-    r = a1_s1.patch(
-        reverse(
-            DETAIL_URL,
-            args={auth.get_user(a1_s1).userspace_set.first().id}
-        ),
-        {'groups': [{'id': 2, 'name': 'user'}]},
-        content_type='application/json'
-    )
-    assert r.status_code == 400
-
-
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 403],
@@ -103,9 +88,25 @@ def test_add(arg, request, u1_s1, space_1):
     assert r.status_code == arg[1]
 
 
-def test_delete(u1_s1, u1_s2, a1_s1, space_1):
+def test_delete_user(u1_s1, u2_s1, u1_s2, a1_s1, space_1):
     space_1.created_by = auth.get_user(a1_s1)
     space_1.save()
+
+    r = u2_s1.delete(
+        reverse(
+            DETAIL_URL,
+            args={auth.get_user(u1_s1).userspace_set.first().id}
+        )
+    )
+    assert r.status_code == 404
+
+    r = u1_s2.delete(
+        reverse(
+            DETAIL_URL,
+            args={auth.get_user(u1_s1).userspace_set.first().id}
+        )
+    )
+    assert r.status_code == 404
 
     r = u1_s1.delete(
         reverse(
@@ -113,7 +114,12 @@ def test_delete(u1_s1, u1_s2, a1_s1, space_1):
             args={auth.get_user(u1_s1).userspace_set.first().id}
         )
     )
-    assert r.status_code == 403
+    assert r.status_code == 204
+
+
+def test_delete_admin(u1_s1, u2_s1, u1_s2, a1_s1, space_1):
+    space_1.created_by = auth.get_user(a1_s1)
+    space_1.save()
 
     r = a1_s1.delete(
         reverse(

@@ -42,19 +42,13 @@ export interface MealType {
      * @type {string}
      * @memberof MealType
      */
-    time?: string;
+    time?: string | null;
     /**
      * 
      * @type {string}
      * @memberof MealType
      */
-    color?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof MealType
-     */
-    _default?: boolean;
+    color?: string | null;
     /**
      * 
      * @type {number}
@@ -87,15 +81,19 @@ export function MealTypeFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'order': json['order'] == null ? undefined : json['order'],
         'time': json['time'] == null ? undefined : json['time'],
         'color': json['color'] == null ? undefined : json['color'],
-        '_default': json['default'] == null ? undefined : json['default'],
         'createdBy': json['created_by'],
     };
 }
 
-export function MealTypeToJSON(value?: Omit<MealType, 'createdBy'> | null): any {
+export function MealTypeToJSON(json: any): MealType {
+    return MealTypeToJSONTyped(json, false);
+}
+
+export function MealTypeToJSONTyped(value?: Omit<MealType, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -103,7 +101,6 @@ export function MealTypeToJSON(value?: Omit<MealType, 'createdBy'> | null): any 
         'order': value['order'],
         'time': value['time'],
         'color': value['color'],
-        'default': value['_default'],
     };
 }
 

@@ -18,6 +18,7 @@ import {
     ViewLogFromJSON,
     ViewLogFromJSONTyped,
     ViewLogToJSON,
+    ViewLogToJSONTyped,
 } from './ViewLog';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedViewLogList {
      * @type {string}
      * @memberof PaginatedViewLogList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedViewLogList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<ViewLog>}
@@ -85,17 +86,22 @@ export function PaginatedViewLogListFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function PaginatedViewLogListToJSON(value?: PaginatedViewLogList | null): any {
+export function PaginatedViewLogListToJSON(json: any): PaginatedViewLogList {
+    return PaginatedViewLogListToJSONTyped(json, false);
+}
+
+export function PaginatedViewLogListToJSONTyped(value?: PaginatedViewLogList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(ViewLogToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

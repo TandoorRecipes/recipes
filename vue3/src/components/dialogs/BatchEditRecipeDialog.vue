@@ -16,21 +16,21 @@
                         <v-col cols="12" md="6">
                             <v-card :title="$t('Keywords')" :prepend-icon="TKeyword.icon" variant="plain">
                                 <v-card-text>
-                                    <model-select model="Keyword" v-model="batchUpdateRequest.recipeBatchUpdate.keywordsAdd" :object="false" allow-create mode="tags">
+                                    <v-model-select model="Keyword" v-model="batchUpdateRequest.recipeBatchUpdate.keywordsAdd" :return-object="false" create multiple chips>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-add"></v-icon>
                                         </template>
-                                    </model-select>
-                                    <model-select model="Keyword" v-model="batchUpdateRequest.recipeBatchUpdate.keywordsRemove" :object="false" allow-create mode="tags">
+                                    </v-model-select>
+                                    <v-model-select model="Keyword" v-model="batchUpdateRequest.recipeBatchUpdate.keywordsRemove" :return-object="false" create multiple chips>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-minus"></v-icon>
                                         </template>
-                                    </model-select>
-                                    <model-select model="Keyword" v-model="batchUpdateRequest.recipeBatchUpdate.keywordsSet" :object="false" allow-create mode="tags">
+                                    </v-model-select>
+                                    <v-model-select model="Keyword" v-model="batchUpdateRequest.recipeBatchUpdate.keywordsSet" :return-object="false" create multiple chips>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-equals"></v-icon>
                                         </template>
-                                    </model-select>
+                                    </v-model-select>
                                     <v-checkbox :label="$t('RemoveAllType', {type: $t('Keywords')})" hide-details v-model="batchUpdateRequest.recipeBatchUpdate.keywordsRemoveAll"></v-checkbox>
                                 </v-card-text>
                             </v-card>
@@ -40,21 +40,21 @@
 
                                     <v-select :items="boolUpdateOptions" :label="$t('Private_Recipe')" clearable v-model="batchUpdateRequest.recipeBatchUpdate._private"></v-select>
 
-                                    <model-select model="User" v-model="batchUpdateRequest.recipeBatchUpdate.sharedAdd" :object="false" allow-create mode="tags">
+                                    <v-model-select model="User" v-model="batchUpdateRequest.recipeBatchUpdate.sharedAdd" :return-object="false" create multiple chips>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-add"></v-icon>
                                         </template>
-                                    </model-select>
-                                    <model-select model="User" v-model="batchUpdateRequest.recipeBatchUpdate.sharedRemove" :object="false" allow-create mode="tags">
+                                    </v-model-select>
+                                    <v-model-select model="User" v-model="batchUpdateRequest.recipeBatchUpdate.sharedRemove" :return-object="false" create multiple chips>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-minus"></v-icon>
                                         </template>
-                                    </model-select>
-                                    <model-select model="User" v-model="batchUpdateRequest.recipeBatchUpdate.sharedSet" :object="false" allow-create mode="tags">
+                                    </v-model-select>
+                                    <v-model-select model="User" v-model="batchUpdateRequest.recipeBatchUpdate.sharedSet" :return-object="false" create multiple chips>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-equals"></v-icon>
                                         </template>
-                                    </model-select>
+                                    </v-model-select>
                                     <v-checkbox :label="$t('RemoveAllType', {type: $t('Users')})" hide-details v-model="batchUpdateRequest.recipeBatchUpdate.sharedRemoveAll"></v-checkbox>
                                 </v-card-text>
                             </v-card>
@@ -103,6 +103,7 @@ import {useI18n} from "vue-i18n";
 import {ApiApi, ApiRecipeBatchUpdateUpdateRequest, Recipe, RecipeOverview} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const emit = defineEmits(['change'])
 

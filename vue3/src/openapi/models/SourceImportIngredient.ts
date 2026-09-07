@@ -18,12 +18,14 @@ import {
     SourceImportUnitFromJSON,
     SourceImportUnitFromJSONTyped,
     SourceImportUnitToJSON,
+    SourceImportUnitToJSONTyped,
 } from './SourceImportUnit';
 import type { SourceImportFood } from './SourceImportFood';
 import {
     SourceImportFoodFromJSON,
     SourceImportFoodFromJSONTyped,
     SourceImportFoodToJSON,
+    SourceImportFoodToJSONTyped,
 } from './SourceImportFood';
 
 /**
@@ -58,6 +60,12 @@ export interface SourceImportIngredient {
     note?: string;
     /**
      * 
+     * @type {number}
+     * @memberof SourceImportIngredient
+     */
+    order?: number | null;
+    /**
+     * 
      * @type {string}
      * @memberof SourceImportIngredient
      */
@@ -89,20 +97,27 @@ export function SourceImportIngredientFromJSONTyped(json: any, ignoreDiscriminat
         'food': SourceImportFoodFromJSON(json['food']),
         'unit': SourceImportUnitFromJSON(json['unit']),
         'note': json['note'] == null ? undefined : json['note'],
+        'order': json['order'] == null ? undefined : json['order'],
         'originalText': json['original_text'],
     };
 }
 
-export function SourceImportIngredientToJSON(value?: SourceImportIngredient | null): any {
+export function SourceImportIngredientToJSON(json: any): SourceImportIngredient {
+    return SourceImportIngredientToJSONTyped(json, false);
+}
+
+export function SourceImportIngredientToJSONTyped(value?: SourceImportIngredient | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'amount': value['amount'],
         'food': SourceImportFoodToJSON(value['food']),
         'unit': SourceImportUnitToJSON(value['unit']),
         'note': value['note'],
+        'order': value['order'],
         'original_text': value['originalText'],
     };
 }

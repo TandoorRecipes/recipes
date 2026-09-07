@@ -18,12 +18,14 @@ import {
     ShoppingListFromJSON,
     ShoppingListFromJSONTyped,
     ShoppingListToJSON,
+    ShoppingListToJSONTyped,
 } from './ShoppingList';
 import type { SupermarketCategory } from './SupermarketCategory';
 import {
     SupermarketCategoryFromJSON,
     SupermarketCategoryFromJSONTyped,
     SupermarketCategoryToJSON,
+    SupermarketCategoryToJSONTyped,
 } from './SupermarketCategory';
 
 /**
@@ -49,7 +51,7 @@ export interface FoodShopping {
      * @type {string}
      * @memberof FoodShopping
      */
-    pluralName?: string;
+    pluralName?: string | null;
     /**
      * 
      * @type {SupermarketCategory}
@@ -92,10 +94,15 @@ export function FoodShoppingFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function FoodShoppingToJSON(value?: Omit<FoodShopping, 'supermarketCategory'|'shoppingLists'> | null): any {
+export function FoodShoppingToJSON(json: any): FoodShopping {
+    return FoodShoppingToJSONTyped(json, false);
+}
+
+export function FoodShoppingToJSONTyped(value?: Omit<FoodShopping, 'supermarket_category'|'shopping_lists'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

@@ -18,7 +18,15 @@ import {
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
+    GroupToJSONTyped,
 } from './Group';
+import type { Household } from './Household';
+import {
+    HouseholdFromJSON,
+    HouseholdFromJSONTyped,
+    HouseholdToJSON,
+    HouseholdToJSONTyped,
+} from './Household';
 
 /**
  * Adds nested create feature
@@ -52,6 +60,12 @@ export interface PatchedInviteLink {
     group?: Group;
     /**
      * 
+     * @type {Household}
+     * @memberof PatchedInviteLink
+     */
+    household?: Household | null;
+    /**
+     * 
      * @type {Date}
      * @memberof PatchedInviteLink
      */
@@ -61,7 +75,7 @@ export interface PatchedInviteLink {
      * @type {number}
      * @memberof PatchedInviteLink
      */
-    readonly usedBy?: number;
+    readonly usedBy?: number | null;
     /**
      * 
      * @type {boolean}
@@ -73,7 +87,7 @@ export interface PatchedInviteLink {
      * @type {string}
      * @memberof PatchedInviteLink
      */
-    internalNote?: string;
+    internalNote?: string | null;
     /**
      * 
      * @type {number}
@@ -86,6 +100,12 @@ export interface PatchedInviteLink {
      * @memberof PatchedInviteLink
      */
     readonly createdAt?: Date;
+    /**
+     * Return whether the invite email was successfully sent.
+     * @type {boolean}
+     * @memberof PatchedInviteLink
+     */
+    readonly emailSent?: boolean;
 }
 
 /**
@@ -109,25 +129,33 @@ export function PatchedInviteLinkFromJSONTyped(json: any, ignoreDiscriminator: b
         'uuid': json['uuid'] == null ? undefined : json['uuid'],
         'email': json['email'] == null ? undefined : json['email'],
         'group': json['group'] == null ? undefined : GroupFromJSON(json['group']),
+        'household': json['household'] == null ? undefined : HouseholdFromJSON(json['household']),
         'validUntil': json['valid_until'] == null ? undefined : (new Date(json['valid_until'])),
         'usedBy': json['used_by'] == null ? undefined : json['used_by'],
         'reusable': json['reusable'] == null ? undefined : json['reusable'],
         'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
         'createdBy': json['created_by'] == null ? undefined : json['created_by'],
         'createdAt': json['created_at'] == null ? undefined : (new Date(json['created_at'])),
+        'emailSent': json['email_sent'] == null ? undefined : json['email_sent'],
     };
 }
 
-export function PatchedInviteLinkToJSON(value?: Omit<PatchedInviteLink, 'uuid'|'usedBy'|'createdBy'|'createdAt'> | null): any {
+export function PatchedInviteLinkToJSON(json: any): PatchedInviteLink {
+    return PatchedInviteLinkToJSONTyped(json, false);
+}
+
+export function PatchedInviteLinkToJSONTyped(value?: Omit<PatchedInviteLink, 'uuid'|'used_by'|'created_by'|'created_at'|'email_sent'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
         'email': value['email'],
         'group': GroupToJSON(value['group']),
-        'valid_until': value['validUntil'] == null ? undefined : ((value['validUntil']).toISOString().substring(0,10)),
+        'household': HouseholdToJSON(value['household']),
+        'valid_until': value['validUntil'] == null ? value['validUntil'] : value['validUntil'].toISOString().substring(0,10),
         'reusable': value['reusable'],
         'internal_note': value['internalNote'],
     };

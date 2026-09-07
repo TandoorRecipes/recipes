@@ -18,13 +18,22 @@ import {
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
+    GroupToJSONTyped,
 } from './Group';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
+import type { Household } from './Household';
+import {
+    HouseholdFromJSON,
+    HouseholdFromJSONTyped,
+    HouseholdToJSON,
+    HouseholdToJSONTyped,
+} from './Household';
 
 /**
  * Adds nested create feature
@@ -58,6 +67,12 @@ export interface PatchedUserSpace {
     groups?: Array<Group>;
     /**
      * 
+     * @type {Household}
+     * @memberof PatchedUserSpace
+     */
+    household?: Household | null;
+    /**
+     * 
      * @type {boolean}
      * @memberof PatchedUserSpace
      */
@@ -67,13 +82,13 @@ export interface PatchedUserSpace {
      * @type {string}
      * @memberof PatchedUserSpace
      */
-    internalNote?: string;
+    internalNote?: string | null;
     /**
      * 
      * @type {number}
      * @memberof PatchedUserSpace
      */
-    readonly inviteLink?: number;
+    readonly inviteLink?: number | null;
     /**
      * 
      * @type {Date}
@@ -109,6 +124,7 @@ export function PatchedUserSpaceFromJSONTyped(json: any, ignoreDiscriminator: bo
         'user': json['user'] == null ? undefined : UserFromJSON(json['user']),
         'space': json['space'] == null ? undefined : json['space'],
         'groups': json['groups'] == null ? undefined : ((json['groups'] as Array<any>).map(GroupFromJSON)),
+        'household': json['household'] == null ? undefined : HouseholdFromJSON(json['household']),
         'active': json['active'] == null ? undefined : json['active'],
         'internalNote': json['internal_note'] == null ? undefined : json['internal_note'],
         'inviteLink': json['invite_link'] == null ? undefined : json['invite_link'],
@@ -117,14 +133,20 @@ export function PatchedUserSpaceFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function PatchedUserSpaceToJSON(value?: Omit<PatchedUserSpace, 'user'|'space'|'inviteLink'|'createdAt'|'updatedAt'> | null): any {
+export function PatchedUserSpaceToJSON(json: any): PatchedUserSpace {
+    return PatchedUserSpaceToJSONTyped(json, false);
+}
+
+export function PatchedUserSpaceToJSONTyped(value?: Omit<PatchedUserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
         'groups': value['groups'] == null ? undefined : ((value['groups'] as Array<any>).map(GroupToJSON)),
+        'household': HouseholdToJSON(value['household']),
         'active': value['active'],
         'internal_note': value['internalNote'],
     };

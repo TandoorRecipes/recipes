@@ -224,6 +224,71 @@
             {% endfor %}
         </table>
     {% endif %}
+    {% if social_providers or social_login_errors %}
+    <h3 class="mt-5">{% trans 'Social Login' %}</h3>
+
+    <h4 class="mt-3">{% trans 'Configured Providers' %}
+        <span class="badge text-bg-success">
+            {{ social_providers|length }}
+        </span>
+    </h4>
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>{% trans 'Name' %}</th>
+                <th>{% trans 'Provider' %}</th>
+                <th>{% trans 'Client ID' %}</th>
+                <th>{% trans 'Source' %}</th>
+                <th>{% trans 'Linked Accounts' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in social_providers %}
+            <tr>
+                <td>{{ p.name }}</td>
+                <td><code>{{ p.provider_id|default:p.provider }}</code></td>
+                <td><code>{{ p.client_id }}</code></td>
+                <td><span class="badge text-bg-{% if p.source == 'settings' %}info{% else %}secondary{% endif %}">{{ p.source }}</span></td>
+                <td>{{ p.account_count }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h4 class="mt-3">{% trans 'Recent Login Errors' %}
+        <span class="badge text-bg-{% if social_login_errors %}warning{% else %}success{% endif %}">
+            {{ social_login_errors|length }}
+        </span>
+    </h4>
+
+    {% if social_login_errors %}
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>{% trans 'Time' %}</th>
+                <th>{% trans 'Provider' %}</th>
+                <th>{% trans 'Error Code' %}</th>
+                <th>{% trans 'Details' %}</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in social_login_errors %}
+            <tr>
+                <td><small>{{ e.timestamp }}</small></td>
+                <td><code>{{ e.provider }}</code></td>
+                <td><code>{{ e.error }}</code></td>
+                <td>{% if e.exception %}<code>{{ e.exception }}</code>{% else %}-{% endif %}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <p class="text-muted small">{% trans 'Errors are cached for 24 hours. Maximum 50 entries stored.' %}</p>
+    {% else %}
+        <p class="text-muted">{% trans 'No recent social login errors.' %}</p>
+    {% endif %}
+    {% endif %}
+
     <h4 class="mt-3">Cache Test</h4>
     On first load this should be None, on second load it should be the time of the first load. Expiration is set to 10 seconds after that it should be None again. <br/>
     {% if cache_response %}

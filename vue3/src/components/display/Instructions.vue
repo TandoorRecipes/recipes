@@ -8,6 +8,7 @@
 import {defineComponent, markRaw} from "vue";
 
 import ScalableNumber from "@/components/display/ScalableNumber.vue";
+import PluralName from "@/components/display/PluralName.vue";
 
 /**
  * the API template compiler returns safe, pre rendered html (from markdown) with scalable number tags inside (<scalable-number v-bind:number='80.0000000000000000' v-bind:factor='ingredient_factor'></scalable-number>)
@@ -16,7 +17,7 @@ import ScalableNumber from "@/components/display/ScalableNumber.vue";
 export default defineComponent({
     name: 'Instructions',
     computed: {},
-    components: {ScalableNumber},
+    components: {ScalableNumber, PluralName},
     props: {
         instructions_html: {type: String, required: true},
         ingredient_factor: {type: Number, required: true},
@@ -30,7 +31,7 @@ export default defineComponent({
                     instructions_html: {type: String, required: true},
                     ingredient_factor: {type: Number, required: true},
                 },
-                components: {ScalableNumber,},
+                components: {ScalableNumber, PluralName,},
                 template: `
                     <div>${this.instructions_html}</div>`
             }))

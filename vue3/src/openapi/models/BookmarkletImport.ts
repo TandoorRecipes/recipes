@@ -30,7 +30,7 @@ export interface BookmarkletImport {
      * @type {string}
      * @memberof BookmarkletImport
      */
-    url?: string;
+    url?: string | null;
     /**
      * 
      * @type {string}
@@ -79,10 +79,15 @@ export function BookmarkletImportFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function BookmarkletImportToJSON(value?: Omit<BookmarkletImport, 'createdBy'|'createdAt'> | null): any {
+export function BookmarkletImportToJSON(json: any): BookmarkletImport {
+    return BookmarkletImportToJSONTyped(json, false);
+}
+
+export function BookmarkletImportToJSONTyped(value?: Omit<BookmarkletImport, 'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

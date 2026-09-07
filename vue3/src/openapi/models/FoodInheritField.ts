@@ -64,13 +64,13 @@ export interface FoodInheritField {
      * @type {string}
      * @memberof FoodInheritField
      */
-    name?: string;
+    name?: string | null;
     /**
      * 
      * @type {string}
      * @memberof FoodInheritField
      */
-    field?: string;
+    field?: string | null;
 }
 
 /**
@@ -96,10 +96,15 @@ export function FoodInheritFieldFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function FoodInheritFieldToJSON(value?: FoodInheritField | null): any {
+export function FoodInheritFieldToJSON(json: any): FoodInheritField {
+    return FoodInheritFieldToJSONTyped(json, false);
+}
+
+export function FoodInheritFieldToJSONTyped(value?: FoodInheritField | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

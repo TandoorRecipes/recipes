@@ -52,8 +52,8 @@
                             <div class="cursor-pointer">
                                 <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
                                 <div class="text-grey"><span v-if="recipe.servingsText">{{ recipe.servingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
-                                <number-scaler-dialog :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
-                                </number-scaler-dialog>
+                                <recipe-scaling-dialog :recipe="recipe" :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
+                                </recipe-scaling-dialog>
                             </div>
                         </v-col>
                     </v-row>
@@ -106,8 +106,8 @@
                                 <div class="cursor-pointer">
                                     <i class="fas fa-sort-numeric-up fa-fw mr-1"></i> {{ servings }} <br/>
                                     <div class="text-grey"><span v-if="recipe.servingsText">{{ recipe.servingsText }}</span><span v-else>{{ $t('Servings') }}</span></div>
-                                    <number-scaler-dialog :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
-                                    </number-scaler-dialog>
+                                    <recipe-scaling-dialog :recipe="recipe" :number="servings" @confirm="(s: number) => {servings = s}" title="Servings">
+                                    </recipe-scaling-dialog>
                                 </div>
                             </v-col>
                         </v-row>
@@ -126,18 +126,19 @@
                 <v-card-text>
                     {{ $t('ConvertUsingAI') }}
 
-                    <model-select model="AiProvider" v-model="selectedAiProvider">
+                    <v-model-select model="AiProvider" v-model="selectedAiProvider">
                         <template #append>
                             <v-btn @click="aiConvertRecipe()" icon="fa-solid fa-person-running" color="success"></v-btn>
                         </template>
-                    </model-select>
+                    </v-model-select>
+                    <v-spacer class="mt-10"></v-spacer>
                 </v-card-text>
             </v-card>
         </template>
 
         <v-card class="mt-1"
-                v-if="(recipe.steps.length > 1 || (recipe.steps.length == 1 && !recipe.steps[0].showIngredientsTable)) && recipe.showIngredientOverview && !useUserPreferenceStore().isPrintMode">
-            <steps-overview :steps="recipe.steps" :ingredient-factor="ingredientFactor"></steps-overview>
+                v-if="recipe.showIngredientOverview && !useUserPreferenceStore().isPrintMode">
+            <steps-overview :steps="recipe.steps" :ingredient-factor="ingredientFactor" @scale="(factor: number) => {servings = recipe.servings * factor}"></steps-overview>
         </v-card>
 
         <v-card class="mt-1" v-for="(step, index) in recipe.steps" :key="step.id">
@@ -214,6 +215,8 @@ import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useFileApi} from "@/composables/useFileApi.ts";
 import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import RecipeScalingDialog from "@/components/dialogs/RecipeScalingDialog.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const {request, release} = useWakeLock()
 const {doAiImport, fileApiLoading} = useFileApi()

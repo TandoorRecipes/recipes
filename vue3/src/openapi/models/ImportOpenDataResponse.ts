@@ -18,6 +18,7 @@ import {
     ImportOpenDataResponseDetailFromJSON,
     ImportOpenDataResponseDetailFromJSONTyped,
     ImportOpenDataResponseDetailToJSON,
+    ImportOpenDataResponseDetailToJSONTyped,
 } from './ImportOpenDataResponseDetail';
 
 /**
@@ -90,10 +91,15 @@ export function ImportOpenDataResponseFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function ImportOpenDataResponseToJSON(value?: ImportOpenDataResponse | null): any {
+export function ImportOpenDataResponseToJSON(json: any): ImportOpenDataResponse {
+    return ImportOpenDataResponseToJSONTyped(json, false);
+}
+
+export function ImportOpenDataResponseToJSONTyped(value?: ImportOpenDataResponse | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'food': ImportOpenDataResponseDetailToJSON(value['food']),

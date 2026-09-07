@@ -45,9 +45,9 @@ def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 403],  # changed expected value.  based on list permissions the log is visible, but not editable
+    ['g1_s1', 403],
     ['u1_s1', 200],
-    ['a1_s1', 403],  # changed expected value.  based on list permissions the log is visible, but not editable
+    ['a1_s1', 200],
     ['g1_s2', 404],
     ['u1_s2', 404],
     ['a1_s2', 404],
@@ -88,7 +88,7 @@ def test_add(arg, request, u1_s2, u2_s1, recipe_1_s1):
         r = c.get(reverse(DETAIL_URL, args={response['id']}))
         assert r.status_code == 200
         r = u2_s1.get(reverse(DETAIL_URL, args={response['id']}))
-        assert r.status_code == 403  # expected value changed.  user can list the log - detail should be 403 as no reason to 'hide' that it actually exists
+        assert r.status_code == 200
         r = u1_s2.get(reverse(DETAIL_URL, args={response['id']}))
         assert r.status_code == 404
 

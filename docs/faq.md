@@ -46,6 +46,24 @@ Navigate to `/system/` and review the headers listed in the DEBUG section.  At a
 | HTTP_X_SCRIPT_NAME:/subfolder      | If you are hosting Tandoor at a subfolder instead of a subdomain this header must exist. |
 
 
+## Why am I getting a 403 error when trying to log in?
+
+Starting with version 2.6.1, Tandoor includes login rate limiting to protect against brute-force attacks.
+This requires Tandoor to determine your client IP address from the `X-Forwarded-For` header set by
+reverse proxies in front of the application.
+
+Tandoor's built-in nginx is always counted as one trusted proxy, so the default setting of
+`ALLAUTH_TRUSTED_PROXY_COUNT=1` works for most setups. If you are running additional reverse proxies
+(Traefik, Caddy, nginx proxy manager, etc.) and experience 403 errors on login, increase this value
+to match your total number of proxies (including Tandoor's built-in nginx).
+
+For example, if you run one external reverse proxy in front of Tandoor:
+```
+ALLAUTH_TRUSTED_PROXY_COUNT=2
+```
+
+See the [configuration docs](system/configuration.md#trusted-proxy-count) for more details.
+
 ## Why am I getting CSRF Errors?
 If you are getting CSRF Errors this is most likely due to a reverse proxy not passing the correct headers.
 

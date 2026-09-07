@@ -42,19 +42,13 @@ export interface PatchedMealType {
      * @type {string}
      * @memberof PatchedMealType
      */
-    time?: string;
+    time?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedMealType
      */
-    color?: string;
-    /**
-     * 
-     * @type {boolean}
-     * @memberof PatchedMealType
-     */
-    _default?: boolean;
+    color?: string | null;
     /**
      * 
      * @type {number}
@@ -85,15 +79,19 @@ export function PatchedMealTypeFromJSONTyped(json: any, ignoreDiscriminator: boo
         'order': json['order'] == null ? undefined : json['order'],
         'time': json['time'] == null ? undefined : json['time'],
         'color': json['color'] == null ? undefined : json['color'],
-        '_default': json['default'] == null ? undefined : json['default'],
         'createdBy': json['created_by'] == null ? undefined : json['created_by'],
     };
 }
 
-export function PatchedMealTypeToJSON(value?: Omit<PatchedMealType, 'createdBy'> | null): any {
+export function PatchedMealTypeToJSON(json: any): PatchedMealType {
+    return PatchedMealTypeToJSONTyped(json, false);
+}
+
+export function PatchedMealTypeToJSONTyped(value?: Omit<PatchedMealType, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -101,7 +99,6 @@ export function PatchedMealTypeToJSON(value?: Omit<PatchedMealType, 'createdBy'>
         'order': value['order'],
         'time': value['time'],
         'color': value['color'],
-        'default': value['_default'],
     };
 }
 

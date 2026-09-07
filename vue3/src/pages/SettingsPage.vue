@@ -16,6 +16,11 @@
                     <v-list-item :to="{name: 'SpaceSettings'}" prepend-icon="$settings">{{ $t('SpaceSettings') }}</v-list-item>
                     <v-list-item :to="{name: 'OpenDataImportSettings'}" prepend-icon="fa-solid fa-cloud-arrow-down">{{ $t('Open_Data_Import') }}</v-list-item>
                     <v-list-item :to="{name: 'ExportDataSettings'}" prepend-icon="fa-solid fa-file-export">{{ $t('Export') }}</v-list-item>
+
+                    <template v-for="p in TANDOOR_PLUGINS" :key="p.name">
+                        <component :is="p.settingsComponent" v-if="p.settingsComponent"></component>
+                    </template>
+
                     <v-divider></v-divider>
                     <v-list-subheader>Admin</v-list-subheader>
                     <v-list-item :to="{name: 'ApiSettings'}" prepend-icon="fa-solid fa-code">{{ $t('API') }}</v-list-item>
@@ -34,6 +39,7 @@
 <script setup lang="ts">
 
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
+import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
 
 const {getDjangoUrl} = useDjangoUrls()
 

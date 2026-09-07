@@ -28,7 +28,7 @@ export type UserPreferenceNavTextColorEnum = typeof UserPreferenceNavTextColorEn
 export function instanceOfUserPreferenceNavTextColorEnum(value: any): boolean {
     for (const key in UserPreferenceNavTextColorEnum) {
         if (Object.prototype.hasOwnProperty.call(UserPreferenceNavTextColorEnum, key)) {
-            if (UserPreferenceNavTextColorEnum[key] === value) {
+            if (UserPreferenceNavTextColorEnum[key as keyof typeof UserPreferenceNavTextColorEnum] === value) {
                 return true;
             }
         }
@@ -46,5 +46,9 @@ export function UserPreferenceNavTextColorEnumFromJSONTyped(json: any, ignoreDis
 
 export function UserPreferenceNavTextColorEnumToJSON(value?: UserPreferenceNavTextColorEnum | null): any {
     return value as any;
+}
+
+export function UserPreferenceNavTextColorEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): UserPreferenceNavTextColorEnum {
+    return value as UserPreferenceNavTextColorEnum;
 }
 

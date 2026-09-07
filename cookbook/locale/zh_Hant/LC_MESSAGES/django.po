@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-22 20:15+0200\n"
+"POT-Creation-Date: 2026-06-24 18:06+0200\n"
 "PO-Revision-Date: 2025-08-02 07:49+0000\n"
 "Last-Translator: TC Kuo <tckuo7@gmail.com>\n"
 "Language-Team: Chinese (Traditional Han script) <http://translate.tandoor."
@@ -19,161 +19,171 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.8.4\n"
 
-#: .\cookbook\forms.py:50
+#: .\cookbook\forms.py:58
 msgid "Default"
 msgstr "預設"
 
-#: .\cookbook\forms.py:77
+#: .\cookbook\forms.py:90
 msgid ""
 "To prevent duplicates recipes with the same name as existing ones are "
 "ignored. Check this box to import everything."
 msgstr ""
 "為防止重複，忽略與現有同名的食譜。選中此框可導入所有內容（包括同名食譜）。"
 
-#: .\cookbook\forms.py:108
+#: .\cookbook\forms.py:120
 msgid "Maximum number of users for this space reached."
 msgstr "已達到該空間的最大用戶數。"
 
-#: .\cookbook\forms.py:114
+#: .\cookbook\forms.py:126
 msgid "Email address already taken!"
 msgstr "電子郵件地址已被註冊！"
 
-#: .\cookbook\forms.py:121
+#: .\cookbook\forms.py:134
 msgid ""
 "An email address is not required but if present the invite link will be sent "
 "to the user."
 msgstr "電子郵件地址不是必需的，但如果存在，邀請鏈接將被發送給用戶。"
 
-#: .\cookbook\forms.py:133
+#: .\cookbook\forms.py:149
 msgid "Name already taken."
 msgstr "名字已被占用。"
 
-#: .\cookbook\forms.py:144 .\cookbook\forms.py:158
+#: .\cookbook\forms.py:160 .\cookbook\forms.py:174
 msgid "Accept Terms and Privacy"
 msgstr "接受條款及隱私政策"
 
-#: .\cookbook\helper\AllAuthCustomAdapter.py:41
+#: .\cookbook\helper\AllAuthCustomAdapter.py:55
 msgid ""
 "In order to prevent spam, the requested email was not send. Please wait a "
 "few minutes and try again."
 msgstr "為了防止垃圾郵件，所要求的電子郵件沒有被發送。請等待幾分鐘後再試。"
 
-#: .\cookbook\helper\permission_helper.py:165
-#: .\cookbook\helper\permission_helper.py:186 .\cookbook\views\views.py:138
+#: .\cookbook\helper\permission_helper.py:215
+#: .\cookbook\helper\permission_helper.py:236 .\cookbook\views\views.py:149
 msgid "You are not logged in and therefore cannot view this page!"
 msgstr "你还沒有登錄，因此不能查看這個頁面！"
 
-#: .\cookbook\helper\permission_helper.py:168
-#: .\cookbook\helper\permission_helper.py:173
-#: .\cookbook\helper\permission_helper.py:198
-#: .\cookbook\helper\permission_helper.py:265
-#: .\cookbook\helper\permission_helper.py:279
-#: .\cookbook\helper\permission_helper.py:290
-#: .\cookbook\helper\permission_helper.py:301
-#: .\cookbook\helper\permission_helper.py:317
-#: .\cookbook\helper\permission_helper.py:343
-#: .\cookbook\helper\permission_helper.py:359
+#: .\cookbook\helper\permission_helper.py:218
+#: .\cookbook\helper\permission_helper.py:223
+#: .\cookbook\helper\permission_helper.py:248
+#: .\cookbook\helper\permission_helper.py:337
+#: .\cookbook\helper\permission_helper.py:351
+#: .\cookbook\helper\permission_helper.py:362
+#: .\cookbook\helper\permission_helper.py:373
+#: .\cookbook\helper\permission_helper.py:389
+#: .\cookbook\helper\permission_helper.py:420
+#: .\cookbook\helper\permission_helper.py:436
 msgid "You do not have the required permissions to view this page!"
 msgstr "你沒有必要的權限來查看這個頁面！"
 
-#: .\cookbook\helper\permission_helper.py:191
-#: .\cookbook\helper\permission_helper.py:214
-#: .\cookbook\helper\permission_helper.py:236
-#: .\cookbook\helper\permission_helper.py:251
+#: .\cookbook\helper\permission_helper.py:241
+#: .\cookbook\helper\permission_helper.py:264
+#: .\cookbook\helper\permission_helper.py:294
+#: .\cookbook\helper\permission_helper.py:309
 msgid "You cannot interact with this object as it is not owned by you!"
 msgstr "你不能與此對象互動，因為它不屬於你！"
 
-#: .\cookbook\helper\permission_helper.py:420
+#: .\cookbook\helper\permission_helper.py:323
+#, fuzzy
+#| msgid "You cannot interact with this object as it is not owned by you!"
+msgid ""
+"You cannot interact with this object because you are not in the same "
+"household as the user who created it!"
+msgstr "你不能與此對象互動，因為它不屬於你！"
+
+#: .\cookbook\helper\permission_helper.py:505
 msgid "You have reached the maximum number of recipes for your space."
 msgstr "你已達到空間的最大食譜數量。"
 
-#: .\cookbook\helper\permission_helper.py:432
+#: .\cookbook\helper\permission_helper.py:517
 msgid "You have more users than allowed in your space."
 msgstr "你的空間中用戶數量超過允許的數量。"
 
-#: .\cookbook\helper\recipe_url_import.py:319
+#: .\cookbook\helper\recipe_url_import.py:312
 msgid "reverse rotation"
 msgstr "反向旋轉"
 
-#: .\cookbook\helper\recipe_url_import.py:320
+#: .\cookbook\helper\recipe_url_import.py:313
 msgid "careful rotation"
 msgstr "小心旋轉"
 
-#: .\cookbook\helper\recipe_url_import.py:321
+#: .\cookbook\helper\recipe_url_import.py:314
 msgid "knead"
 msgstr "揉"
 
-#: .\cookbook\helper\recipe_url_import.py:322
+#: .\cookbook\helper\recipe_url_import.py:315
 msgid "thicken"
 msgstr "增稠"
 
-#: .\cookbook\helper\recipe_url_import.py:323
+#: .\cookbook\helper\recipe_url_import.py:316
 msgid "warm up"
 msgstr "加熱"
 
-#: .\cookbook\helper\recipe_url_import.py:324
+#: .\cookbook\helper\recipe_url_import.py:317
 msgid "ferment"
 msgstr "發酵"
 
-#: .\cookbook\helper\recipe_url_import.py:325
+#: .\cookbook\helper\recipe_url_import.py:318
 msgid "slow cook"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:326
+#: .\cookbook\helper\recipe_url_import.py:319
 msgid "egg boiler"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:327
+#: .\cookbook\helper\recipe_url_import.py:320
 msgid "kettle"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:328
+#: .\cookbook\helper\recipe_url_import.py:321
 msgid "blend"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:329
+#: .\cookbook\helper\recipe_url_import.py:322
 msgid "pre-clean"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:330
+#: .\cookbook\helper\recipe_url_import.py:323
 msgid "high temperature"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:331
+#: .\cookbook\helper\recipe_url_import.py:324
 msgid "rice cooker"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:332
+#: .\cookbook\helper\recipe_url_import.py:325
 msgid "caramelize"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:333
+#: .\cookbook\helper\recipe_url_import.py:326
 msgid "peeler"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:334
+#: .\cookbook\helper\recipe_url_import.py:327
 msgid "slicer"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:335
+#: .\cookbook\helper\recipe_url_import.py:328
 msgid "grater"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:336
+#: .\cookbook\helper\recipe_url_import.py:329
 msgid "spiralizer"
 msgstr ""
 
-#: .\cookbook\helper\recipe_url_import.py:337
+#: .\cookbook\helper\recipe_url_import.py:330
 msgid "sous-vide"
 msgstr "低溫烹調"
 
-#: .\cookbook\helper\shopping_helper.py:150
+#: .\cookbook\helper\shopping_helper.py:154
 msgid "You must supply a servings size"
 msgstr "你必須提供份量大小"
 
-#: .\cookbook\helper\template_helper.py:97
-#: .\cookbook\helper\template_helper.py:99
-#: .\cookbook\helper\template_helper.py:101
+#: .\cookbook\helper\template_helper.py:156
+#: .\cookbook\helper\template_helper.py:158
+#: .\cookbook\helper\template_helper.py:160
+#: .\cookbook\helper\template_helper.py:162
+#: .\cookbook\helper\template_helper.py:164
 msgid "Could not parse template code."
 msgstr "無法解析模板代碼。"
 
@@ -186,73 +196,89 @@ msgstr "收藏"
 msgid "I made this"
 msgstr "我做了這個"
 
-#: .\cookbook\integration\integration.py:238
+#: .\cookbook\integration\integration.py:67
+msgid "Too many files in zip"
+msgstr ""
+
+#: .\cookbook\integration\integration.py:71
+msgid "Zip file too large"
+msgstr ""
+
+#: .\cookbook\integration\integration.py:84
+msgid "Nested zip files too deep"
+msgstr ""
+
+#: .\cookbook\integration\integration.py:92
+msgid "File in zip too large"
+msgstr ""
+
+#: .\cookbook\integration\integration.py:270
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr "導入需要一個 .zip 文件。你是否為數據選擇了正確的導入器類型？"
 
-#: .\cookbook\integration\integration.py:241
+#: .\cookbook\integration\integration.py:272
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr "在導入過程中發生了一個意外的錯誤。請確認你上傳的文件是否有效。"
 
-#: .\cookbook\integration\integration.py:246
+#: .\cookbook\integration\integration.py:276
 msgid "The following recipes were ignored because they already existed:"
 msgstr "以下食譜被忽略了，因為它們已經存在了："
 
-#: .\cookbook\integration\integration.py:250
+#: .\cookbook\integration\integration.py:279
 #, python-format
 msgid "Imported %s recipes."
 msgstr "導入了%s食譜。"
 
-#: .\cookbook\integration\mealie1.py:210
+#: .\cookbook\integration\mealie1.py:242
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "Calories"
 msgstr "卡路里"
 
-#: .\cookbook\integration\mealie1.py:211
+#: .\cookbook\integration\mealie1.py:243
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
 msgstr "碳水化合物"
 
-#: .\cookbook\integration\mealie1.py:212
+#: .\cookbook\integration\mealie1.py:244
 msgid "Cholesterol"
 msgstr ""
 
-#: .\cookbook\integration\mealie1.py:213
+#: .\cookbook\integration\mealie1.py:245
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
 msgid "Fat"
 msgstr "脂肪"
 
-#: .\cookbook\integration\mealie1.py:214
+#: .\cookbook\integration\mealie1.py:246
 msgid "Fiber"
 msgstr ""
 
-#: .\cookbook\integration\mealie1.py:215
+#: .\cookbook\integration\mealie1.py:247
 #, fuzzy
 #| msgid "Proteins"
 msgid "Protein"
 msgstr "蛋白質"
 
-#: .\cookbook\integration\mealie1.py:216
+#: .\cookbook\integration\mealie1.py:248
 msgid "Saturated Fat"
 msgstr ""
 
-#: .\cookbook\integration\mealie1.py:217
+#: .\cookbook\integration\mealie1.py:249
 msgid "Sodium"
 msgstr ""
 
-#: .\cookbook\integration\mealie1.py:218
+#: .\cookbook\integration\mealie1.py:250
 msgid "Sugar"
 msgstr ""
 
-#: .\cookbook\integration\mealie1.py:219
+#: .\cookbook\integration\mealie1.py:251
 msgid "Trans Fat"
 msgstr ""
 
-#: .\cookbook\integration\mealie1.py:220
+#: .\cookbook\integration\mealie1.py:252
 msgid "Unsaturated Fat"
 msgstr ""
 
@@ -260,19 +286,29 @@ msgstr ""
 msgid "Recipe source:"
 msgstr "食譜來源："
 
-#: .\cookbook\integration\paprika.py:49
+#: .\cookbook\integration\paprika.py:47
 msgid "Notes"
 msgstr "說明"
 
-#: .\cookbook\integration\paprika.py:52
+#: .\cookbook\integration\paprika.py:50
 msgid "Nutritional Information"
 msgstr "營養資訊"
 
-#: .\cookbook\integration\paprika.py:56
+#: .\cookbook\integration\paprika.py:54 .\cookbook\templates\system.html:242
 msgid "Source"
 msgstr "來源"
 
-#: .\cookbook\integration\recettetek.py:55
+#: .\cookbook\integration\pdfexport.py:9
+msgid "Method not implemented in storage integration"
+msgstr ""
+
+#: .\cookbook\integration\pdfexport.py:13
+msgid ""
+"PDF export is not currently available. Use your browser's print function "
+"(Ctrl+P) to save recipes as PDF."
+msgstr ""
+
+#: .\cookbook\integration\recettetek.py:52
 #: .\cookbook\integration\recipekeeper.py:70
 msgid "Imported from"
 msgstr "導入"
@@ -329,7 +365,8 @@ msgstr "午餐"
 msgid "Dinner"
 msgstr "晚餐"
 
-#: .\cookbook\migrations\0047_auto_20200602_1133.py:29 .\cookbook\models.py:971
+#: .\cookbook\migrations\0047_auto_20200602_1133.py:29
+#: .\cookbook\models.py:1002
 msgid "Other"
 msgstr "其他"
 
@@ -347,7 +384,7 @@ msgstr "蛋白質"
 msgid "kcal"
 msgstr "千卡"
 
-#: .\cookbook\models.py:325
+#: .\cookbook\models.py:313
 msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
@@ -365,178 +402,193 @@ msgstr "膳食計劃"
 msgid "Books"
 msgstr "烹飪手冊"
 
-#: .\cookbook\models.py:516 .\cookbook\views\views.py:416
-#: .\cookbook\views\views.py:417
+#: .\cookbook\models.py:516 .\cookbook\views\views.py:477
+#: .\cookbook\views\views.py:478
 msgid "Shopping"
 msgstr "購物"
 
-#: .\cookbook\models.py:967
+#: .\cookbook\models.py:998
 msgid "Nutrition"
 msgstr "營養"
 
-#: .\cookbook\models.py:968
+#: .\cookbook\models.py:999
 msgid "Allergen"
 msgstr "過敏原"
 
-#: .\cookbook\models.py:969
+#: .\cookbook\models.py:1000
 msgid "Price"
 msgstr "價格"
 
-#: .\cookbook\models.py:970
+#: .\cookbook\models.py:1001
 msgid "Goal"
 msgstr "目標"
 
-#: .\cookbook\models.py:1467 .\cookbook\templates\search_info.html:28
+#: .\cookbook\models.py:1407
+msgid "Add"
+msgstr ""
+
+#: .\cookbook\models.py:1408 .\cookbook\templates\account\email.html:43
+#: .\cookbook\templates\socialaccount\connections.html:36
+msgid "Remove"
+msgstr "移除"
+
+#: .\cookbook\models.py:1409
+msgid "Move"
+msgstr ""
+
+#: .\cookbook\models.py:1621 .\cookbook\templates\search_info.html:28
 msgid "Simple"
 msgstr "簡單"
 
-#: .\cookbook\models.py:1468 .\cookbook\templates\search_info.html:33
+#: .\cookbook\models.py:1622 .\cookbook\templates\search_info.html:33
 msgid "Phrase"
 msgstr "短語"
 
-#: .\cookbook\models.py:1469 .\cookbook\templates\search_info.html:38
+#: .\cookbook\models.py:1623 .\cookbook\templates\search_info.html:38
 msgid "Web"
 msgstr "網絡"
 
-#: .\cookbook\models.py:1470 .\cookbook\templates\search_info.html:47
+#: .\cookbook\models.py:1624 .\cookbook\templates\search_info.html:47
 msgid "Raw"
 msgstr "原始"
 
-#: .\cookbook\models.py:1525
+#: .\cookbook\models.py:1682
 msgid "Food Alias"
 msgstr "食物別名"
 
-#: .\cookbook\models.py:1526
+#: .\cookbook\models.py:1683
 msgid "Unit Alias"
 msgstr "單位別名"
 
-#: .\cookbook\models.py:1527
+#: .\cookbook\models.py:1684
 msgid "Keyword Alias"
 msgstr "關鍵詞別名"
 
-#: .\cookbook\models.py:1528
+#: .\cookbook\models.py:1685
 msgid "Description Replace"
 msgstr "描述替換"
 
-#: .\cookbook\models.py:1529
+#: .\cookbook\models.py:1686
 msgid "Instruction Replace"
 msgstr "指示替換"
 
-#: .\cookbook\models.py:1530
+#: .\cookbook\models.py:1687
 msgid "Never Unit"
 msgstr "禁用單位識別"
 
-#: .\cookbook\models.py:1531
+#: .\cookbook\models.py:1688
 msgid "Transpose Words"
 msgstr "轉換詞語"
 
-#: .\cookbook\models.py:1532
+#: .\cookbook\models.py:1689
 msgid "Food Replace"
 msgstr "食物替換"
 
-#: .\cookbook\models.py:1533
+#: .\cookbook\models.py:1690
 msgid "Unit Replace"
 msgstr "單位替換"
 
-#: .\cookbook\models.py:1534
+#: .\cookbook\models.py:1691
 msgid "Name Replace"
 msgstr "名稱替換"
 
-#: .\cookbook\models.py:1564
+#: .\cookbook\models.py:1724
 msgid "Recipe"
 msgstr "食譜"
 
-#: .\cookbook\models.py:1565
+#: .\cookbook\models.py:1725
 msgid "Food"
 msgstr "食物"
 
-#: .\cookbook\models.py:1566
+#: .\cookbook\models.py:1726
 msgid "Keyword"
 msgstr "關鍵詞"
 
-#: .\cookbook\serializer.py:262
+#: .\cookbook\serializer.py:285
 msgid "File uploads are not enabled for this Space."
 msgstr "未為此空間啟用文件上傳。"
 
-#: .\cookbook\serializer.py:273
+#: .\cookbook\serializer.py:296
 msgid "You have reached your file upload limit."
 msgstr "你已達到文件上傳的限製。"
 
-#: .\cookbook\serializer.py:281
+#: .\cookbook\serializer.py:304
 msgid "The given file type is not allowed."
 msgstr ""
 
-#: .\cookbook\serializer.py:421 .\cookbook\views\views.py:94
+#: .\cookbook\serializer.py:444 .\cookbook\views\views.py:97
 msgid ""
 "You have the reached the maximum amount of spaces that can be owned by you."
 msgstr "你已達到可以擁有的最大空間數量。"
 
-#: .\cookbook\serializer.py:434
+#: .\cookbook\serializer.py:457
 msgid "Space Name must be unique."
 msgstr ""
 
-#: .\cookbook\serializer.py:469
-msgid "Cannot modify Space owner permission."
-msgstr "無法修改空間所有者權限。"
+#: .\cookbook\serializer.py:505
+#, fuzzy
+#| msgid "You must select at least one field to search!"
+msgid "You must select at least one group."
+msgstr "你必須選擇至少一個字段進行搜索！"
 
-#: .\cookbook\serializer.py:1596
+#: .\cookbook\serializer.py:1838
 msgid "Hello"
 msgstr "你好"
 
-#: .\cookbook\serializer.py:1596
+#: .\cookbook\serializer.py:1838
 msgid "You have been invited by "
 msgstr "你已被邀請由 "
 
-#: .\cookbook\serializer.py:1598
+#: .\cookbook\serializer.py:1840
 msgid " to join their Tandoor Recipes space "
 msgstr " 加入他們的Tandoor Recipes空間 "
 
-#: .\cookbook\serializer.py:1600
+#: .\cookbook\serializer.py:1842
 msgid "Click the following link to activate your account: "
 msgstr "點擊以下鏈接激活你的賬戶： "
 
-#: .\cookbook\serializer.py:1602
+#: .\cookbook\serializer.py:1844
 msgid ""
 "If the link does not work use the following code to manually join the space: "
 msgstr "如果鏈接無法使用，請使用以下代碼手動加入空間： "
 
-#: .\cookbook\serializer.py:1604
+#: .\cookbook\serializer.py:1846
 msgid "The invitation is valid until "
 msgstr "邀請有效期至 "
 
-#: .\cookbook\serializer.py:1606
+#: .\cookbook\serializer.py:1848
 msgid ""
 "Tandoor Recipes is an Open Source recipe manager. Check it out on GitHub "
 msgstr "Tandoor Recipes是一個開源的食譜管理器。在GitHub上查看 "
 
-#: .\cookbook\serializer.py:1609
+#: .\cookbook\serializer.py:1851
 msgid "Tandoor Recipes Invite"
 msgstr "Tandoor Recipes邀請"
 
-#: .\cookbook\serializer.py:1813
+#: .\cookbook\serializer.py:2057
 msgid "Existing shopping list to update"
 msgstr "現有購物清單更新"
 
-#: .\cookbook\serializer.py:1815
+#: .\cookbook\serializer.py:2059
 msgid ""
 "List of ingredient IDs from the recipe to add, if not provided all "
 "ingredients will be added."
 msgstr "從食譜中添加的成分ID列表，如果未提供，將添加所有成分。"
 
-#: .\cookbook\serializer.py:1817
+#: .\cookbook\serializer.py:2061
 msgid ""
 "Providing a list_recipe ID and servings of 0 will delete that shopping list."
 msgstr "提供一個list_recipe ID和0份量將刪除該購物清單。"
 
-#: .\cookbook\serializer.py:1826
+#: .\cookbook\serializer.py:2070
 msgid "Amount of food to add to the shopping list"
 msgstr "添加到購物清單的食物數量"
 
-#: .\cookbook\serializer.py:1828
+#: .\cookbook\serializer.py:2072
 msgid "ID of unit to use for the shopping list"
 msgstr "用於購物清單的單位ID"
 
-#: .\cookbook\serializer.py:1830
+#: .\cookbook\serializer.py:2074
 msgid "When set to true will delete all food from active shopping lists."
 msgstr "設置為true時，將刪除所有活動購物清單中的食物。"
 
@@ -584,11 +636,6 @@ msgstr "設為主要"
 #: .\cookbook\templates\account\email.html:42
 msgid "Re-send Verification"
 msgstr "重新發送驗證"
-
-#: .\cookbook\templates\account\email.html:43
-#: .\cookbook\templates\socialaccount\connections.html:36
-msgid "Remove"
-msgstr "移除"
 
 #: .\cookbook\templates\account\email.html:51
 msgid "Warning:"
@@ -652,7 +699,7 @@ msgid "Login"
 msgstr "登錄"
 
 #: .\cookbook\templates\account\login.html:15
-#: .\cookbook\templates\account\login.html:31
+#: .\cookbook\templates\account\login.html:34
 #: .\cookbook\templates\account\password_reset.html:39
 #: .\cookbook\templates\account\password_reset_done.html:31
 #: .\cookbook\templates\account\signup.html:68
@@ -663,7 +710,7 @@ msgstr "登錄"
 msgid "Sign In"
 msgstr "登錄"
 
-#: .\cookbook\templates\account\login.html:34
+#: .\cookbook\templates\account\login.html:37
 #: .\cookbook\templates\account\password_reset.html:41
 #: .\cookbook\templates\account\password_reset_done.html:33
 #: .\cookbook\templates\socialaccount\signup.html:8
@@ -671,20 +718,21 @@ msgstr "登錄"
 msgid "Sign Up"
 msgstr "註冊"
 
-#: .\cookbook\templates\account\login.html:38
+#: .\cookbook\templates\account\login.html:41
 msgid "Lost your password?"
 msgstr "忘記密碼？"
 
-#: .\cookbook\templates\account\login.html:39
+#: .\cookbook\templates\account\login.html:42
 #: .\cookbook\templates\account\password_reset.html:29
 msgid "Reset My Password"
 msgstr "重置我的密碼"
 
-#: .\cookbook\templates\account\login.html:50
+#: .\cookbook\templates\account\login.html:52
+#: .\cookbook\templates\system.html:228
 msgid "Social Login"
 msgstr "社交登錄"
 
-#: .\cookbook\templates\account\login.html:51
+#: .\cookbook\templates\account\login.html:53
 msgid "You can use any of the following providers to sign in."
 msgstr "你可以使用以下任何提供商登錄。"
 
@@ -1299,6 +1347,12 @@ msgid ""
 "An error occurred while attempting to login via your social network account."
 msgstr "嘗試通過你的社交網絡賬戶登錄時發生錯誤。"
 
+#: .\cookbook\templates\socialaccount\authentication_error.html:30
+#, fuzzy
+#| msgid "Please contact your administrator."
+msgid "If this problem persists, please contact your administrator."
+msgstr "請聯繫你的管理員。"
+
 #: .\cookbook\templates\socialaccount\connections.html:4
 #: .\cookbook\templates\socialaccount\connections.html:7
 msgid "Account Connections"
@@ -1524,7 +1578,7 @@ msgstr ""
 
 #: .\cookbook\templates\system.html:76 .\cookbook\templates\system.html:91
 #: .\cookbook\templates\system.html:104 .\cookbook\templates\system.html:115
-#: .\cookbook\views\views.py:168
+#: .\cookbook\views\views.py:179
 msgid "Everything is fine!"
 msgstr "一切正常！"
 
@@ -1620,19 +1674,65 @@ msgstr ""
 "發布遷移日誌和下面的概述。\n"
 "        "
 
-#: .\cookbook\templates\system.html:238
+#: .\cookbook\templates\system.html:230
+#, fuzzy
+#| msgid "Connect %(provider)s"
+msgid "Configured Providers"
+msgstr "連接%(provider)s"
+
+#: .\cookbook\templates\system.html:239
+msgid "Name"
+msgstr "名字"
+
+#: .\cookbook\templates\system.html:240 .\cookbook\templates\system.html:270
+msgid "Provider"
+msgstr ""
+
+#: .\cookbook\templates\system.html:241
+msgid "Client ID"
+msgstr ""
+
+#: .\cookbook\templates\system.html:243
+msgid "Linked Accounts"
+msgstr ""
+
+#: .\cookbook\templates\system.html:259
+msgid "Recent Login Errors"
+msgstr ""
+
+#: .\cookbook\templates\system.html:269
+msgid "Time"
+msgstr "時間"
+
+#: .\cookbook\templates\system.html:271
+msgid "Error Code"
+msgstr ""
+
+#: .\cookbook\templates\system.html:272
+msgid "Details"
+msgstr ""
+
+#: .\cookbook\templates\system.html:286
+msgid "Errors are cached for 24 hours. Maximum 50 entries stored."
+msgstr ""
+
+#: .\cookbook\templates\system.html:288
+msgid "No recent social login errors."
+msgstr ""
+
+#: .\cookbook\templates\system.html:303
 msgid "False"
 msgstr "錯誤"
 
-#: .\cookbook\templates\system.html:238
+#: .\cookbook\templates\system.html:303
 msgid "True"
 msgstr "真"
 
-#: .\cookbook\templates\system.html:268
+#: .\cookbook\templates\system.html:333
 msgid "Hide"
 msgstr "隱藏"
 
-#: .\cookbook\templates\system.html:271
+#: .\cookbook\templates\system.html:336
 msgid "Show"
 msgstr "顯示"
 
@@ -1644,192 +1744,287 @@ msgstr "導出食譜"
 msgid "Export"
 msgstr "導出"
 
-#: .\cookbook\views\api.py:198 .\cookbook\views\api.py:326
+#: .\cookbook\templates\usersessions\usersession_list.html:5
+#: .\cookbook\templates\usersessions\usersession_list.html:8
+#, fuzzy
+#| msgid "No Permissions"
+msgid "Sessions"
+msgstr "無權限"
+
+#: .\cookbook\templates\usersessions\usersession_list.html:9
+#, fuzzy
+#| msgid "The following e-mail addresses are associated with your account:"
+msgid "The following sessions are currently active on your account."
+msgstr "以下電子郵件地址與你的賬戶相關聯："
+
+#: .\cookbook\templates\usersessions\usersession_list.html:16
+#, fuzzy
+#| msgid "Starts With"
+msgid "Started At"
+msgstr "以...開始"
+
+#: .\cookbook\templates\usersessions\usersession_list.html:17
+#, fuzzy
+#| msgid "E-mail Addresses"
+msgid "IP Address"
+msgstr "電子郵件地址"
+
+#: .\cookbook\templates\usersessions\usersession_list.html:18
+#, fuzzy
+#| msgid "API Browser"
+msgid "Browser"
+msgstr "API瀏覽器"
+
+#: .\cookbook\templates\usersessions\usersession_list.html:20
+#, fuzzy
+#| msgid "Last viewed"
+msgid "Last Seen"
+msgstr "最近查看"
+
+#: .\cookbook\templates\usersessions\usersession_list.html:36
+msgid "Current"
+msgstr ""
+
+#: .\cookbook\templates\usersessions\usersession_list.html:45
+msgid "Sign Out Other Sessions"
+msgstr ""
+
+#: .\cookbook\views\api.py:205 .\cookbook\views\api.py:334
 msgid "Parameter updated_at incorrectly formatted"
 msgstr "參數updated_at格式不正確"
 
-#: .\cookbook\views\api.py:351 .\cookbook\views\api.py:484
+#: .\cookbook\views\api.py:359 .\cookbook\views\api.py:497
 #, python-brace-format
 msgid "No {self.basename} with id {pk} exists"
 msgstr "不存在id為{pk}的{self.basename}"
 
-#: .\cookbook\views\api.py:355
+#: .\cookbook\views\api.py:363
 msgid "Cannot merge with the same object!"
 msgstr "不能與相同的對象合併！"
 
-#: .\cookbook\views\api.py:362
+#: .\cookbook\views\api.py:370
 #, python-brace-format
 msgid "No {self.basename} with id {target} exists"
 msgstr "不存在id為{target}的{self.basename}"
 
-#: .\cookbook\views\api.py:367
+#: .\cookbook\views\api.py:375
 msgid "Cannot merge with child object!"
 msgstr "不能與子對象合併！"
 
-#: .\cookbook\views\api.py:405
+#: .\cookbook\views\api.py:418
 #, python-brace-format
 msgid "{source.name} was merged successfully with {target.name}"
 msgstr "{source.name}已成功與{target.name}合併"
 
-#: .\cookbook\views\api.py:411
+#: .\cookbook\views\api.py:424
 #, python-brace-format
 msgid "An error occurred attempting to merge {source.name} with {target.name}"
 msgstr "嘗試將{source.name}與{target.name}合併時發生錯誤"
 
-#: .\cookbook\views\api.py:493
+#: .\cookbook\views\api.py:506
 #, python-brace-format
 msgid "{child.name} was moved successfully to the root."
 msgstr "{child.name}已成功移動到根目錄。"
 
-#: .\cookbook\views\api.py:496 .\cookbook\views\api.py:514
+#: .\cookbook\views\api.py:509 .\cookbook\views\api.py:527
 msgid "An error occurred attempting to move "
 msgstr "嘗試移動時發生錯誤 "
 
-#: .\cookbook\views\api.py:499
+#: .\cookbook\views\api.py:512
 msgid "Cannot move an object to itself!"
 msgstr "不能將對象移動到自身！"
 
-#: .\cookbook\views\api.py:505
+#: .\cookbook\views\api.py:518
 #, python-brace-format
 msgid "No {self.basename} with id {parent} exists"
 msgstr "不存在id為{parent}的{self.basename}"
 
-#: .\cookbook\views\api.py:511
+#: .\cookbook\views\api.py:524
 #, python-brace-format
 msgid "{child.name} was moved successfully to parent {parent.name}"
 msgstr "{child.name}已成功移動到父級{parent.name}"
 
-#: .\cookbook\views\api.py:992
+#: .\cookbook\views\api.py:867
+msgid ""
+"If true also return empty entries, if false (default) only return entries "
+"with amount > 0."
+msgstr ""
+
+#: .\cookbook\views\api.py:868
+msgid ""
+"Returns all entries with the same food as the given code. If code is given "
+"food parameter is ignored"
+msgstr ""
+
+#: .\cookbook\views\api.py:869 .\cookbook\views\api.py:903
+#, fuzzy
+#| msgid "Filter for entries with the given recipe"
+msgid "Returns all entries with the given food id"
+msgstr "篩選具有給定食譜的條目"
+
+#: .\cookbook\views\api.py:870
+#, fuzzy
+#| msgid "Filter for entries with the given recipe"
+msgid "Returns all entries with the given inventory location id"
+msgstr "篩選具有給定食譜的條目"
+
+#: .\cookbook\views\api.py:904
+#, fuzzy
+#| msgid "Filter for entries with the given recipe"
+msgid "Returns all entries with the given entry id"
+msgstr "篩選具有給定食譜的條目"
+
+#: .\cookbook\views\api.py:1107
 #, python-brace-format
 msgid "{obj.name} was removed from the shopping list."
 msgstr "{obj.name}已從購物清單中移除。"
 
-#: .\cookbook\views\api.py:997 .\cookbook\views\api.py:1627
+#: .\cookbook\views\api.py:1112 .\cookbook\views\api.py:1922
 #, python-brace-format
 msgid "{obj.name} was added to the shopping list."
 msgstr "{obj.name}已添加到購物清單中。"
 
-#: .\cookbook\views\api.py:1239
+#: .\cookbook\views\api.py:1229 .\cookbook\views\api.py:2040
+#: .\cookbook\views\api.py:2722 .\cookbook\views\api.py:2889
+msgid "You must select an AI provider to perform your request."
+msgstr ""
+
+#: .\cookbook\views\api.py:1236 .\cookbook\views\api.py:2047
+#: .\cookbook\views\api.py:2729 .\cookbook\views\api.py:2896
+msgid ""
+"You don't have any credits remaining to use AI or AI features are not "
+"enabled for your space."
+msgstr ""
+
+#: .\cookbook\views\api.py:1484
 #, fuzzy
 #| msgid "Filter meal plans from date (inclusive) in the format of YYYY-MM-DD."
-msgid "Filter meal plans from date (inclusive)."
+msgid ""
+"Filter meal plans from date (inclusive). If nothing is given its today - 90 "
+"days."
 msgstr "按日期篩選膳食計劃（包括），格式為YYYY-MM-DD。"
 
-#: .\cookbook\views\api.py:1241
+#: .\cookbook\views\api.py:1486
 #, fuzzy
 #| msgid "Filter meal plans to date (inclusive) in the format of YYYY-MM-DD."
-msgid "Filter meal plans to date (inclusive)."
+msgid ""
+"Filter meal plans to date (inclusive). If nothing is given its today + 360 "
+"days."
 msgstr "按日期篩選膳食計劃（包括），格式為YYYY-MM-DD。"
 
-#: .\cookbook\views\api.py:1244
+#: .\cookbook\views\api.py:1489
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
 msgstr "按MealType ID篩選膳食計劃。對於多個重複參數。"
 
-#: .\cookbook\views\api.py:1404
+#: .\cookbook\views\api.py:1578
+msgid "No recipes found."
+msgstr ""
+
+#: .\cookbook\views\api.py:1677
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr "步驟所屬的食譜ID。對於多個重複參數。"
 
-#: .\cookbook\views\api.py:1406
+#: .\cookbook\views\api.py:1679
 msgid "Query string matched (fuzzy) against object name."
 msgstr "查詢字符串與對象名稱模糊匹配。"
 
-#: .\cookbook\views\api.py:1442
+#: .\cookbook\views\api.py:1718
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
 msgstr "查詢字符串與食譜名稱模糊匹配。未來還將進行全文搜索。"
 
-#: .\cookbook\views\api.py:1444
+#: .\cookbook\views\api.py:1720
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
 msgstr "食譜應具有的關鍵詞ID。對於多個重複參數。相當於keywords_or"
 
-#: .\cookbook\views\api.py:1445
+#: .\cookbook\views\api.py:1721
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr "關鍵詞ID，多次重複。返回具有任何關鍵詞的食譜"
 
-#: .\cookbook\views\api.py:1446
+#: .\cookbook\views\api.py:1722
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr "關鍵詞ID，多次重複。返回具有所有關鍵詞的食譜。"
 
-#: .\cookbook\views\api.py:1447
+#: .\cookbook\views\api.py:1723
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr "關鍵詞ID，多次重複。排除具有任何關鍵詞的食譜。"
 
-#: .\cookbook\views\api.py:1448
+#: .\cookbook\views\api.py:1724
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr "關鍵詞ID，多次重複。排除具有所有關鍵詞的食譜。"
 
-#: .\cookbook\views\api.py:1450
+#: .\cookbook\views\api.py:1726
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr "食譜應具有的食物ID。對於多個重複參數。"
 
-#: .\cookbook\views\api.py:1451
+#: .\cookbook\views\api.py:1727
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr "食物ID，多次重複。返回具有任何食物的食譜"
 
-#: .\cookbook\views\api.py:1452
+#: .\cookbook\views\api.py:1728
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr "食物ID，多次重複。返回具有所有食物的食譜。"
 
-#: .\cookbook\views\api.py:1453
+#: .\cookbook\views\api.py:1729
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr "食物ID，多次重複。排除具有任何食物的食譜。"
 
-#: .\cookbook\views\api.py:1454
+#: .\cookbook\views\api.py:1730
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr "食物ID，多次重複。排除具有所有食物的食譜。"
 
-#: .\cookbook\views\api.py:1456
+#: .\cookbook\views\api.py:1732
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr "食譜應在的書籍ID。對於多個重複參數。"
 
-#: .\cookbook\views\api.py:1457
+#: .\cookbook\views\api.py:1733
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
 msgstr "書籍ID，多次重複。返回具有任何書籍的食譜"
 
-#: .\cookbook\views\api.py:1458
+#: .\cookbook\views\api.py:1734
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
 msgstr "書籍ID，多次重複。返回具有所有書籍的食譜。"
 
-#: .\cookbook\views\api.py:1459
+#: .\cookbook\views\api.py:1735
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr "書籍ID，多次重複。排除具有任何書籍的食譜。"
 
-#: .\cookbook\views\api.py:1460
+#: .\cookbook\views\api.py:1736
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
 msgstr "書籍ID，多次重複。排除具有所有書籍的食譜。"
 
-#: .\cookbook\views\api.py:1462
+#: .\cookbook\views\api.py:1738
 msgid "ID of unit a recipe should have."
 msgstr "食譜應具有的單位ID。"
 
-#: .\cookbook\views\api.py:1464
+#: .\cookbook\views\api.py:1740
 msgid "Exact rating of recipe"
 msgstr ""
 
-#: .\cookbook\views\api.py:1465
+#: .\cookbook\views\api.py:1741
 #, fuzzy
 #| msgid "ID of unit a recipe should have."
 msgid "Rating a recipe should have or greater."
 msgstr "食譜應具有的單位ID。"
 
-#: .\cookbook\views\api.py:1466
+#: .\cookbook\views\api.py:1742
 #, fuzzy
 #| msgid "ID of unit a recipe should have."
 msgid "Rating a recipe should have or smaller."
 msgstr "食譜應具有的單位ID。"
 
-#: .\cookbook\views\api.py:1468
+#: .\cookbook\views\api.py:1744
 msgid "Filter recipes cooked X times."
 msgstr ""
 
-#: .\cookbook\views\api.py:1469
+#: .\cookbook\views\api.py:1745
 #, fuzzy
 #| msgid ""
 #| "Filter recipes cooked X times or more.  Negative values returns cooked "
@@ -1837,17 +2032,17 @@ msgstr ""
 msgid "Filter recipes cooked X times or more."
 msgstr "篩選烹飪X次或更多次的食譜。負值返回烹飪次數少於X次的食譜"
 
-#: .\cookbook\views\api.py:1470
+#: .\cookbook\views\api.py:1746
 msgid "Filter recipes cooked X times or less."
 msgstr ""
 
-#: .\cookbook\views\api.py:1472
+#: .\cookbook\views\api.py:1748
 #, fuzzy
 #| msgid "Filter for entries with the given recipe"
 msgid "Filter recipes created on the given date."
 msgstr "篩選具有給定食譜的條目"
 
-#: .\cookbook\views\api.py:1473
+#: .\cookbook\views\api.py:1749
 #, fuzzy
 #| msgid ""
 #| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
@@ -1855,7 +2050,7 @@ msgstr "篩選具有給定食譜的條目"
 msgid "Filter recipes created on the given date or after."
 msgstr "篩選創建日期在YYYY-MM-DD或之後的食譜。前置-篩選在日期或之前的食譜。"
 
-#: .\cookbook\views\api.py:1474
+#: .\cookbook\views\api.py:1750
 #, fuzzy
 #| msgid ""
 #| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
@@ -1863,14 +2058,14 @@ msgstr "篩選創建日期在YYYY-MM-DD或之後的食譜。前置-篩選在日�
 msgid "Filter recipes created on the given date or before."
 msgstr "篩選創建日期在YYYY-MM-DD或之後的食譜。前置-篩選在日期或之前的食譜。"
 
-#: .\cookbook\views\api.py:1476 .\cookbook\views\api.py:1477
-#: .\cookbook\views\api.py:1478
+#: .\cookbook\views\api.py:1752 .\cookbook\views\api.py:1753
+#: .\cookbook\views\api.py:1754
 #, fuzzy
 #| msgid "Filter for entries with the given recipe"
 msgid "Filter recipes updated on the given date."
 msgstr "篩選具有給定食譜的條目"
 
-#: .\cookbook\views\api.py:1480
+#: .\cookbook\views\api.py:1756
 #, fuzzy
 #| msgid ""
 #| "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters "
@@ -1879,7 +2074,7 @@ msgid "Filter recipes last cooked on the given date or after."
 msgstr ""
 "篩選最後烹飪日期在YYYY-MM-DD或之後的食譜。前置-篩選在日期或之前的食譜。"
 
-#: .\cookbook\views\api.py:1481
+#: .\cookbook\views\api.py:1757
 #, fuzzy
 #| msgid ""
 #| "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters "
@@ -1888,7 +2083,7 @@ msgid "Filter recipes last cooked on the given date or before."
 msgstr ""
 "篩選最後烹飪日期在YYYY-MM-DD或之後的食譜。前置-篩選在日期或之前的食譜。"
 
-#: .\cookbook\views\api.py:1483 .\cookbook\views\api.py:1484
+#: .\cookbook\views\api.py:1759 .\cookbook\views\api.py:1760
 #, fuzzy
 #| msgid ""
 #| "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters "
@@ -1897,63 +2092,69 @@ msgid "Filter recipes lasts viewed on the given date."
 msgstr ""
 "篩選最後查看日期在YYYY-MM-DD或之後的食譜。前置-篩選在日期或之前的食譜。"
 
-#: .\cookbook\views\api.py:1486
+#: .\cookbook\views\api.py:1762
 #, fuzzy
 #| msgid "Filter for entries with the given recipe"
 msgid "Filter recipes for ones created by the given user ID"
 msgstr "篩選具有給定食譜的條目"
 
-#: .\cookbook\views\api.py:1487
+#: .\cookbook\views\api.py:1763
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
 msgstr "是否僅返回內部食譜。[true/<b>false</b>]"
 
-#: .\cookbook\views\api.py:1488
+#: .\cookbook\views\api.py:1764
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
 msgstr "以隨機順序返回結果。[true/<b>false</b>]"
 
-#: .\cookbook\views\api.py:1490
+#: .\cookbook\views\api.py:1766
 msgid ""
 "Determines the order of the results. Options are: score,-score,name,-name,"
 "lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-"
 "created_at,lastviewed,-lastviewed"
 msgstr ""
 
-#: .\cookbook\views\api.py:1492
+#: .\cookbook\views\api.py:1768
 msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgstr "在搜索結果中首先返回新結果。[true/<b>false</b>]"
 
-#: .\cookbook\views\api.py:1493
+#: .\cookbook\views\api.py:1769
 msgid ""
 "Returns the given number of recently viewed recipes before search results "
 "(if given)"
 msgstr ""
 
-#: .\cookbook\views\api.py:1494
+#: .\cookbook\views\api.py:1770
 msgid "ID of a custom filter. Returns all recipes matched by that filter."
 msgstr ""
 
-#: .\cookbook\views\api.py:1495
+#: .\cookbook\views\api.py:1771
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr "篩選可以用現有食物製作的食譜。[true/<b>false</b>]"
 
-#: .\cookbook\views\api.py:1773
+#: .\cookbook\views\api.py:1772
+#, fuzzy
+#| msgid "Returns new results first in search results. [true/<b>false</b>]"
+msgid "Include child keywords and foods in search results. [<b>true</b>/false]"
+msgstr "在搜索結果中首先返回新結果。[true/<b>false</b>]"
+
+#: .\cookbook\views\api.py:2159
 msgid ""
 "Return the PropertyTypes matching the property category.  Repeat for "
 "multiple."
 msgstr ""
 
-#: .\cookbook\views\api.py:1804 .\cookbook\views\api.py:1860
+#: .\cookbook\views\api.py:2190 .\cookbook\views\api.py:2268
 #, fuzzy
 #| msgid "Filter for entries with the given recipe"
 msgid "Returns only entries associated with the given mealplan id"
 msgstr "篩選具有給定食譜的條目"
 
-#: .\cookbook\views\api.py:1858
+#: .\cookbook\views\api.py:2266
 msgid ""
 "Returns only elements updated after the given timestamp in ISO 8601 format."
 msgstr ""
 
-#: .\cookbook\views\api.py:2031
+#: .\cookbook\views\api.py:2466
 #, fuzzy
 #| msgid ""
 #| "Return the Automations matching the automation type.  Multiple values "
@@ -1962,17 +2163,17 @@ msgid ""
 "Return the Automations matching the automation type.  Repeat for multiple."
 msgstr "返回與自動化類型匹配的自動化。允許多個值。"
 
-#: .\cookbook\views\api.py:2048
+#: .\cookbook\views\api.py:2483
 msgid ""
 "Text field to store data that gets carried over to the UserSpace created "
 "from the InviteLink"
 msgstr ""
 
-#: .\cookbook\views\api.py:2049
+#: .\cookbook\views\api.py:2484
 msgid "Only return InviteLinks that have not been used yet."
 msgstr ""
 
-#: .\cookbook\views\api.py:2076
+#: .\cookbook\views\api.py:2511
 #, fuzzy
 #| msgid ""
 #| "Return the Automations matching the automation type.  Multiple values "
@@ -1980,87 +2181,79 @@ msgstr ""
 msgid "Return the CustomFilters matching the model type.  Repeat for multiple."
 msgstr "返回與自動化類型匹配的自動化。允許多個值。"
 
-#: .\cookbook\views\api.py:2176
+#: .\cookbook\views\api.py:2611
 msgid "Nothing to do."
 msgstr "無事可做。"
 
-#: .\cookbook\views\api.py:2222
-msgid "Invalid Url"
-msgstr "無效的URL"
+#: .\cookbook\views\api.py:2656
+#, python-format
+msgid ""
+"The requested page could not be loaded. The server returned %(status_code)s."
+msgstr ""
 
-#: .\cookbook\views\api.py:2228
+#: .\cookbook\views\api.py:2664
 msgid "Connection Refused."
 msgstr "連接被拒絕。"
 
-#: .\cookbook\views\api.py:2232
+#: .\cookbook\views\api.py:2668
 msgid "Bad URL Schema."
 msgstr "錯誤的URL架構。"
 
-#: .\cookbook\views\api.py:2257
+#: .\cookbook\views\api.py:2693
 msgid "No usable data could be found."
 msgstr "找不到可用的數據。"
 
-#: .\cookbook\views\api.py:2286 .\cookbook\views\api.py:2434
-msgid "You must select an AI provider to perform your request."
-msgstr ""
-
-#: .\cookbook\views\api.py:2293 .\cookbook\views\api.py:2441
-msgid ""
-"You don't have any credits remaining to use AI or AI features are not "
-"enabled for your space."
-msgstr ""
-
-#: .\cookbook\views\api.py:2499 .\cookbook\views\api.py:2667
+#: .\cookbook\views\api.py:2970 .\cookbook\views\api.py:3139
 msgid "File is above space limit"
 msgstr "文件超過空間限制"
 
-#: .\cookbook\views\api.py:2522 .\cookbook\views\api.py:2684
+#: .\cookbook\views\api.py:2993 .\cookbook\views\api.py:3156
 msgid "Importing is not implemented for this provider"
 msgstr "此提供程序未實現導入"
 
-#: .\cookbook\views\api.py:2548
+#: .\cookbook\views\api.py:3022
 msgid ""
-"The PDF Exporter is not enabled on this instance as it is still in an "
-"experimental state."
-msgstr "此實例未啟用PDF導出器，因為它仍處於實驗階段。"
+"PDF export is no longer available. Use your browser's print function (Ctrl"
+"+P) to save recipes as PDF."
+msgstr ""
 
-#: .\cookbook\views\api.py:2842
+#: .\cookbook\views\api.py:3365
 msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr "此功能在 Tandoor 的托管版本中尚不可用！"
 
-#: .\cookbook\views\api.py:2863
+#: .\cookbook\views\api.py:3386
 msgid "Sync successful!"
 msgstr "同步成功！"
 
-#: .\cookbook\views\api.py:2866
+#: .\cookbook\views\api.py:3389
 msgid "Error synchronizing with Storage"
 msgstr "與儲存同步時出錯"
 
-#: .\cookbook\views\views.py:89
+#: .\cookbook\views\views.py:92
 msgid "This feature is not available in the demo version!"
 msgstr "此功能在演示版本中不可用！"
 
-#: .\cookbook\views\views.py:110
+#: .\cookbook\views\views.py:113
 msgid ""
 "You have successfully created your own recipe space. Start by adding some "
 "recipes or invite other people to join you."
 msgstr "你已成功創建自己的食譜空間。開始添加一些食譜或邀請其他人加入你。"
 
-#: .\cookbook\views\views.py:171
+#: .\cookbook\views\views.py:182
 #, python-format
 msgid "PostgreSQL %(v)s is deprecated.  Upgrade to a fully supported version!"
 msgstr "PostgreSQL %(v)s已被棄用。升級到完全支持的版本！"
 
-#: .\cookbook\views\views.py:174
+#: .\cookbook\views\views.py:185
 #, python-format
 msgid "You are running PostgreSQL %(v1)s.  PostgreSQL %(v2)s is recommended"
 msgstr "你正在運行PostgreSQL %(v1)s。建議使用PostgreSQL %(v2)s"
 
-#: .\cookbook\views\views.py:178
+#: .\cookbook\views\views.py:189
 msgid "Unable to determine PostgreSQL version."
 msgstr "無法確定PostgreSQL版本。"
 
-#: .\cookbook\views\views.py:182
+#: .\cookbook\views\views.py:193
 msgid ""
 "This application is not running with a Postgres database backend. This is ok "
 "but not recommended as some features only work with postgres databases."
@@ -2068,7 +2261,7 @@ msgstr ""
 "此應用程序未使用Postgres數據庫後端運行。這是可以的，但不推薦，因為某些功能僅"
 "適用於Postgres數據庫。"
 
-#: .\cookbook\views\views.py:296
+#: .\cookbook\views\views.py:354
 msgid ""
 "The setup page can only be used to create the first "
 "user!                     If you have forgotten your superuser credentials "
@@ -2077,49 +2270,57 @@ msgstr ""
 "設置頁面只能用於創建第一個用戶！如果你忘記了超級用戶憑據，請參閱django文檔了"
 "解如何重置密碼。"
 
-#: .\cookbook\views\views.py:304
+#: .\cookbook\views\views.py:362
 msgid "Passwords dont match!"
 msgstr "密碼不匹配！"
 
-#: .\cookbook\views\views.py:312
+#: .\cookbook\views\views.py:370
 msgid "User has been created, please login!"
 msgstr "用戶已創建，請登錄！"
 
-#: .\cookbook\views\views.py:352
+#: .\cookbook\views\views.py:413
 msgid ""
 "Reporting share links is not enabled for this instance. Please notify the "
 "page administrator to report problems."
 msgstr "此實例未啟用報告共享鏈接。請通知頁面管理員報告問題。"
 
-#: .\cookbook\views\views.py:357
+#: .\cookbook\views\views.py:418
 msgid ""
 "Recipe sharing link has been disabled! For additional information please "
 "contact the page administrator."
 msgstr "食譜共享鏈接已被禁用！如需更多信息，請聯繫頁面管理員。"
 
-#: .\cookbook\views\views.py:383
+#: .\cookbook\views\views.py:444
 msgid "Manage recipes, shopping list, meal plans and more."
 msgstr "管理食譜、購物清單、膳食計劃等。"
 
-#: .\cookbook\views\views.py:397 .\cookbook\views\views.py:398
+#: .\cookbook\views\views.py:458 .\cookbook\views\views.py:459
 msgid "Plan"
 msgstr "計劃"
 
-#: .\cookbook\views\views.py:399
+#: .\cookbook\views\views.py:460
 msgid "View your meal Plan"
 msgstr "查看你的膳食計劃"
 
-#: .\cookbook\views\views.py:418
+#: .\cookbook\views\views.py:479
 msgid "View your shopping lists"
 msgstr "查看你的購物清單"
+
+#~ msgid "Cannot modify Space owner permission."
+#~ msgstr "無法修改空間所有者權限。"
+
+#~ msgid "Invalid Url"
+#~ msgstr "無效的URL"
+
+#~ msgid ""
+#~ "The PDF Exporter is not enabled on this instance as it is still in an "
+#~ "experimental state."
+#~ msgstr "此實例未啟用PDF導出器，因為它仍處於實驗階段。"
 
 #~ msgid ""
 #~ "Both fields are optional. If none are given the username will be "
 #~ "displayed instead"
 #~ msgstr "這兩個欄位都是可選的。如果沒有輸入,將顯示用戶名"
-
-#~ msgid "Name"
-#~ msgstr "名字"
 
 #~ msgid "Keywords"
 #~ msgstr "關鍵字"
@@ -2238,9 +2439,6 @@ msgstr "查看你的購物清單"
 #~ msgid "Partial Match"
 #~ msgstr "部分匹配"
 
-#~ msgid "Starts With"
-#~ msgstr "以...開始"
-
 #~ msgid "Fuzzy Search"
 #~ msgstr "模糊搜索"
 
@@ -2318,9 +2516,6 @@ msgstr "查看你的購物清單"
 
 #~ msgid "Translate Tandoor"
 #~ msgstr "翻譯Tandoor"
-
-#~ msgid "API Browser"
-#~ msgstr "API瀏覽器"
 
 #~ msgid "Log out"
 #~ msgstr "登出"
@@ -2662,9 +2857,6 @@ msgstr "查看你的購物清單"
 #~ msgid "Comment saved!"
 #~ msgstr "評論已保存！"
 
-#~ msgid "You must select at least one field to search!"
-#~ msgstr "你必須選擇至少一個字段進行搜索！"
-
 #~ msgid ""
 #~ "To use this search method you must select at least one full text search "
 #~ "field!"
@@ -2757,9 +2949,6 @@ msgstr "查看你的購物清單"
 
 #~ msgid "Large"
 #~ msgstr "大"
-
-#~ msgid "Time"
-#~ msgstr "時間"
 
 #~ msgid "File"
 #~ msgstr "文件"

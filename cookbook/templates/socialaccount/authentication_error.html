@@ -25,6 +25,10 @@
             <p>{% trans "An error occurred while attempting to login via your social network account." %}</p>
 
             <a class="btn btn-secondary" href="{% url 'account_login' %}">{% trans "Back" %}</a>
+
+            {% if auth_error %}
+            <p class="text-muted small mt-3">{% trans "If this problem persists, please contact your administrator." %}</p>
+            {% endif %}
         </div>
     </div>
 

@@ -18,6 +18,7 @@ import {
     OpenDataConversionFromJSON,
     OpenDataConversionFromJSONTyped,
     OpenDataConversionToJSON,
+    OpenDataConversionToJSONTyped,
 } from './OpenDataConversion';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedOpenDataConversionList {
      * @type {string}
      * @memberof PaginatedOpenDataConversionList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedOpenDataConversionList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<OpenDataConversion>}
@@ -85,17 +86,22 @@ export function PaginatedOpenDataConversionListFromJSONTyped(json: any, ignoreDi
     };
 }
 
-export function PaginatedOpenDataConversionListToJSON(value?: PaginatedOpenDataConversionList | null): any {
+export function PaginatedOpenDataConversionListToJSON(json: any): PaginatedOpenDataConversionList {
+    return PaginatedOpenDataConversionListToJSONTyped(json, false);
+}
+
+export function PaginatedOpenDataConversionListToJSONTyped(value?: PaginatedOpenDataConversionList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(OpenDataConversionToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

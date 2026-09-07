@@ -146,11 +146,11 @@ function formatCategory(categoryName: string) {
  */
 function formatEntry(entry: ShoppingListEntry) {
     if (mode.value == 'md_list') {
-        return `${useUserPreferenceStore().userSettings.csvPrefix} ${entry.amount} ${entry.unit?.name} ${entry.food?.name}`
+        return `${useUserPreferenceStore().userSettings.csvPrefix} ${entry.amount} ${(entry.unit) ? entry.unit.name : ''} ${entry.food?.name}`
     } else if (mode.value == 'md_table') {
-        return `|${entry.amount}|${entry.unit?.name}|${entry.food?.name}|`
+        return `|${entry.amount}|${(entry.unit) ? entry.unit.name : ''}|${entry.food?.name}|`
     } else if (mode.value == 'csv') {
-        return `${entry.amount}${csvDelim.value}${entry.unit?.name}${csvDelim.value}${entry.food?.name}`
+        return `${entry.amount}${csvDelim.value}${(entry.unit) ? entry.unit.name : ''}${csvDelim.value}${entry.food?.name}`
     }
     return ''
 }

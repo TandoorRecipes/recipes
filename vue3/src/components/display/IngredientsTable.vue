@@ -27,7 +27,7 @@
 
     <v-table density="compact">
         <tbody>
-        <template v-for="i in ingredients" :key="i.id" >
+        <template v-for="(i, idx) in ingredients" :key="i.id">
             <tr @click="i.checked = !i.checked">
                 <template v-if="i.isHeader">
                     <td colspan="5" class="font-weight-bold">{{ i.note }}</td>
@@ -61,9 +61,34 @@
                         <span class="text-disabled font-italic"> {{ i.note }}</span>
                     </td>
                     <td style="width: 1%; text-wrap: nowrap" v-if="!useUserPreferenceStore().isPrintMode">
-                        <v-icon class="far fa-comment float-right" v-if="i.note != '' && i.note != undefined">
-                            <v-tooltip activator="parent" open-on-click location="start">{{ i.note }}</v-tooltip>
+                        <v-icon class="far fa-comment float-right"
+                                v-if="i.note != '' && i.note != undefined"
+                                @click.stop="openNoteIdx = openNoteIdx === idx ? null : idx">
+                            <v-tooltip :model-value="openNoteIdx === idx" activator="parent" location="start">{{ i.note }}</v-tooltip>
                         </v-icon>
+                    </td>
+                    <td v-if="showActions">
+                        <v-btn density="compact" variant="plain" @click.stop="" icon>
+                            <v-icon icon="$menu"></v-icon>
+                            <v-menu activator="parent">
+                                <v-list>
+                                    <v-list-item prepend-icon="fa-solid fa-sort-numeric-up">
+                                        {{ $t('Scale') }}
+                                        <number-scaler-dialog :number="i.amount * ingredientFactor"
+                                                              @confirm="(target: number) => emit('scale', target/i.amount)"></number-scaler-dialog>
+                                    </v-list-item>
+                                    <v-list-item prepend-icon="$shopping" @click="addToShopping(i)">
+                                        {{ $t('Shopping') }}
+                                    </v-list-item>
+                                    <v-list-item link v-if="i.food" :to="{name: 'ModelEditPage', params: { model:'Food', id: i.food.id}}" :prepend-icon="TFood.icon">
+                                        {{ $t('Food') }}
+                                    </v-list-item>
+                                    <v-list-item link v-if="i.unit" :to="{name: 'ModelEditPage', params: { model:'Unit', id: i.unit.id}}" :prepend-icon="TUnit.icon">
+                                        {{ $t('Unit') }}
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </v-btn>
                     </td>
                 </template>
             </tr>
@@ -74,13 +99,16 @@
 </template>
 
 <script lang="ts" setup>
-import {Ingredient} from "@/openapi";
-import {computed} from "vue";
+import {ApiApi, Ingredient, ShoppingListEntry} from "@/openapi";
+import {computed, ref} from "vue";
 import {calculateFoodAmount} from "../../utils/number_utils";
 import {useUserPreferenceStore} from "../../stores/UserPreferenceStore";
 import {ingredientToFoodString, ingredientToUnitString} from "@/utils/model_utils.ts";
+import {TFood, TUnit} from "@/types/Models.ts";
+import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
+import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore.ts";
 
-const ingredients = defineModel<Ingredient[]>({required: true})
+const emit = defineEmits(['scale'])
 
 const props = defineProps({
     showNotes: {
@@ -95,7 +123,15 @@ const props = defineProps({
         type: Boolean,
         default: true
     },
+    showActions: {
+        type: Boolean,
+        default: false
+    },
 })
+
+const ingredients = defineModel<Ingredient[]>({required: true})
+
+const openNoteIdx = ref<number | null>(null)
 
 const tableHeaders = computed(() => {
     let headers = [
@@ -115,6 +151,20 @@ const tableHeaders = computed(() => {
 
 function handleRowClick(event: PointerEvent, data: any) {
     ingredients.value[data.index].checked = !ingredients.value[data.index].checked
+}
+
+function addToShopping(ingredient: Ingredient) {
+    const api = new ApiApi()
+    const sLE = {
+        amount: ingredient.amount * props.ingredientFactor,
+        unit: ingredient.unit,
+        food: ingredient.food
+    } as ShoppingListEntry
+    api.apiShoppingListEntryCreate({shoppingListEntry: sLE}).then(r => {
+        useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+    })
 }
 
 </script>

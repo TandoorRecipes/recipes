@@ -18,6 +18,7 @@ import {
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
+    KeywordToJSONTyped,
 } from './Keyword';
 
 /**
@@ -111,10 +112,15 @@ export function PatchedImportLogFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function PatchedImportLogToJSON(value?: Omit<PatchedImportLog, 'keyword'|'createdBy'|'createdAt'> | null): any {
+export function PatchedImportLogToJSON(json: any): PatchedImportLog {
+    return PatchedImportLogToJSONTyped(json, false);
+}
+
+export function PatchedImportLogToJSONTyped(value?: Omit<PatchedImportLog, 'keyword'|'created_by'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

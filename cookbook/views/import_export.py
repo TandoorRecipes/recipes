@@ -3,19 +3,22 @@ import threading
 
 from django.core.cache import cache
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
+from django.urls import reverse
 from django.utils.translation import gettext as _
 
 from cookbook.forms import ExportForm, ImportExportBase
-from cookbook.helper.permission_helper import group_required
+from cookbook.helper.permission_helper import has_group_permission
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.integration.cheftap import ChefTap
 from cookbook.integration.chowdown import Chowdown
 from cookbook.integration.cookbookapp import CookBookApp
+from cookbook.integration.cooklang import Cooklang
 from cookbook.integration.cookmate import Cookmate
 from cookbook.integration.copymethat import CopyMeThat
 from cookbook.integration.default import Default
 from cookbook.integration.domestica import Domestica
+from cookbook.integration.gourmet import Gourmet
 from cookbook.integration.mealie import Mealie
 from cookbook.integration.mealie1 import Mealie1
 from cookbook.integration.mealmaster import MealMaster
@@ -23,8 +26,9 @@ from cookbook.integration.melarecipes import MelaRecipes
 from cookbook.integration.nextcloud_cookbook import NextcloudCookbook
 from cookbook.integration.openeats import OpenEats
 from cookbook.integration.paprika import Paprika
-from cookbook.integration.pdfexport import PDFexport
+# from cookbook.integration.pdfexport import PDFexport  # pyppeteer dependency removed
 from cookbook.integration.pepperplate import Pepperplate
+from cookbook.integration.pestle import Pestle
 from cookbook.integration.plantoeat import Plantoeat
 from cookbook.integration.recettetek import RecetteTek
 from cookbook.integration.recipekeeper import RecipeKeeper
@@ -32,7 +36,6 @@ from cookbook.integration.recipesage import RecipeSage
 from cookbook.integration.rezeptsuitede import Rezeptsuitede
 from cookbook.integration.rezkonv import RezKonv
 from cookbook.integration.saffron import Saffron
-from cookbook.integration.gourmet import Gourmet
 from cookbook.models import ExportLog, Recipe
 from recipes import settings
 
@@ -74,10 +77,13 @@ def get_integration(request, export_type):
         return Plantoeat(request, export_type)
     if export_type == ImportExportBase.COOKBOOKAPP:
         return CookBookApp(request, export_type)
+    if export_type == ImportExportBase.COOKLANG:
+        return Cooklang(request, export_type)
     if export_type == ImportExportBase.COPYMETHAT:
         return CopyMeThat(request, export_type)
     if export_type == ImportExportBase.PDF:
-        return PDFexport(request, export_type)
+    #     return PDFexport(request, export_type)  # pyppeteer dependency removed
+        raise NotImplementedError('PDF export is no longer available. Use your browser\'s print function (Ctrl+P) to save recipes as PDF.')
     if export_type == ImportExportBase.MELARECIPES:
         return MelaRecipes(request, export_type)
     if export_type == ImportExportBase.COOKMATE:
@@ -86,10 +92,14 @@ def get_integration(request, export_type):
         return Rezeptsuitede(request, export_type)
     if export_type == ImportExportBase.GOURMET:
         return Gourmet(request, export_type)
+    if export_type == ImportExportBase.PESTLE:
+        return Pestle(request, export_type)
 
 
-@group_required('user')
 def export_file(request, pk):
+    if not has_group_permission(request, ['user']):
+        return redirect(reverse('index'))
+
     el = get_object_or_404(ExportLog, pk=pk, space=request.space)
 
     cacheData = cache.get(f'export_file_{el.pk}')

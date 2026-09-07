@@ -44,7 +44,7 @@ watch(() => props.model, () => {
 })
 
 /**
- * Allow opening the model edit dialog trough v-model property of the dialog by watching for model changes
+ * Allow opening the model edit dialog through v-model property of the dialog by watching for model changes
  */
 watch(dialog, (value, oldValue, onCleanup) => {
     dialog.value = !!value

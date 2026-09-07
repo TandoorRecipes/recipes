@@ -6,7 +6,6 @@
             label="Combobox"
             v-model="selected_items"
             v-model:search="search_query"
-            @update:search="debouncedSearchFunction"
             :items="items"
             :loading="search_loading"
             :hide-no-data="!(allowCreate && search_query != '')"
@@ -46,7 +45,6 @@
             label="Autocomplete"
             v-model="selected_items"
             v-model:search="search_query"
-            @update:search="debouncedSearchFunction"
             :items="items"
             :loading="search_loading"
             :hide-no-data="!(allowCreate && search_query != '')"
@@ -64,9 +62,9 @@
 <script lang="ts" setup>
 import {computed, onMounted, PropType, ref, Ref, watch} from 'vue'
 import {ApiApi} from "@/openapi/index.js";
-import {useDebounceFn} from "@vueuse/core";
 import {Models} from "@/types/Models";
 import {VAutocomplete, VCombobox} from "vuetify/components";
+import {useDebouncedSearch} from "@/composables/useDebouncedSearch";
 
 
 const props = defineProps(
@@ -113,7 +111,7 @@ const props = defineProps(
 
 const items: Ref<Array<any>> = ref([])
 const selected_items: Ref<Array<any> | any> = ref(undefined)
-const search_query = ref('')
+const {inputValue: search_query, debouncedValue: debouncedSearchQuery, signal} = useDebouncedSearch()
 const search_loading = ref(false)
 
 
@@ -143,16 +141,16 @@ watch(selected_items, (new_items, old_items) => {
 
 onMounted(() => {
     if (props.search_on_load) {
-        debouncedSearchFunction('')
+        search('')
     }
 })
 
 /**
- * debounced search function bound to search input changing
+ * trigger search when debounced value changes
  */
-const debouncedSearchFunction = useDebounceFn((query: string) => {
-    search(query)
-}, 300)
+watch(debouncedSearchQuery, (val) => {
+    search(val)
+})
 
 /**
  * performs the API request to search for the selected input
@@ -161,7 +159,7 @@ const debouncedSearchFunction = useDebounceFn((query: string) => {
 function search(query: string) {
     const api = new ApiApi()
     search_loading.value = true
-    api[`api${props.model}List`]({query: query}).then(r => {
+    api[`api${props.model}List`]({query: query}, {signal: signal.value}).then(r => {
         if (r.results) {
             items.value = r.results
             if (props.allowCreate && search_query.value != '') {
@@ -170,7 +168,9 @@ function search(query: string) {
             }
         }
     }).catch(err => {
-        //useMessageStore().addMessage(MessageType.ERROR, err, 8000)
+        if (err.name !== 'AbortError') {
+            //useMessageStore().addMessage(MessageType.ERROR, err, 8000)
+        }
     }).finally(() => {
         search_loading.value = false
     })

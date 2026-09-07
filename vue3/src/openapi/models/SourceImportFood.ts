@@ -49,10 +49,15 @@ export function SourceImportFoodFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function SourceImportFoodToJSON(value?: SourceImportFood | null): any {
+export function SourceImportFoodToJSON(json: any): SourceImportFood {
+    return SourceImportFoodToJSONTyped(json, false);
+}
+
+export function SourceImportFoodToJSONTyped(value?: SourceImportFood | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'name': value['name'],

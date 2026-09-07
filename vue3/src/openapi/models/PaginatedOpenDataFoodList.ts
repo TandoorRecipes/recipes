@@ -18,6 +18,7 @@ import {
     OpenDataFoodFromJSON,
     OpenDataFoodFromJSONTyped,
     OpenDataFoodToJSON,
+    OpenDataFoodToJSONTyped,
 } from './OpenDataFood';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedOpenDataFoodList {
      * @type {string}
      * @memberof PaginatedOpenDataFoodList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedOpenDataFoodList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<OpenDataFood>}
@@ -85,17 +86,22 @@ export function PaginatedOpenDataFoodListFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function PaginatedOpenDataFoodListToJSON(value?: PaginatedOpenDataFoodList | null): any {
+export function PaginatedOpenDataFoodListToJSON(json: any): PaginatedOpenDataFoodList {
+    return PaginatedOpenDataFoodListToJSONTyped(json, false);
+}
+
+export function PaginatedOpenDataFoodListToJSONTyped(value?: PaginatedOpenDataFoodList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(OpenDataFoodToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

@@ -6,12 +6,13 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import Group
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
 from oauth2_provider.models import AccessToken
+from oauth2_provider.settings import oauth2_settings
 from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS
 import random
@@ -33,36 +34,37 @@ def get_allowed_groups(groups_required):
     return groups_allowed
 
 
-def has_group_permission(user, groups, no_cache=False):
+def has_group_permission(request, groups, no_cache=False):
     """
     Tests if a given user is member of a certain group (or any higher group)
     Superusers always bypass permission checks.
     Unauthenticated users can't be member of any group thus always return false.
-    :param no_cache: (optional) do not return cached results, always check agains DB
-    :param user: django auth user object
+    :param no_cache: (optional) do not return cached results, always check against DB
+    :param request: the django request checking permission for
     :param groups: list or tuple of groups the user should be checked for
     :return: True if user is in allowed groups, false otherwise
     """
-    if not user.is_authenticated:
+    if not request.user.is_authenticated:
         return False
     groups_allowed = get_allowed_groups(groups)
 
-    CACHE_KEY = hash((inspect.stack()[0][3], (user.pk, user.username, user.email), groups_allowed))
-    if not no_cache:
-        cached_result = cache.get(CACHE_KEY, default=None)
-        if cached_result is not None:
-            return cached_result
+    CACHE_KEY = 'GROUP_CACHE_' + str(request.user.pk)
+    user_groups = cache.get(CACHE_KEY, default=None)
 
-    result = False
-    if user.is_authenticated:
-        if user_space := user.userspace_set.filter(active=True):
-            if len(user_space) != 1:
-                result = False  # do not allow any group permission if more than one space is active, needs to be changed when simultaneous multi-space-tenancy is added
-            elif bool(user_space.first().groups.filter(name__in=groups_allowed)):
-                result = True
+    if no_cache or user_groups is None:
+        # always reset to invalidate should a cache exist
+        user_groups = []
+        if user_space := request.user.userspace_set.filter(active=True):
+            if len(user_space) == 1: # more than one active space is not supported and should error
+                user_groups = user_space.first().groups.values_list('name', flat=True)
 
-    cache.set(CACHE_KEY, result, timeout=10)
-    return result
+    cache.set(CACHE_KEY, user_groups, timeout=30)
+
+    for group in user_groups:
+        if group in groups_allowed:
+            return True
+
+    return False
 
 
 def is_object_owner(user, obj):
@@ -112,6 +114,55 @@ def is_object_shared(user, obj):
     return user in obj.get_shared()
 
 
+def is_object_household(user, obj):
+    """
+    Tests if a given user is in the same household as the owener of the given object
+    :param user django auth user object
+    :param obj any object that should be tested
+    :return: true if user is in the same household for object, false otherwise
+    """
+    # TODO this could be improved/cleaned up by adding
+    #      share checks for relevant objects
+    if not user.is_authenticated:
+        return False
+    return UserSpace.objects.filter(user=user, space=obj.space, household__in=obj.get_owner().userspace_set.values_list('household_id', flat=True)).exists()
+
+
+def get_household_user_ids(user_space):
+    """
+    Return user IDs sharing the same household, or just the user's own ID if no household.
+    Results are cached for 5 minutes per space/household (or space/user if no household).
+    :param user_space: UserSpace instance (e.g. request.user_space)
+    :return: list of user IDs
+    """
+    if user_space is None:
+        return []
+
+    if user_space.household_id:
+        cache_key = f'household_user_ids_{user_space.space_id}_{user_space.household_id}'
+    else:
+        cache_key = f'household_user_ids_{user_space.space_id}_user_{user_space.user_id}'
+
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    if user_space.household_id:
+        result = set(UserSpace.objects.filter(space=user_space.space, household=user_space.household).values_list('user_id', flat=True))
+    else:
+        result = {user_space.user_id}
+
+    result = list(result)
+    cache.set(cache_key, result, timeout=5 * 60)
+    return result
+
+
+def invalidate_household_cache(user_space):
+    """Delete the cached household_user_ids for a UserSpace's household."""
+    if user_space.household_id:
+        cache.delete(f'household_user_ids_{user_space.space_id}_{user_space.household_id}')
+
+
 def share_link_valid(recipe, share):
     """
     Verifies the validity of a share uuid
@@ -138,19 +189,6 @@ def share_link_valid(recipe, share):
 
 # Django Views
 
-def group_required(*groups_required):
-    """
-    Decorator that tests the requesting user to be member
-    of at least one of the provided groups or higher level groups
-    :param groups_required: list of required groups
-    :return: true if member of group, false otherwise
-    """
-
-    def in_groups(u):
-        return has_group_permission(u, groups_required)
-
-    return user_passes_test(in_groups, login_url='view_no_perm')
-
 
 class GroupRequiredMixin(object):
     """
@@ -160,7 +198,7 @@ class GroupRequiredMixin(object):
     groups_required = None
 
     def dispatch(self, request, *args, **kwargs):
-        if not has_group_permission(request.user, self.groups_required):
+        if not has_group_permission(request, self.groups_required):
             if not request.user.is_authenticated:
                 messages.add_message(request, messages.ERROR, _('You are not logged in and therefore cannot view this page!'))
                 return HttpResponseRedirect(reverse_lazy('account_login') + '?next=' + request.path)
@@ -225,7 +263,15 @@ class CustomIsOwnerReadOnly(CustomIsOwner):
         return super().has_permission(request, view) and request.method in SAFE_METHODS
 
     def has_object_permission(self, request, view, obj):
-        return super().has_object_permission(request, view) and request.method in SAFE_METHODS
+        return super().has_object_permission(request, view, obj) and request.method in SAFE_METHODS
+
+
+class CustomIsOwnerDestroyOnly(CustomIsOwner):
+    def has_permission(self, request, view):
+        return super().has_permission(request, view) and request.method == 'DELETE'
+
+    def has_object_permission(self, request, view, obj):
+        return super().has_object_permission(request, view, obj) and request.method == 'DELETE'
 
 
 class CustomIsSpaceOwner(permissions.BasePermission):
@@ -248,13 +294,27 @@ class CustomIsShared(permissions.BasePermission):
     Custom permission class for django rest framework views
     verifies user is shared for the object he is trying to access
     """
-    message = _('You cannot interact with this object as it is not owned by you!')  # noqa: E501
+    message = _('You cannot interact with this object as it is not owned by you!')
 
     def has_permission(self, request, view):
         return request.user.is_authenticated
 
     def has_object_permission(self, request, view, obj):
         return is_object_shared(request.user, obj)
+
+
+class CustomIsHousehold(permissions.BasePermission):
+    """
+    Custom permission class for django rest framework views
+    verifies user is in the same household as the object he is trying to access
+    """
+    message = _('You cannot interact with this object because you are not in the same household as the user who created it!')
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated
+
+    def has_object_permission(self, request, view, obj):
+        return is_object_household(request.user, obj)
 
 
 class CustomIsGuest(permissions.BasePermission):
@@ -265,10 +325,10 @@ class CustomIsGuest(permissions.BasePermission):
     message = _('You do not have the required permissions to view this page!')
 
     def has_permission(self, request, view):
-        return has_group_permission(request.user, ['guest'])
+        return has_group_permission(request, ['guest'])
 
     def has_object_permission(self, request, view, obj):
-        return has_group_permission(request.user, ['guest'])
+        return has_group_permission(request, ['guest'])
 
 
 class CustomIsUser(permissions.BasePermission):
@@ -279,7 +339,7 @@ class CustomIsUser(permissions.BasePermission):
     message = _('You do not have the required permissions to view this page!')
 
     def has_permission(self, request, view):
-        return has_group_permission(request.user, ['user'])
+        return has_group_permission(request, ['user'])
 
 
 class CustomIsAdmin(permissions.BasePermission):
@@ -290,7 +350,7 @@ class CustomIsAdmin(permissions.BasePermission):
     message = _('You do not have the required permissions to view this page!')
 
     def has_permission(self, request, view):
-        return has_group_permission(request.user, ['admin'])
+        return has_group_permission(request, ['admin'])
 
 
 class CustomIsShare(permissions.BasePermission):
@@ -318,19 +378,24 @@ class CustomRecipePermission(permissions.BasePermission):
 
     def has_permission(self, request, view):  # user is either at least a guest or a share link is given and the request is safe
         share = request.query_params.get('share', None)
-        return ((has_group_permission(request.user, ['guest']) and request.method in SAFE_METHODS) or has_group_permission(
-            request.user, ['user'])) or (share and request.method in SAFE_METHODS and 'pk' in view.kwargs)
+        return ((has_group_permission(request, ['guest']) and request.method in SAFE_METHODS) or has_group_permission(
+            request, ['user'])) or (share and request.method in SAFE_METHODS and 'pk' in view.kwargs)
 
     def has_object_permission(self, request, view, obj):
         share = request.query_params.get('share', None)
         if share:
-            return share_link_valid(obj, share)
+            if share_link_valid(obj, share):
+                return True
+            # Invalid share link - check if user has normal access
+            # If not, raise 404 to avoid leaking recipe existence
+            if obj.space != request.space:
+                raise Http404()
+            # User is in same space, fall through to normal permission check
+        if obj.private:
+            return ((obj.created_by == request.user) or (request.user in obj.shared.all())) and obj.space == request.space
         else:
-            if obj.private:
-                return ((obj.created_by == request.user) or (request.user in obj.shared.all())) and obj.space == request.space
-            else:
-                return ((has_group_permission(request.user, ['guest']) and request.method in SAFE_METHODS)
-                        or has_group_permission(request.user, ['user'])) and obj.space == request.space
+            return ((has_group_permission(request, ['guest']) and request.method in SAFE_METHODS)
+                    or has_group_permission(request, ['user'])) and obj.space == request.space
 
 
 class CustomAiProviderPermission(permissions.BasePermission):
@@ -343,13 +408,13 @@ class CustomAiProviderPermission(permissions.BasePermission):
     message = _('You do not have the required permissions to view this page!')
 
     def has_permission(self, request, view):  # user is either at least a user and the request is safe
-        return (has_group_permission(request.user, ['user']) and request.method in SAFE_METHODS) or (has_group_permission(request.user, ['admin']) or request.user.is_superuser)
+        return (has_group_permission(request, ['user']) and request.method in SAFE_METHODS) or (has_group_permission(request, ['admin']) or request.user.is_superuser)
 
     # editing of global providers allowed for superusers, space providers by admins and users can read only access
     def has_object_permission(self, request, view, obj):
         return ((obj.space is None and request.user.is_superuser)
-                or (obj.space == request.space and has_group_permission(request.user, ['admin']))
-                or (obj.space == request.space and has_group_permission(request.user, ['user']) and request.method in SAFE_METHODS))
+                or (obj.space == request.space and has_group_permission(request, ['admin']))
+                or (obj.space == request.space and has_group_permission(request, ['user']) and request.method in SAFE_METHODS))
 
 
 class CustomUserPermission(permissions.BasePermission):
@@ -359,10 +424,10 @@ class CustomUserPermission(permissions.BasePermission):
     message = _('You do not have the required permissions to view this page!')
 
     def has_permission(self, request, view):  # a space filtered user list is visible for everyone
-        return has_group_permission(request.user, ['guest'])
+        return has_group_permission(request, ['guest'])
 
     def has_object_permission(self, request, view, obj):  # object write permissions are only available for user
-        if request.method in SAFE_METHODS and 'pk' in view.kwargs and has_group_permission(request.user, ['guest']) and request.space in obj.userspace_set.all():
+        if request.method in SAFE_METHODS and 'pk' in view.kwargs and has_group_permission(request, ['guest']) and request.space in obj.userspace_set.all():
             return True
         elif request.user == obj:
             return True
@@ -390,6 +455,14 @@ class CustomTokenHasReadWriteScope(TokenHasReadWriteScope):
     Only difference: if any other authentication method except OAuth2Authentication is used the scope check is ignored
     IMPORTANT: do not use this class without any other permission class as it will not check anything besides token scopes
     """
+
+    def get_scopes(self, request, view):
+        if request.method.upper() in SAFE_METHODS:
+            read_write_scope = oauth2_settings.READ_SCOPE
+        else:
+            read_write_scope = oauth2_settings.WRITE_SCOPE
+
+        return [read_write_scope]
 
     def has_permission(self, request, view):
         if isinstance(request.auth, AccessToken):
@@ -486,8 +559,11 @@ def create_space_for_user(user, name=None):
                               space_setup_completed=False, )
         created_space.save()
 
-        UserSpace.objects.filter(user=user).update(active=False)
-        user_space = UserSpace.objects.create(space=created_space, user=user, active=True)
+        new_space_active = False
+        if UserSpace.objects.filter(user=user).count() == 0:
+            new_space_active = True
+
+        user_space = UserSpace.objects.create(space=created_space, user=user, active=new_space_active)
         user_space.groups.add(Group.objects.filter(name='admin').get())
 
         return user_space

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load humanize %}
+
+{% block title %}{% trans "Sessions" %}{% endblock %}
+
+{% block content %}
+    <h3>{% trans "Sessions" %}</h3>
+    <p>{% trans "The following sessions are currently active on your account." %}</p>
+
+    <form method="post" action="{% url 'usersessions_list' %}">
+        {% csrf_token %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>{% trans "Started At" %}</th>
+                    <th>{% trans "IP Address" %}</th>
+                    <th>{% trans "Browser" %}</th>
+                    {% if show_last_seen_at %}
+                    <th>{% trans "Last Seen" %}</th>
+                    {% endif %}
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for session in sessions %}
+                <tr>
+                    <td><span title="{{ session.created_at }}">{{ session.created_at|naturaltime }}</span></td>
+                    <td>{{ session.ip }}</td>
+                    <td>{{ session.user_agent }}</td>
+                    {% if show_last_seen_at %}
+                    <td><span title="{{ session.last_seen_at }}">{{ session.last_seen_at|naturaltime }}</span></td>
+                    {% endif %}
+                    <td>
+                        {% if session.is_current %}
+                            <span class="badge badge-pill badge-success">{% trans "Current" %}</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if session_count > 1 %}
+            <button type="submit" class="btn btn-warning">{% trans "Sign Out Other Sessions" %}</button>
+        {% endif %}
+    </form>
+{% endblock %}

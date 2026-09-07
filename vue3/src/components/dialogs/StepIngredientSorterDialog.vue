@@ -71,6 +71,10 @@ function moveIngredient(sourceIngredientIndex: number, targetStepIndex: number, 
     step.value.ingredients.splice(sourceIngredientIndex, 1)
     recipe.value.steps[targetStepIndex].ingredients.splice(targetIngredientIndex, 0, ingredient)
 
+    recipe.value.steps[targetStepIndex].ingredients.forEach((ingredient, index) => {
+        ingredient.order = index
+    })
+
     // close dialog if moved to a new step, update index if its in the same step
     if (targetStepIndex != props.stepIndex) {
         dialog.value = false

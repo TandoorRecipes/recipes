@@ -18,6 +18,7 @@ import {
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
+    KeywordToJSONTyped,
 } from './Keyword';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedKeywordList {
      * @type {string}
      * @memberof PaginatedKeywordList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedKeywordList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Keyword>}
@@ -85,17 +86,22 @@ export function PaginatedKeywordListFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function PaginatedKeywordListToJSON(value?: PaginatedKeywordList | null): any {
+export function PaginatedKeywordListToJSON(json: any): PaginatedKeywordList {
+    return PaginatedKeywordListToJSONTyped(json, false);
+}
+
+export function PaginatedKeywordListToJSONTyped(value?: PaginatedKeywordList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(KeywordToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 
