@@ -23,7 +23,7 @@ def obj_2(space_1, u1_s1, recipe_1_s1):
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 403],
+    ['g1_s1', 200],
     ['u1_s1', 200],
     ['a1_s1', 200],
 ])
@@ -48,7 +48,7 @@ def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
     ['g1_s1', 403],
     ['u1_s1', 200],
     ['a1_s1', 200],
-    ['g1_s2', 403],
+    ['g1_s2', 404],
     ['u1_s2', 404],
     ['a1_s2', 404],
 ])
@@ -70,7 +70,7 @@ def test_update(arg, request, obj_1):
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
-    ['g1_s1', 403],
+    ['g1_s1', 201],
     ['u1_s1', 201],
     ['a1_s1', 201],
 ])

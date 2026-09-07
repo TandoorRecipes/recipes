@@ -39,7 +39,7 @@ as environment files loaded by docker compose don't support multiple lines for a
 The line data needs to either be in json or as Python dictionary syntax.
 
 Take the example configuration from the allauth docs, fill in your settings and then inline the whole object
-(you can use a service like [www.freeformatter.com](https://www.freeformatter.com/json-formatter.html) for formatting).
+(you can use a service like [jsoning.com](https://jsoning.com/formatter/) for formatting).
 Assign it to the additional `SOCIALACCOUNT_PROVIDERS` variable.
 
 The example below is for a generic OIDC provider with PKCE enabled. Most values need to be customized for your specifics!
