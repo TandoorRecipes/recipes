@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-24 18:06+0200\n"
-"PO-Revision-Date: 2026-09-07 16:04+0000\n"
+"PO-Revision-Date: 2026-09-08 15:54+0000\n"
 "Last-Translator: Mr Jico <hawar4bug@gmail.com>\n"
 "Language-Team: Kurdish (Sorani) <http://translate.tandoor.dev/projects/"
 "tandoor/recipes-backend/ckb/>\n"
@@ -391,12 +391,14 @@ msgid "g"
 msgstr "g"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:19
+#, fuzzy
 msgid "Proteins"
-msgstr "پرۆتینەکان"
+msgstr "Proteins"
 
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
+#, fuzzy
 msgid "kcal"
-msgstr "کالۆری"
+msgstr "kcal"
 
 #: .\cookbook\models.py:313
 msgid ""
