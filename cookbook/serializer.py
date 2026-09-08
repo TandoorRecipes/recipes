@@ -28,7 +28,7 @@ from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.ai_helper import get_monthly_token_usage
 from cookbook.helper.image_processing import is_file_type_allowed
-from cookbook.helper.permission_helper import above_space_limit, create_space_for_user, get_household_user_ids
+from cookbook.helper.permission_helper import above_space_limit, create_space_for_user, get_household_user_ids, CustomRecipePermission
 from cookbook.helper.property_helper import FoodPropertyHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
@@ -510,7 +510,7 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
 
     class Meta:
         model = UserSpace
-        fields = ('id', 'user', 'space', 'groups', 'household','active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
+        fields = ('id', 'user', 'space', 'groups', 'household', 'active', 'internal_note', 'invite_link', 'created_at', 'updated_at',)
         read_only_fields = ('id', 'invite_link', 'created_at', 'updated_at', 'space')
 
 
@@ -582,7 +582,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_recent_days',
-            'csv_delim', 'csv_prefix', 'shopping_update_food_lists','default_meal_type',
+            'csv_delim', 'csv_prefix', 'shopping_update_food_lists', 'default_meal_type',
             'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients',
             'food_children_exist'
         )
@@ -671,6 +671,7 @@ class RecipeImportSerializer(WritableNestedModelSerializer, SpacedModelSerialize
     class Meta:
         model = RecipeImport
         fields = ('id', 'storage', 'name', 'file_uid', 'file_path', 'created_at')
+        read_only_fields = ('id', 'created_at', 'file_uid', 'file_path', 'created_at', 'storage')
 
 
 class SyncSerializer(WritableNestedModelSerializer, SpacedModelSerializer):
@@ -1219,7 +1220,7 @@ class RecipeSerializer(RecipeBaseSerializer):
             'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings', 'file_path', 'servings_text', 'diameter', 'diameter_text', 'rating',
             'last_cooked', 'private', 'shared'
         )
-        read_only_fields = ['image', 'created_by', 'created_at', 'food_properties']
+        read_only_fields = ['image', 'created_by', 'created_at', 'food_properties', 'file_path',]
 
     def validate(self, data):
         above_limit, msg = above_space_limit(self.context['request'].space)
@@ -1315,7 +1316,6 @@ class UserSpaceBatchUpdateSerializer(serializers.Serializer):
     group_set = serializers.ListField(child=serializers.IntegerField())
 
 
-
 class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     shared = UserSerializer(many=True, required=False)
 
@@ -1354,13 +1354,22 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
 
     @extend_schema_field(RecipeOverviewSerializer)
     def get_recipe_content(self, obj):
-        return RecipeOverviewSerializer(context={'request': self.context['request']}).to_representation(obj.recipe)
+        crp = CustomRecipePermission()
+        if crp.has_object_permission(self.context['request'], None, obj.recipe):
+            return RecipeOverviewSerializer(context={'request': self.context['request']}).to_representation(obj.recipe)
+        else:
+            raise NotFound(detail=None, code=None)
 
     def create(self, validated_data):
         book = validated_data['book']
         recipe = validated_data['recipe']
         if not book.get_owner() == self.context['request'].user and not self.context['request'].user in book.get_shared():
             raise NotFound(detail=None, code=None)
+
+        crp = CustomRecipePermission()
+        if not crp.has_object_permission(self.context['request'], None, recipe):
+            raise NotFound(detail=None, code=None)
+
         obj, created = RecipeBookEntry.objects.get_or_create(book=book, recipe=recipe)
         return obj
 
@@ -1431,13 +1440,13 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 
         mealplan = super().create(validated_data)
         if add_to_shopping and self.context['request'].data.get('recipe', None):
-            SLR = RecipeShoppingEditor(user=validated_data['created_by'], space=validated_data['space'])
+            SLR = RecipeShoppingEditor(self.context['request'], user=validated_data['created_by'], space=validated_data['space'])
             SLR.create(mealplan=mealplan, servings=validated_data['servings'])
         return mealplan
 
     def update(self, obj, validated_data):
         if sr := ShoppingListRecipe.objects.filter(mealplan=obj.id).first():
-            SLR = RecipeShoppingEditor(user=obj.created_by, space=obj.space, id=sr.id)
+            SLR = RecipeShoppingEditor(self.context['request'], user=obj.created_by, space=obj.space, id=sr.id)
             SLR.edit(mealplan=obj, servings=validated_data['servings'])
 
         return super().update(obj, validated_data)
@@ -1476,7 +1485,7 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         if 'servings' in validated_data and self.context.get('view', None).__class__.__name__ != 'ShoppingListViewSet':
-            SLR = RecipeShoppingEditor(user=self.context['request'].user, space=self.context['request'].space)
+            SLR = RecipeShoppingEditor(self.context['request'], user=self.context['request'].user, space=self.context['request'].space)
             SLR.edit_servings(servings=validated_data['servings'], id=instance.id)
         return super().update(instance, validated_data)
 

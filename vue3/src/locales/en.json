@@ -635,7 +635,7 @@
   "SourceImportHelp": "Import JSON in schema.org/recipe format or html pages with json+ld recipe or microdata.",
   "SourceImportSubtitle": "Import JSON or HTML manually.",
   "Space": "Space",
-  "SpaceHelp": "All your data is part of your space and can only be acccessed by space members. ",
+  "SpaceHelp": "All your data is part of your space and can only be accessed by space members. ",
   "SpaceHouseholdHelp": "Some functions are automatically shared between members of a household. ",
   "SpaceLimitExceeded": "Your space has surpassed one of its limits, some functions might be restricted.",
   "SpaceLimitReached": "This Space has reached a limit. No more objects of this type can be created.",
