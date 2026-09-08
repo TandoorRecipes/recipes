@@ -45,6 +45,28 @@ def _store_error(error_entry):
 
 
 class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
+    def save_user(self, request, sociallogin, form=None):
+        """Create the social user and, if SOCIAL_DEFAULT_ACCESS is enabled,
+        add them to the first space with the SOCIAL_DEFAULT_GROUP group.
+        """
+        user = super().save_user(request, sociallogin, form=form)
+        if settings.SOCIAL_DEFAULT_ACCESS:
+            from django.contrib.auth.models import Group
+            from django_scopes import scopes_disabled
+
+            from cookbook.models import Space, UserSpace
+            with scopes_disabled():
+                space = Space.objects.first()
+                group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
+                if space and group:
+                    user_space = UserSpace.objects.create(space=space, user=user, active=True)
+                    user_space.groups.add(group)
+                else:
+                    if not space:
+                        print(f'WARNING: SOCIAL_DEFAULT_ACCESS is enabled but no Space exists. Cannot auto-assign user {user}.')
+                    if not group:
+                        print(f'WARNING: SOCIAL_DEFAULT_GROUP={settings.SOCIAL_DEFAULT_GROUP!r} does not match any Group. Cannot auto-assign user {user}.')
+        return user
 
     def pre_social_login(self, request, sociallogin):
         """Warn when email matching is skipped due to unverified provider emails."""
