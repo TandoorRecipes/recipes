@@ -12,6 +12,7 @@ from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField
 from hcaptcha.fields import hCaptchaField
 
+from .helper.social_auth import assign_social_default_access
 from .models import InviteLink, Recipe, Space, User, UserPreference, UserSpace
 
 
@@ -181,19 +182,7 @@ class AllAuthSocialSignupForm(SocialSignupForm):
 
     def signup(self, request, user):
         if settings.SOCIAL_DEFAULT_ACCESS:
-            with scopes_disabled():
-                space = Space.objects.first()
-                group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
-                if space and group:
-                    user_space = UserSpace.objects.create(
-                        space=space, user=user, active=True
-                    )
-                    user_space.groups.add(group)
-                else:
-                    if not space:
-                        print(f'WARNING: SOCIAL_DEFAULT_ACCESS is enabled but no Space exists. Cannot auto-assign user {user}.')
-                    if not group:
-                        print(f'WARNING: SOCIAL_DEFAULT_GROUP={settings.SOCIAL_DEFAULT_GROUP!r} does not match any Group. Cannot auto-assign user {user}.')
+            assign_social_default_access(user, active=True)
 
 
 class CustomPasswordResetForm(ResetPasswordForm):
