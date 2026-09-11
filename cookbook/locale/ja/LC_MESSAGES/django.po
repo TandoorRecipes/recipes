@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-24 18:06+0200\n"
-"PO-Revision-Date: 2026-06-07 07:43+0000\n"
-"Last-Translator: yama <yamada2662@gmail.com>\n"
+"PO-Revision-Date: 2026-09-11 23:39+0000\n"
+"Last-Translator: Lilly Kulp <scientificlilly@gmail.com>\n"
 "Language-Team: Japanese <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/ja/>\n"
 "Language: ja\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #: .\cookbook\forms.py:58
 msgid "Default"
@@ -550,7 +550,7 @@ msgstr ""
 
 #: .\cookbook\serializer.py:1838
 msgid "Hello"
-msgstr ""
+msgstr "今日は"
 
 #: .\cookbook\serializer.py:1838
 msgid "You have been invited by "
