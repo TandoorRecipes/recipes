@@ -21,6 +21,7 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.i18n import JavaScriptCatalog
 from django.views.static import serve
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,6 +34,10 @@ urlpatterns = [
         name='javascript-catalog'
     ),
 ]
+
+# Override logout URL if REVERSE_PROXY_AUTH_LOGOUT is set
+if settings.REMOTE_USER_AUTH and settings.REVERSE_PROXY_AUTH_LOGOUT:
+    urlpatterns.insert(1, path('accounts/logout/', RedirectView.as_view(url=settings.REVERSE_PROXY_AUTH_LOGOUT, permanent=False), name='account_logout'))
 
 if settings.DEBUG and settings.DEBUG_TOOLBAR:
     urlpatterns += path('__debug__/', include('debug_toolbar.urls')),
