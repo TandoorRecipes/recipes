@@ -75,7 +75,7 @@ def invite_link(invite_space):
 
 # ---------------------- SOCIAL SIGNUP FORM TESTS -----------------------
 
-@override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest')
+@override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest', SOCIAL_DEFAULT_SPACE=0)
 def test_social_default_access_adds_user_to_existing_space(
     social_signup_space, new_social_user, signup_request
 ):
@@ -95,7 +95,7 @@ def test_social_default_access_adds_user_to_existing_space(
         assert us.groups.filter(name='guest').exists()
 
 
-@override_settings(SOCIAL_DEFAULT_ACCESS=False, SOCIAL_DEFAULT_GROUP='guest')
+@override_settings(SOCIAL_DEFAULT_ACCESS=False, SOCIAL_DEFAULT_GROUP='guest', SOCIAL_DEFAULT_SPACE=0)
 def test_social_default_access_disabled_does_nothing(
     social_signup_space, new_social_user, signup_request
 ):
@@ -108,7 +108,7 @@ def test_social_default_access_disabled_does_nothing(
         assert UserSpace.objects.filter(user=new_social_user).count() == 0
 
 
-@override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest')
+@override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest', SOCIAL_DEFAULT_SPACE=0)
 def test_social_default_access_uses_first_space(
     new_social_user, signup_request
 ):
@@ -128,6 +128,37 @@ def test_social_default_access_uses_first_space(
 
 
 @override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest')
+def test_social_default_access_uses_configured_space(
+    new_social_user, signup_request
+):
+    """SOCIAL_DEFAULT_SPACE should select a space other than the first one."""
+    with scopes_disabled():
+        Space.objects.create(name='First Space')
+        configured_space = Space.objects.create(name='Configured Space')
+
+    form = AllAuthSocialSignupForm.__new__(AllAuthSocialSignupForm)
+    with override_settings(SOCIAL_DEFAULT_SPACE=configured_space.pk):
+        form.signup(signup_request, new_social_user)
+
+    with scopes_disabled():
+        user_space = UserSpace.objects.get(user=new_social_user)
+        assert user_space.space == configured_space
+
+
+@override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest', SOCIAL_DEFAULT_SPACE=999999)
+def test_social_default_access_missing_configured_space(
+    social_signup_space, new_social_user, signup_request, capsys
+):
+    """An invalid configured space should not silently grant access elsewhere."""
+    form = AllAuthSocialSignupForm.__new__(AllAuthSocialSignupForm)
+    form.signup(signup_request, new_social_user)
+
+    with scopes_disabled():
+        assert UserSpace.objects.filter(user=new_social_user).count() == 0
+    assert 'SOCIAL_DEFAULT_SPACE=999999 does not match any Space' in capsys.readouterr().out
+
+
+@override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest', SOCIAL_DEFAULT_SPACE=0)
 def test_social_default_access_no_space_exists(
     new_social_user, signup_request
 ):
@@ -143,7 +174,7 @@ def test_social_default_access_no_space_exists(
         assert UserSpace.objects.filter(user=new_social_user).count() == 0
 
 
-@override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='nonexistent_group')
+@override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='nonexistent_group', SOCIAL_DEFAULT_SPACE=0)
 def test_social_default_access_bad_group(
     social_signup_space, new_social_user, signup_request
 ):

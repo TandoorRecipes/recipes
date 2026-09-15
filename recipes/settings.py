@@ -55,6 +55,7 @@ LOG_LEVEL = os.getenv("LOG_LEVEL", "WARNING")
 
 SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
 SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
+SOCIAL_DEFAULT_SPACE = int(os.getenv('SOCIAL_DEFAULT_SPACE', 0))
 
 HIDE_LOGIN_FORM = bool(int(os.getenv('HIDE_LOGIN_FORM', False)))
 
