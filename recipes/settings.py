@@ -36,6 +36,55 @@ def extract_comma_list(env_key, default=None):
         else:
             return []
 
+# Application definition
+INSTALLED_APPS = [
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.sites',
+    'django.contrib.staticfiles',
+    'django.contrib.humanize',
+    'django.contrib.postgres',
+    'oauth2_provider',
+    'corsheaders',
+    'crispy_forms',
+    'crispy_bootstrap4',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'drf_spectacular',
+    'drf_spectacular_sidecar',
+    'django_cleanup.apps.CleanupConfig',
+    'django_vite',
+    'hcaptcha',
+    'django.db.migrations',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.headless',
+    'allauth.mfa',
+    'allauth.usersessions',
+    'cookbook.apps.CookbookConfig',
+    'treebeard',
+]
+
+MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'allauth.usersessions.middleware.UserSessionsMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'cookbook.helper.scope_middleware.ScopeMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
+]
+
 
 load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -52,11 +101,6 @@ DEBUG = bool(int(os.getenv('DEBUG', '0')))
 DEBUG_TOOLBAR = bool(int(os.getenv('DEBUG_TOOLBAR', '0')))
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "WARNING")
-
-SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
-SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
-
-HIDE_LOGIN_FORM = bool(int(os.getenv('HIDE_LOGIN_FORM', False)))
 
 SPACE_DEFAULT_MAX_RECIPES = int(os.getenv('SPACE_DEFAULT_MAX_RECIPES', 0))
 SPACE_DEFAULT_MAX_USERS = int(os.getenv('SPACE_DEFAULT_MAX_USERS', 0))
@@ -104,12 +148,6 @@ MAX_ZIP_NESTING_DEPTH = int(os.getenv('MAX_ZIP_NESTING_DEPTH', 2))
 # allow djangos wsgi server to server mediafiles
 GUNICORN_MEDIA = extract_bool('GUNICORN_MEDIA', False)
 
-if os.getenv('REVERSE_PROXY_AUTH') is not None:
-    print('DEPRECATION WARNING: Environment var "REVERSE_PROXY_AUTH" is deprecated. Please use "REMOTE_USER_AUTH".')
-    REMOTE_USER_AUTH = extract_bool('REVERSE_PROXY_AUTH', False)
-else:
-    REMOTE_USER_AUTH = extract_bool('REMOTE_USER_AUTH', False)
-
 # default value for user preference 'comment'
 COMMENT_PREF_DEFAULT = extract_bool('COMMENT_PREF_DEFAULT', True)
 FRACTION_PREF_DEFAULT = extract_bool('FRACTION_PREF_DEFAULT', False)
@@ -130,14 +168,6 @@ if CORS_ORIGIN_ALLOW_ALL := os.getenv('CORS_ORIGIN_ALLOW_ALL') is not None:
     CORS_ALLOW_ALL_ORIGINS = CORS_ORIGIN_ALLOW_ALL
 else:
     CORS_ALLOW_ALL_ORIGINS = extract_bool("CORS_ALLOW_ALL_ORIGINS", True)
-
-LOGIN_REDIRECT_URL = "index"
-LOGOUT_REDIRECT_URL = "index"
-ACCOUNT_LOGOUT_REDIRECT_URL = "index"
-ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "index"
-
-SESSION_EXPIRE_AT_BROWSER_CLOSE = False
-SESSION_COOKIE_AGE = 365 * 60 * 24 * 60
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 DJANGO_TABLES2_TEMPLATE = 'cookbook/templates/generic/table_template.html'
@@ -171,40 +201,9 @@ REDIS_DATABASES = {
 
 MESSAGE_TAGS = {messages.ERROR: 'danger'}
 
-# Application definition
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.sites',
-    'django.contrib.staticfiles',
-    'django.contrib.humanize',
-    'django.contrib.postgres',
-    'oauth2_provider',
-    'corsheaders',
-    'crispy_forms',
-    'crispy_bootstrap4',
-    'rest_framework',
-    'rest_framework.authtoken',
-    'drf_spectacular',
-    'drf_spectacular_sidecar',
-    'django_cleanup.apps.CleanupConfig',
-    'django_vite',
-    'hcaptcha',
-    'django.db.migrations',
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.headless',
-    'allauth.mfa',
-    'allauth.usersessions',
-
-    'cookbook.apps.CookbookConfig',
-    'treebeard',
-]
+##################################################################
+####### Plugin settings/logic
+##################################################################
 
 PLUGINS_DIRECTORY = os.path.join(BASE_DIR, 'recipes', 'plugins')
 PLUGINS = []
@@ -244,6 +243,112 @@ except Exception:
     if DEBUG:
         print('ERROR failed to initialize plugins')
 
+##################################################################
+####### Django specific auth settings
+##################################################################
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 365 * 60 * 24 * 60
+
+LOGIN_REDIRECT_URL = "index"
+LOGOUT_REDIRECT_URL = "index"
+ACCOUNT_LOGOUT_REDIRECT_URL = "index"
+
+SESSION_COOKIE_DOMAIN = os.getenv('SESSION_COOKIE_DOMAIN', None)
+SESSION_COOKIE_NAME = os.getenv('SESSION_COOKIE_NAME', 'sessionid')
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'
+    },
+]
+
+##################################################################
+####### Tandoor specific auth settings
+##################################################################
+
+ENABLE_SIGNUP = extract_bool('ENABLE_SIGNUP', False)
+
+SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
+SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
+
+HIDE_LOGIN_FORM = bool(int(os.getenv('HIDE_LOGIN_FORM', False)))
+
+##################################################################
+####### AllAuth specific auth settings
+##################################################################
+
+ALLAUTH_TRUSTED_PROXY_COUNT = int(os.getenv('ALLAUTH_TRUSTED_PROXY_COUNT', 1))
+
+ACCOUNT_EMAIL_CONFIRMATION_ANONYMOUS_REDIRECT_URL = "index"
+
+ACCOUNT_CHANGE_EMAIL = True
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_EMAIL_VERIFICATION_SUPPORTS_RESEND = True
+ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
+ACCOUNT_LOGIN_METHODS = ['email', 'username']
+
+ACCOUNT_LOGIN_ON_PASSWORD_RESET = True
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', ]
+ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 3 # TODO set properly
+ACCOUNT_LOGOUT_ON_GET = True
+
+USERSESSIONS_TRACK_ACTIVITY = True
+HEADLESS_SERVE_SPECIFICATION = True
+
+# django allauth site id
+SITE_ID = int(os.getenv('ALLAUTH_SITE_ID', 1))
+
+ACCOUNT_ADAPTER = 'cookbook.helper.AllAuthCustomAdapter'
+
+# TODO remove once frontend is complete
+# ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
+ACCOUNT_FORMS = {'signup': 'cookbook.forms.AllAuthSignupForm', 'reset_password': 'cookbook.forms.CustomPasswordResetForm'}
+SOCIALACCOUNT_FORMS = {
+    'signup': 'cookbook.forms.AllAuthSocialSignupForm',
+}
+
+ACCOUNT_RATE_LIMITS = {
+    "change_password": "1/m/user",
+    "reset_password": "1/m/ip,1/m/key",
+    "reset_password_from_key": "1/m/ip",
+    "signup": "5/m/ip",
+    "login": "5/m/ip",
+}
+
+HEADLESS_FRONTEND_URLS = {
+    "account_confirm_email": "/account/email-confirm/?key={key}",
+
+    "account_reset_password": "/account/password-reset",
+    "account_reset_password_from_key": "/account/password-reset/?key={key}",
+    #TODO  "account_signup": "https://app.project.org/account/signup",
+
+    # Fallback in case the state containing the `next` URL is lost and the handshake
+    # with the third-party provider fails.
+
+    #TODO  "socialaccount_login_error": "https://app.project.org/account/provider/callback",
+}
+
+##################################################################
+####### Social auth related settings (allauth)
+##################################################################
+
 SOCIAL_PROVIDERS = extract_comma_list('SOCIAL_PROVIDERS')
 SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = extract_bool('SOCIALACCOUNT_EMAIL_AUTHENTICATION', False)
@@ -252,21 +357,8 @@ SOCIALACCOUNT_LOGIN_ON_GET = extract_bool('SOCIALACCOUNT_LOGIN_ON_GET', False)
 if os.getenv('SOCIALACCOUNT_AUTO_SIGNUP') is not None:
     SOCIALACCOUNT_AUTO_SIGNUP = extract_bool('SOCIALACCOUNT_AUTO_SIGNUP', True)
 SOCIALACCOUNT_ONLY = extract_bool('SOCIALACCOUNT_ONLY', False)
-if SOCIALACCOUNT_ONLY and not SOCIAL_PROVIDERS:
-    print('WARNING: SOCIALACCOUNT_ONLY is enabled but no SOCIAL_PROVIDERS are configured. Users will be unable to log in!')
-if HIDE_LOGIN_FORM and not SOCIAL_PROVIDERS and not REMOTE_USER_AUTH:
-    print('WARNING: HIDE_LOGIN_FORM is enabled but no SOCIAL_PROVIDERS or REMOTE_USER_AUTH are configured. Users will be unable to log in!')
-if SOCIALACCOUNT_EMAIL_AUTHENTICATION and not SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT and os.getenv('EMAIL_HOST', '') == '':
-    print('WARNING: SOCIALACCOUNT_EMAIL_AUTHENTICATION requires a working email configuration (EMAIL_HOST) when SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT is not enabled.')
+
 INSTALLED_APPS = INSTALLED_APPS + SOCIAL_PROVIDERS
-
-ACCOUNT_MAX_EMAIL_ADDRESSES = 1
-ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', ]
-ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 90
-ACCOUNT_LOGOUT_ON_GET = True
-
-USERSESSIONS_TRACK_ACTIVITY = True
-HEADLESS_SERVE_SPECIFICATION = True
 
 SOCIALACCOUNT_ADAPTER = 'cookbook.helper.social_adapter.TandoorSocialAccountAdapter'
 
@@ -275,48 +367,9 @@ try:
 except ValueError:
     SOCIALACCOUNT_PROVIDERS = json.loads(os.getenv('SOCIALACCOUNT_PROVIDERS').replace("'", '"') if os.getenv('SOCIALACCOUNT_PROVIDERS') else '{}')
 
-SESSION_COOKIE_DOMAIN = os.getenv('SESSION_COOKIE_DOMAIN', None)
-SESSION_COOKIE_NAME = os.getenv('SESSION_COOKIE_NAME', 'sessionid')
-
-ENABLE_SIGNUP = extract_bool('ENABLE_SIGNUP', False)
-
-ENABLE_METRICS = extract_bool('ENABLE_METRICS', False)
-
-# ENABLE_PDF_EXPORT = extract_bool('ENABLE_PDF_EXPORT', False)  # Removed: pyppeteer dependency removed
-EXPORT_FILE_CACHE_DURATION = int(os.getenv('EXPORT_FILE_CACHE_DURATION', 600))
-
-MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'allauth.usersessions.middleware.UserSessionsMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'cookbook.helper.scope_middleware.ScopeMiddleware',
-    'allauth.account.middleware.AccountMiddleware',
-]
-
-if DEBUG_TOOLBAR:
-    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
-    INSTALLED_APPS += ('debug_toolbar',)
-
-SORT_TREE_BY_NAME = extract_bool('SORT_TREE_BY_NAME', False)
-DISABLE_TREE_FIX_STARTUP = extract_bool('DISABLE_TREE_FIX_STARTUP', False)
-
-if bool(int(os.getenv('SQL_DEBUG', False))):
-    MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware',)
-
-if ENABLE_METRICS:
-    MIDDLEWARE += 'django_prometheus.middleware.PrometheusAfterMiddleware',
-    INSTALLED_APPS += 'django_prometheus',
-
-# Auth related settings
-AUTHENTICATION_BACKENDS = []
+##################################################################
+####### LDAP and remote auth settings
+##################################################################
 
 # LDAP
 LDAP_AUTH = bool(os.getenv('LDAP_AUTH', False))
@@ -324,7 +377,7 @@ if LDAP_AUTH:
     import ldap
     from django_auth_ldap.config import LDAPSearch
 
-    AUTHENTICATION_BACKENDS.append('django_auth_ldap.backend.LDAPBackend')
+    AUTHENTICATION_BACKENDS.insert(0, 'django_auth_ldap.backend.LDAPBackend')
     AUTH_LDAP_SERVER_URI = os.getenv('AUTH_LDAP_SERVER_URI')
     AUTH_LDAP_START_TLS = extract_bool('AUTH_LDAP_START_TLS', False)
     AUTH_LDAP_BIND_DN = os.getenv('AUTH_LDAP_BIND_DN')
@@ -349,44 +402,58 @@ if LDAP_AUTH:
             "handlers": ["console"]
         }
 
-AUTHENTICATION_BACKENDS += [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-# django allauth site id
-SITE_ID = int(os.getenv('ALLAUTH_SITE_ID', 1))
-
-ACCOUNT_ADAPTER = 'cookbook.helper.AllAuthCustomAdapter'
+# remote user auth
+if os.getenv('REVERSE_PROXY_AUTH') is not None:
+    print('DEPRECATION WARNING: Environment var "REVERSE_PROXY_AUTH" is deprecated. Please use "REMOTE_USER_AUTH".')
+    REMOTE_USER_AUTH = extract_bool('REVERSE_PROXY_AUTH', False)
+else:
+    REMOTE_USER_AUTH = extract_bool('REMOTE_USER_AUTH', False)
 
 if REMOTE_USER_AUTH:
     MIDDLEWARE.insert(8, 'recipes.middleware.CustomRemoteUser')
     AUTHENTICATION_BACKENDS.append('django.contrib.auth.backends.RemoteUserBackend')
 
-# Password validation
-# https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
+##################################################################
+####### auth config warnings
+##################################################################
+# TODO move to a proper config check warning module/page
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'
-    },
-]
+if SOCIALACCOUNT_ONLY and not SOCIAL_PROVIDERS:
+    print('WARNING: SOCIALACCOUNT_ONLY is enabled but no SOCIAL_PROVIDERS are configured. Users will be unable to log in!')
+if HIDE_LOGIN_FORM and not SOCIAL_PROVIDERS and not REMOTE_USER_AUTH:
+    print('WARNING: HIDE_LOGIN_FORM is enabled but no SOCIAL_PROVIDERS or REMOTE_USER_AUTH are configured. Users will be unable to log in!')
+if SOCIALACCOUNT_EMAIL_AUTHENTICATION and not SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT and os.getenv('EMAIL_HOST', '') == '':
+    print('WARNING: SOCIALACCOUNT_EMAIL_AUTHENTICATION requires a working email configuration (EMAIL_HOST) when SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT is not enabled.')
 
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-X_FRAME_OPTIONS = "SAMEORIGIN"
+##################################################################
+####### AUTH settings END
+##################################################################
 
 OAUTH2_PROVIDER = {'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'bookmarklet': 'only access to bookmarklet', 'mealplan': 'only access to mealplan'}}
 READ_SCOPE = 'read'
 WRITE_SCOPE = 'write'
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+X_FRAME_OPTIONS = "SAMEORIGIN"
+
+ENABLE_METRICS = extract_bool('ENABLE_METRICS', False)
+
+# ENABLE_PDF_EXPORT = extract_bool('ENABLE_PDF_EXPORT', False)  # Removed: pyppeteer dependency removed
+EXPORT_FILE_CACHE_DURATION = int(os.getenv('EXPORT_FILE_CACHE_DURATION', 600))
+
+if DEBUG_TOOLBAR:
+    MIDDLEWARE += ('debug_toolbar.middleware.DebugToolbarMiddleware',)
+    INSTALLED_APPS += ('debug_toolbar',)
+
+SORT_TREE_BY_NAME = extract_bool('SORT_TREE_BY_NAME', False)
+DISABLE_TREE_FIX_STARTUP = extract_bool('DISABLE_TREE_FIX_STARTUP', False)
+
+if bool(int(os.getenv('SQL_DEBUG', False))):
+    MIDDLEWARE += ('recipes.middleware.SqlPrintingMiddleware',)
+
+if ENABLE_METRICS:
+    MIDDLEWARE += 'django_prometheus.middleware.PrometheusAfterMiddleware',
+    INSTALLED_APPS += 'django_prometheus',
 
 ##################################################################
 ####### change DEFAULT_SCHEMA_CLASS below to regenerate legacy API
@@ -701,22 +768,6 @@ EMAIL_USE_TLS = extract_bool('EMAIL_USE_TLS', False)
 EMAIL_USE_SSL = extract_bool('EMAIL_USE_SSL', False)
 DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'webmaster@localhost')
 ACCOUNT_EMAIL_SUBJECT_PREFIX = os.getenv('ACCOUNT_EMAIL_SUBJECT_PREFIX', '[Tandoor Recipes] ')  # allauth sender prefix
-
-# ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
-ACCOUNT_FORMS = {'signup': 'cookbook.forms.AllAuthSignupForm', 'reset_password': 'cookbook.forms.CustomPasswordResetForm'}
-SOCIALACCOUNT_FORMS = {
-    'signup': 'cookbook.forms.AllAuthSocialSignupForm',
-}
-
-ACCOUNT_EMAIL_UNKNOWN_ACCOUNTS = False
-ALLAUTH_TRUSTED_PROXY_COUNT = int(os.getenv('ALLAUTH_TRUSTED_PROXY_COUNT', 1))
-ACCOUNT_RATE_LIMITS = {
-    "change_password": "1/m/user",
-    "reset_password": "1/m/ip,1/m/key",
-    "reset_password_from_key": "1/m/ip",
-    "signup": "5/m/ip",
-    "login": "5/m/ip",
-}
 
 DISABLE_EXTERNAL_CONNECTORS = extract_bool('DISABLE_EXTERNAL_CONNECTORS', False)
 EXTERNAL_CONNECTORS_QUEUE_SIZE = int(os.getenv('EXTERNAL_CONNECTORS_QUEUE_SIZE', 100))

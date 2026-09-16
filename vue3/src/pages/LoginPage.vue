@@ -1,39 +1,49 @@
 <template>
-    <v-container>
-        <v-card style="max-width: 400px; margin: auto;">
-            <v-card-title>{{ $t('Login') }}</v-card-title>
-            <v-divider></v-divider>
-            <v-card-text>
+    <v-container style="max-width: 450px; margin: auto;">
+        <v-row>
+            <v-col>
+                <v-card>
+                    <v-card-title>{{ $t('Login') }}</v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-text>
 
-                <v-form>
-                    <v-alert class="mb-4" v-if="generalError" type="warning">{{ generalError }}</v-alert>
+                        <v-form>
+                            <v-alert class="mb-4" v-if="generalError" type="warning">{{ generalError }}</v-alert>
 
-                    <v-text-field :label="$t('Username')" autofocus v-model="username" :disabled="loading" :error-messages="usernameError" :error="!!usernameError"/>
-                    <v-text-field :label="$t('Password')" type="password" v-model="password" :disabled="loading" @keyup.enter="login()" :error-messages="passwordError" :error="!!passwordError"/>
+                            <v-text-field :label="$t('Username')" autofocus v-model="username" :disabled="loading" :error-messages="usernameError" :error="!!usernameError"/>
+                            <v-text-field :label="$t('Password')" type="password" v-model="password" :disabled="loading" @keyup.enter="login()" :error-messages="passwordError"
+                                          :error="!!passwordError"/>
 
-                </v-form>
-                <!-- TODO email send screen -->
+                        </v-form>
+                        <!-- TODO email send screen -->
 
-                <!-- TODO reset screen when GET param is present -->
+                        <!-- TODO reset screen when GET param is present -->
 
-            </v-card-text>
-            <v-card-actions>
-                <v-btn type="submit" :to="{name: 'SignUpPage'}" variant="elevated" :loading="loading" color="info">{{ $t('SignUp') }} TODO</v-btn>
-                <v-btn type="submit" @click="login()" variant="elevated" :loading="loading" color="primary">{{ $t('Login') }}</v-btn>
-            </v-card-actions>
-        </v-card>
-        <div style="max-width: 400px; margin: auto;" class="text-center mt-2">
-            <router-link :to="{name: 'PasswordResetPage'}">Passwort vergessen? TODO</router-link>
-        </div>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn :to="{name: 'SignUpPage'}" variant="elevated" :loading="loading" color="info">{{ $t('SignUp') }} TODO</v-btn>
+                        <v-btn type="submit" @click="login()" variant="elevated" :loading="loading" color="primary">{{ $t('Login') }}</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col>
+                <div class="text-center mt-2">
+                    <router-link :to="{name: 'PasswordResetPage'}">{{ $t('ForgotPassword') }}</router-link>
+                </div>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
 <script setup lang="ts">
 
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import {AuthenticationAccountApi} from "@/authapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
-import {useRouter} from "vue-router";
+import {useRoute, useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {useI18n} from "vue-i18n";
 
@@ -72,6 +82,8 @@ function login() {
             err.response.json().then(responseJson => {
                 if (responseJson.status == 429) {
                     generalError.value = t('RateLimitHelp')
+                } else if (responseJson.status == 401) {
+                    generalError.value = t('AwaitingEmailConfirmation')
                 } else {
                     responseJson.errors.forEach(error => {
                         if (error.param == 'password') {
@@ -86,7 +98,8 @@ function login() {
                 }
             })
         } catch (e) {
-            //useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+            console.error(e)
+            useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         }
 
     }).finally(() => {

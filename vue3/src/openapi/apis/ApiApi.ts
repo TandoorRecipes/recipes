@@ -697,7 +697,7 @@ export interface ApiAiProviderUpdateRequest {
 }
 
 export interface ApiAiStepSortCreateRequest {
-    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'filePath'|'rating'|'lastCooked'>;
     provider?: number;
 }
 
@@ -1085,7 +1085,7 @@ export interface ApiEnterpriseSocialKeywordUpdateRequest {
 
 export interface ApiEnterpriseSocialRecipeAipropertiesCreateRequest {
     id: number;
-    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'filePath'|'rating'|'lastCooked'>;
     provider?: number;
 }
 
@@ -1101,12 +1101,12 @@ export interface ApiEnterpriseSocialRecipeCascadingListRequest {
 }
 
 export interface ApiEnterpriseSocialRecipeCreateRequest {
-    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'filePath'|'rating'|'lastCooked'>;
 }
 
 export interface ApiEnterpriseSocialRecipeDeleteExternalPartialUpdateRequest {
     id: number;
-    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'filePath'|'rating'|'lastCooked'>;
 }
 
 export interface ApiEnterpriseSocialRecipeDestroyRequest {
@@ -1177,7 +1177,7 @@ export interface ApiEnterpriseSocialRecipeNullingListRequest {
 
 export interface ApiEnterpriseSocialRecipePartialUpdateRequest {
     id: number;
-    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'filePath'|'rating'|'lastCooked'>;
 }
 
 export interface ApiEnterpriseSocialRecipeProtectingListRequest {
@@ -1204,7 +1204,7 @@ export interface ApiEnterpriseSocialRecipeShoppingUpdateRequest {
 
 export interface ApiEnterpriseSocialRecipeUpdateRequest {
     id: number;
-    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'filePath'|'rating'|'lastCooked'>;
 }
 
 export interface ApiEnterpriseSpaceCreateRequest {
@@ -2063,7 +2063,7 @@ export interface ApiPropertyUpdateRequest {
 
 export interface ApiRecipeAipropertiesCreateRequest {
     id: number;
-    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'filePath'|'rating'|'lastCooked'>;
     provider?: number;
 }
 
@@ -2162,12 +2162,12 @@ export interface ApiRecipeCascadingListRequest {
 }
 
 export interface ApiRecipeCreateRequest {
-    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'filePath'|'rating'|'lastCooked'>;
 }
 
 export interface ApiRecipeDeleteExternalPartialUpdateRequest {
     id: number;
-    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'filePath'|'rating'|'lastCooked'>;
 }
 
 export interface ApiRecipeDestroyRequest {
@@ -2185,7 +2185,7 @@ export interface ApiRecipeImageUpdateRequest {
 }
 
 export interface ApiRecipeImportCreateRequest {
-    recipeImport: Omit<RecipeImport, 'createdAt'>;
+    recipeImport: Omit<RecipeImport, 'fileUid'|'filePath'|'createdAt'>;
 }
 
 export interface ApiRecipeImportDestroyRequest {
@@ -2193,12 +2193,12 @@ export interface ApiRecipeImportDestroyRequest {
 }
 
 export interface ApiRecipeImportImportAllCreateRequest {
-    recipeImport: Omit<RecipeImport, 'createdAt'>;
+    recipeImport: Omit<RecipeImport, 'fileUid'|'filePath'|'createdAt'>;
 }
 
 export interface ApiRecipeImportImportRecipeCreateRequest {
     id: number;
-    recipeImport: Omit<RecipeImport, 'createdAt'>;
+    recipeImport: Omit<RecipeImport, 'fileUid'|'filePath'|'createdAt'>;
 }
 
 export interface ApiRecipeImportListRequest {
@@ -2208,7 +2208,7 @@ export interface ApiRecipeImportListRequest {
 
 export interface ApiRecipeImportPartialUpdateRequest {
     id: number;
-    patchedRecipeImport?: Omit<PatchedRecipeImport, 'createdAt'>;
+    patchedRecipeImport?: Omit<PatchedRecipeImport, 'fileUid'|'filePath'|'createdAt'>;
 }
 
 export interface ApiRecipeImportRetrieveRequest {
@@ -2217,7 +2217,7 @@ export interface ApiRecipeImportRetrieveRequest {
 
 export interface ApiRecipeImportUpdateRequest {
     id: number;
-    recipeImport: Omit<RecipeImport, 'createdAt'>;
+    recipeImport: Omit<RecipeImport, 'fileUid'|'filePath'|'createdAt'>;
 }
 
 export interface ApiRecipeListRequest {
@@ -2276,7 +2276,7 @@ export interface ApiRecipeNullingListRequest {
 
 export interface ApiRecipePartialUpdateRequest {
     id: number;
-    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    patchedRecipe?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'filePath'|'rating'|'lastCooked'>;
 }
 
 export interface ApiRecipeProtectingListRequest {
@@ -2302,7 +2302,7 @@ export interface ApiRecipeShoppingUpdateRequest {
 
 export interface ApiRecipeUpdateRequest {
     id: number;
-    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'>;
+    recipe: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'filePath'|'rating'|'lastCooked'>;
 }
 
 export interface ApiSearchFieldsRetrieveRequest {

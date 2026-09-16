@@ -1,4 +1,3 @@
-.openapi-generator-ignore
 apis/Account2FAApi.ts
 apis/AccountEmailApi.ts
 apis/AccountPasswordApi.ts
@@ -125,4 +124,3 @@ models/WebAuthnAuthenticator.ts
 models/WebAuthnCredentialCreationOptions.ts
 models/WebAuthnCredentialRequestOptions.ts
 models/index.ts
-runtime.ts

@@ -34,11 +34,11 @@ class ScopeMiddleware:
                 return self.get_response(request)
 
         # views that should be served with scopes_disabled
-        NO_SCOPE_VIEWS = ['/admin/']
+        NO_SCOPE_VIEWS = ['/admin']
         # views that should be served even when no space context is available
-        NO_SPACE_VIEWS = ['/invite/', '/accounts/', '/switch-space/']  # TODO verify this is all still needed in v2
+        NO_SPACE_VIEWS = ['/invite', '/accounts', '/switch-space']  # TODO verify this is all still needed in v2
         # views that should be served without redirection when not authenticated
-        NO_AUTH_VIEWS = ['/login/', '/signup/', '/password-reset/', '/manifest.json', '/_allauth/']
+        NO_AUTH_VIEWS = ['/account/login', '/account/signup', '/account/password-reset', '/account/email-confirm', '/manifest.json', '/_allauth', '/openapi']
         if settings.DEBUG:
             NO_AUTH_VIEWS.append('/__debug__/')
 
@@ -105,4 +105,4 @@ class ScopeMiddleware:
                     with scopes_disabled():
                         return self.get_response(request)
 
-            return HttpResponseRedirect('/login/?next=' + request.path)
+            return HttpResponseRedirect('account/login/?next=' + request.path)

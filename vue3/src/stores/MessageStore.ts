@@ -31,6 +31,7 @@ export enum PreparedMessage {
     MOVE_SUCCESS = 'MOVE_SUCCESS',
     NOT_FOUND = 'NOT_FOUND',
     RATE_LIMIT = 'RATE_LIMIT',
+    PASSWORDS_DONT_MATCH = 'PASSWORDS_DONT_MATCH',
 }
 
 /**
@@ -107,11 +108,14 @@ export const useMessageStore = defineStore('message_store', () => {
      * @param data optional error data
      */
     function addError(errorType: ErrorMessageType | string, data?: any) {
-        if (data instanceof ResponseError) {
+        try {
             let messageText = ""
             messageText += `URL: ${data.response.url} \n\nErrors:\n`
-            try {
-                data.response.json().then(responseJson => {
+
+            data.response.json().then(responseJson => {
+                if (responseJson.status == 429) {
+                    useMessageStore().addPreparedMessage(PreparedMessage.RATE_LIMIT)
+                } else {
                     let flatResponseJson = flattenObject(responseJson)
                     for (let key in flatResponseJson) {
                         messageText += `    - ${key}: ${flatResponseJson[key]}\n`
@@ -120,14 +124,12 @@ export const useMessageStore = defineStore('message_store', () => {
                         title: `${t(errorType)} - ${data.response.statusText} (${data.response.status})`,
                         text: messageText
                     } as StructuredMessage, 5000 + Object.keys(responseJson).length * 1500, responseJson)
-                }).catch(() => {
-                    // if response does not contain parsable JSON or parsing fails for some other reason show generic error
-                    addMessage(MessageType.ERROR, {title: t(errorType), text: ''} as StructuredMessage, 7000, data)
-                })
-            } catch (e) {
+                }
+            }).catch(() => {
+                // if response does not contain parsable JSON or parsing fails for some other reason show generic error
                 addMessage(MessageType.ERROR, {title: t(errorType), text: ''} as StructuredMessage, 7000, data)
-            }
-        } else {
+            })
+        } catch (e) {
             addMessage(MessageType.ERROR, {title: t(errorType), text: ''} as StructuredMessage, 7000, data)
         }
     }
@@ -155,6 +157,9 @@ export const useMessageStore = defineStore('message_store', () => {
         }
         if (preparedMessage == PreparedMessage.NOT_FOUND) {
             addMessage(MessageType.WARNING, {title: t('NotFound'), text: t('NotFoundHelp')} as StructuredMessage, 6000, data)
+        }
+        if (preparedMessage == PreparedMessage.PASSWORDS_DONT_MATCH) {
+            addMessage(MessageType.WARNING, {title: t('Invalid'), text: t('PasswordsDontMatch')} as StructuredMessage, 6000)
         }
 
         if (preparedMessage == PreparedMessage.RATE_LIMIT) {

@@ -69,6 +69,12 @@ export interface ServerSettings {
     version: string;
     /**
      * 
+     * @type {boolean}
+     * @memberof ServerSettings
+     */
+    email: boolean;
+    /**
+     * 
      * @type {number}
      * @memberof ServerSettings
      */
@@ -153,6 +159,7 @@ export function instanceOfServerSettings(value: object): value is ServerSettings
     if (!('hosted' in value) || value['hosted'] === undefined) return false;
     if (!('debug' in value) || value['debug'] === undefined) return false;
     if (!('version' in value) || value['version'] === undefined) return false;
+    if (!('email' in value) || value['email'] === undefined) return false;
     if (!('unauthenticatedThemeFromSpace' in value) || value['unauthenticatedThemeFromSpace'] === undefined) return false;
     if (!('forceThemeFromSpace' in value) || value['forceThemeFromSpace'] === undefined) return false;
     return true;
@@ -176,6 +183,7 @@ export function ServerSettingsFromJSONTyped(json: any, ignoreDiscriminator: bool
         'hosted': json['hosted'],
         'debug': json['debug'],
         'version': json['version'],
+        'email': json['email'],
         'unauthenticatedThemeFromSpace': json['unauthenticated_theme_from_space'],
         'forceThemeFromSpace': json['force_theme_from_space'],
         'logoColor32': json['logo_color_32'] == null ? undefined : json['logo_color_32'],
@@ -210,6 +218,7 @@ export function ServerSettingsToJSONTyped(value?: ServerSettings | null, ignoreD
         'hosted': value['hosted'],
         'debug': value['debug'],
         'version': value['version'],
+        'email': value['email'],
         'unauthenticated_theme_from_space': value['unauthenticatedThemeFromSpace'],
         'force_theme_from_space': value['forceThemeFromSpace'],
         'logo_color_32': value['logoColor32'],

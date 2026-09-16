@@ -41,17 +41,11 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
         # OAuth callbacks, headless, and other flows: defer to default
         return super(AllAuthCustomAdapter, self).is_open_for_signup(request)
 
-    # disable password reset for now
     def send_mail(self, template_prefix, email, context):
         if settings.EMAIL_HOST != '':
-            default = timezone.now()
-            c = caches['default'].get_or_set(email, default, timeout=360)
-            if c == default:
-                try:
-                    super(AllAuthCustomAdapter, self).send_mail(template_prefix, email, context)
-                except Exception as e:  # dont fail signup just because confirmation mail could not be send
-                    logger.error(f"Failed to send {template_prefix} email to {email}: {type(e).__name__}: {e}")
-            else:
-                messages.add_message(self.request, messages.ERROR, _('In order to prevent spam, the requested email was not send. Please wait a few minutes and try again.'))
+            try:
+                super(AllAuthCustomAdapter, self).send_mail(template_prefix, email, context)
+            except Exception as e:  # dont fail signup just because confirmation mail could not be send
+                logger.error(f"Failed to send {template_prefix} email to {email}: {type(e).__name__}: {e}")
         else:
             logger.debug(f"Email not sent (EMAIL_HOST not configured): {template_prefix} to {email}")

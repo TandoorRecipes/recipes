@@ -168,7 +168,7 @@ export interface PatchedRecipe {
      * @type {string}
      * @memberof PatchedRecipe
      */
-    filePath?: string;
+    readonly filePath?: string;
     /**
      * 
      * @type {string}
@@ -263,7 +263,7 @@ export function PatchedRecipeToJSON(json: any): PatchedRecipe {
     return PatchedRecipeToJSONTyped(json, false);
 }
 
-export function PatchedRecipeToJSONTyped(value?: Omit<PatchedRecipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'rating'|'last_cooked'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedRecipeToJSONTyped(value?: Omit<PatchedRecipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'file_path'|'rating'|'last_cooked'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -283,7 +283,6 @@ export function PatchedRecipeToJSONTyped(value?: Omit<PatchedRecipe, 'image'|'cr
         'nutrition': NutritionInformationToJSON(value['nutrition']),
         'properties': value['properties'] == null ? undefined : ((value['properties'] as Array<any>).map(PropertyToJSON)),
         'servings': value['servings'],
-        'file_path': value['filePath'],
         'servings_text': value['servingsText'],
         'diameter': value['diameter'],
         'diameter_text': value['diameterText'],

@@ -149,6 +149,8 @@ onMounted(() => {
     useUserPreferenceStore().init().then(() => {
         if (useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().activeSpace.spaceSetupCompleted) {
             router.push({name: 'WelcomePage'})
+        } else if (router.currentRoute.value.name == 'LoginPage' && useUserPreferenceStore().isAuthenticated) {
+            router.push({name: 'StartPage'})
         }
     })
 
@@ -174,6 +176,8 @@ router.afterEach((to, from) => {
         useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id! &&
         useUserPreferenceStore().activeUserSpace?.household == undefined ) {
         router.push({name: 'HouseholdPage'})
+    } else if (to.name == 'LoginPage' && useUserPreferenceStore().initCompleted && useUserPreferenceStore().isAuthenticated) {
+        router.push({name: 'StartPage'})
     }
     nextTick(() => {
         if (to.meta.title) {

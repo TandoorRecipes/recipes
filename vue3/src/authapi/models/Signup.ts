@@ -33,13 +33,6 @@ export interface Signup {
      * @memberof Signup
      */
     username: string;
-    /**
-     * The password.
-     * 
-     * @type {string}
-     * @memberof Signup
-     */
-    password: string;
 }
 
 /**
@@ -48,7 +41,6 @@ export interface Signup {
 export function instanceOfSignup(value: object): value is Signup {
     if (!('email' in value) || value['email'] === undefined) return false;
     if (!('username' in value) || value['username'] === undefined) return false;
-    if (!('password' in value) || value['password'] === undefined) return false;
     return true;
 }
 
@@ -64,7 +56,6 @@ export function SignupFromJSONTyped(json: any, ignoreDiscriminator: boolean): Si
         
         'email': json['email'],
         'username': json['username'],
-        'password': json['password'],
     };
 }
 
@@ -81,7 +72,6 @@ export function SignupToJSONTyped(value?: Signup | null, ignoreDiscriminator: bo
         
         'email': value['email'],
         'username': value['username'],
-        'password': value['password'],
     };
 }
 

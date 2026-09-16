@@ -5,8 +5,6 @@
 
         <thank-you-note></thank-you-note>
 
-        <v-text-field class="mt-3" :label="$t('Username')" v-model="user.username" disabled :hint="$t('theUsernameCannotBeChanged')" persistent-hint></v-text-field>
-
         <!--                    <v-label>Avatar</v-label><br/>-->
         <!--                    <v-avatar class="mt-3 mb-3" style="height: 10vh; width: 10vh" color="info">V</v-avatar> Feature coming in a future Version of Tandoor.-->
 
