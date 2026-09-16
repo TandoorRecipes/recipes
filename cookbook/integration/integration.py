@@ -188,6 +188,7 @@ class Integration:
                             il.total_recipes += len(file_list)
 
                         if isinstance(self, cookbook.integration.cookmate.Cookmate):
+                            self.import_zip = import_zip
                             new_file_list = []
                             for file in file_list:
                                 new_file_list += etree.parse(BytesIO(self.safe_read(import_zip, file.filename))).getroot().getchildren()
