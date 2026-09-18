@@ -118,6 +118,7 @@ export interface MealPlan {
      * @memberof MealPlan
      */
     addshopping?: boolean;
+    done?: boolean;
 }
 
 /**
@@ -159,6 +160,7 @@ export function MealPlanFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
         'mealTypeName': json['meal_type_name'],
         'shopping': json['shopping'],
         'addshopping': json['addshopping'] == null ? undefined : json['addshopping'],
+        'done': json['done'] == null ? undefined : json['done'],
     };
 }
 
@@ -182,6 +184,7 @@ export function MealPlanToJSONTyped(value?: Omit<MealPlan, 'note_markdown'|'crea
         'to_date': value['toDate'] == null ? value['toDate'] : value['toDate'].toISOString(),
         'meal_type': MealTypeToJSON(value['mealType']),
         'addshopping': value['addshopping'],
+        'done': value['done'],
     };
 }
 
