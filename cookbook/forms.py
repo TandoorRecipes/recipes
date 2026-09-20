@@ -4,7 +4,6 @@ from allauth.account.forms import ResetPasswordForm, SignupForm
 from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from django import forms
 from django.conf import settings
-from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from django.forms import widgets
 from django.utils.translation import gettext_lazy as _
@@ -12,7 +11,7 @@ from django_scopes import scopes_disabled
 from django_scopes.forms import SafeModelChoiceField
 from hcaptcha.fields import hCaptchaField
 
-from .models import InviteLink, Recipe, Space, User, UserPreference, UserSpace
+from .models import InviteLink, Recipe, Space, User, UserPreference
 
 
 class SelectWidget(widgets.Select):
@@ -178,22 +177,6 @@ class AllAuthSocialSignupForm(SocialSignupForm):
         super().__init__(**kwargs)
         if settings.PRIVACY_URL == '' and settings.TERMS_URL == '':
             self.fields.pop('terms')
-
-    def signup(self, request, user):
-        if settings.SOCIAL_DEFAULT_ACCESS:
-            with scopes_disabled():
-                space = Space.objects.first()
-                group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
-                if space and group:
-                    user_space = UserSpace.objects.create(
-                        space=space, user=user, active=True
-                    )
-                    user_space.groups.add(group)
-                else:
-                    if not space:
-                        print(f'WARNING: SOCIAL_DEFAULT_ACCESS is enabled but no Space exists. Cannot auto-assign user {user}.')
-                    if not group:
-                        print(f'WARNING: SOCIAL_DEFAULT_GROUP={settings.SOCIAL_DEFAULT_GROUP!r} does not match any Group. Cannot auto-assign user {user}.')
 
 
 class CustomPasswordResetForm(ResetPasswordForm):
