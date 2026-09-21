@@ -16,6 +16,7 @@
                     <recipe-context-menu :recipe="props.recipe" size="small" v-if="props.showMenu"></recipe-context-menu>
                 </div>
             </div>
+            <v-rating v-if="props.recipe.rating !== null && props.recipe.rating > 0" :model-value="props.recipe.rating" density="comfortable" size="x-small" color="tandoor" half-increments readonly></v-rating>
             <!--            <p class="text-disabled">{{ props.recipe.createdBy.displayName}}</p>-->
             <keywords-component variant="outlined" :keywords="props.recipe.keywords" :max-keywords="3" v-if="props.showKeywords">
                 <template #prepend>
