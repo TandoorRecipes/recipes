@@ -215,11 +215,19 @@ const itemLabelAttribute = computed(() => {
     return 'name'
 })
 
+const isExternalUpdate = ref(false)
+
 /**
  * watcher to update external model value
  */
 watch(autoselectValue, (newValue, oldValue) => {
     console.log('AUTOSELECT value changed', oldValue, ' ==>', newValue)
+
+    if (isExternalUpdate.value) {
+        isExternalUpdate.value = false
+        return
+    }
+
     updateModelValue(newValue)
 })
 
@@ -386,6 +394,7 @@ function updateAutoselectValue(newValue: EditorSupportedTypes | EditorSupportedT
     if (typeof newValue === 'number') {
         if ((autoselectValue.value && autoselectValue.value.id! != newValue) || !autoselectValue.value) {
             modelClass.value.retrieve(newValue).then((r: EditorSupportedTypes) => {
+                isExternalUpdate.value = true
                 autoselectValue.value = r
             })
         }
@@ -396,6 +405,7 @@ function updateAutoselectValue(newValue: EditorSupportedTypes | EditorSupportedT
             // remove existing items no longer in external model
             // check before filtering because filtering triggers an update which causes an infinite loop
             if (autoselectValue.value.findIndex((item: EditorSupportedTypes) => !newValue.includes(item.id!)) != -1) {
+                isExternalUpdate.value = true
                 autoselectValue.value = autoselectValue.value.filter((item: EditorSupportedTypes) => newValue.includes(item.id!))
             }
 
@@ -411,6 +421,7 @@ function updateAutoselectValue(newValue: EditorSupportedTypes | EditorSupportedT
             Promise.all(
                 missingIds.map(id => modelClass.value.retrieve(id))
             ).then((missingItems: EditorSupportedTypes[]) => {
+                isExternalUpdate.value = true
                 if (autoselectValue.value && Array.isArray(autoselectValue.value)) {
                     // check again items were not already added (might occur with race conditions)
                     const existingIds = new Set(autoselectValue.value.map(item => item.id))
@@ -426,7 +437,8 @@ function updateAutoselectValue(newValue: EditorSupportedTypes | EditorSupportedT
                 loading.value = false
             })
         }
-    } else {
+    } else if (autoselectValue.value !== newValue) {
+        isExternalUpdate.value = true
         autoselectValue.value = newValue
     }
 }
