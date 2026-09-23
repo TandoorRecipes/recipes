@@ -194,7 +194,7 @@ class IngredientParser:
             raise ValueError('string to parse cannot be empty')
 
         if len(ingredient) > 512:
-            raise ValueError('cannot parse ingredients with more than 512 characters')
+            raise ValueError(f'cannot parse ingredients with more than 512 characters: \'{ingredient[:100]}...\'')
 
         # remove leading commas, dots and other symbols that typically do not occur at the start of an ingredient string
         ingredient = re.sub(r"^[,.\-_=+#*|\\/]+", "", ingredient)
