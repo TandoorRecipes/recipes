@@ -10,7 +10,7 @@ from django.core.cache import caches
 from django.utils import timezone
 from django_scopes import scopes_disabled
 
-from cookbook.helper.permission_helper import create_space_for_user
+from cookbook.helper.permission_helper import create_space_for_user, process_invite_token
 from cookbook.models import InviteLink
 
 logger = logging.getLogger(__name__)
@@ -48,6 +48,12 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
         """
         user = super(AllAuthCustomAdapter, self).save_user(request, user, form)
         create_space_for_user(user)
+
+        if 'signup_token' in request.session:
+            value = request.session['signup_token']
+            del request.session['signup_token']
+            request.session.modified = True
+            process_invite_token(user, value)
         return user
 
     def send_mail(self, template_prefix, email, context):

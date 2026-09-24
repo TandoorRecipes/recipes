@@ -28,7 +28,7 @@ from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
 
 from cookbook.forms import Recipe, SpaceCreateForm, SpaceJoinForm, User, UserCreateForm
 from cookbook.helper.HelperFunctions import str2bool
-from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, has_group_permission, share_link_valid, switch_user_active_space
+from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, has_group_permission, share_link_valid, switch_user_active_space, process_invite_token
 from cookbook.models import InviteLink, ShareLink, Space, UserSpace
 from cookbook.templatetags.theming_tags import get_theming_values
 from cookbook.version_info import VERSION_INFO
@@ -42,11 +42,11 @@ def index(request, path=None, resource=None):
             if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
                 return HttpResponseRedirect(reverse_lazy('view_setup'))
 
-    if 'signup_token' in request.session:
+    if 'signup_token' in request.session and request.user.is_authenticated:
         value = request.session['signup_token']
         del request.session['signup_token']
         request.session.modified = True
-        return HttpResponseRedirect(reverse('view_invite', args=[value]))
+        process_invite_token(request.user, value)
 
     return render(request, 'frontend/tandoor.html', {})
 
@@ -383,25 +383,14 @@ def invite_link(request, token):
             print('Malformed Invite Link supplied!')
             return HttpResponseRedirect(reverse('index'))
 
-        if link := InviteLink.objects.filter(valid_until__gte=timezone.now().date(), used_by=None, uuid=token).first():
-            if request.user.is_authenticated:
-                if not request.user.userspace_set.filter(space=link.space).exists():
-                    if not link.reusable:
-                        link.used_by = request.user
-                        link.save()
-
-                    UserSpace.objects.filter(user=request.user).update(active=False)
-                    user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, household=link.household,
-                                                          active=True)
-
-                    user_space.groups.add(link.group)
-
-                return HttpResponseRedirect(reverse('index'))
-            else:
-                request.session['signup_token'] = str(token)
-                if settings.SOCIALACCOUNT_ONLY:
-                    return HttpResponseRedirect(reverse('account_login'))
-                return HttpResponseRedirect(reverse('account_signup'))
+        if request.user.is_authenticated:
+            process_invite_token(request.user, token)
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            request.session['signup_token'] = str(token)
+            if settings.SOCIALACCOUNT_ONLY:
+                return HttpResponseRedirect('/account/login/')
+            return HttpResponseRedirect('/account/signup/')
 
     return HttpResponseRedirect(reverse('index'))
 
