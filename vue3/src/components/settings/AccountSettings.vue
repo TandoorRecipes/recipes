@@ -44,7 +44,7 @@
         <v-col>
 
             <v-form :disabled="loading">
-                <v-text-field type="password" :label="$t('CurrentPassword')" v-model="currentPassword" :disabled="userSession.data.user.hasUsablePassword"></v-text-field>
+                <v-text-field type="password" :label="$t('CurrentPassword')" v-model="currentPassword" :disabled="!userSession.data.user.hasUsablePassword"></v-text-field>
                 <v-text-field type="password" :label="$t('NewPassword')" v-model="newPassword1"></v-text-field>
                 <v-text-field type="password" :label="$t('RepeatNewPassword')" v-model="newPassword2"></v-text-field>
                 <v-btn prepend-icon="$save" color="save" @click="changePassword()" :loading="loading">{{ $t('Save') }}</v-btn>

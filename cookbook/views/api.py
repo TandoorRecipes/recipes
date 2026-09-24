@@ -2554,39 +2554,8 @@ class AccessTokenViewSet(LoggingMixin, viewsets.ModelViewSet):
 
 
 # -------------- DRF custom views --------------------
-
-
-class AuthTokenThrottle(AnonRateThrottle):
-    rate = '10/day'
-
-
 class RecipeImportThrottle(UserRateThrottle):
     rate = DRF_THROTTLE_RECIPE_URL_IMPORT
-
-
-class CustomAuthToken(ObtainAuthToken):
-    throttle_classes = [AuthTokenThrottle]
-
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
-        if token := AccessToken.objects.filter(user=user, expires__gt=timezone.now(), scope__contains='read').filter(
-                scope__contains='write').first():
-            access_token = token
-        else:
-            access_token = AccessToken.objects.create(user=user,
-                                                      token=f'tda_{str(uuid.uuid4()).replace("-", "_")}',
-                                                      expires=(timezone.now() + timezone.timedelta(days=365 * 5)),
-                                                      scope='read write app')
-        return Response({
-            'id': access_token.id,
-            'token': access_token.token,
-            'scope': access_token.scope,
-            'expires': access_token.expires,
-            'user_id': access_token.user.pk,
-            'test': user.pk
-        })
 
 
 class RecipeUrlImportView(APIView):

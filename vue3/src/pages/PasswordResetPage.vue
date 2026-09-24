@@ -36,7 +36,7 @@
                     <v-divider></v-divider>
                     <v-card-text>
                         <v-form :disabled="loading">
-                            <v-text-field type="password" :label="$t('NewPassword')" v-model="newPassword1"></v-text-field>
+                            <v-text-field type="password" autofocus :label="$t('NewPassword')" v-model="newPassword1"></v-text-field>
                             <v-text-field type="password" :label="$t('RepeatNewPassword')" v-model="newPassword2" @keydown.enter="resetPassword()"></v-text-field>
                         </v-form>
                     </v-card-text>
