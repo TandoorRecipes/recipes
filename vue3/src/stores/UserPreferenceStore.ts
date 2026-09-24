@@ -65,6 +65,20 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
     const router = useRouter()
 
     /**
+     * Check if system prefers dark mode
+     */
+    const systemPrefersDark = ref(typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+
+    // Listen for system theme changes
+    if (typeof window !== 'undefined') {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+        mediaQuery.addEventListener('change', (e: MediaQueryListEvent) => {
+            systemPrefersDark.value = e.matches
+            updateTheme()
+        })
+    }
+
+    /**
      * holds the active user space if there is one or null if not
      */
     let activeUserSpace: ComputedRef<null | UserSpace> = computed(() => {
@@ -255,13 +269,25 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
 
     /**
      * applies user settings regarding themes/styling
+     * Respects light_theme and dark_theme settings and system preference
+     * TANDOOR_DARK (or any theme with "DARK" in name) loads dark theme, otherwise light
      */
     function updateTheme() {
-        if (userSettings.value.theme == 'TANDOOR_DARK' && !isPrintMode.value) {
-            theme.change('dark')
-        } else {
+        // In print mode, always use light theme
+        if (isPrintMode.value) {
             theme.change('light')
+            return
         }
+
+        // Determine which theme to use based on system preference
+        const selectedTheme = systemPrefersDark.value && userSettings.value.darkTheme
+            ? userSettings.value.darkTheme
+            : (userSettings.value.lightTheme || 'TANDOOR')
+
+        // TANDOOR_DARK or any theme with "DARK" means dark theme, otherwise light
+        const isDark = selectedTheme === 'TANDOOR_DARK' || selectedTheme.includes('DARK')
+
+        theme.change(isDark ? 'dark' : 'light')
     }
 
     function init() {
