@@ -8,6 +8,8 @@
         </v-col>
     </v-row>
 
+    <p class="text-h6 mt-3">{{ $t('Email') }}</p>
+    <v-divider class="mb-3"></v-divider>
     <!-- email change -->
     <v-row>
         <v-col>
@@ -23,7 +25,7 @@
                     </template>
 
                 </v-list-item>
-                <v-divider></v-divider>
+                <v-divider v-if="emailAddresses.length > 0"></v-divider>
                 <v-list-item>
                     <v-text-field type="email" density="compact" v-model="newEmail" :hint="$t('EmailAddHint')" persistent-hint>
                         <template #append>
@@ -35,6 +37,8 @@
         </v-col>
     </v-row>
 
+    <p class="text-h6 mt-3">{{ $t('Password') }}</p>
+    <v-divider class="mb-3"></v-divider>
     <!-- password change -->
     <v-row>
         <v-col>
@@ -49,9 +53,6 @@
     </v-row>
 
 
-    <br/>
-    <br/>
-    <v-btn color="primary" class="mt-1" :href="getDjangoUrl('accounts/email/')" target="_blank">{{ $t('Manage_Emails') }}</v-btn>
     <br/>
     <br/>
     <v-btn color="primary" class="mt-1" :href="getDjangoUrl('accounts/social/connections/')" target="_blank">{{ $t('Social_Authentication') }}</v-btn>

@@ -21,7 +21,7 @@
 
                     </v-card-text>
                     <v-card-actions>
-                        <v-btn :to="{name: 'SignUpPage'}" variant="elevated" :loading="loading" color="info">{{ $t('SignUp') }} TODO</v-btn>
+                        <v-btn :to="{name: 'SignUpPage'}" variant="elevated" :loading="loading" color="info">{{ $t('SignUp') }}</v-btn>
                         <v-btn type="submit" @click="login()" variant="elevated" :loading="loading" color="primary">{{ $t('Login') }}</v-btn>
                     </v-card-actions>
                 </v-card>

@@ -146,6 +146,10 @@ const title = useTitle()
 const router = useRouter()
 
 onMounted(() => {
+    init()
+})
+
+function init(){
     useUserPreferenceStore().init().then(() => {
         if (useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().activeSpace.spaceSetupCompleted) {
             router.push({name: 'WelcomePage'})
@@ -160,7 +164,7 @@ onMounted(() => {
     if (locale != null) {
         current.value = toVuetifyLocale(locale.toLowerCase())
     }
-})
+}
 
 /**
  * global title update handler, might be overridden by page specific handlers
@@ -179,6 +183,11 @@ router.afterEach((to, from) => {
     } else if (to.name == 'LoginPage' && useUserPreferenceStore().initCompleted && useUserPreferenceStore().isAuthenticated) {
         router.push({name: 'StartPage'})
     }
+
+    if(from.fullPath.startsWith('/account/') && !to.fullPath.startsWith('/account/')){
+        init()
+    }
+
     nextTick(() => {
         if (to.meta.title) {
             title.value = t(to.meta.title)

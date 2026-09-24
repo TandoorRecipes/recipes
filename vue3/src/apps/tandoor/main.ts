@@ -55,7 +55,7 @@ let routes = [
 ]
 
 let settings = {
-    path: '/settings', component: () => import("@/pages/SettingsPage.vue"), name: 'SettingsPage', redirect: '/settings/account',
+    path: '/settings', component: () => import("@/pages/SettingsPage.vue"), name: 'SettingsPage', redirect: '/settings/profile',
     children: [
         {path: 'profile', component: () => import("@/components/settings/ProfileSettings.vue"), name: 'ProfileSettings', meta: {title: 'Settings'}},
         {path: 'account', component: () => import("@/components/settings/AccountSettings.vue"), name: 'AccountSettings', meta: {title: 'Settings'}},

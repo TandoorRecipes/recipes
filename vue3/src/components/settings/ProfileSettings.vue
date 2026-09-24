@@ -3,12 +3,12 @@
         <p class="text-h6">{{ $t('Profile') }}</p>
         <v-divider class="mb-3"></v-divider>
 
-        <thank-you-note></thank-you-note>
+        <thank-you-note ></thank-you-note>
 
         <!--                    <v-label>Avatar</v-label><br/>-->
         <!--                    <v-avatar class="mt-3 mb-3" style="height: 10vh; width: 10vh" color="info">V</v-avatar> Feature coming in a future Version of Tandoor.-->
 
-        <v-text-field :label="$t('First_name')" v-model="user.firstName"></v-text-field>
+        <v-text-field class="mt-3" :label="$t('First_name')" v-model="user.firstName"></v-text-field>
         <v-text-field :label="$t('Last_name')" v-model="user.lastName"></v-text-field>
         <v-btn color="success" prepend-icon="$save" @click="save()">{{ $t('Save') }}</v-btn>
 
