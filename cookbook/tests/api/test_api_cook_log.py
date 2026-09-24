@@ -3,6 +3,7 @@ import json
 import pytest
 from django.contrib import auth
 from django.urls import reverse
+from django.utils.dateparse import parse_datetime
 from django_scopes import scopes_disabled
 
 from cookbook.models import CookLog
@@ -91,6 +92,23 @@ def test_add(arg, request, u1_s2, u2_s1, recipe_1_s1):
         assert r.status_code == 200
         r = u1_s2.get(reverse(DETAIL_URL, args={response['id']}))
         assert r.status_code == 404
+
+
+def test_recipe_last_cooked_reflects_cook_log(u1_s1, space_1, recipe_1_s1):
+    # Regression: the recipe serializer's `last_cooked` field must read the queryset
+    # annotation (`lastcooked`). Without source='lastcooked' it silently returned null
+    # for every recipe because allow_null swallows the missing-attribute error.
+    detail = reverse('api:recipe-detail', args={recipe_1_s1.id})
+
+    assert json.loads(u1_s1.get(detail).content)['last_cooked'] is None
+
+    with scopes_disabled():
+        log = CookLog.objects.create(recipe=recipe_1_s1, created_by=auth.get_user(u1_s1), space=space_1)
+
+    last_cooked = json.loads(u1_s1.get(detail).content)['last_cooked']
+    assert last_cooked is not None
+    # same instant, regardless of the timezone the API renders it in
+    assert parse_datetime(last_cooked) == log.created_at
 
 
 def test_delete(u1_s1, u1_s2, obj_1):
