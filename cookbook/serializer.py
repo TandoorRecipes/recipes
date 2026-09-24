@@ -441,7 +441,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
     def create(self, validated_data):
         if Space.objects.filter(created_by=self.context['request'].user).count() >= self.context['request'].user.userpreference.max_owned_spaces:
             raise serializers.ValidationError(
-                _('You have the reached the maximum amount of spaces that can be owned by you.') + f' ({self.context['request'].user.userpreference.max_owned_spaces})')
+                _('You have the reached the maximum amount of spaces that can be owned by you.') + f' ({self.context["request"].user.userpreference.max_owned_spaces})')
 
         name = None
         if 'name' in validated_data:
