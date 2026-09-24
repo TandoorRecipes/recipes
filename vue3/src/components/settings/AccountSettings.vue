@@ -2,7 +2,7 @@
 
     <p class="text-h6 mt-3">{{ $t('Account') }}</p>
     <v-divider class="mb-3"></v-divider>
-    <v-row>
+    <v-row v-if="user">
         <v-col>
             <v-text-field class="mt-3" :label="$t('Username')" v-model="user.username" disabled :hint="$t('theUsernameCannotBeChanged')" persistent-hint></v-text-field>
         </v-col>
@@ -20,7 +20,7 @@
                     <template #append>
                         <v-chip v-if="email.primary">{{ $t('Primary') }}</v-chip>
                         <v-chip v-if="email.verified">{{ $t('Verified') }}</v-chip>
-                        <v-chip v-if="!email.verified" color="warning" >{{ $t('NotVerified') }}</v-chip>
+                        <v-chip v-if="!email.verified" color="warning">{{ $t('NotVerified') }}</v-chip>
                         <!-- <v-btn @click="removeEmail(email.email)" icon="$delete"></v-btn>-->
                     </template>
 
@@ -40,11 +40,11 @@
     <p class="text-h6 mt-3">{{ $t('Password') }}</p>
     <v-divider class="mb-3"></v-divider>
     <!-- password change -->
-    <v-row>
+    <v-row v-if="userSession">
         <v-col>
 
             <v-form :disabled="loading">
-                <v-text-field type="password" :label="$t('CurrentPassword')" v-model="currentPassword"></v-text-field>
+                <v-text-field type="password" :label="$t('CurrentPassword')" v-model="currentPassword" :disabled="userSession.data.user.hasUsablePassword"></v-text-field>
                 <v-text-field type="password" :label="$t('NewPassword')" v-model="newPassword1"></v-text-field>
                 <v-text-field type="password" :label="$t('RepeatNewPassword')" v-model="newPassword2"></v-text-field>
                 <v-btn prepend-icon="$save" color="save" @click="changePassword()" :loading="loading">{{ $t('Save') }}</v-btn>
@@ -53,24 +53,51 @@
     </v-row>
 
 
+    <p class="text-h6 mt-3">{{ $t('Manage_Sessions') }}</p>
+    <v-divider class="mb-3"></v-divider>
+    <v-row>
+        <v-col>
+
+            <v-data-table :items="sessions" :headers="sessionsTableHeaders">
+                <template v-slot:item.createdAt="{ item }">
+                    {{ DateTime.fromSeconds(item.createdAt).toLocaleString(DateTime.DATETIME_MED) }}
+                </template>
+                <template v-slot:item.lastSeenAt="{ item }">
+                    {{ DateTime.fromSeconds(item.lastSeenAt).toLocaleString(DateTime.DATETIME_MED) }}
+                </template>
+                <template v-slot:item.action="{ item }">
+                    <v-chip color="success" v-if="item.isCurrent">{{ $t('Current') }}</v-chip>
+                    <v-btn icon="$delete" variant="plain" @click="endSessions([item])" v-if="!item.isCurrent"></v-btn>
+                </template>
+            </v-data-table>
+        </v-col>
+    </v-row>
+
     <br/>
     <br/>
     <v-btn color="primary" class="mt-1" :href="getDjangoUrl('accounts/social/connections/')" target="_blank">{{ $t('Social_Authentication') }}</v-btn>
-    <br/>
-    <v-btn color="primary" class="mt-1" :href="getDjangoUrl('accounts/sessions/')" target="_blank">{{ $t('Manage_Sessions') }}</v-btn>
-    <br/>
 
 </template>
 
 <script setup lang="ts">
 
 import {useDjangoUrls} from "@/composables/useDjangoUrls.ts";
-import {AccountEmailApi, AccountPasswordApi, AuthenticationAccountApi, EmailAddress} from "@/authapi";
+import {
+    AccountEmailApi,
+    AccountPasswordApi,
+    AuthenticatedResponse,
+    AuthenticationAccountApi,
+    AuthenticationCurrentSessionApi,
+    EmailAddress,
+    type Session,
+    SessionsApi
+} from "@/authapi";
 import {onMounted, ref} from "vue";
 import {ErrorMessageType, MessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore.ts";
 import {useI18n} from "vue-i18n";
 import {ApiApi, User} from "@/openapi";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import {DateTime} from "luxon";
 
 const {getDjangoUrl} = useDjangoUrls()
 const {t} = useI18n()
@@ -82,7 +109,17 @@ let loading = ref(false)
 
 const newEmail = ref('')
 
-const user = ref({} as User)
+const user = ref<undefined | User>(undefined)
+const userSession = ref<undefined | AuthenticatedResponse>(undefined)
+
+const sessions = ref<Session[]>([] as Session[])
+const sessionsTableHeaders = ref([
+    {title: t('IP'), key: 'ip'},
+    {title: t('Created'), key: 'createdAt'},
+    {title: t('Updated'), key: 'lastSeenAt'},
+
+    {title: t('Actions'), key: 'action', align: 'end'},
+])
 
 const emailAddresses = ref([] as EmailAddress[])
 
@@ -90,6 +127,7 @@ onMounted(() => {
 
     loadUser()
     loadEmailAddresses()
+    loadSessions()
 })
 
 /**
@@ -113,6 +151,13 @@ function loadUser() {
 
     api.apiUserRetrieve({id: useUserPreferenceStore().userSettings.user.id}).then(r => {
         user.value = r
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
+
+    let authenticationCurrentSessionApi = new AuthenticationCurrentSessionApi()
+    authenticationCurrentSessionApi.allauthClientV1AuthSessionGet({client: 'browser'}).then(r => {
+        userSession.value = r
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
@@ -143,19 +188,6 @@ function removeEmail(email: string) {
     accountEmailApi.allauthClientV1AccountEmailDelete({client: 'browser', allauthClientV1AccountEmailPutRequest: {email: email}}).then(r => {
 
         loadEmailAddresses()
-    }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
-    })
-}
-
-/**
- * re-send an email verification link to to the user
- * @param email
- */
-function sendVerifyEmail(email: string) {
-    let authenticationAccountApi = new AuthenticationAccountApi()
-    authenticationAccountApi.allauthClientV1AuthEmailVerifyResendPost({client: 'browser', allauthClientV1AccountEmailResendPostRequest: {email: email}}).then(r => {
-        useMessageStore().addPreparedMessage(PreparedMessage.UPDATE_SUCCESS)
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
@@ -196,6 +228,33 @@ function changePassword() {
     } else {
         useMessageStore().addPreparedMessage(PreparedMessage.PASSWORDS_DONT_MATCH)
     }
+}
+
+/**
+ * load all active user sessions
+ */
+function loadSessions() {
+    let sessionsApi = new SessionsApi()
+
+    sessionsApi.allauthClientV1AuthSessionsGet({client: 'browser'}).then(r => {
+        sessions.value = r.data
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
+}
+
+/**
+ * end one or more sessions
+ * @param sessionsToEnd
+ */
+function endSessions(sessionsToEnd: Session[]) {
+    let sessionsApi = new SessionsApi()
+
+    sessionsApi.allauthClientV1AuthSessionsDelete({client: 'browser', endSessions: {sessions: sessionsToEnd.flatMap(s => s.id)}}).then(r => {
+        loadSessions()
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
 }
 
 </script>

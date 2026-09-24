@@ -1,24 +1,41 @@
 <template>
-    <v-container>
-        <v-card style="max-width: 400px; margin: auto;">
-            <v-card-title>{{ $t('SignUp') }}</v-card-title>
-            <v-divider></v-divider>
-            <v-card-text>
+    <v-container style="max-width: 450px; margin: auto;">
 
-                <v-form v-if="!awaitingEmailConfirmation">
-                    <v-alert class="mb-4" v-if="generalError" type="warning">{{ generalError }}</v-alert>
-                    <v-text-field :label="$t('Email')" v-model="email" :error-messages="emailError" :error="!!emailError"></v-text-field>
-                    <v-text-field :label="$t('Username')" v-model="username" :error-messages="usernameError" :error="!!usernameError" @change="usernameManuallyChanged = true"></v-text-field>
-                </v-form>
 
-                <span v-if="awaitingEmailConfirmation">
+        <v-row>
+            <v-col>
+                <v-card>
+                    <v-card-text class="pt-2 pb-2">
+                        <v-btn variant="flat" @click="router.push({name: 'LoginPage'})" prepend-icon="fa-solid fa-arrow-left">{{ $t('Login') }}</v-btn>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col>
+                <v-card>
+
+                    <v-card-title>{{ $t('SignUp') }}</v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-text>
+
+                        <v-form v-if="!awaitingEmailConfirmation">
+                            <v-alert class="mb-4" v-if="generalError" type="warning">{{ generalError }}</v-alert>
+                            <v-text-field :label="$t('Email')" v-model="email" :error-messages="emailError" :error="!!emailError"></v-text-field>
+                            <v-text-field :label="$t('Username')" v-model="username" :error-messages="usernameError" :error="!!usernameError" @change="usernameManuallyChanged = true"></v-text-field>
+                        </v-form>
+
+                        <span v-if="awaitingEmailConfirmation">
                     {{$t('PleaseConfirmMail')}}
                 </span>
-            </v-card-text>
-            <v-card-actions>
-                <v-btn type="submit" variant="elevated" :loading="loading" color="primary" @click="createAccount()" v-if="!awaitingEmailConfirmation">{{ $t('SignUp') }}</v-btn>
-            </v-card-actions>
-        </v-card>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-btn type="submit" variant="elevated" :loading="loading" color="primary" @click="createAccount()" v-if="!awaitingEmailConfirmation">{{ $t('SignUp') }}</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
 
     </v-container>
 </template>
@@ -57,13 +74,18 @@ function createAccount() {
     loading.value = true
 
     authenticationAccountApi.allauthClientV1AuthSignupPost({client: 'browser', signup: {email: email.value, username: username.value, password: ''}}).then(r => {
-        console.log(r)
+        if(r.meta.isAuthenticated){
+            setTimeout(() => {
+                router.push({name: 'StartPage'})
+                loading.value = false
+            }, 1000)
+        }
     }).catch(err => {
         try {
             err.response.json().then(responseJson => {
                 if (responseJson.status == 429) {
                     generalError.value = t('RateLimitHelp')
-                } else  if (responseJson.status == 401){
+                } else if (responseJson.status == 401){
                     if(responseJson.meta.is_authenticated){
                         router.push({name: 'StartPage'})
                     } else {
@@ -72,7 +94,7 @@ function createAccount() {
                 } else {
                     responseJson.errors.forEach(error => {
                         if (error.param == 'email') {
-                            email.value = error.message
+                            emailError.value = error.message
                         } else if (error.param == 'username') {
                             usernameError.value = error.message
                         } else {
@@ -86,7 +108,6 @@ function createAccount() {
             console.error(e)
             useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
         }
-    }).finally(() => {
         loading.value = false
     })
 }

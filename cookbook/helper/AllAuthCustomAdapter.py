@@ -1,4 +1,3 @@
-
 import datetime
 import logging
 
@@ -11,6 +10,7 @@ from django.core.cache import caches
 from django.utils import timezone
 from django_scopes import scopes_disabled
 
+from cookbook.helper.permission_helper import create_space_for_user
 from cookbook.models import InviteLink
 
 logger = logging.getLogger(__name__)
@@ -40,6 +40,15 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
 
         # OAuth callbacks, headless, and other flows: defer to default
         return super(AllAuthCustomAdapter, self).is_open_for_signup(request)
+
+
+    def save_user(self, request, user, form, commit: bool = True):
+        """
+        create a default space for new users
+        """
+        user = super(AllAuthCustomAdapter, self).save_user(request, user, form)
+        create_space_for_user(user)
+        return user
 
     def send_mail(self, template_prefix, email, context):
         if settings.EMAIL_HOST != '':
