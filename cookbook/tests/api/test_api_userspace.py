@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import UserSpace
+from cookbook.models import Household, UserSpace
 
 LIST_URL = 'api:userspace-list'
 DETAIL_URL = 'api:userspace-detail'
@@ -39,6 +39,24 @@ def test_list_all_personal(space_2, u1_s1):
     result = u1_s1.get(reverse('api:userspace-all-personal'))
     assert result.status_code == 200
     assert len(json.loads(result.content)) == 2
+
+
+@pytest.mark.parametrize("arg", [
+    ['a_u', 403],
+    ['g1_s1', 403],
+    ['u1_s1', 200],
+    ['u2_s1', 200],
+    ['a1_s1', 200],
+    ['a2_s1', 200],
+])
+def test_household_list_permission(arg, request, space_1, u1_s1, u2_s1, a1_s1, a2_s1):
+    space_1.created_by = auth.get_user(a1_s1)
+    space_1.save()
+    Household.objects.create(name='Shared household', space=space_1)
+
+    c = request.getfixturevalue(arg[0])
+    result = c.get(reverse('api:household-list'))
+    assert result.status_code == arg[1]
 
 
 @pytest.mark.parametrize("arg", [
