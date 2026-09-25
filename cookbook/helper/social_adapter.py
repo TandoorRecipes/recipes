@@ -7,6 +7,8 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.conf import settings
 from django.utils import timezone
 
+from cookbook.helper.permission_helper import create_space_for_user, process_invite_token
+
 _ERROR_FILE = os.path.join(settings.MEDIA_ROOT, '.social_login_errors.json')
 _MAX_ERRORS = 50
 _MAX_AGE_HOURS = 24
@@ -104,3 +106,17 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
         })
 
         super().on_authentication_error(request, provider, error=error, exception=exception, extra_context=extra_context)
+
+    def save_user(self, request, sociallogin, form=None):
+        """
+        create a default space for new users
+        """
+        user = super().save_user(request, sociallogin, form=form)
+        create_space_for_user(user)
+
+        if 'signup_token' in request.session:
+            value = request.session['signup_token']
+            del request.session['signup_token']
+            request.session.modified = True
+            process_invite_token(user, value)
+        return user

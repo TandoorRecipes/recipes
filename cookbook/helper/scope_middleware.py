@@ -40,7 +40,7 @@ class ScopeMiddleware:
         # views that should be served even when no space context is available
         NO_SPACE_VIEWS = ['/accounts', '/switch-space']  # TODO verify this is all still needed in v2
         # views that should be served without redirection when not authenticated
-        NO_AUTH_VIEWS = ['/invite', '/account/login', '/account/signup', '/account/password-reset', '/account/email-confirm', '/manifest.json', '/_allauth', '/openapi']
+        NO_AUTH_VIEWS = ['/invite', '/account/login', '/account/signup', '/account/password-reset', '/account/email-confirm', '/account/social-signup/', '/manifest.json', '/_allauth', '/openapi']
         if settings.DEBUG:
             NO_AUTH_VIEWS.append('/__debug__/')
 
@@ -100,5 +100,9 @@ class ScopeMiddleware:
                     request.space = None
                     with scopes_disabled():
                         return self.get_response(request)
+
+            if re.match(rf'^{re.escape(prefix)}/accounts/(?:openid_connect/)?[a-zA-Z0-9_-]+/login/callback/?$', request.path):
+                with scopes_disabled():
+                    return self.get_response(request)
 
             return HttpResponseRedirect('/account/login/?next=' + request.path)

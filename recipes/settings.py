@@ -36,6 +36,7 @@ def extract_comma_list(env_key, default=None):
         else:
             return []
 
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -84,7 +85,6 @@ MIDDLEWARE = [
     'cookbook.helper.scope_middleware.ScopeMiddleware',
     'allauth.account.middleware.AccountMiddleware',
 ]
-
 
 load_dotenv()
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -317,13 +317,6 @@ SITE_ID = int(os.getenv('ALLAUTH_SITE_ID', 1))
 
 ACCOUNT_ADAPTER = 'cookbook.helper.AllAuthCustomAdapter'
 
-# TODO remove once frontend is complete
-# ACCOUNT_SIGNUP_FORM_CLASS = 'cookbook.forms.AllAuthSignupForm'
-ACCOUNT_FORMS = {'signup': 'cookbook.forms.AllAuthSignupForm', 'reset_password': 'cookbook.forms.CustomPasswordResetForm'}
-SOCIALACCOUNT_FORMS = {
-    'signup': 'cookbook.forms.AllAuthSocialSignupForm',
-}
-
 ACCOUNT_RATE_LIMITS = {
     "change_password": "1/m/user",
     "reset_password": "1/m/ip,1/m/key",
@@ -337,12 +330,13 @@ HEADLESS_FRONTEND_URLS = {
 
     "account_reset_password": "/account/password-reset",
     "account_reset_password_from_key": "/account/password-reset/?key={key}",
-    #TODO  "account_signup": "https://app.project.org/account/signup",
+    # TODO  "account_signup": "https://app.project.org/account/signup",
 
     # Fallback in case the state containing the `next` URL is lost and the handshake
     # with the third-party provider fails.
 
-    #TODO  "socialaccount_login_error": "https://app.project.org/account/provider/callback",
+    "socialaccount_login_error": "/account/social-signup/",
+    "socialaccount_signup": "/account/social-signup/",
 }
 
 ##################################################################

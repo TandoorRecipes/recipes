@@ -15,6 +15,14 @@
                                           :error="!!passwordError"/>
 
                         </v-form>
+
+                        <v-row>
+                            <v-col md="6" cols="12" v-for="p in socialProviders" :key="p.id">
+                                <v-btn block @click="startProviderFlow(p.id)">{{ p.name }}</v-btn>
+                            </v-col>
+                        </v-row>
+                        {{ socialProviders }}
+
                         <!-- TODO email send screen -->
 
                         <!-- TODO reset screen when GET param is present -->
@@ -41,11 +49,13 @@
 <script setup lang="ts">
 
 import {onMounted, ref} from "vue";
-import {AuthenticationAccountApi} from "@/authapi";
+import {AuthenticationAccountApi, AuthenticationProvidersApi, ConfigurationApi, Provider} from "@/authapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
-import {useRoute, useRouter} from "vue-router";
+import {useRouter} from "vue-router";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {useI18n} from "vue-i18n";
+import {getCookie} from "@/utils/cookie.ts";
+import {useDjangoUrls} from "@/composables/useDjangoUrls.ts";
 
 const router = useRouter()
 const {t} = useI18n()
@@ -58,7 +68,13 @@ const generalError = ref('')
 const passwordError = ref('')
 const usernameError = ref('')
 
+const socialProviders = ref<Provider[]>([] as Provider[])
+
 const next = useRouter().currentRoute.value.query.next
+
+onMounted(() => {
+    loadProviders()
+})
 
 function login() {
     let accountApi = new AuthenticationAccountApi()
@@ -105,6 +121,52 @@ function login() {
     }).finally(() => {
         loading.value = false
     })
+}
+
+function loadProviders() {
+    const configurationApi = new ConfigurationApi()
+
+    configurationApi.allauthClientV1ConfigGet({client: "browser"}).then(r => {
+        if (r.data.socialaccount) {
+            socialProviders.value = r.data.socialaccount.providers
+        }
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
+}
+
+function startProviderFlow(provider: string) {
+
+    const nextRoute = router.currentRoute.value.query.next;
+    const targetPath = typeof nextRoute === 'string' ? nextRoute : '/';
+    const callbackUrl = `${window.location.origin}${targetPath}`;
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/_allauth/browser/v1/auth/provider/redirect';
+
+    const fields: Record<string, string> = {
+        provider: provider,
+        process: 'login',
+        callback_url: callbackUrl, // useDjangoUrls().getDjangoUrl(`/accounts/${provider}/login/callback/`),
+    };
+
+    const csrfToken = getCookie('csrftoken');
+    if (csrfToken) {
+        fields['csrfmiddlewaretoken'] = csrfToken;
+    }
+
+    for (const [name, value] of Object.entries(fields)) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        form.appendChild(input);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
 }
 
 </script>

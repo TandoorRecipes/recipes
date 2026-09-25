@@ -19,6 +19,7 @@ let routes = [
     // auth related views
     {path: '/account/login', component: () => import("@/pages/LoginPage.vue"), name: 'LoginPage' , meta: {title: 'Login'}},
     {path: '/account/signup', component: () => import("@/pages/SignUpPage.vue"), name: 'SignUpPage' , meta: {title: 'SignUp'}},
+    {path: '/account/social-signup/', component: () => import("@/pages/SocialSignupPage.vue"), name: 'SocialSignupPage' , meta: {title: 'SignUp'}},
     {path: '/account/password-reset', component: () => import("@/pages/PasswordResetPage.vue"), name: 'PasswordResetPage' , meta: {title: 'PasswordReset'}},
     {path: '/account/email-confirm', component: () => import("@/pages/EmailConfirmPage.vue"), name: 'EmailConfirmPage' , meta: {title: 'EmailConfirmation'}},
 
