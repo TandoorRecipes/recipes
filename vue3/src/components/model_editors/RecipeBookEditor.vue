@@ -33,9 +33,9 @@
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="recipes">
-                    <v-model-select model="Recipe" v-model="selectedRecipe">
+                    <v-model-select model="Recipe" v-model="selectedRecipes" multiple chips>
                         <template #append>
-                            <v-btn icon color="create" @click="addRecipeToBook()">
+                            <v-btn icon color="create" @click="addRecipesToBook()">
                                 <v-icon icon="$create"></v-icon>
                             </v-btn>
                         </template>
@@ -93,7 +93,7 @@ const {t} = useI18n()
 const tab = ref("book")
 const recipeBookEntries = ref([] as RecipeBookEntry[])
 
-const selectedRecipe = ref<undefined|Recipe>(undefined)
+const selectedRecipes = ref([] as Recipe[])
 
 const tablePage = ref(1)
 const itemCount = ref(0)
@@ -124,31 +124,32 @@ function initializeEditor() {
 }
 
 /**
- * add selected recipe into the book and client list
+ * add selected recipes into the book and client list
  */
-function addRecipeToBook() {
+function addRecipesToBook() {
     let api = new ApiApi()
 
-    if (Object.keys(selectedRecipe.value).length > 0) {
-        let duplicateFound = false
+    if (selectedRecipes.value.length > 0) {
+        selectedRecipes.value.forEach(selectedRecipe => {
+            let duplicateFound = false
 
-        recipeBookEntries.value.forEach(rBE => {
-            if (rBE.recipe == selectedRecipe.value.id) {
-                duplicateFound = true
+            recipeBookEntries.value.forEach(rBE => {
+                if (rBE.recipe == selectedRecipe.id) {
+                    duplicateFound = true
+                }
+            })
+
+            if (!duplicateFound) {
+                api.apiRecipeBookEntryCreate({recipeBookEntry: {book: editingObj.value.id!, recipe: selectedRecipe.id!}}).then(r => {
+                    recipeBookEntries.value.push(r)
+                }).catch(err => {
+                    useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+                })
+            } else {
+                useMessageStore().addMessage(MessageType.WARNING, t('WarningRecipeBookEntryDuplicate'), 5000)
             }
         })
-
-        if (!duplicateFound) {
-            api.apiRecipeBookEntryCreate({recipeBookEntry: {book: editingObj.value.id!, recipe: selectedRecipe.value.id!}}).then(r => {
-                recipeBookEntries.value.push(r)
-                selectedRecipe.value = undefined
-            }).catch(err => {
-                useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
-            })
-        } else {
-            selectedRecipe.value = undefined
-            useMessageStore().addMessage(MessageType.WARNING, $t('WarningRecipeBookEntryDuplicate'), 5000)
-        }
+        selectedRecipes.value = []
     }
 }
 

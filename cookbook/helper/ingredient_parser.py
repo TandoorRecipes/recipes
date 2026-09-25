@@ -1,10 +1,19 @@
 import re
 import string
 import unicodedata
+
 from django.db.models import Q
 
 from cookbook.helper.automation_helper import AutomationEngine
 from cookbook.models import Food, Ingredient, Unit
+
+_VULGAR_FRACTIONS = '¼½¾⅐⅑⅒⅓⅔⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞'
+_AMOUNT_EXPRESSION = rf'(?:[0-9]+\s+[0-9]+/[0-9]+|[0-9]+/[0-9]+|[0-9]+(?:[.,][0-9]+)?[{_VULGAR_FRACTIONS}]?|[{_VULGAR_FRACTIONS}])'
+_UNIT_EXPRESSION = r'(?=[^\s/()]*[^\d\s/()])[^\s/()]+'
+_ALTERNATE_MEASUREMENT_PATTERNS = (
+    re.compile(rf'^(?P<amount>{_AMOUNT_EXPRESSION})\s+(?P<unit>{_UNIT_EXPRESSION})\s*/\s*(?P<alternate>{_AMOUNT_EXPRESSION}\s+{_UNIT_EXPRESSION})\s+(?P<food>.+)$'),
+    re.compile(rf'^(?P<amount>{_AMOUNT_EXPRESSION})\s+(?P<unit>{_UNIT_EXPRESSION})\s+\(\s*(?P<alternate>{_AMOUNT_EXPRESSION}\s+{_UNIT_EXPRESSION})\s*\)\s+(?P<food>.+)$'),
+)
 
 
 class IngredientParser:
@@ -158,6 +167,14 @@ class IngredientParser:
             food, note = self.parse_food_with_comma(tokens)
         return food, note
 
+    @staticmethod
+    def _extract_alternate_measurement(ingredient):
+        for pattern in _ALTERNATE_MEASUREMENT_PATTERNS:
+            if match := pattern.match(ingredient):
+                primary = f'{match["amount"]} {match["unit"]} {match["food"]}'
+                return primary, match['alternate']
+        return ingredient, ''
+
     def parse(self, ingredient):
         """
         Main parsing function, takes an ingredient string (e.g. '1 l Water') and extracts amount, unit, food, ...
@@ -182,15 +199,17 @@ class IngredientParser:
         # remove leading commas, dots and other symbols that typically do not occur at the start of an ingredient string
         ingredient = re.sub(r"^[,.\-_=+#*|\\/]+", "", ingredient)
 
+        _, detected_alternate_measurement = self._extract_alternate_measurement(ingredient)
+
         # some people/languages put amount and unit at the end of the ingredient string
         # if something like this is detected move it to the beginning so the parser can handle it
-        if len(ingredient) < 1000 and re.search(r'^([^\W\d_])+(.)*[1-9](\d)*\s*([^\W\d_])+', ingredient):
+        if not detected_alternate_measurement and len(ingredient) < 1000 and re.search(r'^([^\W\d_])+(.)*[1-9](\d)*\s*([^\W\d_])+', ingredient):
             match = re.search(r'[1-9](\d)*\s*([^\W\d_])+', ingredient)
             ingredient = ingredient[match.start():match.end()] + ' ' + ingredient.replace(ingredient[match.start():match.end()], '')
 
         # if the string contains parenthesis early on remove it and place it at the end
         # because its likely some kind of note
-        if re.match('(.){1,6}\\s\\((.[^\\(\\)])+\\)\\s', ingredient):
+        if not detected_alternate_measurement and re.match('(.){1,6}\\s\\((.[^\\(\\)])+\\)\\s', ingredient):
             match = re.search('\\((.[^\\(])+\\)', ingredient)
             ingredient = ingredient[:match.start()] + ingredient[match.end():] + ' ' + ingredient[match.start():match.end()]
 
@@ -207,6 +226,8 @@ class IngredientParser:
 
         if not self.ignore_rules:
             ingredient = self.automation.apply_transpose_automation(ingredient)
+
+        ingredient, alternate_measurement_note = self._extract_alternate_measurement(ingredient)
 
         tokens = ingredient.split()  # split at each space into tokens
         if len(tokens) == 1:
@@ -274,6 +295,9 @@ class IngredientParser:
 
         if unit_note not in note:
             note += ' ' + unit_note
+
+        if alternate_measurement_note:
+            note += ' ' + alternate_measurement_note
 
         if unit and not self.ignore_rules:
             unit = self.automation.apply_unit_automation(unit)

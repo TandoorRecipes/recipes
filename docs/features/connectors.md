@@ -30,7 +30,26 @@ Step 1:
 ![Profile Page](https://github.com/TandoorRecipes/recipes/assets/7824786/15ebeec5-5be3-48db-97d1-c698405db533)
 2. Get/create a todo list entry you want to sync too.
 ![Todos Viewer](https://github.com/TandoorRecipes/recipes/assets/7824786/506c4c34-3d40-48ae-a80c-e50374c5c618)
-3. Create a connector 
-![New Connector Config](https://github.com/TandoorRecipes/recipes/assets/7824786/7f14f181-1341-4cab-959b-a6bef79e2159)
+3. Create a Home Assistant connector and fill in the required fields:
+
+- **URL:** Enter your Home Assistant URL **including the `/api` suffix**.
+  Example:
+  ```
+  http://homeassistant.local:8123/api
+  ```
+  or
+  ```
+  https://homeassistant.example.com/api
+  ```
+
+- **Access Token:** Paste the Long-Lived Access Token created in Step 1.
+
+- **Name of Todo List:** Enter the full Home Assistant todo entity ID (for example, `todo.shopping`), not just the display name (`shopping`).
+
+![New Connector Config](...)
+!!! note
+    Recent versions of the Home Assistant connector UI no longer explicitly mention adding `/api` to the URL. Make sure the URL includes `/api`, otherwise the connector will not work.
+
+    The **Name of Todo List** field expects the full entity ID (for example, `todo.shopping`) rather than only the list name.
 4. ???
 5. Profit

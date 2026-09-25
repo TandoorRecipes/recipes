@@ -242,8 +242,21 @@
                                 <v-row>
                                     <v-col class="text-center">
                                         <v-btn-group border divided>
-                                            <v-btn prepend-icon="fa-solid fa-square-check" @click="setAllKeywordsImportStatus(true)">{{ $t('SelectAll') }}</v-btn>
-                                            <v-btn prepend-icon="fa-solid fa-square-minus" @click="setAllKeywordsImportStatus(false)">{{ $t('SelectNone') }}</v-btn>
+                                            <ai-action-button 
+                                                :text="$t('Auto_Sort')" 
+                                                prepend-icon="$ai" 
+                                                :loading="aiStepSortLoading" 
+                                                @selected="aiStepSort" 
+                                                :disabled="!importResponse.recipe?.steps || importResponse.recipe.steps.length < 1">
+                                            </ai-action-button>
+                                            
+                                            <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps()">
+                                                <span v-if="!mobile">{{ $t('Split') }}</span>
+                                            </v-btn>
+                                            
+                                            <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps()">
+                                                <span v-if="!mobile">{{ $t('Merge') }}</span>
+                                            </v-btn>
                                         </v-btn-group>
                                     </v-col>
                                 </v-row>
@@ -629,6 +642,7 @@ function importFromUrlList() {
     }
 }
 
+const aiStepSortLoading = ref(false)
 const params = useUrlSearchParams('history', {})
 const {mobile} = useDisplay()
 const router = useRouter()
@@ -874,6 +888,25 @@ function mergeStep(step: SourceImportStep) {
  */
 function deleteIngredient(step: SourceImportStep, ingredient: SourceImportIngredient) {
     step.ingredients = step.ingredients.filter(i => i != ingredient)
+}
+
+/**
+ * sort steps and ingredients using AI and update recipe with result
+ * @param providerId provider to use for request
+ */
+function aiStepSort(providerId: number) {
+    if (!importResponse.value.recipe) return;
+
+    let api = new ApiApi()
+    aiStepSortLoading.value = true
+
+    api.apiAiStepSortCreate({recipe: importResponse.value.recipe, provider: providerId}).then(r => {
+        importResponse.value.recipe = r
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    }).finally(() => {
+        aiStepSortLoading.value = false
+    })
 }
 
 /**

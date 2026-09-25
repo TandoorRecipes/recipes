@@ -6,7 +6,7 @@ from django.db.models.functions import Coalesce
 from django.utils.translation import gettext as _
 
 from cookbook.connectors.connector_manager import ActionType, ConnectorManager
-from cookbook.helper.permission_helper import get_household_user_ids
+from cookbook.helper.permission_helper import get_household_user_ids, CustomRecipePermission
 from cookbook.models import Ingredient, MealPlan, Recipe, ShoppingListEntry, ShoppingListRecipe, SupermarketCategoryRelation
 
 
@@ -32,10 +32,17 @@ def shopping_helper(qs, request):
 
 
 class RecipeShoppingEditor():
-    def __init__(self, user, space, **kwargs):
-        self.created_by = user
-        self.space = space
+    def __init__(self, request, user=None, space=None, **kwargs):
+        self.created_by = request.user
+        self.space = request.space
+        self.request = request
         self._kwargs = {**kwargs}
+
+        if user:
+            self.created_by = user
+
+        if space:
+            self.space = space
 
         self.mealplan = self._kwargs.get('mealplan', None)
         if type(self.mealplan) in [int, float]:
@@ -112,6 +119,10 @@ class RecipeShoppingEditor():
             self.recipe = mealplan.recipe
         elif recipe := kwargs.get('recipe', None):
             self.recipe = recipe
+
+        crp = CustomRecipePermission()
+        if not crp.has_object_permission(self.request, None, self.recipe):
+            return False
 
         if not self.servings:
             self.servings = getattr(self.mealplan, 'servings', None) or getattr(self.recipe, 'servings', 1.0)

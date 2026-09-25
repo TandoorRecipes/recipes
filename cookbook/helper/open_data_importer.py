@@ -416,6 +416,11 @@ class OpenDataImporter:
 
         for k in list(self.data['food'].keys()):
             for fp in self.data['food'][k]['properties']['type_values']:
+                # property types are only imported (and cached) when the 'property' datatype
+                # is selected. If it was not imported, skip linking the property so the food
+                # import still succeeds instead of raising a KeyError. (#4713)
+                if fp['property_type'] not in self.slug_id_cache['property']:
+                    continue
                 obj = model_type(
                     property_type_id=self.slug_id_cache['property'][fp['property_type']],
                     property_amount=fp['property_value'],

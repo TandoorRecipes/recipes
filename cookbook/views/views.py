@@ -70,7 +70,7 @@ def search(request):
     if settings.V3_BETA:
         return HttpResponseRedirect(reverse('vue3'))
 
-    if has_group_permission(request.user, ('guest',)):
+    if has_group_permission(request, ('guest',)):
         return render(request, 'search.html', {})
     else:
         if request.user.is_authenticated:
@@ -155,7 +155,7 @@ def recipe_pdf_viewer(request, pk):
     with scopes_disabled():
         recipe = get_object_or_404(Recipe, pk=pk)
         if share_link_valid(recipe, request.GET.get('share', None)) or (has_group_permission(
-                request.user, ['guest']) and recipe.space == request.space):
+                request, ['guest']) and recipe.space == request.space):
             return render(request, 'pdf_viewer.html', {'recipe_id': pk, 'share': request.GET.get('share', None)})
         return HttpResponseRedirect(reverse('index'))
 
