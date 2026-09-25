@@ -29,7 +29,7 @@
 
                         <template v-if="s.stepRecipe">
                             <v-card class="ma-2 border-md" prepend-icon="$recipes" :title="s.stepRecipeData.name"
-                                    :to="{name: 'RecipeViewPage', params: {id: s.stepRecipeData.id}}" target="_blank">
+                                    :to="buildRecipeRoute(s.stepRecipeData.id, currentShare)" target="_blank">
                                 <v-row v-for="subRecipeStep in s.stepRecipeData.steps">
                                     <v-col>
                                         <ingredients-table v-model="subRecipeStep.ingredients" :ingredient-factor="props.ingredientFactor" show-actions
@@ -60,8 +60,15 @@ import {Ingredient, Step} from "@/openapi";
 import IngredientsTable from "@/components/display/IngredientsTable.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {useDisplay} from "vuetify";
+import {useUrlSearchParams} from "@vueuse/core";
+import {buildRecipeRoute} from "@/utils/recipe_route.js";
 
 const emit = defineEmits(['scale'])
+const params = useUrlSearchParams('history')
+
+const currentShare = computed(() => {
+    return typeof params.share === 'string' ? params.share : undefined
+})
 
 const props = defineProps({
     steps: {
