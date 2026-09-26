@@ -7,7 +7,7 @@ from rest_framework import routers
 
 from cookbook.version_info import TANDOOR_VERSION
 from recipes.settings import DEBUG, PLUGINS
-from .views import api, telegram, views, import_export
+from .views import api, telegram, views, import_export, health as health_view
 from .views.api import CustomAuthToken
 
 
@@ -103,6 +103,7 @@ urlpatterns = [
     path('view/recipe/<int:pk>', views.redirect_recipe_view, name='redirect_recipe_view'),
     path('view/recipe/<int:pk>/<slug:share>', views.redirect_recipe_share_view, name='redirect_recipe_share_view'),
 
+    path('api/health/', health_view.health, name='api_health'),
     path('api/import/', api.AppImportView.as_view(), name='view_import'),
     path('api/export/', api.AppExportView.as_view(), name='api_export'),
     path('api/get_external_file_link/<int:pk>/', api.get_external_file_link, name='api_get_external_file_link'),
