@@ -73,5 +73,19 @@ jobs:
                   key: |
                       ${{ runner.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}-collectstatic-${{ hashFiles('**/*.css', '**/*.js', 'vue/src/*') }}
 
+            # Lint: fail on syntax errors / undefined names, report the rest without failing
+            - name: Lint Python (blocking)
+              run: flake8 cookbook recipes --select=E9,F63,F7,F82 --show-source --statistics
+
+            - name: Lint Python (informational)
+              run: flake8 cookbook recipes --exit-zero --statistics
+
+            # Dependency vulnerability audit (informational until existing findings are triaged)
+            - name: Audit Python dependencies
+              continue-on-error: true
+              run: |
+                  pip install pip-audit
+                  pip-audit -r requirements.txt
+
             - name: Django Testing project
               run: pytest --junitxml=junit/test-results-${{ matrix.python-version }}.xml
