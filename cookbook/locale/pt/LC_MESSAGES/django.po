@@ -12,7 +12,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-24 18:06+0200\n"
-"PO-Revision-Date: 2026-09-26 20:17+0000\n"
+"PO-Revision-Date: 2026-09-26 20:35+0000\n"
 "Last-Translator: Iuri Pereira <iurialexandre@hotmail.com>\n"
 "Language-Team: Portuguese <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/pt/>\n"
@@ -142,7 +142,7 @@ msgstr "cozedor de ovos"
 
 #: .\cookbook\helper\recipe_url_import.py:320
 msgid "kettle"
-msgstr ""
+msgstr "chaleira"
 
 #: .\cookbook\helper\recipe_url_import.py:321
 msgid "blend"
@@ -154,15 +154,15 @@ msgstr ""
 
 #: .\cookbook\helper\recipe_url_import.py:323
 msgid "high temperature"
-msgstr ""
+msgstr "alta temperatura"
 
 #: .\cookbook\helper\recipe_url_import.py:324
 msgid "rice cooker"
-msgstr ""
+msgstr "cozedor de arroz"
 
 #: .\cookbook\helper\recipe_url_import.py:325
 msgid "caramelize"
-msgstr ""
+msgstr "caramelizar"
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "peeler"
@@ -199,7 +199,7 @@ msgstr ""
 #: .\cookbook\integration\copymethat.py:44
 #: .\cookbook\integration\melarecipes.py:37
 msgid "Favorite"
-msgstr ""
+msgstr "Favorito"
 
 #: .\cookbook\integration\copymethat.py:50
 msgid "I made this"
@@ -211,7 +211,7 @@ msgstr ""
 
 #: .\cookbook\integration\integration.py:71
 msgid "Zip file too large"
-msgstr ""
+msgstr "Ficheiro comprimido demasiado grande"
 
 #: .\cookbook\integration\integration.py:84
 msgid "Nested zip files too deep"
@@ -226,16 +226,20 @@ msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
+"O importador esperava um ficheiro .zip. Escolheu o importador correto para o "
+"tipo de dados?"
 
 #: .\cookbook\integration\integration.py:272
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
 msgstr ""
+"Um erro inesperado ocorreu durante a importação. Por favor garanta que "
+"escolheu um ficheiro válido."
 
 #: .\cookbook\integration\integration.py:276
 msgid "The following recipes were ignored because they already existed:"
-msgstr ""
+msgstr "As seguintes receitas foram ignoradas porque já existiam:"
 
 #: .\cookbook\integration\integration.py:279
 #, python-format
@@ -245,16 +249,16 @@ msgstr "%s receitas importadas."
 #: .\cookbook\integration\mealie1.py:242
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:20
 msgid "Calories"
-msgstr ""
+msgstr "Calorias"
 
 #: .\cookbook\integration\mealie1.py:243
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:18
 msgid "Carbohydrates"
-msgstr ""
+msgstr "Carboidratos"
 
 #: .\cookbook\integration\mealie1.py:244
 msgid "Cholesterol"
-msgstr ""
+msgstr "Colesterol"
 
 #: .\cookbook\integration\mealie1.py:245
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
@@ -263,23 +267,23 @@ msgstr ""
 
 #: .\cookbook\integration\mealie1.py:246
 msgid "Fiber"
-msgstr ""
+msgstr "Fibra"
 
 #: .\cookbook\integration\mealie1.py:247
 msgid "Protein"
-msgstr ""
+msgstr "Proteína"
 
 #: .\cookbook\integration\mealie1.py:248
 msgid "Saturated Fat"
-msgstr ""
+msgstr "Gordura Saturada"
 
 #: .\cookbook\integration\mealie1.py:249
 msgid "Sodium"
-msgstr ""
+msgstr "Sódio"
 
 #: .\cookbook\integration\mealie1.py:250
 msgid "Sugar"
-msgstr ""
+msgstr "Açúcar"
 
 #: .\cookbook\integration\mealie1.py:251
 msgid "Trans Fat"
@@ -299,11 +303,11 @@ msgstr "Notas"
 
 #: .\cookbook\integration\paprika.py:50
 msgid "Nutritional Information"
-msgstr ""
+msgstr "Informação Nutricional"
 
 #: .\cookbook\integration\paprika.py:54 .\cookbook\templates\system.html:242
 msgid "Source"
-msgstr ""
+msgstr "Fonte"
 
 #: .\cookbook\integration\pdfexport.py:9
 msgid "Method not implemented in storage integration"
