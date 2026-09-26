@@ -536,5 +536,13 @@
     "Next": "Próximo",
     "New_Supermarket": "Criar novo supermercado",
     "New_Supermarket_Category": "Criar nova categoria de supermercado",
-    "No": "Não"
+    "No": "Não",
+    "AddAll": "Adicionar todos",
+    "AddMore": "Adicionar Mais",
+    "Actions": "Ações",
+    "Active": "Ativo",
+    "Activity": "Atividade",
+    "AddFilter": "Adicionar Filtro",
+    "Added": "Adicionado",
+    "AiProviderHelp": "Pode adicionar múltiplos provedores de IA de acordo com as suas preferências. Eles até podem ser configurados para trabalhar ao longo de múltiplos espaços."
 }
