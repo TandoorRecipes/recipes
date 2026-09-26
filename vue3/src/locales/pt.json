@@ -532,5 +532,9 @@
     "NutritionsPerServing": "Nutrição por porção",
     "None": "Nenhum",
     "NotFound": "Não encontrado",
-    "NotFoundHelp": "A página ou objeto que procura não pode ser encontrado."
+    "NotFoundHelp": "A página ou objeto que procura não pode ser encontrado.",
+    "Next": "Próximo",
+    "New_Supermarket": "Criar novo supermercado",
+    "New_Supermarket_Category": "Criar nova categoria de supermercado",
+    "No": "Não"
 }
