@@ -544,5 +544,6 @@
     "Activity": "Atividade",
     "AddFilter": "Adicionar Filtro",
     "Added": "Adicionado",
-    "AiProviderHelp": "Pode adicionar múltiplos provedores de IA de acordo com as suas preferências. Eles até podem ser configurados para trabalhar ao longo de múltiplos espaços."
+    "AiProviderHelp": "Pode adicionar múltiplos provedores de IA de acordo com as suas preferências. Eles até podem ser configurados para trabalhar ao longo de múltiplos espaços.",
+    "Admin": "Administrador"
 }
