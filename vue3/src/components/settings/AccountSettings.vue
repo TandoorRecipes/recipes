@@ -52,6 +52,22 @@
         </v-col>
     </v-row>
 
+    <p class="text-h6 mt-3">{{ $t('Account') }}</p>
+    <v-divider class="mb-3"></v-divider>
+
+    <v-row>
+        <v-col>
+
+            <v-data-table :items="socialAccounts" :headers="socialAccountsTableHeader">
+                <template v-slot:item.provider="{ item }">
+                    {{ item.provider.name }}
+                </template>
+                <template v-slot:item.action="{ item }">
+                    <v-btn icon="$delete" variant="plain" @click="removeSocialAccount(item.provider.id, item.uid)"></v-btn>
+                </template>
+            </v-data-table>
+        </v-col>
+    </v-row>
 
     <p class="text-h6 mt-3">{{ $t('Manage_Sessions') }}</p>
     <v-divider class="mb-3"></v-divider>
@@ -73,10 +89,6 @@
         </v-col>
     </v-row>
 
-    <br/>
-    <br/>
-    <v-btn color="primary" class="mt-1" :href="getDjangoUrl('accounts/social/connections/')" target="_blank">{{ $t('Social_Authentication') }}</v-btn>
-
 </template>
 
 <script setup lang="ts">
@@ -85,10 +97,11 @@ import {useDjangoUrls} from "@/composables/useDjangoUrls.ts";
 import {
     AccountEmailApi,
     AccountPasswordApi,
+    AccountProvidersApi,
     AuthenticatedResponse,
-    AuthenticationAccountApi,
     AuthenticationCurrentSessionApi,
     EmailAddress,
+    ProviderAccount,
     type Session,
     SessionsApi
 } from "@/authapi";
@@ -112,6 +125,13 @@ const newEmail = ref('')
 const user = ref<undefined | User>(undefined)
 const userSession = ref<undefined | AuthenticatedResponse>(undefined)
 
+const socialAccounts = ref<undefined | ProviderAccount[]>(undefined)
+const socialAccountsTableHeader = ref([
+    {title: t('Account'), key: 'provider'},
+    {title: t('Username'), key: 'display'},
+    {title: t('Actions'), key: 'action', align: 'end'},
+])
+
 const sessions = ref<Session[]>([] as Session[])
 const sessionsTableHeaders = ref([
     {title: t('IP'), key: 'ip'},
@@ -128,6 +148,7 @@ onMounted(() => {
     loadUser()
     loadEmailAddresses()
     loadSessions()
+    loadSocialAccounts()
 })
 
 /**
@@ -224,6 +245,7 @@ function changePassword() {
 
         }).finally(() => {
             loading.value = false
+            loadUser()
         })
     } else {
         useMessageStore().addPreparedMessage(PreparedMessage.PASSWORDS_DONT_MATCH)
@@ -252,6 +274,27 @@ function endSessions(sessionsToEnd: Session[]) {
 
     sessionsApi.allauthClientV1AuthSessionsDelete({client: 'browser', endSessions: {sessions: sessionsToEnd.flatMap(s => s.id)}}).then(r => {
         loadSessions()
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
+}
+
+function loadSocialAccounts() {
+    const accountProvidersApi = new AccountProvidersApi()
+
+    accountProvidersApi.allauthClientV1AccountProvidersGet({client: 'browser'}).then(r => {
+        socialAccounts.value = r.data
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
+}
+
+function removeSocialAccount(provider: string, account: string) {
+    const accountProvidersApi = new AccountProvidersApi()
+
+    accountProvidersApi.allauthClientV1AccountProvidersDelete({client: "browser", allauthClientV1AccountProvidersDeleteRequest: {provider: provider, account: account}}).then(r => {
+        useMessageStore().addPreparedMessage(PreparedMessage.DELETE_SUCCESS)
+        loadSocialAccounts()
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })

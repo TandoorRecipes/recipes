@@ -49,12 +49,21 @@ def _store_error(error_entry):
 class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
 
     def pre_social_login(self, request, sociallogin):
-        """Warn when email matching is skipped due to unverified provider emails."""
+        """
+        pre-login check
+        - when SOCIALACCOUNT_EMAIL_AUTHENTICATION is enabled cheks if the provider has unverified emails that are just not linked and provides a warning
+        - checks if social login/signup could not be completed due to conflicting usernames/emails.
+        :param request:
+        :param sociallogin:
+        :return:
+        """
+        # if its an existing account and its linked, just sign in
         if sociallogin.is_existing:
             return
 
         from allauth.account.utils import filter_users_by_email
 
+        # if auto linking is not enabled, no warning is required
         if not getattr(settings, 'SOCIALACCOUNT_EMAIL_AUTHENTICATION', False):
             return
 

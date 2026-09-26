@@ -21,7 +21,6 @@
                                 <v-btn block @click="startProviderFlow(p.id)">{{ p.name }}</v-btn>
                             </v-col>
                         </v-row>
-                        {{ socialProviders }}
 
                         <!-- TODO email send screen -->
 
@@ -140,6 +139,8 @@ function startProviderFlow(provider: string) {
     const nextRoute = router.currentRoute.value.query.next;
     const targetPath = typeof nextRoute === 'string' ? nextRoute : '/';
     const callbackUrl = `${window.location.origin}${targetPath}`;
+
+    // TODO callback is always a central page in the react example, maybe I need this for propeper error handling https://github.com/pennersr/django-allauth/tree/main/examples/react-spa
 
     const form = document.createElement('form');
     form.method = 'POST';

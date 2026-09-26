@@ -330,7 +330,7 @@ HEADLESS_FRONTEND_URLS = {
 
     "account_reset_password": "/account/password-reset",
     "account_reset_password_from_key": "/account/password-reset/?key={key}",
-    # TODO  "account_signup": "https://app.project.org/account/signup",
+    "account_signup": "/account/signup",
 
     # Fallback in case the state containing the `next` URL is lost and the handshake
     # with the third-party provider fails.
@@ -348,8 +348,7 @@ SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = extract_bool('SOCIALACCOUNT_EMAIL_AUTHENTICATION', False)
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = extract_bool('SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT', False)
 SOCIALACCOUNT_LOGIN_ON_GET = extract_bool('SOCIALACCOUNT_LOGIN_ON_GET', False)
-if os.getenv('SOCIALACCOUNT_AUTO_SIGNUP') is not None:
-    SOCIALACCOUNT_AUTO_SIGNUP = extract_bool('SOCIALACCOUNT_AUTO_SIGNUP', True)
+SOCIALACCOUNT_AUTO_SIGNUP = extract_bool('SOCIALACCOUNT_AUTO_SIGNUP', True)
 SOCIALACCOUNT_ONLY = extract_bool('SOCIALACCOUNT_ONLY', False)
 
 INSTALLED_APPS = INSTALLED_APPS + SOCIAL_PROVIDERS
