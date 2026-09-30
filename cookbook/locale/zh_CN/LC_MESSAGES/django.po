@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-24 18:06+0200\n"
-"PO-Revision-Date: 2026-09-30 07:09+0000\n"
+"PO-Revision-Date: 2026-09-30 07:26+0000\n"
 "Last-Translator: Lucas Wang <unicornundermoon@protonmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <http://translate.tandoor.dev/"
 "projects/tandoor/recipes-backend/zh_Hans/>\n"
@@ -197,19 +197,19 @@ msgstr "我做的"
 
 #: .\cookbook\integration\integration.py:67
 msgid "Too many files in zip"
-msgstr ""
+msgstr "压缩包内的文件过多"
 
 #: .\cookbook\integration\integration.py:71
 msgid "Zip file too large"
-msgstr ""
+msgstr "压缩文件过大"
 
 #: .\cookbook\integration\integration.py:84
 msgid "Nested zip files too deep"
-msgstr ""
+msgstr "嵌套的压缩文件层级过深"
 
 #: .\cookbook\integration\integration.py:92
 msgid "File in zip too large"
-msgstr ""
+msgstr "压缩包内的文件过大"
 
 #: .\cookbook\integration\integration.py:270
 msgid ""
