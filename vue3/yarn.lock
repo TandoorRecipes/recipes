@@ -1510,17 +1510,22 @@
   resolved "https://registry.npmjs.org/@vueuse/metadata/-/metadata-14.3.0.tgz"
   integrity sha512-BwxmbAzwAVF50+MW57GXOUEV61nFBGnlBvrTqj49PqWJu3uw7hdu72ztXeZ33RdZtDY6kO+bfCAE1PCn88Tktw==
 
-"@vueuse/router@^14.2.1":
-  version "14.3.0"
-  resolved "https://registry.npmjs.org/@vueuse/router/-/router-14.3.0.tgz"
-  integrity sha512-MK7YETFDPyDDF9aSP4W3TzUIHLZ+uq0n/t4VMxOP39e0qGbCZ21ZRsGE93ML84teKtCtPDlN+73CTk2e3xVl9w==
+"@vueuse/router@^15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/router/-/router-15.0.0.tgz#06c8c8d32f72380863c941b6352e80b318d5ba64"
+  integrity sha512-+JqXjJs9+3Nu6GjaybYup0dFK7JbNJu1kvNlLmgXp1GTm5bYZZAUWOayCN69ld4gfPy/J4EA+/DImyEsW3QepQ==
   dependencies:
-    "@vueuse/shared" "14.3.0"
+    "@vueuse/shared" "15.0.0"
 
 "@vueuse/shared@14.3.0":
   version "14.3.0"
   resolved "https://registry.npmjs.org/@vueuse/shared/-/shared-14.3.0.tgz"
   integrity sha512-bZpge9eSXwa4ToSiqJ7j6KRwhAsneMFoSz3LMWKQDkqimm3D/tbFlrklrs/IOqC8tEcYmXQZJ6N0UrjhBirVCg==
+
+"@vueuse/shared@15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@vueuse/shared/-/shared-15.0.0.tgz#9e9332e1345c08601f67f1657e0e82597b42cdef"
+  integrity sha512-vbNXhGrbV53xPOMSyOzMHQRvhMgZf7oNDw2RChUetVxwTIEkInQ1joZ9JbT0G3z2n2AJNjvmCWeM9ySYrnvogA==
 
 acorn@^8.15.0:
   version "8.17.0"
