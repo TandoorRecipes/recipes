@@ -11,7 +11,7 @@ from django.contrib.auth.models import Group, User
 from django.contrib.postgres.indexes import GinIndex
 from django.contrib.postgres.search import SearchVectorField
 from django.core.files.uploadedfile import InMemoryUploadedFile, UploadedFile
-from django.core.validators import MinLengthValidator
+from django.core.validators import MaxValueValidator, MinLengthValidator, MinValueValidator
 from django.db import IntegrityError, models
 from django.db.models import Index, Q
 from django.db.models.fields.related import ManyToManyField
@@ -941,6 +941,9 @@ class Ingredient(ExportModelOperationsMixin('ingredient'), models.Model, Permiss
     note = models.CharField(max_length=256, null=True, blank=True)
     is_header = models.BooleanField(default=False)
     no_amount = models.BooleanField(default=False)
+    # share of the ingredient that actually ends up in the served dish (e.g. absorbed frying oil,
+    # marinades that are partially discarded), used to scale property (nutrition) calculations
+    properties_consumed_fraction = models.DecimalField(default=1, decimal_places=4, max_digits=5, validators=[MinValueValidator(0), MaxValueValidator(1)])
 
     order = models.IntegerField(default=0)
     original_text = models.CharField(max_length=512, null=True, blank=True, default=None)

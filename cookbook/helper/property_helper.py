@@ -58,9 +58,10 @@ class FoodPropertyHelper:
                                 for c in conversions:
                                     if c.unit == i.food.properties_food_unit and i.food.properties_food_amount != 0:
                                         found_property = True
-                                        computed_properties[pt.id]['total_value'] += (c.amount / i.food.properties_food_amount) * p.property_amount
+                                        property_value = (c.amount / i.food.properties_food_amount) * p.property_amount * i.properties_consumed_fraction
+                                        computed_properties[pt.id]['total_value'] += property_value
                                         computed_properties[pt.id]['food_values'] = self.add_or_create(
-                                            computed_properties[p.property_type.id]['food_values'], c.food.id, (c.amount / i.food.properties_food_amount) * p.property_amount, c.food)
+                                            computed_properties[p.property_type.id]['food_values'], c.food.id, property_value, c.food)
                     if not found_property:
                         # if no amount and food does not exist yet add it but don't count as missing
                         if i.amount == 0 or i.no_amount:
