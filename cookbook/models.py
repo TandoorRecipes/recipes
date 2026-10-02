@@ -1108,6 +1108,7 @@ class Recipe(ExportModelOperationsMixin('recipe'), models.Model, PermissionModel
     shared = models.ManyToManyField(User, blank=True, related_name='recipe_shared_with')
 
     source_url = models.CharField(max_length=1024, default=None, blank=True, null=True)
+    recommendation_weight = models.FloatField(default=0.0)
     created_by = models.ForeignKey(User, on_delete=models.PROTECT)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -1515,6 +1516,34 @@ class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionMo
             Index(fields=['created_by', 'rating']),
         )
         ordering = ('pk',)
+
+
+class RecipeUserWeight(ExportModelOperationsMixin('recipe_user_weight'), models.Model, PermissionModelMixin):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recipe_weights')
+    recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
+    weight = models.FloatField(default=0.0)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
+
+    def __str__(self):
+        return f"{self.user.username} - {self.recipe.name} ({self.weight})"
+
+    class Meta:
+        ordering = ('pk',)
+        constraints = [
+            models.UniqueConstraint(fields=['user', 'recipe'], name='unique_user_recipe_weight'),
+        ]
+        indexes = (
+            Index(fields=['id']),
+            Index(fields=['user']),
+            Index(fields=['recipe']),
+            Index(fields=['user', 'recipe']),
+            Index(fields=['weight']),
+        )
 
 
 class ViewLog(ExportModelOperationsMixin('view_log'), models.Model, PermissionModelMixin):
