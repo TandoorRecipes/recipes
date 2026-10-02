@@ -1492,7 +1492,7 @@ class TelegramBot(models.Model, PermissionModelMixin):
 class CookLog(ExportModelOperationsMixin('cook_log'), models.Model, PermissionModelMixin):
     recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE)
     rating = models.IntegerField(null=True, blank=True)
-    servings = models.IntegerField(null=True, blank=True)
+    servings = models.DecimalField(max_digits=8, decimal_places=4, null=True, blank=True)
     comment = models.TextField(null=True, blank=True)
 
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
