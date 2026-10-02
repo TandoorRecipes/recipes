@@ -13,7 +13,7 @@ from cookbook.managers import DICTIONARY, TextSearchConfig
 from cookbook.models import CustomFilter, SearchPreference
 from recipes import settings
 
-_NULLS_LAST = frozenset({'lastcooked', 'lastviewed', 'rating'})
+_NULLS_LAST = frozenset({'lastcooked', 'lastviewed', 'rating', 'times_cooked'})  # <- Added 'times_cooked' here
 
 
 def _sort_includes(orderby, *fields):
@@ -25,8 +25,10 @@ def _sort_includes(orderby, *fields):
 
 def _finalize_ordering(orderby):
     result = []
-    ALLOWED_KEYS = ['random', 'score', '-score', 'name', '-name', 'lastcooked', '-lastcooked', 'rating', '-rating', 'times_cooked', '-times_cooked', 'created_at', '-created_at',
-                    'lastviewed', '-lastviewed', 'recent','-recent', 'new_recipe', '-new_recipe', '?']
+    ALLOWED_KEYS = [
+        'random', 'score', '-score', 'name', '-name', 'lastcooked', '-lastcooked', 'rating', '-rating', 'times_cooked', '-times_cooked', 'created_at', '-created_at', 'lastviewed',
+        '-lastviewed', 'recent', '-recent', 'new_recipe', '-new_recipe', 'favorite', '-favorite', '?'
+    ]  # <- Added 'favorite' and '-favorite' here
     for key in orderby:
         # expressions cant come from user input so add them
         if not isinstance(key, str):
@@ -154,9 +156,7 @@ def _is_postgres():
 def _resolve_params(request, params):
     if filter_id := params.get('filter', None):
         custom_filter = (
-            CustomFilter.objects.filter(id=filter_id, space=request.space)
-            .filter(Q(created_by=request.user) | Q(shared=request.user) | Q(recipebook__shared=request.user))
-            .first()
+            CustomFilter.objects.filter(id=filter_id, space=request.space).filter(Q(created_by=request.user) | Q(shared=request.user) | Q(recipebook__shared=request.user)).first()
         )
         if custom_filter:
             resolved = {**json.loads(custom_filter.search)}
@@ -244,6 +244,8 @@ class RecipeSearch:
             qs = qs.with_last_viewed(user, space)
         if _sort_includes(orderby, 'favorite'):
             qs = qs.with_favorite(user, space)
+        if _sort_includes(orderby, 'times_cooked'):  # <- Added "time_cooked"
+            qs = qs.with_times_cooked(user, space)
         if params.num_recent:
             qs = qs.with_recent(user, space, params.num_recent)
         if params.new:
@@ -265,18 +267,24 @@ class RecipeSearch:
 
         # Entity filters
         qs = qs.by_keywords(
-            or_=params.keywords['or'], and_=params.keywords['and'],
-            or_not=params.keywords['or_not'], and_not=params.keywords['and_not'],
+            or_=params.keywords['or'],
+            and_=params.keywords['and'],
+            or_not=params.keywords['or_not'],
+            and_not=params.keywords['and_not'],
             include_children=params.include_children,
         )
         qs = qs.by_foods(
-            or_=params.foods['or'], and_=params.foods['and'],
-            or_not=params.foods['or_not'], and_not=params.foods['and_not'],
+            or_=params.foods['or'],
+            and_=params.foods['and'],
+            or_not=params.foods['or_not'],
+            and_not=params.foods['and_not'],
             include_children=params.include_children,
         )
         qs = qs.by_books(
-            or_=params.books['or'], and_=params.books['and'],
-            or_not=params.books['or_not'], and_not=params.books['and_not'],
+            or_=params.books['or'],
+            and_=params.books['and'],
+            or_not=params.books['or_not'],
+            and_not=params.books['and_not'],
         )
 
         # Makenow
