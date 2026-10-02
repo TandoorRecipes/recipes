@@ -584,7 +584,7 @@ class UserSpace(models.Model, PermissionModelMixin):
     # that having more than one active space should just break certain parts of the application and not leak any data
     active = models.BooleanField(default=False)
 
-    invite_link = models.ForeignKey("InviteLink", on_delete=models.PROTECT, null=True, blank=True)
+    invite_link = models.ForeignKey("InviteLink", on_delete=models.SET_NULL, null=True, blank=True)
     internal_note = models.TextField(blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)

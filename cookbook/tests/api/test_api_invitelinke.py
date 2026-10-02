@@ -121,6 +121,49 @@ def test_delete(u1_s1, u1_s2, a1_s1, a2_s1, space_1):
         assert r.status_code == 204
 
 
+def test_delete_invite_link_with_referencing_user_space(u1_s1, a1_s1, space_1):
+    """
+    Regression test for: deleting an InviteLink that was used to create a UserSpace
+    must succeed (HTTP 204) and must NOT delete or break the UserSpace membership.
+
+    Background: migration 0195 added UserSpace.invite_link as a FK with
+    on_delete=PROTECT.  Any InviteLink that had actually been accepted now had a
+    UserSpace row pointing at it.  Trying to delete that InviteLink raised a
+    ProtectedError.  The fix changes on_delete to SET_NULL so the membership
+    survives and invite_link is simply cleared to NULL.
+    """
+    from cookbook.models import UserSpace
+
+    with scopes_disabled():
+        space_1.created_by = auth.get_user(a1_s1)
+        space_1.save()
+
+        # Create an InviteLink and simulate a user accepting it by creating a
+        # UserSpace that references the link (exactly what views.invite_link() does).
+        il = InviteLink.objects.create(group_id=1, created_by=auth.get_user(a1_s1), space=space_1)
+        user = auth.get_user(u1_s1)
+        us = UserSpace.objects.filter(user=user, space=space_1).first()
+        us.invite_link = il
+        us.save()
+
+        # Sanity check: the UserSpace really references the link.
+        assert UserSpace.objects.filter(invite_link=il).exists()
+
+        # The space owner deletes the InviteLink — this used to raise ProtectedError.
+        r = a1_s1.delete(reverse(DETAIL_URL, args={il.id}))
+        assert r.status_code == 204
+
+        # The InviteLink is gone.
+        assert not InviteLink.objects.filter(pk=il.pk).exists()
+
+        # The UserSpace (the membership) still exists — the user is NOT kicked out.
+        us.refresh_from_db()
+        assert us.pk is not None
+
+        # The invite_link reference was cleared to NULL (SET_NULL behaviour).
+        assert us.invite_link is None
+
+
 # ============================================================================
 # Email Status Tests (#1063)
 # These tests verify that the API response includes email_sent field
