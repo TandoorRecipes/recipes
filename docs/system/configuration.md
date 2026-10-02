@@ -431,6 +431,21 @@ Allow authentication via the REMOTE-USER header (can be used for e.g. authelia).
 REMOTE_USER_AUTH=0
 ```
 
+#### Reverse Proxy Auth Logout URL
+> default `` (empty)
+
+Custom logout URL for reverse proxy authentication. When set, users clicking logout will be redirected to this URL
+instead of the default Tandoor logout behavior. This is useful for SSO solutions like Authelia or Authentik where
+you want users to be logged out from the SSO provider as well.
+
+```
+REVERSE_PROXY_AUTH_LOGOUT=https://authelia.example.com/logout
+```
+
+!!! info
+    This setting only takes effect when `REMOTE_USER_AUTH=1` is enabled. The reverse proxy should also be configured
+    to pass `REMOTE_NAME` and `REMOTE_EMAIL` headers to automatically populate user information in Tandoor.
+
 #### LDAP
 
 LDAP based authentication is disabled by default. You can enable it by setting `LDAP_AUTH` to `1` and configuring the
