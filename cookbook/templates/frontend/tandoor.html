@@ -38,14 +38,13 @@
     {% endif %}
 
     <style>
-        {% if request.user.userpreference.theme == 'TANDOOR_DARK' %}
-            /* vueform/multiselect */
-            /* when append to body is true the multiselects dropdown does not recognize the .v-theme--dark condition and renders a white background otherwise */
-
+        /* vueform/multiselect */
+        /* when append to body is true the multiselects dropdown does not recognize the .v-theme--dark condition and renders a white background otherwise */
+        .v-theme--dark{
             .multiselect-dropdown, .multiselect-options, .multiselect-option {
                 background: #212121 !important;
-            }
-        {% endif %}
+            }    
+        }
     </style>
 
 </head>
