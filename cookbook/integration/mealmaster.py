@@ -46,7 +46,7 @@ class MealMaster(Integration):
         for ingredient in ingredients:
             if len(ingredient.strip()) > 0:
                 amount, unit, food, note = ingredient_parser.parse(ingredient)
-                f = ingredient_parser.get_food(ingredient)
+                f = ingredient_parser.get_food(food)
                 u = ingredient_parser.get_unit(unit)
                 step.ingredients.add(Ingredient.objects.create(
                     food=f, unit=u, amount=amount, note=note, original_text=ingredient, space=self.request.space,
