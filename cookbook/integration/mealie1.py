@@ -24,7 +24,6 @@ class Mealie1(Integration):
 
     def get_recipe_from_file(self, file):
         mealie_database = json.loads(BytesIO(self.safe_read(file, 'database.json')).getvalue().decode("utf-8"))
-        self.import_log.total_recipes = len(mealie_database['recipes'])
         self.import_log.msg += f"Importing {len(mealie_database["categories"]) + len(mealie_database["tags"])} tags and categories as keywords...\n"
         self.import_log.save()
 
@@ -45,6 +44,8 @@ class Mealie1(Integration):
                 keywords_tags_dict[t['id']] = keyword.pk
 
         self.import_log.msg += f"Importing {len(mealie_database["multi_purpose_labels"])} multi purpose labels as supermarket categories...\n"
+        self.import_log.total_recipes = len(mealie_database['multi_purpose_labels'])
+        self.import_log.imported_recipes = 0
         self.import_log.save()
 
         supermarket_categories_dict = {}
@@ -54,8 +55,12 @@ class Mealie1(Integration):
             else:
                 supermarket_category = SupermarketCategory.objects.create(name=m['name'], space=self.request.space)
                 supermarket_categories_dict[m['id']] = supermarket_category.pk
+            self.import_log.imported_recipes += 1
+            self.import_log.save()
 
         self.import_log.msg += f"Importing {len(mealie_database["ingredient_foods"])} foods...\n"
+        self.import_log.total_recipes = len(mealie_database["ingredient_foods"])
+        self.import_log.imported_recipes = 0
         self.import_log.save()
 
         foods_dict = {}
@@ -75,6 +80,8 @@ class Mealie1(Integration):
                 if f['on_hand']:
                     food.onhand_users.add(self.request.user)
                 foods_dict[f['id']] = food.pk
+            self.import_log.imported_recipes += 1
+            self.import_log.save()
 
         self.import_log.msg += f"Importing {len(mealie_database["ingredient_units"])} units...\n"
         self.import_log.save()
@@ -91,6 +98,11 @@ class Mealie1(Integration):
         recipe_property_factor_dict = {}
         recipes = []
         recipe_keyword_relation = []
+        self.import_log.msg += f"Importing {len(mealie_database["recipes"])}...\n"
+        self.import_log.total_recipes = len(mealie_database['recipes'])
+        self.import_log.imported_recipes = 0
+        self.import_log.save()
+
         for r in mealie_database['recipes']:
             raw_name = r.get('name') or ""
             clean_name = raw_name.strip()
@@ -136,6 +148,8 @@ class Mealie1(Integration):
         Recipe.keywords.through.objects.bulk_create(recipe_keyword_relation, ignore_conflicts=True)
 
         self.import_log.msg += f"Importing {len(mealie_database["recipe_instructions"])} instructions...\n"
+        self.import_log.total_recipes = len(mealie_database['recipe_instructions'])
+        self.import_log.imported_recipes = 0
         self.import_log.save()
 
         steps_relation = []
@@ -151,6 +165,8 @@ class Mealie1(Integration):
                 step_id_dict[s["id"]] = step.pk
                 if s['recipe_id'] not in first_step_of_recipe_dict:
                     first_step_of_recipe_dict[s['recipe_id']] = step.pk
+                self.import_log.imported_recipes += 1
+                self.import_log.save()
 
         # it is possible for a recipe to not have steps but have ingredients, in that case create an empty step to add them to later
         for r in recipes_dict.keys():
@@ -175,6 +191,8 @@ class Mealie1(Integration):
         ingredient_parser = IngredientParser(self.request, True)
 
         self.import_log.msg += f"Importing {len(mealie_database["recipes_ingredients"])} ingredients...\n"
+        self.import_log.total_recipes = len(mealie_database["recipes_ingredients"])
+        self.import_log.imported_recipes = 0
         self.import_log.save()
 
         # mealie stores the reference to a step (instruction) from an ingredient (reference) in the recipe_ingredient_ref_link table
@@ -219,6 +237,8 @@ class Mealie1(Integration):
                         space=self.request.space,
                     )
                     ingredients_relation.append(Step.ingredients.through(step_id=get_step_id(i, first_step_of_recipe_dict, step_id_dict,recipe_ingredient_ref_link_dict), ingredient_id=ingredient.pk))
+                self.import_log.imported_recipes += 1
+                self.import_log.save()
         Step.ingredients.through.objects.bulk_create(ingredients_relation)
 
         self.import_log.msg += f"Importing {len(mealie_database["recipes_to_categories"]) + len(mealie_database["recipes_to_tags"])} category and keyword relations...\n"
@@ -235,7 +255,9 @@ class Mealie1(Integration):
 
         Recipe.keywords.through.objects.bulk_create(recipe_keyword_relation, ignore_conflicts=True)
 
-        self.import_log.msg += f"Importing {len(mealie_database["recipe_nutrition"])} properties...\n"
+        self.import_log.msg += f"Importing {len(mealie_database["recipe_nutrition"])} nutritional properties...\n"
+        self.import_log.total_recipes = len(mealie_database["recipe_nutrition"])
+        self.import_log.imported_recipes = 0
         self.import_log.save()
 
         property_types_dict = {
@@ -265,6 +287,8 @@ class Mealie1(Integration):
                                              Decimal(str(recipe_property_factor_dict[r['recipe_id']])) if r['recipe_id'] in recipe_property_factor_dict else 1),
                                          open_data_food_slug=r['recipe_id'],
                                          space=self.request.space))
+                            self.import_log.imported_recipes += 1
+                            self.import_log.save()
             properties = Property.objects.bulk_create(properties_relation)
             property_ids = []
             for p in properties:
@@ -281,6 +305,8 @@ class Mealie1(Integration):
                 pass
 
         self.import_log.msg += f"Importing {len(mealie_database["recipe_comments"]) + len(mealie_database["recipe_timeline_events"])} comments and cook logs...\n"
+        self.import_log.total_recipes = len(mealie_database["recipe_comments"]) + len(mealie_database["recipe_timeline_events"])
+        self.import_log.imported_recipes = 0
         self.import_log.save()
 
         cook_log_list = []
@@ -293,6 +319,8 @@ class Mealie1(Integration):
                     created_by=self.request.user,
                     space=self.request.space,
                 ))
+                self.import_log.imported_recipes += 1
+                self.import_log.save()
 
         for c in mealie_database['recipe_timeline_events']:
             if c['recipe_id'] in recipes_dict:
@@ -304,11 +332,15 @@ class Mealie1(Integration):
                         created_by=self.request.user,
                         space=self.request.space,
                     ))
+                    self.import_log.imported_recipes += 1
+                    self.import_log.save()
 
         CookLog.objects.bulk_create(cook_log_list)
 
         if self.import_meal_plans:
             self.import_log.msg += f"Importing {len(mealie_database["group_meal_plans"])} meal plans...\n"
+            self.import_log.total_recipes = len(mealie_database["group_meal_plans"])
+            self.import_log.imported_recipes = 0
             self.import_log.save()
 
             meal_types_dict = {}
@@ -328,11 +360,15 @@ class Mealie1(Integration):
                         created_by=self.request.user,
                         space=self.request.space,
                     ))
+                    self.import_log.imported_recipes += 1
+                    self.import_log.save()
 
             MealPlan.objects.bulk_create(meal_plans)
 
         if self.import_shopping_lists:
             self.import_log.msg += f"Importing {len(mealie_database["shopping_list_items"])} shopping list items...\n"
+            self.import_log.total_recipes = len(mealie_database["shopping_list_items"])
+            self.import_log.imported_recipes = 0
             self.import_log.save()
 
             shopping_list_items = []
@@ -357,15 +393,21 @@ class Mealie1(Integration):
                             created_by=self.request.user,
                             space=self.request.space,
                         ))
+                    self.import_log.imported_recipes += 1
+                    self.import_log.save()
             ShoppingListEntry.objects.bulk_create(shopping_list_items)
 
         self.import_log.msg += f"Importing Images. This might take some time ...\n"
+        self.import_log.total_recipes = len(mealie_database['recipes'])
+        self.import_log.imported_recipes = 0
         self.import_log.save()
         for r in mealie_database['recipes']:
             try:
                 if r['id'] in recipes_dict:
                     if recipe := Recipe.objects.filter(pk=recipes_dict[r['id']]).first():
                         self.import_recipe_image(recipe, BytesIO(self.safe_read(file, f'data/recipes/{str(uuid.UUID(str(r["id"])))}/images/original.webp')), filetype='.webp')
+                        self.import_log.imported_recipes += 1
+                        self.import_log.save()
             except Exception:
                 pass
 
