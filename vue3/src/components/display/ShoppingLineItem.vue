@@ -30,7 +30,7 @@
                     </span>
                 </div>
                 <div class="d-flex  flex-column flex-grow-1 align-self-center">
-                    {{ pluralString(shoppingListFood.food, (amounts.length > 1 ? 2 : amounts[0]?.amount ?? 1)) }} 
+                    <span>{{ pluralString(shoppingListFood.food, (amounts.length > 1 ? 2 : amounts[0]?.amount ?? 1)) }}<span v-if="note" class="text-caption text-medium-emphasis ms-2">{{ note }}</span></span>
                     <span v-if="infoRow"><small class="text-disabled">{{ infoRow }}</small></span>
                 </div>
             </div>
@@ -234,6 +234,14 @@ const infoRow = computed(() => {
     }
 
     return info_row.join(' - ')
+})
+
+/**
+ * return all unique non-empty notes across entries, joined with a separator
+ */
+const note = computed(() => {
+    const notes = [...new Set(entries.value.map(e => e.note).filter(n => n))]
+    return notes.length > 0 ? notes.join(' - ') : null
 })
 
 /**
