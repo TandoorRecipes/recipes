@@ -1,8 +1,11 @@
+import datetime
 import json
 
 import pytest
 from django.contrib import auth
 from django.urls import reverse
+from django.utils import timezone
+from django_scopes import scopes_disabled
 
 from cookbook.models import ShoppingListEntry, ShoppingListRecipe
 
@@ -52,3 +55,16 @@ def test_delete(u1_s1, u1_s2, obj_1):
     r = u1_s1.delete(reverse(DETAIL_URL, args={obj_1.id}))
 
     assert r.status_code == 204
+
+
+def test_updated_at_filter(obj_1, u1_s1, space_1, recipe_1_s1):
+    with scopes_disabled():
+        ShoppingListRecipe.objects.filter(pk=obj_1.pk).update(updated_at=timezone.now() - datetime.timedelta(hours=1))
+    cutoff = timezone.now().isoformat()
+    with scopes_disabled():
+        obj_2 = ShoppingListRecipe.objects.create(recipe=recipe_1_s1, servings=2, space=space_1, created_by=auth.get_user(u1_s1))
+    r = u1_s1.get(reverse(LIST_URL), {'updated_at': cutoff})
+    data = json.loads(r.content)
+    ids = [x['id'] for x in data['results']]
+    assert obj_2.id in ids
+    assert obj_1.id not in ids
