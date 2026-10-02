@@ -348,7 +348,7 @@ access to the data.
 
 > default `0` (disabled) - options `0`, `1`
 
-When enabled, new social login users will automatically join the first existing space with the group configured in `SOCIAL_DEFAULT_GROUP`.
+When enabled, new social login users will automatically join the space configured in `SOCIAL_DEFAULT_SPACE` with the group configured in `SOCIAL_DEFAULT_GROUP`.
 
 ```
 SOCIAL_DEFAULT_ACCESS = 1
@@ -358,6 +358,14 @@ SOCIAL_DEFAULT_ACCESS = 1
 
 ```
 SOCIAL_DEFAULT_GROUP=guest
+```
+
+> default `0` (first existing space) - option: numeric space ID
+
+Set a specific space ID to avoid depending on creation order. If the configured space does not exist, users are not granted access to another space.
+
+```
+SOCIAL_DEFAULT_SPACE=1
 ```
 
 #### Enable Signup

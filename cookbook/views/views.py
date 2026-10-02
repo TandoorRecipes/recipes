@@ -29,6 +29,7 @@ from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
 from cookbook.forms import Recipe, SpaceCreateForm, SpaceJoinForm, User, UserCreateForm
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, has_group_permission, share_link_valid, switch_user_active_space
+from cookbook.helper.social_auth import assign_social_default_access
 from cookbook.models import InviteLink, ShareLink, Space, UserSpace
 from cookbook.templatetags.theming_tags import get_theming_values
 from cookbook.version_info import VERSION_INFO
@@ -117,17 +118,8 @@ def space_overview(request):
                 return HttpResponseRedirect(reverse('view_invite', args=[join_form.cleaned_data['token']]))
     else:
         if settings.SOCIAL_DEFAULT_ACCESS and len(request.user.userspace_set.all()) == 0:
-            space = Space.objects.first()
-            group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
-            if space and group:
-                user_space = UserSpace.objects.create(space=space, user=request.user, active=False)
-                user_space.groups.add(group)
+            if assign_social_default_access(request.user, active=False):
                 return HttpResponseRedirect(reverse('index'))
-            else:
-                if not space:
-                    print(f'WARNING: SOCIAL_DEFAULT_ACCESS is enabled but no Space exists. Cannot auto-assign user {request.user}.')
-                if not group:
-                    print(f'WARNING: SOCIAL_DEFAULT_GROUP={settings.SOCIAL_DEFAULT_GROUP!r} does not match any Group. Cannot auto-assign user {request.user}.')
         if 'signup_token' in request.session:
             return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
 

@@ -78,7 +78,7 @@ set as environment variables.
     `SOCIALACCOUNT_PROVIDERS` credential configuration, not the provider module registration.
 
 Now the provider is configured and you should be able to sign up and sign in using the provider.
-Use the superuser account to grant permissions to the newly created users, or enable default access via `SOCIAL_DEFAULT_ACCESS` & `SOCIAL_DEFAULT_GROUP` (see [configuration docs](../system/configuration.md)).
+Use the superuser account to grant permissions to the newly created users, or enable default access via `SOCIAL_DEFAULT_ACCESS`, `SOCIAL_DEFAULT_GROUP`, and `SOCIAL_DEFAULT_SPACE` (see [configuration docs](../system/configuration.md)).
 
 ### Third-party authentication example
 
@@ -280,7 +280,7 @@ Administrators can view additional diagnostics on the **System** page (`/system/
 
 **User created but has no permissions**
 :   New social login users start with no space access by default. Use `SOCIAL_DEFAULT_ACCESS` and
-    `SOCIAL_DEFAULT_GROUP` environment variables to automatically grant permissions to new social login users.
+    `SOCIAL_DEFAULT_GROUP` and `SOCIAL_DEFAULT_SPACE` environment variables to automatically grant permissions to new social login users.
 
 ## LDAP
 
