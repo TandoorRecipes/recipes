@@ -40,11 +40,11 @@
                 <v-container>
                     <v-row class="text-center text-body-2">
                         <v-col class="pt-1 pb-1">
-                            <i class="fas fa-cogs fa-fw mr-1"></i> {{ recipe.workingTime }} min<br/>
+                            <i class="fas fa-cogs fa-fw mr-1"></i> {{ displayDuration(recipe.workingTime) }}<br/>
                             <div class="text-grey">{{ $t('WorkingTime') }}</div>
                         </v-col>
                         <v-col class="pt-1 pb-1">
-                            <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ recipe.waitingTime }} min</div>
+                            <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ displayDuration(recipe.waitingTime) }}</div>
                             <div class="text-grey">{{ $t('WaitingTime') }}</div>
                         </v-col>
                         <v-col class="pt-1 pb-1">
@@ -95,11 +95,11 @@
 
                         <v-row class="text-center text-body-2 mb-1 flex-grow-0">
                             <v-col>
-                                <i class="fas fa-cogs fa-fw mr-1"></i> {{ recipe.workingTime }} {{ $t('min') }}<br/>
+                                <i class="fas fa-cogs fa-fw mr-1"></i> {{ displayDuration(recipe.workingTime) }}<br/>
                                 <div class="text-grey">{{ $t('WorkingTime') }}</div>
                             </v-col>
                             <v-col>
-                                <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ recipe.waitingTime }} {{ $t('min') }}</div>
+                                <div><i class="fas fa-hourglass-half fa-fw mr-1"></i> {{ displayDuration(recipe.waitingTime) }}</div>
                                 <div class="text-grey">{{ $t('WaitingTime') }}</div>
                             </v-col>
                             <v-col>
@@ -216,6 +216,9 @@ import {useFileApi} from "@/composables/useFileApi.ts";
 import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import RecipeScalingDialog from "@/components/dialogs/RecipeScalingDialog.vue";
+import {useDurationDisplay} from "@/composables/useDurationDisplay.ts";
+
+const displayDuration = useDurationDisplay()
 import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const {request, release} = useWakeLock()

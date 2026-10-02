@@ -849,6 +849,7 @@
   "food_recipe_help": "Linking a recipe here will include the linked recipe in any other recipe that use this food",
   "g": "gram [g] (metric, weight)",
   "gallon": "gallon [gal] (US, volume)",
+  "h": "h",
   "help_translate": "Help Translate",
   "hide_step_ingredients": "Hide Step Ingredients",
   "hours": "hours",

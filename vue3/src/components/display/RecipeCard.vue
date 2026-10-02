@@ -29,7 +29,7 @@
                     </v-chip>
                     <v-chip class="mb-1 me-1" size="x-small" prepend-icon="far fa-clock" label variant="outlined"
                             v-if="props.recipe.workingTime != undefined && props.recipe.workingTime > 0">
-                        {{ recipe.workingTime! + recipe.waitingTime! }}
+                        {{ displayDuration(recipe.workingTime! + recipe.waitingTime!) }}
                     </v-chip>
                 </template>
             </keywords-component>
@@ -105,6 +105,9 @@ import RecipeContextMenu from "@/components/inputs/RecipeContextMenu.vue";
 import RecipeImage from "@/components/display/RecipeImage.vue";
 import {useRouter} from "vue-router";
 import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
+import {useDurationDisplay} from "@/composables/useDurationDisplay.ts";
+
+const displayDuration = useDurationDisplay()
 
 const props = defineProps({
     recipe: {type: {} as PropType<Recipe | RecipeOverview>, required: true,},

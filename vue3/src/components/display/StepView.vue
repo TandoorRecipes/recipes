@@ -9,7 +9,7 @@
                 <v-col class="text-right">
                     <v-btn-group density="compact" variant="tonal" class="d-print-none">
                         <v-btn size="small" color="info" v-if="step.time != undefined && step.time > 0" @click="timerRunning = true"><i
-                            class="fas fa-stopwatch mr-1 fa-fw"></i> {{ step.time }}
+                            class="fas fa-stopwatch mr-1 fa-fw"></i> {{ displayDuration(step.time) }}
                         </v-btn>
                         <v-btn size="small" color="success" v-if="hasDetails" @click="stepChecked = !stepChecked"><i class="fas fa-fw"
                                                                                                                      :class="{'fa-check': !stepChecked, 'fa-times': stepChecked}"></i>
@@ -63,6 +63,9 @@ import {Step} from "@/openapi";
 import Instructions from "@/components/display/Instructions.vue";
 import Timer from "@/components/display/Timer.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import {useDurationDisplay} from "@/composables/useDurationDisplay.ts";
+
+const displayDuration = useDurationDisplay()
 
 const step = defineModel<Step>({required: true})
 
