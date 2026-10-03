@@ -70,7 +70,7 @@ from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, safe_request
-from cookbook.helper.ai_helper import can_perform_ai_request, AiCallbackHandler
+from cookbook.helper.ai_helper import can_perform_ai_request, AiCallbackHandler, strip_json_fences
 from cookbook.helper.batch_edit_helper import add_to_relation, remove_from_relation, remove_all_from_relation, set_relation
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
@@ -1283,7 +1283,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
 
                 response_text = ai_response.choices[0].message.content
 
-                return Response(json.loads(response_text), status=status.HTTP_200_OK)
+                return Response(json.loads(strip_json_fences(response_text)), status=status.HTTP_200_OK)
             except LitellmTimeout:
                 response = {
                     'error': True,
@@ -2106,7 +2106,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
 
                 response_text = ai_response.choices[0].message.content
 
-                return Response(json.loads(response_text), status=status.HTTP_200_OK)
+                return Response(json.loads(strip_json_fences(response_text)), status=status.HTTP_200_OK)
             except LitellmTimeout:
                 response = {
                     'error': True,
@@ -2867,18 +2867,7 @@ class AiImportView(APIView):
                 }
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
             response_text = ai_response.choices[0].message.content
-
-            # Strip Markdown code fences. Some providers (notably Anthropic Claude
-            # via LiteLLM) wrap JSON responses in ```json ... ``` even when
-            # response_format={"type":"json_object"} is requested, which breaks
-            # json.loads() below.
-            stripped = response_text.strip()
-            if stripped.startswith("```"):
-                lines = stripped.split("\n")
-                if len(lines) >= 2 and lines[-1].strip() == "```":
-                    response_text = "\n".join(lines[1:-1])
-                else:
-                    response_text = "\n".join(lines[1:])
+            response_text = strip_json_fences(response_text)
 
             try:
                 data_json = json.loads(response_text)
@@ -2984,7 +2973,7 @@ class AiStepSortView(APIView):
                 response_text = ai_response.choices[0].message.content
                 # TODO validate by loading/dumping using serializer ?
 
-                return Response(json.loads(response_text), status=status.HTTP_200_OK)
+                return Response(json.loads(strip_json_fences(response_text)), status=status.HTTP_200_OK)
             except LitellmTimeout:
                 response = {
                     'error': True,

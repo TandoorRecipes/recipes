@@ -1,3 +1,4 @@
+import re
 from decimal import Decimal
 
 from django.utils import timezone
@@ -23,6 +24,21 @@ def has_monthly_token(space):
     checks if the monthly credit limit has been exceeded
     """
     return get_monthly_token_usage(space) < space.ai_credits_monthly
+
+
+def strip_json_fences(text):
+    """
+    extracts the content of a Markdown code fence (```json ... ```) from an AI response.
+    Some providers (e.g. Anthropic Claude via LiteLLM) wrap JSON in fences even when
+    response_format json_object is requested, which breaks json.loads().
+    The fenced block is also found if the model adds explanatory text before or after it.
+    """
+    stripped = text.strip()
+    block = re.search(r'```[\w-]*[ \t]*\r?\n(.*?)\r?\n[ \t]*```', stripped, re.DOTALL)
+    if block:
+        return block.group(1).strip()
+    match = re.fullmatch(r'```[\w-]*[ \t]*\n?(.*?)\n?[ \t]*(?:```)?', stripped, re.DOTALL)
+    return match.group(1).strip() if stripped.startswith('```') and match else text
 
 
 def can_perform_ai_request(space):
