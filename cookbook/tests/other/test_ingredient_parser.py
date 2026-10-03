@@ -118,3 +118,20 @@ def test_ingredient_parser(arg, u1_s1):
             parsed = ingredient_parser.parse(key)
             print(f'testing if {key} becomes {val}')
             assert parsed == val
+
+
+def test_ingredient_parser_too_long_error_hint(u1_s1):
+    user = auth.get_user(u1_s1)
+    space = user.userspace_set.first().space
+    request = RequestFactory()
+    request.user = user
+    request.space = space
+    ingredient_parser = IngredientParser(request, False)
+
+    too_long_ingredient = 'a' * 600
+
+    with scope(space=space):
+        with pytest.raises(ValueError) as e:
+            ingredient_parser.parse(too_long_ingredient)
+
+    assert too_long_ingredient[:100] in str(e.value)
