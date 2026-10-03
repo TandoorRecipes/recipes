@@ -9,6 +9,7 @@ Please have a look at the [list of pull requests](https://github.com/vabene1111/
 a complete list of contributions.
 Below are some of the larger contributions made yet.
 
+- [sahil24raj](https://github.com/sahil24raj)
 - [vabene1111]
 - [Kaibu]
 - [smilerz]
