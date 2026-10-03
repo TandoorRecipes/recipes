@@ -118,6 +118,7 @@ class Mealie1(Integration):
                     servings_text=r['recipe_yield'].strip()[:32] if r['recipe_yield'] else "",
                     internal=True,
                     created_at=r['created_at'],
+                    updated_at=r['update_at'],
                     space=self.request.space,
                     created_by=self.request.user,
                 )
