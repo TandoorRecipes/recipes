@@ -25,8 +25,7 @@
 
                         <v-row>
                             <v-col cols="12" md="6">
-                                <v-model-select model="Recipe" v-model="editingObj.recipe"
-                                             @update:modelValue="editingObj.servings = editingObj.recipe ? editingObj.recipe.servings : 1"></v-model-select>
+                                <v-model-select model="Recipe" v-model="editingObj.recipe"></v-model-select>
                                 <!--                                <v-number-input label="Days" control-variant="split" :min="1"></v-number-input>-->
                                 <!--TODO create days input with +/- synced to date -->
                                 <recipe-card :recipe="editingObj.recipe" :servings="editingObj.servings" v-if="editingObj && editingObj.recipe" link-target="_blank"></recipe-card>
@@ -165,6 +164,17 @@ const tab = ref('plan')
 const dateRangeValue = ref([] as Date[])
 const timePickerMenu = ref(false)
 const mealPlanTime = ref('12:00')
+
+/**
+ * pre-fill servings from the recipe when the user actually selects a different recipe.
+ * Not when the editor is (re-)populated from the outside, e.g. loading an existing entry or the save response replacing the edited object
+ * (VModelSelect emits update:modelValue in those cases too, which used to overwrite the stored servings)
+ */
+watch(() => [editingObj.value.recipe?.id, editingObj.value.id], ([newRecipeId, newId], [oldRecipeId, oldId]) => {
+    if (newRecipeId !== oldRecipeId && newId === oldId) {
+        editingObj.value.servings = editingObj.value.recipe ? editingObj.value.recipe.servings : 1
+    }
+})
 
 watch(() => editingObj.value.mealType, (newType, oldType) => {
     if (newType?.time && newType?.time !== oldType?.time) {
