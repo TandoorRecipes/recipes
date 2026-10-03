@@ -39,7 +39,7 @@
                     <v-card-title>
                         <v-icon icon="$recipes"></v-icon>
                         {{ step.stepRecipeData.name }}
-                        <v-btn icon="fa-solid fa-up-right-from-square" size="x-small" :to="{name: 'RecipeViewPage', params: {id: step.stepRecipeData.id}}" target="_blank" variant="plain"></v-btn>
+                        <v-btn icon="fa-solid fa-up-right-from-square" size="x-small" :to="buildRecipeRoute(step.stepRecipeData.id, currentShare)" target="_blank" variant="plain"></v-btn>
                     </v-card-title>
                     <v-card-text class="mt-1" v-for="(subRecipeStep, subRecipeStepIndex) in step.stepRecipeData.steps" :key="subRecipeStep.id">
                         <step-view v-model="step.stepRecipeData.steps[subRecipeStepIndex]" :step-number="subRecipeStepIndex+1" :ingredientFactor="ingredientFactor"></step-view>
@@ -63,6 +63,8 @@ import {Step} from "@/openapi";
 import Instructions from "@/components/display/Instructions.vue";
 import Timer from "@/components/display/Timer.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import {useUrlSearchParams} from "@vueuse/core";
+import {buildRecipeRoute} from "@/utils/recipe_route.js";
 
 const step = defineModel<Step>({required: true})
 
@@ -76,6 +78,11 @@ const props = defineProps({
         type: Number,
         required: true,
     },
+})
+
+const params = useUrlSearchParams('history')
+const currentShare = computed(() => {
+    return typeof params.share === 'string' ? params.share : undefined
 })
 
 const timerRunning = ref(false)

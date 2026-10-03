@@ -716,11 +716,11 @@ class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
 class HouseholdViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Household.objects
     serializer_class = HouseholdSerializer
-    permission_classes = [CustomIsSpaceOwner & CustomTokenHasReadWriteScope]
+    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.space)
+        return self.queryset.filter(space=self.request.space).order_by('pk')
 
 
 @extend_schema_view(list=extend_schema(parameters=[

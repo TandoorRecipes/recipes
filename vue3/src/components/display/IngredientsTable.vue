@@ -49,7 +49,7 @@
                     </td>
                     <td>
                         <template v-if="i.food">
-                            <router-link v-if="i.food.recipe" :to="{name: 'RecipeViewPage', params: {id: i.food.recipe.id}}">
+                            <router-link v-if="i.food.recipe" :to="buildRecipeRoute(i.food.recipe.id, currentShare)">
                                 {{ ingredientToFoodString(i, ingredientFactor) }}
                             </router-link>
                             <a v-else-if="i.food.url" :href="i.food.url" target="_blank">{{ ingredientToFoodString(i, ingredientFactor) }}</a>
@@ -107,6 +107,8 @@ import {ingredientToFoodString, ingredientToUnitString} from "@/utils/model_util
 import {TFood, TUnit} from "@/types/Models.ts";
 import NumberScalerDialog from "@/components/inputs/NumberScalerDialog.vue";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore.ts";
+import {useUrlSearchParams} from "@vueuse/core";
+import {buildRecipeRoute} from "@/utils/recipe_route.js";
 
 const emit = defineEmits(['scale'])
 
@@ -130,6 +132,11 @@ const props = defineProps({
 })
 
 const ingredients = defineModel<Ingredient[]>({required: true})
+const params = useUrlSearchParams('history')
+
+const currentShare = computed(() => {
+    return typeof params.share === 'string' ? params.share : undefined
+})
 
 const openNoteIdx = ref<number | null>(null)
 
