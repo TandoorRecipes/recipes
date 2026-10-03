@@ -29,6 +29,7 @@
                             :item-top="top"
                             @onDragStart="currentlyDraggedMealplan = value"
                             @delete="(arg: MealPlan) => {useMealPlanStore().plans.delete(arg.id)}"
+                            @toggleDone="toggleMealPlanDone"
                             :detailed-items="lgAndUp"
                         ></meal-plan-calendar-item>
                     </template>
@@ -55,10 +56,11 @@ import {DateTime, Duration} from "luxon";
 import {useDisplay} from "vuetify";
 import {useMealPlanStore} from "@/stores/MealPlanStore";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
-import {MealPlan} from "@/openapi";
+import {ApiApi, MealPlan} from "@/openapi";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import MealPlanCalendarHeader from "@/components/display/MealPlanCalendarHeader.vue";
 import {useI18n} from "vue-i18n";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 
 const {lgAndUp} = useDisplay()
 const {locale} = useI18n()
@@ -168,6 +170,25 @@ function dropCalendarItemOnDate(undefinedItem: IMealPlanNormalizedCalendarItem, 
                 useMealPlanStore().updateObject(mealPlan)
             }
         }
+    }
+}
+
+/**
+ * toggle the "done" flag on a meal plan entry
+ * @param mealPlan the meal plan entry to toggle
+ */
+async function toggleMealPlanDone(mealPlan: MealPlan) {
+    if (mealPlan.id == undefined) return
+
+    const api = new ApiApi()
+    try {
+        const updated = await api.apiMealPlanPartialUpdate({
+            id: mealPlan.id,
+            patchedMealPlan: {done: !mealPlan.done}
+        })
+        useMealPlanStore().plans.set(updated.id!, updated)
+    } catch (err) {
+        useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
     }
 }
 

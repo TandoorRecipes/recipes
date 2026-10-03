@@ -4,7 +4,12 @@
             :draggable="true"
             :key="value.id"
             @dragstart="emit('onDragStart', value, $event)"
-            :class="value.classes">
+            :class="[value.classes, {'done-item': mealPlan.done}]">
+        <v-btn icon size="x-small" variant="text" class="done-btn" @click.stop="toggleDone">
+            <v-icon :color="mealPlan.done ? 'success' : 'grey'" size="small">
+                {{ mealPlan.done ? 'fas fa-check-circle' : 'far fa-circle' }}
+            </v-icon>
+        </v-btn>
         <v-card-text class="pa-0">
             <div class="d-flex flex-row align-items-center">
                 <div class="flex-column" v-if="detailedItems">
@@ -36,6 +41,9 @@ const emit = defineEmits({
     },
     delete: (value: MealPlan) => {
         return true
+    },
+    toggleDone: (value: MealPlan) => {
+        return true
     }
 })
 
@@ -60,6 +68,10 @@ const itemTitle = computed(() => {
     }
 })
 
+const toggleDone = () => {
+    if (mealPlan.value.id == null) return
+    emit('toggleDone', mealPlan.value)
+}
 
 </script>
 
@@ -91,4 +103,24 @@ const itemTitle = computed(() => {
     overflow: hidden;
     text-overflow: ellipsis;
 }
+
+.done-item {
+    opacity: 0.5;
+    text-decoration: line-through;
+}
+
+.done-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    opacity: 0.3;
+    transition: opacity 0.2s;
+}
+
+.done-btn:hover,
+.done-item .done-btn {
+    opacity: 1;
+}
+
 </style>

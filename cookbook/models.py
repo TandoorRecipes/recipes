@@ -1275,6 +1275,7 @@ class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, Permission
     note = models.TextField(blank=True)
     from_date = models.DateTimeField()
     to_date = models.DateTimeField()
+    done = models.BooleanField(default=False)          # ← put it here
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
     objects = ScopedManager(space='space')
@@ -1292,7 +1293,6 @@ class MealPlan(ExportModelOperationsMixin('meal_plan'), models.Model, Permission
 
     class Meta:
         ordering = ('pk',)
-
 
 class ShoppingListRecipe(ExportModelOperationsMixin('shopping_list_recipe'), models.Model, PermissionModelMixin):
     name = models.CharField(max_length=32, blank=True, default='')

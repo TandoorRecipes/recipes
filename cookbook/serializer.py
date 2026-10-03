@@ -1387,6 +1387,7 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     servings = CustomDecimalField()
     shopping = serializers.SerializerMethodField('in_shopping')
     addshopping = serializers.BooleanField(write_only=True, required=False)
+    done = serializers.BooleanField(required=False)    
 
     to_date = serializers.DateTimeField(required=False)
 
@@ -1456,7 +1457,8 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         fields = (
             'id', 'title', 'recipe', 'servings', 'note', 'note_markdown',
             'from_date', 'to_date', 'meal_type', 'created_by', 'recipe_name',
-            'meal_type_name', 'shopping', 'addshopping'
+            'meal_type_name', 'shopping', 'addshopping',
+            'done'
         )
         read_only_fields = ('created_by',)
 

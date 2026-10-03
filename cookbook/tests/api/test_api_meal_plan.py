@@ -569,3 +569,75 @@ def test_auto_plan_internal_only(u1_s1, meal_type, space_1, auto_plan_keywords):
         content_type='application/json',
     )
     assert resp.status_code == 400
+
+
+
+def test_meal_plan_done_toggle(u1_s1, obj_1):
+    """Test that the done flag can be toggled via the API."""
+    with scopes_disabled():
+        assert obj_1.done is False
+
+    # PATCH done=True
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={obj_1.id}),
+        {'done': True},
+        content_type='application/json'
+    )
+    assert r.status_code == 200
+    response = json.loads(r.content)
+    assert response['done'] is True
+
+    # Verify persisted in DB
+    with scopes_disabled():
+        obj_1.refresh_from_db()
+        assert obj_1.done is True
+
+    # PATCH done=False (toggle back)
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={obj_1.id}),
+        {'done': False},
+        content_type='application/json'
+    )
+    assert r.status_code == 200
+    response = json.loads(r.content)
+    assert response['done'] is False
+
+    with scopes_disabled():
+        obj_1.refresh_from_db()
+        assert obj_1.done is False
+
+
+def test_meal_plan_done_in_list(u1_s1, obj_1):
+    """Test that the done flag is exposed in the list endpoint."""
+    # Initially not done
+    r = u1_s1.get(reverse(LIST_URL))
+    assert r.status_code == 200
+    response = json.loads(r.content)['results']
+    assert len(response) == 1
+    assert response[0]['done'] is False
+
+    # Mark as done
+    with scopes_disabled():
+        obj_1.done = True
+        obj_1.save()
+
+    # Should now appear as done in list
+    r = u1_s1.get(reverse(LIST_URL))
+    assert r.status_code == 200
+    response = json.loads(r.content)['results']
+    assert len(response) == 1
+    assert response[0]['done'] is True
+
+
+def test_meal_plan_done_default_false(space_1, recipe_1_s1, meal_type, u1_s1):
+    """Test that new meal plans default to done=False."""
+    with scopes_disabled():
+        mp = MealPlan.objects.create(
+            recipe=recipe_1_s1,
+            space=space_1,
+            meal_type=meal_type,
+            from_date=timezone.now(),
+            to_date=timezone.now(),
+            created_by=auth.get_user(u1_s1)
+        )
+        assert mp.done is False
