@@ -243,7 +243,8 @@ class Recipe:
                     current_key, value = key_value_pair
                     metadata[current_key] = value.lstrip()
                 elif re.match(r'^\s*-\s', line) and current_key is not None:
-                    metadata[current_key] = metadata[current_key] + f"{re.split(r'^\s*-\s', line)[-1]}, "
+                    _split_line = re.split(r'^\s*-\s', line)
+                    metadata[current_key] = metadata[current_key] + f"{_split_line[-1]}, "
 
         # Parse the Steps recursively Step -> Ingredient -> Quantity
         raw_steps = re.split(r'\n\n', raw_no_metadata.lstrip())
