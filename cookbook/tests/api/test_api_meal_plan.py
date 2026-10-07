@@ -569,3 +569,15 @@ def test_auto_plan_internal_only(u1_s1, meal_type, space_1, auto_plan_keywords):
         content_type='application/json',
     )
     assert resp.status_code == 400
+
+
+def test_updated_at_filter(obj_1, obj_2, u1_s1):
+    with scopes_disabled():
+        MealPlan.objects.filter(pk=obj_1.pk).update(updated_at=timezone.now() - timedelta(hours=1))
+    cutoff = timezone.now().isoformat()
+    obj_2.save()
+    r = u1_s1.get(reverse(LIST_URL), {'updated_at': cutoff})
+    data = json.loads(r.content)
+    ids = [x['id'] for x in data['results']]
+    assert obj_2.id in ids
+    assert obj_1.id not in ids

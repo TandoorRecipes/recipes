@@ -546,8 +546,8 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     class Meta:
         list_serializer_class = SpaceFilterSerializer
         model = MealType
-        fields = ('id', 'name', 'order', 'time', 'color', 'created_by')
-        read_only_fields = ('created_by',)
+        fields = ('id', 'name', 'order', 'time', 'color', 'created_by', 'updated_at')
+        read_only_fields = ('created_by', 'updated_at',)
 
 
 class UserPreferenceSerializer(WritableNestedModelSerializer):
@@ -819,7 +819,8 @@ class PropertyTypeSerializer(OpenDataModelMixin, WritableNestedModelSerializer, 
 
     class Meta:
         model = PropertyType
-        fields = ('id', 'name', 'unit', 'description', 'order', 'open_data_slug', 'fdc_id',)
+        fields = ('id', 'name', 'unit', 'description', 'order', 'open_data_slug', 'fdc_id', 'updated_at')
+        read_only_fields = ('updated_at',)
 
 
 class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
@@ -832,7 +833,8 @@ class PropertySerializer(UniqueFieldsMixin, WritableNestedModelSerializer):
 
     class Meta:
         model = Property
-        fields = ('id', 'property_amount', 'property_type')
+        fields = ('id', 'property_amount', 'property_type', 'updated_at')
+        read_only_fields = ('updated_at',)
 
 
 class RecipeSimpleSerializer(WritableNestedModelSerializer):
@@ -1013,8 +1015,9 @@ class IngredientSimpleSerializer(WritableNestedModelSerializer):
         model = Ingredient
         fields = (
             'id', 'food', 'unit', 'amount', 'note', 'order',
-            'is_header', 'no_amount', 'original_text', 'checked',
+            'is_header', 'no_amount', 'original_text', 'checked', 'updated_at'
         )
+        read_only_fields = ('updated_at',)
 
 
 class IngredientSerializer(IngredientSimpleSerializer):
@@ -1046,9 +1049,9 @@ class IngredientSerializer(IngredientSimpleSerializer):
         model = Ingredient
         fields = (
             'id', 'food', 'unit', 'amount', 'conversions', 'note', 'order',
-            'is_header', 'no_amount', 'original_text', 'used_in_recipes', 'checked',
+            'is_header', 'no_amount', 'original_text', 'used_in_recipes', 'checked', 'updated_at'
         )
-        read_only_fields = ['conversions', ]
+        read_only_fields = ['conversions', 'updated_at',]
 
 
 class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
@@ -1082,8 +1085,9 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         model = Step
         fields = (
             'id', 'name', 'instruction', 'ingredients', 'instructions_markdown', 'time', 'order', 'show_as_header', 'file', 'step_recipe',
-            'step_recipe_data', 'numrecipe', 'show_ingredients_table'
+            'step_recipe_data', 'numrecipe', 'show_ingredients_table', 'updated_at'
         )
+        read_only_fields = ('updated_at',)
 
 
 class StepRecipeSerializer(WritableNestedModelSerializer):
@@ -1156,7 +1160,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
-        read_only_fields = ['id', 'created_at', 'created_by', 'updated_at', ]
+        read_only_fields = ['id', 'created_at', 'created_by', 'updated_at',]
 
 
 class RecipeOverviewSerializer(RecipeBaseSerializer):
@@ -1375,7 +1379,8 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RecipeBookEntry
-        fields = ('id', 'book', 'book_content', 'recipe', 'recipe_content',)
+        fields = ('id', 'book', 'book_content', 'recipe', 'recipe_content', 'updated_at')
+        read_only_fields = ('updated_at',)
 
 
 class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
@@ -1456,9 +1461,9 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
         fields = (
             'id', 'title', 'recipe', 'servings', 'note', 'note_markdown',
             'from_date', 'to_date', 'meal_type', 'created_by', 'recipe_name',
-            'meal_type_name', 'shopping', 'addshopping'
+            'meal_type_name', 'shopping', 'addshopping', 'updated_at'
         )
-        read_only_fields = ('created_by',)
+        read_only_fields = ('created_by', 'updated_at',)
 
 
 class AutoMealPlanSerializer(serializers.Serializer):
@@ -1491,8 +1496,8 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShoppingListRecipe
-        fields = ('id', 'name', 'recipe', 'recipe_data', 'meal_plan_data', 'mealplan', 'servings', 'created_by',)
-        read_only_fields = ('id', 'created_by',)
+        fields = ('id', 'name', 'recipe', 'recipe_data', 'meal_plan_data', 'mealplan', 'servings', 'created_by', 'updated_at')
+        read_only_fields = ('id', 'created_by', 'updated_at',)
 
 
 class FoodShoppingSerializer(serializers.ModelSerializer):
