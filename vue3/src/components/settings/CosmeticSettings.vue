@@ -8,8 +8,11 @@
         <v-label>{{$t('Nav_Color')}}</v-label>
         <v-color-picker v-model="useUserPreferenceStore().userSettings.navBgColor" mode="hex" :modes="['hex']" show-swatches :swatches="[['#ddbf86'],['#b98766'],['#b55e4f'],['#82aa8b'],['#385f84']]"></v-color-picker>
 
-        <v-select :label="$t('Theme')" class="mt-4" v-model="useUserPreferenceStore().userSettings.theme" :items="[{title: 'Tandoor', value: 'TANDOOR'}, {title: 'Tandoor Dark', value: 'TANDOOR_DARK'}, ]">
-        </v-select>
+        <v-select :label="$t('Light Theme')" class="mt-4" v-model="useUserPreferenceStore().userSettings.lightTheme" :items="[{title: 'Tandoor', value: 'TANDOOR'}, {title: 'Tandoor Dark', value: 'TANDOOR_DARK'}]"></v-select>
+        <v-select :label="$t('Dark Theme')" class="mt-4" v-model="useUserPreferenceStore().userSettings.darkTheme" :items="[{title: 'Tandoor Dark', value: 'TANDOOR_DARK'}, {title: 'Tandoor', value: 'TANDOOR'}]"></v-select>
+        <div class="text-caption text-disabled mt-2">
+            Theme automatically switches based on your system's color scheme preference.
+        </div>
 
         <v-checkbox :label="$t('Show_Logo')" :hint="$t('Show_Logo_Help')" persistent-hint v-model="useUserPreferenceStore().userSettings.navShowLogo"></v-checkbox>
         <v-checkbox :label="$t('Sticky_Nav')" :hint="$t('Sticky_Nav_Help')" persistent-hint v-model="useUserPreferenceStore().userSettings.navSticky"></v-checkbox>
