@@ -36,7 +36,7 @@ from cookbook.models import (Automation, BookmarkletImport, Comment, CookLog, Cu
                              ExportLog, Food, FoodInheritField, ImportLog, Ingredient, InviteLink,
                              Keyword, MealPlan, MealType, NutritionInformation, Property,
                              PropertyType, Recipe, RecipeBook, RecipeBookEntry, RecipeImport,
-                             ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
+                             RecipeUserWeight, ShareLink, ShoppingListEntry, ShoppingListRecipe, Space,
                              Step, Storage, Supermarket, SupermarketCategory,
                              SupermarketCategoryRelation, Sync, SyncLog, Unit, UnitConversion,
                              UserFile, UserPreference, UserSpace, ViewLog, ConnectorConfig, SearchPreference, SearchFields, AiLog, AiProvider, ShoppingList,
@@ -1164,7 +1164,7 @@ class RecipeOverviewSerializer(RecipeBaseSerializer):
     new = serializers.SerializerMethodField('is_recipe_new', read_only=True)
     recent = serializers.CharField(read_only=True)
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
-    last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
+    last_cooked = serializers.DateTimeField(source='lastcooked', required=False, allow_null=True, read_only=True)
     created_by = UserSerializer(read_only=True)
 
     def create(self, validated_data):
@@ -1197,7 +1197,7 @@ class RecipeSerializer(RecipeBaseSerializer):
     keywords = KeywordSerializer(many=True, required=False)
     shared = UserSerializer(many=True, required=False)
     rating = CustomDecimalField(required=False, allow_null=True, read_only=True)
-    last_cooked = serializers.DateTimeField(required=False, allow_null=True, read_only=True)
+    last_cooked = serializers.DateTimeField(source='lastcooked', required=False, allow_null=True, read_only=True)
     food_properties = serializers.SerializerMethodField('get_food_properties')
     created_by = UserSerializer(read_only=True)
 
@@ -1664,6 +1664,20 @@ class CookLogSerializer(serializers.ModelSerializer):
         model = CookLog
         fields = ('id', 'recipe', 'servings', 'rating', 'comment', 'created_by', 'created_at', 'updated_at')
         read_only_fields = ('id', 'created_by')
+
+
+class RecipeUserWeightSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    def create(self, validated_data):
+        validated_data['user'] = self.context['request'].user
+        validated_data['space'] = self.context['request'].space
+        return super().create(validated_data)
+
+    class Meta:
+        model = RecipeUserWeight
+        fields = ('id', 'recipe', 'user', 'weight', 'created_at', 'updated_at')
+        read_only_fields = ('id', 'user', 'created_at', 'updated_at')
 
 
 class ViewLogSerializer(serializers.ModelSerializer):

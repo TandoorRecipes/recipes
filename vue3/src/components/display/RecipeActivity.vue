@@ -1,20 +1,43 @@
 <template>
     <v-card class="mt-1" v-if="useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode" :loading="loading">
         <v-card-text>
-            <v-textarea :label="$t('Comment')" rows="2" v-model="newCookLog.comment" auto-grow></v-textarea>
-            <v-row dense>
-                <v-col cols="12" md="4">
+            <!-- Recommendation Weight -->
+            <v-row dense class="mb-2">
+                <v-col cols="12" md="6">
+                    <v-label class="font-weight-bold">{{ $t('Recommendation Weight') }}</v-label>
+                    <div class="text-caption text-disabled mb-2">{{ $t('How much do you recommend this recipe?') }}</div>
+                    <v-slider
+                        v-model="userWeight"
+                        min="-1"
+                        max="1"
+                        step="0.1"
+                        thumb-label="always"
+                        show-ticks="always"
+                        tick-size="2"
+                        :color="weightColor"
+                        @update:model-value="saveUserWeight"
+                    ></v-slider>
+                    <div class="text-center text-caption">
+                        <span class="text-negative" v-if="userWeight < 0">{{ $t('Avoid') }}</span>
+                        <span v-else-if="userWeight == 0">{{ $t('Neutral') }}</span>
+                        <span class="text-positive" v-if="userWeight > 0">{{ $t('Recommended') }}</span>
+                    </div>
+                </v-col>
+                <v-col cols="12" md="6">
                     <v-label>{{ $t('Rating') }}</v-label>
                     <br/>
                     <v-rating v-model="newCookLog.rating" clearable hover density="compact"></v-rating>
                 </v-col>
+            </v-row>
+            <v-row dense>
                 <v-col cols="12" md="4">
-
                     <v-number-input :label="$t('Servings')" v-model="newCookLog.servings" :precision="2"></v-number-input>
                 </v-col>
                 <v-col cols="12" md="4">
                     <v-date-input :label="$t('Date')" v-model="newCookLog.createdAt"></v-date-input>
-
+                </v-col>
+                <v-col cols="12" md="4">
+                    <v-textarea :label="$t('Comment')" rows="2" v-model="newCookLog.comment" auto-grow></v-textarea>
                 </v-col>
             </v-row>
         </v-card-text>
@@ -69,8 +92,8 @@
 
 <script setup lang="ts">
 
-import {onMounted, PropType, ref, watch} from "vue";
-import {ApiApi, CookLog, Recipe} from "@/openapi";
+import {computed, onMounted, PropType, ref, watch} from "vue";
+import {ApiApi, CookLog, Recipe, RecipeUserWeight} from "@/openapi";
 import {DateTime} from "luxon";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import {VDateInput} from 'vuetify/labs/VDateInput'
@@ -89,12 +112,21 @@ const props = defineProps({
 })
 
 const newCookLog = ref({} as CookLog);
+const userWeight = ref<number>(0)
+const weightLoading = ref(false)
 
 const cookLogs = ref([] as CookLog[])
 const loading = ref(false)
 
+const weightColor = computed(() => {
+    if (userWeight.value < 0) return 'error'
+    if (userWeight.value > 0) return 'success'
+    return 'primary'
+})
+
 onMounted(() => {
     recLoadCookLog(props.recipe.id)
+    loadUserWeight()
     resetForm()
 })
 
@@ -151,8 +183,64 @@ watch(() => props.servings, (newVal) => {
     newCookLog.value.servings = newVal
 })
 
+/**
+ * Load the user's weight for this recipe
+ */
+function loadUserWeight() {
+    weightLoading.value = true
+    const api = new ApiApi()
+
+    api.apiRecipeUserWeightList({recipe: props.recipe.id}).then(data => {
+        if (data.results && data.results.length > 0) {
+            userWeight.value = data.results[0].weight
+        } else {
+            userWeight.value = 0
+        }
+    }).catch(err => {
+        console.error('Failed to load user weight:', err)
+        userWeight.value = 0
+    }).finally(() => {
+        weightLoading.value = false
+    })
+}
+
+/**
+ * Save the user's weight for this recipe
+ */
+function saveUserWeight() {
+    const api = new ApiApi()
+
+    // First check if a weight entry already exists
+    api.apiRecipeUserWeightList({recipe: props.recipe.id}).then(data => {
+        if (data.results && data.results.length > 0) {
+            // Update existing entry
+            const existingEntry = data.results[0]
+            return api.apiRecipeUserWeightPartialUpdate({
+                id: existingEntry.id!,
+                patchedRecipeUserWeight: { weight: userWeight.value }
+            })
+        } else {
+            // Create new entry
+            return api.apiRecipeUserWeightCreate({
+                recipeUserWeight: {
+                    recipe: props.recipe.id!,
+                    weight: userWeight.value
+                } as Omit<RecipeUserWeight, 'createdBy'|'updatedAt'>
+            })
+        }
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
+    })
+}
+
 </script>
 
 <style scoped>
+.text-positive {
+    color: rgb(var(--v-theme-success));
+}
 
+.text-negative {
+    color: rgb(var(--v-theme-error));
+}
 </style>
