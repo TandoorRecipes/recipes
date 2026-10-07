@@ -1,7 +1,7 @@
 <template>
     <v-select
             :label="$t('Language')"
-            v-model="$i18n.locale"
+            v-model="selectedLocale"
             :items="availableLocalizations"
             item-title="display"
             item-value="code"
@@ -48,10 +48,10 @@
 <script setup lang="ts">
 
 import {onMounted, ref, computed} from "vue";
-import {ApiApi, Localization} from "@/openapi";
+import {ApiApi} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useI18n} from "vue-i18n";
-import {SUPPORT_LOCALES, resolveLocale, localeCoverage, LOCALE_MIN_COVERAGE} from "@/i18n.ts";
+import {resolveLocale, localeCoverage} from "@/i18n.ts";
 import VClosableCardTitle from "@/components/dialogs/VClosableCardTitle.vue";
 import HelpView from "@/components/display/HelpView.vue";
 
@@ -64,6 +64,8 @@ interface LocalizationWithCoverage {
 
 const availableLocalizations = ref([] as LocalizationWithCoverage[])
 const {locale} = useI18n()
+const htmlLocale = document.documentElement.lang.replace(/_/g, '-').toLowerCase()
+const selectedLocale = ref(resolveLocale(htmlLocale) ? htmlLocale : locale.value)
 const helpDialog = ref(false)
 const helpDrawer = ref(true)
 
@@ -105,7 +107,7 @@ onMounted(() => {
                     }
                 }
                 return {
-                    code: resolved,
+                    code: l.code!.replace(/_/g, '-').toLowerCase(),
                     language: l.language!,
                     display: l.language!,
                     coverage: fe
@@ -124,7 +126,7 @@ onMounted(() => {
 function updateLanguage() {
     const expires = new Date();
     expires.setTime(expires.getTime() + (100 * 365 * 24 * 60 * 60 * 1000));
-    document.cookie = `django_language=${locale.value}; expires=${expires.toUTCString()}; path=/`;
+    document.cookie = `django_language=${selectedLocale.value}; expires=${expires.toUTCString()}; path=/`;
     location.reload()
 }
 
