@@ -110,6 +110,9 @@ if os.getenv('REVERSE_PROXY_AUTH') is not None:
 else:
     REMOTE_USER_AUTH = extract_bool('REMOTE_USER_AUTH', False)
 
+# Reverse proxy authentication logout URL
+REVERSE_PROXY_AUTH_LOGOUT = os.getenv('REVERSE_PROXY_AUTH_LOGOUT', '')
+
 # default value for user preference 'comment'
 COMMENT_PREF_DEFAULT = extract_bool('COMMENT_PREF_DEFAULT', True)
 FRACTION_PREF_DEFAULT = extract_bool('FRACTION_PREF_DEFAULT', False)
@@ -361,7 +364,7 @@ ACCOUNT_ADAPTER = 'cookbook.helper.AllAuthCustomAdapter'
 
 if REMOTE_USER_AUTH:
     MIDDLEWARE.insert(8, 'recipes.middleware.CustomRemoteUser')
-    AUTHENTICATION_BACKENDS.append('django.contrib.auth.backends.RemoteUserBackend')
+    AUTHENTICATION_BACKENDS.append('cookbook.helper.remote_user_helper.CustomRemoteUserBackend')
 
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
