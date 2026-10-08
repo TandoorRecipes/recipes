@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-06-24 18:06+0200\n"
-"PO-Revision-Date: 2026-06-01 05:22+0000\n"
-"Last-Translator: 吕楪 <irithys@outlook.com>\n"
+"PO-Revision-Date: 2026-09-30 07:26+0000\n"
+"Last-Translator: Lucas Wang <unicornundermoon@protonmail.com>\n"
 "Language-Team: Chinese (Simplified Han script) <http://translate.tandoor.dev/"
 "projects/tandoor/recipes-backend/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.16.2\n"
+"X-Generator: Weblate 2026.8.1\n"
 
 #: .\cookbook\forms.py:58
 msgid "Default"
@@ -88,7 +88,7 @@ msgstr "你不能与此对象交互，因为它不属于你！"
 msgid ""
 "You cannot interact with this object because you are not in the same "
 "household as the user who created it!"
-msgstr "你无法与此对象交互，因为你与该对象的创建者不属于同一个家庭。"
+msgstr "你无法与此对象交互，因为你与该对象的创建者不属于同一个家庭！"
 
 #: .\cookbook\helper\permission_helper.py:505
 msgid "You have reached the maximum number of recipes for your space."
@@ -197,19 +197,19 @@ msgstr "我做的"
 
 #: .\cookbook\integration\integration.py:67
 msgid "Too many files in zip"
-msgstr ""
+msgstr "压缩包内的文件过多"
 
 #: .\cookbook\integration\integration.py:71
 msgid "Zip file too large"
-msgstr ""
+msgstr "压缩文件过大"
 
 #: .\cookbook\integration\integration.py:84
 msgid "Nested zip files too deep"
-msgstr ""
+msgstr "嵌套的压缩文件层级过深"
 
 #: .\cookbook\integration\integration.py:92
 msgid "File in zip too large"
-msgstr ""
+msgstr "压缩包内的文件过大"
 
 #: .\cookbook\integration\integration.py:270
 msgid ""
@@ -297,7 +297,7 @@ msgstr "来源"
 
 #: .\cookbook\integration\pdfexport.py:9
 msgid "Method not implemented in storage integration"
-msgstr "存储集成中未实现该方法。"
+msgstr "存储集成中未实现该方法"
 
 #: .\cookbook\integration\pdfexport.py:13
 msgid ""
@@ -1018,9 +1018,9 @@ msgid ""
 "editor like <a href=\"https://www.tablesgenerator.com/markdown_tables\" rel="
 "\"noreferrer noopener\" target=\"_blank\">this one.</a>"
 msgstr ""
-"Markdown 表格难以手写。推荐使用像 <a href=\"https://www.tablesgenerator.com/"
-"markdown_tables\" rel=\"noreferrer noopener\" target=\"_blank\">这个</a> 的表"
-"格编辑器。"
+"编辑器Markdown 表格难以手写。推荐使用表格编辑器如 <a href=\"https://"
+"www.tablesgenerator.com/markdown_tables\" rel=\"noreferrer noopener\" "
+"target=\"_blank\">这个。</a>"
 
 #: .\cookbook\templates\markdown_info.html:155
 #: .\cookbook\templates\markdown_info.html:157
@@ -1824,7 +1824,7 @@ msgstr "如果为真，同时返回空条目；如果为假（默认），仅返
 msgid ""
 "Returns all entries with the same food as the given code. If code is given "
 "food parameter is ignored"
-msgstr "返回与给定代码相同食材的所有条目。如果提供了代码，则忽略 food 参数。"
+msgstr "返回与给定代码相同食材的所有条目。如果提供了代码，则忽略 food 参数"
 
 #: .\cookbook\views\api.py:869 .\cookbook\views\api.py:903
 msgid "Returns all entries with the given food id"
