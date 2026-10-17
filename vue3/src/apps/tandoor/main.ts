@@ -17,11 +17,11 @@ import {TANDOOR_PLUGINS, TandoorPlugin} from "@/types/Plugins.ts";
 let routes = [
     {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'StartPage'},
     // auth related views
-    {path: '/account/login', component: () => import("@/pages/LoginPage.vue"), name: 'LoginPage' , meta: {title: 'Login'}},
-    {path: '/account/signup', component: () => import("@/pages/SignUpPage.vue"), name: 'SignUpPage' , meta: {title: 'SignUp'}},
-    {path: '/account/social-signup/', component: () => import("@/pages/SocialSignupPage.vue"), name: 'SocialSignupPage' , meta: {title: 'SignUp'}},
-    {path: '/account/password-reset', component: () => import("@/pages/PasswordResetPage.vue"), name: 'PasswordResetPage' , meta: {title: 'PasswordReset'}},
-    {path: '/account/email-confirm', component: () => import("@/pages/EmailConfirmPage.vue"), name: 'EmailConfirmPage' , meta: {title: 'EmailConfirmation'}},
+    {path: '/account/login', component: () => import("@/pages/account/LoginPage.vue"), name: 'LoginPage' , meta: {title: 'Login'}},
+    {path: '/account/signup', component: () => import("@/pages/account/SignUpPage.vue"), name: 'SignUpPage' , meta: {title: 'SignUp'}},
+    {path: '/account/social-signup/', component: () => import("@/pages/account/SocialSignupPage.vue"), name: 'SocialSignupPage' , meta: {title: 'SignUp'}},
+    {path: '/account/password-reset', component: () => import("@/pages/account/PasswordResetPage.vue"), name: 'PasswordResetPage' , meta: {title: 'PasswordReset'}},
+    {path: '/account/email-confirm', component: () => import("@/pages/account/EmailConfirmPage.vue"), name: 'EmailConfirmPage' , meta: {title: 'EmailConfirmation'}},
 
     {path: '/search', redirect: {name: 'StartPage'}},
     {path: '/test', component: () => import("@/pages/TestPage.vue"), name: 'view_test'},

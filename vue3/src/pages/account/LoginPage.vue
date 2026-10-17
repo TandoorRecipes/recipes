@@ -149,7 +149,7 @@ function startProviderFlow(provider: string) {
     const fields: Record<string, string> = {
         provider: provider,
         process: 'login',
-        callback_url: callbackUrl, // useDjangoUrls().getDjangoUrl(`/accounts/${provider}/login/callback/`),
+        callback_url:  useDjangoUrls().getDjangoUrl(`/account/social-signup/`),
     };
 
     const csrfToken = getCookie('csrftoken');
