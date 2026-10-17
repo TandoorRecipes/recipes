@@ -194,7 +194,7 @@ export class AuthenticationProvidersApi extends runtime.BaseAPI {
             path: urlPath,
             method: 'GET',
             headers: headerParameters,
-            query: queryParameters,ö
+            query: queryParameters,
         };
     }
 

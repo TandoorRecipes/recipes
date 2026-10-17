@@ -28,7 +28,8 @@ from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
 
 from cookbook.forms import Recipe, SpaceCreateForm, SpaceJoinForm, User, UserCreateForm
 from cookbook.helper.HelperFunctions import str2bool
-from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, has_group_permission, share_link_valid, switch_user_active_space, process_invite_token
+from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, has_group_permission, share_link_valid, switch_user_active_space, process_invite_token, \
+    create_space_for_user
 from cookbook.models import InviteLink, ShareLink, Space, UserSpace
 from cookbook.templatetags.theming_tags import get_theming_values
 from cookbook.version_info import VERSION_INFO
@@ -364,8 +365,10 @@ def setup(request):
                         user.set_password(form.cleaned_data['password'])
                         user.save()
 
+                        create_space_for_user(user, name=None)
+
                         messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
-                        return HttpResponseRedirect(reverse('account_login'))
+                        return HttpResponseRedirect(reverse('index'))
                     except ValidationError as e:
                         for m in e:
                             form.add_error('password', m)

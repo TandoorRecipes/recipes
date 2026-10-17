@@ -71,7 +71,6 @@ set as environment variables.
 3. Under **Social accounts → Social applications**, create a new application with the required information from the [allauth provider documentation](https://docs.allauth.org/en/latest/socialaccount/providers/index.html).
 4. Make sure to add your site to the application's list of available sites.
 
-<!-- prettier-ignore -->
 !!! warning
     You still need `SOCIAL_PROVIDERS` set in your environment to load the allauth provider module
     (e.g., `allauth.socialaccount.providers.openid_connect`). The Django Admin only replaces the

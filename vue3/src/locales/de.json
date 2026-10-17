@@ -280,6 +280,7 @@
   "FulltextHelp": "Felder welche im Volltext durchsucht werden sollen. Tipp: Die Suchtypen 'web', 'raw' und 'phrase' funktionieren nur mit Volltext-Feldern.",
   "Fuzzy": "Unscharf",
   "FuzzySearchHelp": "Verwende fuzzy search, um Einträge auch bei Unterschieden in der Schreibweise zu finden.",
+  "GenericSocialSignupError": "Etwas ist beim Anmelden mit dem externen Dienst fehlgeschlagen. Es kann sein das der externe Dienst nicht passend zu den Einstellungen von Tandoor konfiguriert ist. Auch kann es sein das Email oder Benutzername bereits vergeben sind und automatisches verknüpfen deaktiviert ist.",
   "GettingStarted": "Erste Schritte",
   "Global": "Global",
   "GlobalHelp": "Globale KI Anbieter können von Nutzern aller Spaces verwendet werden. Sie können nur dich Instanz Admins (Superusers) erstellt und bearbeitet werden. ",

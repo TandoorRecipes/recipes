@@ -41,7 +41,8 @@ class ScopeMiddleware:
         NO_SPACE_VIEWS = ['/accounts', '/switch-space']  # TODO verify this is all still needed in v2
         # views that should be served without redirection when not authenticated
         # TODO remove '/accounts'
-        NO_AUTH_VIEWS = ['/accounts', '/invite', '/account/login', '/account/signup', '/account/password-reset', '/account/email-confirm', '/account/social-signup', '/manifest.json', '/_allauth', '/openapi']
+        NO_AUTH_VIEWS = ['/setup/', '/accounts', '/invite', '/account/login', '/account/signup', '/account/password-reset', '/account/email-confirm', '/account/social-signup',
+                         '/manifest.json', '/_allauth', '/openapi']
         if settings.DEBUG:
             NO_AUTH_VIEWS.append('/__debug__/')
 

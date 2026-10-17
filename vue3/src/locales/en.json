@@ -278,6 +278,7 @@
   "FulltextHelp": "Fields to full text search.  Note: 'web', 'phrase', and 'raw' search methods only function with fulltext fields.",
   "Fuzzy": "Fuzzy",
   "FuzzySearchHelp": "Use fuzzy search to find entries even when there are differences in how the word is written.",
+  "GenericSocialSignupError": "Something went wrong during logging in using the selected provider. The provider might not be configured correctly for how Tandoor is configured. Also the username or email might already exist which fails if auto linking is disabled.",
   "GettingStarted": "Getting Started",
   "Global": "Global",
   "GlobalHelp": "Global AI Providers can be used by users of all spaces. They can only be created and edited by superusers. ",

@@ -206,6 +206,6 @@ class CustomPasswordResetForm(ResetPasswordForm):
 
 
 class UserCreateForm(forms.Form):
-    name = forms.CharField(label='Username')
-    password = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}))
-    password_confirm = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password'}))
+    name = forms.CharField(label='Username', widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password', 'class': 'form-control'}))
+    password_confirm = forms.CharField(widget=forms.TextInput(attrs={'autocomplete': 'new-password', 'type': 'password', 'class': 'form-control'}))
