@@ -20,6 +20,13 @@ import {
     GroupToJSON,
     GroupToJSONTyped,
 } from './Group';
+import type { InviteLinkEmail } from './InviteLinkEmail';
+import {
+    InviteLinkEmailFromJSON,
+    InviteLinkEmailFromJSONTyped,
+    InviteLinkEmailToJSON,
+    InviteLinkEmailToJSONTyped,
+} from './InviteLinkEmail';
 import type { Household } from './Household';
 import {
     HouseholdFromJSON,
@@ -48,10 +55,10 @@ export interface PatchedInviteLink {
     readonly uuid?: string;
     /**
      * 
-     * @type {string}
+     * @type {InviteLinkEmail}
      * @memberof PatchedInviteLink
      */
-    email?: string;
+    email?: InviteLinkEmail;
     /**
      * 
      * @type {Group}
@@ -127,7 +134,7 @@ export function PatchedInviteLinkFromJSONTyped(json: any, ignoreDiscriminator: b
         
         'id': json['id'] == null ? undefined : json['id'],
         'uuid': json['uuid'] == null ? undefined : json['uuid'],
-        'email': json['email'] == null ? undefined : json['email'],
+        'email': json['email'] == null ? undefined : InviteLinkEmailFromJSON(json['email']),
         'group': json['group'] == null ? undefined : GroupFromJSON(json['group']),
         'household': json['household'] == null ? undefined : HouseholdFromJSON(json['household']),
         'validUntil': json['valid_until'] == null ? undefined : (new Date(json['valid_until'])),
@@ -152,7 +159,7 @@ export function PatchedInviteLinkToJSONTyped(value?: Omit<PatchedInviteLink, 'uu
     return {
         
         'id': value['id'],
-        'email': value['email'],
+        'email': InviteLinkEmailToJSON(value['email']),
         'group': GroupToJSON(value['group']),
         'household': HouseholdToJSON(value['household']),
         'valid_until': value['validUntil'] == null ? value['validUntil'] : value['validUntil'].toISOString().substring(0,10),

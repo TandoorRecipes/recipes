@@ -1948,6 +1948,8 @@ class ServerSettingsSerializer(serializers.Serializer):
 
     unauthenticated_theme_from_space = serializers.IntegerField()
     force_theme_from_space = serializers.IntegerField()
+    enable_signup = serializers.BooleanField()
+    hide_login_form = serializers.BooleanField()
 
     logo_color_32 = serializers.ImageField(default=None)
     logo_color_128 = serializers.CharField(default=None)

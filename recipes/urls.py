@@ -24,6 +24,7 @@ from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
     path("_allauth/", include("allauth.headless.urls")),
     path('i18n/', include('django.conf.urls.i18n')),
     path(

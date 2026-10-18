@@ -37,20 +37,22 @@
         </v-col>
     </v-row>
 
-    <p class="text-h6 mt-3">{{ $t('Password') }}</p>
-    <v-divider class="mb-3"></v-divider>
-    <!-- password change -->
-    <v-row v-if="userSession">
-        <v-col>
+    <template v-if="!useUserPreferenceStore().serverSettings.hideLoginForm">
+        <p class="text-h6 mt-3">{{ $t('Password') }}</p>
+        <v-divider class="mb-3"></v-divider>
+        <!-- password change -->
+        <v-row v-if="userSession">
+            <v-col>
 
-            <v-form :disabled="loading">
-                <v-text-field type="password" :label="$t('CurrentPassword')" v-model="currentPassword" :disabled="!userSession.data.user.hasUsablePassword"></v-text-field>
-                <v-text-field type="password" :label="$t('NewPassword')" v-model="newPassword1"></v-text-field>
-                <v-text-field type="password" :label="$t('RepeatNewPassword')" v-model="newPassword2"></v-text-field>
-                <v-btn prepend-icon="$save" color="save" @click="changePassword()" :loading="loading">{{ $t('Save') }}</v-btn>
-            </v-form>
-        </v-col>
-    </v-row>
+                <v-form :disabled="loading">
+                    <v-text-field type="password" :label="$t('CurrentPassword')" v-model="currentPassword" :disabled="!userSession.data.user.hasUsablePassword"></v-text-field>
+                    <v-text-field type="password" :label="$t('NewPassword')" v-model="newPassword1"></v-text-field>
+                    <v-text-field type="password" :label="$t('RepeatNewPassword')" v-model="newPassword2"></v-text-field>
+                    <v-btn prepend-icon="$save" color="save" @click="changePassword()" :loading="loading">{{ $t('Save') }}</v-btn>
+                </v-form>
+            </v-col>
+        </v-row>
+    </template>
 
     <p class="text-h6 mt-3">{{ $t('Account') }}</p>
     <v-divider class="mb-3"></v-divider>

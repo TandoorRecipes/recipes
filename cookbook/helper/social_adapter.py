@@ -5,9 +5,11 @@ from datetime import timedelta
 
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.conf import settings
+from django.contrib.auth.models import Group
 from django.utils import timezone
 
 from cookbook.helper.permission_helper import create_space_for_user, process_invite_token
+from cookbook.models import Space, UserSpace
 
 _ERROR_FILE = os.path.join(settings.MEDIA_ROOT, '.social_login_errors.json')
 _MAX_ERRORS = 50
@@ -121,11 +123,22 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
         create a default space for new users
         """
         user = super().save_user(request, sociallogin, form=form)
-        create_space_for_user(user)
+
+        if settings.SOCIAL_DEFAULT_ACCESS:
+            space = Space.objects.first()
+            group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
+            if space and group:
+                user_space = UserSpace.objects.create(space=space, user=request.user, active=False)
+                user_space.groups.add(group)
 
         if 'signup_token' in request.session:
             value = request.session['signup_token']
             del request.session['signup_token']
             request.session.modified = True
             process_invite_token(user, value)
+
+        # when no space was created trough invite or default create one for the user
+        if len(user.userspace_set.all()) == 0:
+            create_space_for_user(user)
+
         return user

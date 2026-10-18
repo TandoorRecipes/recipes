@@ -80,61 +80,6 @@ def search(request):
 def no_groups(request):
     return render(request, 'no_groups_info.html')
 
-
-@login_required
-def space_overview(request):
-    if request.POST:
-        create_form = SpaceCreateForm(request.POST, prefix='create')
-        join_form = SpaceJoinForm(request.POST, prefix='join')
-        if settings.HOSTED and request.user.username == 'demo':
-            messages.add_message(request, messages.WARNING, _('This feature is not available in the demo version!'))
-        else:
-            if create_form.is_valid():
-                if Space.objects.filter(created_by=request.user).count() >= request.user.userpreference.max_owned_spaces:
-                    messages.add_message(request, messages.ERROR,
-                                         _('You have the reached the maximum amount of spaces that can be owned by you.') + f' ({request.user.userpreference.max_owned_spaces})')
-                    return HttpResponseRedirect(reverse('view_space_overview'))
-
-                created_space = Space.objects.create(name=create_form.cleaned_data['name'],
-                                                     created_by=request.user,
-                                                     max_file_storage_mb=settings.SPACE_DEFAULT_MAX_FILES,
-                                                     max_recipes=settings.SPACE_DEFAULT_MAX_RECIPES,
-                                                     max_users=settings.SPACE_DEFAULT_MAX_USERS,
-                                                     allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
-                                                     ai_enabled=settings.SPACE_AI_ENABLED,
-                                                     ai_credits_monthly=settings.SPACE_AI_CREDITS_MONTHLY, )
-
-                user_space = UserSpace.objects.create(space=created_space, user=request.user, active=False)
-                user_space.groups.add(Group.objects.filter(name='admin').get())
-
-                messages.add_message(request, messages.SUCCESS,
-                                     _('You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you.'))
-                return HttpResponseRedirect(reverse('view_switch_space', args=[user_space.space.pk]))
-
-            if join_form.is_valid():
-                return HttpResponseRedirect(reverse('view_invite', args=[join_form.cleaned_data['token']]))
-    else:
-        if settings.SOCIAL_DEFAULT_ACCESS and len(request.user.userspace_set.all()) == 0:
-            space = Space.objects.first()
-            group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
-            if space and group:
-                user_space = UserSpace.objects.create(space=space, user=request.user, active=False)
-                user_space.groups.add(group)
-                return HttpResponseRedirect(reverse('index'))
-            else:
-                if not space:
-                    print(f'WARNING: SOCIAL_DEFAULT_ACCESS is enabled but no Space exists. Cannot auto-assign user {request.user}.')
-                if not group:
-                    print(f'WARNING: SOCIAL_DEFAULT_GROUP={settings.SOCIAL_DEFAULT_GROUP!r} does not match any Group. Cannot auto-assign user {request.user}.')
-        if 'signup_token' in request.session:
-            return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
-
-        create_form = SpaceCreateForm(initial={'name': f'{request.user.get_user_display_name()}\'s Space'})
-        join_form = SpaceJoinForm()
-
-    return render(request, 'space_overview.html', {'create_form': create_form, 'join_form': join_form})
-
-
 @login_required
 def switch_space(request, space_id):
     space = get_object_or_404(Space, id=space_id)
@@ -391,7 +336,7 @@ def invite_link(request, token):
             return HttpResponseRedirect(reverse('index'))
         else:
             request.session['signup_token'] = str(token)
-            if settings.SOCIALACCOUNT_ONLY:
+            if settings.HIDE_LOGIN_FORM:
                 return HttpResponseRedirect('/account/login/')
             return HttpResponseRedirect('/account/signup/')
 

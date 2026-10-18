@@ -155,15 +155,21 @@ social login as the default but need a break-glass fallback for emergencies.
 HIDE_LOGIN_FORM=1
 ```
 
-**`SOCIALACCOUNT_ONLY`** — Fully disables local authentication at the allauth level. No password login,
-no password-based signup, no break-glass. Use this only if you are certain all users (including admins)
-will always authenticate through the social provider.
+[//]: # (**`SOCIALACCOUNT_ONLY`** — Fully disables local authentication at the allauth level. No password login,)
 
-> default `0` - options `0`, `1`
+[//]: # (no password-based signup, no break-glass. Use this only if you are certain all users &#40;including admins&#41;)
 
-```ini
-SOCIALACCOUNT_ONLY=1
-```
+[//]: # (will always authenticate through the social provider.)
+
+[//]: # ()
+[//]: # (> default `0` - options `0`, `1`)
+
+[//]: # ()
+[//]: # (```ini)
+
+[//]: # (SOCIALACCOUNT_ONLY=1)
+
+[//]: # (```)
 
 <!-- prettier-ignore -->
 !!! tip

@@ -2,7 +2,7 @@
     <v-app>
         <v-app-bar color="tandoor" flat density="comfortable" v-if="!useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode">
             <a href="https://tandoor.dev">
-                <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2" ></v-img>
+                <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2"></v-img>
             </a>
         </v-app-bar>
         <v-app-bar :color="useUserPreferenceStore().activeSpace.navBgColor ? useUserPreferenceStore().activeSpace.navBgColor : useUserPreferenceStore().userSettings.navBgColor"
@@ -36,6 +36,7 @@
                         <v-divider></v-divider>
 
                         <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getUserNavigation()"></component>
+                        <v-list-item prepend-icon="fa-solid fa-arrow-right-from-bracket" @click="logout()">{{ $t('Logout') }}</v-list-item>
                     </v-list>
                 </v-menu>
             </v-avatar>
@@ -129,15 +130,16 @@ import {toVuetifyLocale} from "@/vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
-import {nextTick, onMounted, ref} from "vue";
+import {nextTick, onMounted} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
 import {useTitle} from "@vueuse/core";
 import HelpDialog from "@/components/dialogs/HelpDialog.vue";
 import {useNavigation} from "@/composables/useNavigation.ts";
 import {useRouter} from "vue-router";
 import {useI18n} from "vue-i18n";
-import {THousehold, TSpace} from "@/types/Models.ts";
 import MenuUserInfo from "@/components/display/MenuUserInfo.vue";
+import {AuthenticationCurrentSessionApi} from "@/authapi";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 
 const {lgAndUp} = useDisplay()
 const {t} = useI18n()
@@ -149,7 +151,7 @@ onMounted(() => {
     init()
 })
 
-function init(){
+function init() {
     useUserPreferenceStore().init().then(() => {
         if (useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().activeSpace.spaceSetupCompleted) {
             router.push({name: 'WelcomePage'})
@@ -178,13 +180,13 @@ router.afterEach((to, from) => {
         !useUserPreferenceStore().activeSpace.householdSetupCompleted != undefined &&
         !useUserPreferenceStore().activeSpace.householdSetupCompleted &&
         useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id! &&
-        useUserPreferenceStore().activeUserSpace?.household == undefined ) {
+        useUserPreferenceStore().activeUserSpace?.household == undefined) {
         router.push({name: 'HouseholdPage'})
     } else if (to.name == 'LoginPage' && useUserPreferenceStore().initCompleted && useUserPreferenceStore().isAuthenticated) {
         router.push({name: 'StartPage'})
     }
 
-    if(from.fullPath.startsWith('/account/') && !to.fullPath.startsWith('/account/')){
+    if (from.fullPath.startsWith('/account/') && !to.fullPath.startsWith('/account/')) {
         init()
     }
 
@@ -196,6 +198,18 @@ router.afterEach((to, from) => {
         }
     })
 })
+
+function logout() {
+    let authenticationCurrentSessionApi = new AuthenticationCurrentSessionApi()
+
+    authenticationCurrentSessionApi.allauthClientV1AuthSessionDelete({client: "browser"}).then(r => {
+    }).catch(err => {
+
+    }).finally(() => {
+        useUserPreferenceStore().isAuthenticated = false
+        router.push({name: 'LoginPage'})
+    })
+}
 
 </script>
 

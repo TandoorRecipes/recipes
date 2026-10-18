@@ -13,13 +13,13 @@
 
         <v-row>
             <v-col>
-                <v-card>
+                <v-card :loading="loading">
                     <v-card-title>{{ $t('Login') }}</v-card-title>
                     <v-divider></v-divider>
-                    <v-card-text>
+                    <v-card-text v-if="!loading">
                         {{ $t('GenericSocialSignupError') }}
 
-                        <v-btn @click="authStatus">{{ $t('CheckAuthenticationStatus') }}</v-btn>
+                        <!--                        <v-btn @click="authStatus">{{ $t('CheckAuthenticationStatus') }}</v-btn>-->
 
                     </v-card-text>
 
@@ -33,10 +33,12 @@
 <script setup lang="ts">
 
 import {AuthenticationCurrentSessionApi, AuthenticationProvidersApi} from "@/authapi";
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
 
 const router = useRouter()
+
+const loading = ref(true)
 
 onMounted(() => {
     authStatus()
@@ -62,7 +64,11 @@ function authStatus() {
         }
     }).catch((error) => {
         console.log(error);
-    });
+    }).finally(() => {
+        setTimeout(() => {
+            loading.value = false
+        }, 400)
+    })
 
 
 }

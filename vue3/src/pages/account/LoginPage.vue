@@ -7,30 +7,33 @@
                     <v-divider></v-divider>
                     <v-card-text>
 
-                        <v-form>
+                        <v-form v-if="!useUserPreferenceStore().serverSettings.hideLoginForm">
                             <v-alert class="mb-4" v-if="generalError" type="warning">{{ generalError }}</v-alert>
 
                             <v-text-field :label="$t('Username')" autofocus v-model="username" :disabled="loading" :error-messages="usernameError" :error="!!usernameError"/>
                             <v-text-field :label="$t('Password')" type="password" v-model="password" :disabled="loading" @keyup.enter="login()" :error-messages="passwordError"
                                           :error="!!passwordError"/>
 
+                            <v-btn block @click="login()" variant="elevated" :loading="loading" :disabled="providerLoading != ''" color="success">{{ $t('Login') }}</v-btn>
                         </v-form>
 
+                        <v-divider v-if="socialProviders.length > 0" class="mt-5 mb-5">{{ $t('or') }}</v-divider>
                         <v-row>
                             <v-col md="6" cols="12" v-for="p in socialProviders" :key="p.id">
-                                <v-btn block @click="startProviderFlow(p.id)">{{ p.name }}</v-btn>
+                                <v-btn block @click="startProviderFlow(p.id)" :disabled="providerLoading != ''" :loading="providerLoading == p.id">{{ p.name }}</v-btn>
                             </v-col>
                         </v-row>
 
-                        <!-- TODO email send screen -->
-
-                        <!-- TODO reset screen when GET param is present -->
+                        <v-row>
+                            <v-col>
+                                <v-divider v-if="useUserPreferenceStore().serverSettings.enableSignup" class="mb-5">{{ $t('or') }}</v-divider>
+                                <v-btn block :to="{name: 'SignUpPage'}" variant="elevated"  :disabled="providerLoading != ''|| loading" color="info"
+                                       v-if="useUserPreferenceStore().serverSettings.enableSignup">{{ $t('SignUp') }}
+                                </v-btn>
+                            </v-col>
+                        </v-row>
 
                     </v-card-text>
-                    <v-card-actions>
-                        <v-btn :to="{name: 'SignUpPage'}" variant="elevated" :loading="loading" color="info">{{ $t('SignUp') }}</v-btn>
-                        <v-btn type="submit" @click="login()" variant="elevated" :loading="loading" color="primary">{{ $t('Login') }}</v-btn>
-                    </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
@@ -39,6 +42,7 @@
             <v-col>
                 <div class="text-center mt-2">
                     <router-link :to="{name: 'PasswordResetPage'}">{{ $t('ForgotPassword') }}</router-link>
+                    <a href="#">Test</a>
                 </div>
             </v-col>
         </v-row>
@@ -60,6 +64,7 @@ const router = useRouter()
 const {t} = useI18n()
 
 const loading = ref(false)
+const providerLoading = ref("")
 const username = ref('')
 const password = ref('')
 
@@ -73,6 +78,8 @@ const next = useRouter().currentRoute.value.query.next
 
 onMounted(() => {
     loadProviders()
+
+    useUserPreferenceStore().loadServerSettings()
 })
 
 function login() {
@@ -116,8 +123,6 @@ function login() {
             console.error(e)
             useMessageStore().addError(ErrorMessageType.UPDATE_ERROR, err)
         }
-
-    }).finally(() => {
         loading.value = false
     })
 }
@@ -136,20 +141,16 @@ function loadProviders() {
 
 function startProviderFlow(provider: string) {
 
-    const nextRoute = router.currentRoute.value.query.next;
-    const targetPath = typeof nextRoute === 'string' ? nextRoute : '/';
-    const callbackUrl = `${window.location.origin}${targetPath}`;
-
-    // TODO callback is always a central page in the react example, maybe I need this for propeper error handling https://github.com/pennersr/django-allauth/tree/main/examples/react-spa
+    providerLoading.value = provider
 
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = '/_allauth/browser/v1/auth/provider/redirect';
+    form.action = useDjangoUrls().getDjangoUrl(`/_allauth/browser/v1/auth/provider/redirect`, false);
 
     const fields: Record<string, string> = {
         provider: provider,
         process: 'login',
-        callback_url:  useDjangoUrls().getDjangoUrl(`/account/social-signup/`),
+        callback_url: useDjangoUrls().getDjangoUrl(`/account/social-signup/`),
     };
 
     const csrfToken = getCookie('csrftoken');

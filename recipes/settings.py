@@ -279,15 +279,16 @@ AUTH_PASSWORD_VALIDATORS = [
 ##################################################################
 
 ENABLE_SIGNUP = extract_bool('ENABLE_SIGNUP', False)
+HIDE_LOGIN_FORM = bool(int(os.getenv('HIDE_LOGIN_FORM', False)))
 
 SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
 SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
 
-HIDE_LOGIN_FORM = bool(int(os.getenv('HIDE_LOGIN_FORM', False)))
-
 ##################################################################
 ####### AllAuth specific auth settings
 ##################################################################
+
+HEADLESS_ONLY = True
 
 ALLAUTH_TRUSTED_PROXY_COUNT = int(os.getenv('ALLAUTH_TRUSTED_PROXY_COUNT', 1))
 
@@ -304,7 +305,6 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', ]
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 90
-ACCOUNT_LOGOUT_ON_GET = True
 
 USERSESSIONS_TRACK_ACTIVITY = True
 HEADLESS_SERVE_SPECIFICATION = True
@@ -346,7 +346,6 @@ SOCIALACCOUNT_EMAIL_AUTHENTICATION = extract_bool('SOCIALACCOUNT_EMAIL_AUTHENTIC
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = extract_bool('SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT', False)
 SOCIALACCOUNT_LOGIN_ON_GET = extract_bool('SOCIALACCOUNT_LOGIN_ON_GET', False)
 SOCIALACCOUNT_AUTO_SIGNUP = extract_bool('SOCIALACCOUNT_AUTO_SIGNUP', True)
-SOCIALACCOUNT_ONLY = extract_bool('SOCIALACCOUNT_ONLY', False)
 
 INSTALLED_APPS = INSTALLED_APPS + SOCIAL_PROVIDERS
 
@@ -408,8 +407,8 @@ if REMOTE_USER_AUTH:
 ##################################################################
 # TODO move to a proper config check warning module/page
 
-if SOCIALACCOUNT_ONLY and not SOCIAL_PROVIDERS:
-    print('WARNING: SOCIALACCOUNT_ONLY is enabled but no SOCIAL_PROVIDERS are configured. Users will be unable to log in!')
+# if SOCIALACCOUNT_ONLY and not SOCIAL_PROVIDERS:
+#     print('WARNING: SOCIALACCOUNT_ONLY is enabled but no SOCIAL_PROVIDERS are configured. Users will be unable to log in!')
 if HIDE_LOGIN_FORM and not SOCIAL_PROVIDERS and not REMOTE_USER_AUTH:
     print('WARNING: HIDE_LOGIN_FORM is enabled but no SOCIAL_PROVIDERS or REMOTE_USER_AUTH are configured. Users will be unable to log in!')
 if SOCIALACCOUNT_EMAIL_AUTHENTICATION and not SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT and os.getenv('EMAIL_HOST', '') == '':

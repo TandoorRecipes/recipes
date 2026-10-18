@@ -87,10 +87,22 @@ export interface ServerSettings {
     forceThemeFromSpace: number;
     /**
      * 
+     * @type {boolean}
+     * @memberof ServerSettings
+     */
+    enableSignup: boolean;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof ServerSettings
+     */
+    hideLoginForm: boolean;
+    /**
+     * 
      * @type {string}
      * @memberof ServerSettings
      */
-    logoColor32?: string;
+    logoColor32?: string | null;
     /**
      * 
      * @type {string}
@@ -162,6 +174,8 @@ export function instanceOfServerSettings(value: object): value is ServerSettings
     if (!('email' in value) || value['email'] === undefined) return false;
     if (!('unauthenticatedThemeFromSpace' in value) || value['unauthenticatedThemeFromSpace'] === undefined) return false;
     if (!('forceThemeFromSpace' in value) || value['forceThemeFromSpace'] === undefined) return false;
+    if (!('enableSignup' in value) || value['enableSignup'] === undefined) return false;
+    if (!('hideLoginForm' in value) || value['hideLoginForm'] === undefined) return false;
     return true;
 }
 
@@ -186,6 +200,8 @@ export function ServerSettingsFromJSONTyped(json: any, ignoreDiscriminator: bool
         'email': json['email'],
         'unauthenticatedThemeFromSpace': json['unauthenticated_theme_from_space'],
         'forceThemeFromSpace': json['force_theme_from_space'],
+        'enableSignup': json['enable_signup'],
+        'hideLoginForm': json['hide_login_form'],
         'logoColor32': json['logo_color_32'] == null ? undefined : json['logo_color_32'],
         'logoColor128': json['logo_color_128'] == null ? undefined : json['logo_color_128'],
         'logoColor144': json['logo_color_144'] == null ? undefined : json['logo_color_144'],
@@ -221,6 +237,8 @@ export function ServerSettingsToJSONTyped(value?: ServerSettings | null, ignoreD
         'email': value['email'],
         'unauthenticated_theme_from_space': value['unauthenticatedThemeFromSpace'],
         'force_theme_from_space': value['forceThemeFromSpace'],
+        'enable_signup': value['enableSignup'],
+        'hide_login_form': value['hideLoginForm'],
         'logo_color_32': value['logoColor32'],
         'logo_color_128': value['logoColor128'],
         'logo_color_144': value['logoColor144'],

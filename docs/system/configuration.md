@@ -389,7 +389,8 @@ SOCIALACCOUNT_PROVIDERS='{"openid_connect":{"APPS":[{"provider_id":"myidp","name
 | `SOCIALACCOUNT_PROVIDERS` | — | Provider configuration (JSON or Python dict) |
 | `SOCIALACCOUNT_PROVIDERS_FILE` | — | Path to file containing provider configuration |
 | `HIDE_LOGIN_FORM` | `0` | Hide local login form, break-glass via `?form=1` ([details](../features/authentication.md#social-only-authentication)) |
-| `SOCIALACCOUNT_ONLY` | `0` | Fully disable local auth ([details](../features/authentication.md#social-only-authentication)) |
+
+[//]: # (| `SOCIALACCOUNT_ONLY` | `0` | Fully disable local auth &#40;[details]&#40;../features/authentication.md#social-only-authentication&#41;&#41; |)
 | `SOCIALACCOUNT_LOGIN_ON_GET` | `0` | Skip confirmation page ([details](../features/authentication.md#skipping-the-confirmation-page)) |
 | `SOCIALACCOUNT_AUTO_SIGNUP` | `1` | Auto-create accounts on social login ([details](../features/authentication.md#controlling-social-signup)) |
 | `SOCIALACCOUNT_EMAIL_AUTHENTICATION` | `0` | Match social logins to existing accounts by email ([details](../features/authentication.md#email-based-account-matching)) |

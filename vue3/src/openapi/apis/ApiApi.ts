@@ -2845,7 +2845,7 @@ export interface ApiUserFileCreateRequest {
     createdBy: User;
     createdAt: Date;
     id?: number;
-    file?: string;
+    file?: string | null;
 }
 
 export interface ApiUserFileDestroyRequest {
@@ -2872,7 +2872,7 @@ export interface ApiUserFilePartialUpdateRequest {
     id: number;
     id2?: number;
     name?: string;
-    file?: string;
+    file?: string | null;
     fileDownload?: string;
     preview?: string;
     fileSizeKb?: number;
@@ -2900,7 +2900,7 @@ export interface ApiUserFileUpdateRequest {
     createdBy: User;
     createdAt: Date;
     id2?: number;
-    file?: string;
+    file?: string | null;
 }
 
 export interface ApiUserListRequest {

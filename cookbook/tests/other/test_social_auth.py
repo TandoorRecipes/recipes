@@ -252,12 +252,12 @@ def test_invite_link_unauthenticated_redirects_to_signup(client, invite_link):
 
 
 
-@override_settings(SOCIALACCOUNT_ONLY=True)
-def test_invite_link_unauthenticated_social_only_redirects_to_login(client, invite_link):
-    """With SOCIALACCOUNT_ONLY, unauthenticated user should be redirected to login."""
-    response = client.get(f'/invite/{invite_link.uuid}')
-    assert response.status_code == 302
-    assert '/accounts/login/' in response.url
+# @override_settings(SOCIALACCOUNT_ONLY=True)
+# def test_invite_link_unauthenticated_social_only_redirects_to_login(client, invite_link):
+#     """With SOCIALACCOUNT_ONLY, unauthenticated user should be redirected to login."""
+#     response = client.get(f'/invite/{invite_link.uuid}')
+#     assert response.status_code == 302
+#     assert '/accounts/login/' in response.url
 
 
 

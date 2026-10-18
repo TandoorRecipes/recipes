@@ -3262,6 +3262,8 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         s['version'] = TANDOOR_VERSION
         s['unauthenticated_theme_from_space'] = settings.UNAUTHENTICATED_THEME_FROM_SPACE
         s['force_theme_from_space'] = settings.FORCE_THEME_FROM_SPACE
+        s['enable_signup'] = settings.ENABLE_SIGNUP
+        s['hide_login_form'] = settings.HIDE_LOGIN_FORM
 
         # include the settings handled by the space
         space = None
