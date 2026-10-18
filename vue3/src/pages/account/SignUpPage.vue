@@ -1,0 +1,144 @@
+<template>
+    <v-container style="max-width: 450px; margin: auto;">
+
+
+        <v-row>
+            <v-col>
+                <v-card>
+                    <v-card-text class="pt-2 pb-2">
+                        <v-btn variant="flat" @click="router.push({name: 'LoginPage'})" prepend-icon="fa-solid fa-arrow-left">{{ $t('Login') }}</v-btn>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col>
+                <v-card>
+
+                    <v-card-title>{{ $t('SignUp') }}</v-card-title>
+                    <v-divider></v-divider>
+                    <v-card-text>
+
+                        <v-form v-if="!awaitingEmailConfirmation">
+                            <v-alert class="mb-4" v-if="generalError" type="warning">{{ generalError }}</v-alert>
+                            <v-text-field :label="$t('Email')" v-model="email" :error-messages="emailError" :error="!!emailError"></v-text-field>
+                            <v-text-field :label="$t('Username')" v-model="username" :error-messages="usernameError" :error="!!usernameError"
+                                          @change="usernameManuallyChanged = true"></v-text-field>
+
+                            <v-checkbox v-model="consent" :error="!!consentError" :error-messages="consentError"class="mb-4">
+                                <template #label>
+                                    {{ $t('AcceptPrivacyTerms') }}
+                                </template>
+                                <template #details>
+                                    <a :href="useUserPreferenceStore().serverSettings.privacyUrl" v-if="useUserPreferenceStore().serverSettings.privacyUrl" target="_blank"
+                                       class="me-4">{{ $t('PrivacyPolicy') }}</a>
+                                    <a :href="useUserPreferenceStore().serverSettings.termsUrl" v-if="useUserPreferenceStore().serverSettings.termsUrl" target="_blank" class="me-4">
+                                        {{ $t('TermsOfService') }}</a>
+                                </template>
+                            </v-checkbox>
+
+
+                            <v-btn block variant="elevated" :loading="loading" color="success" @click="createAccount()" v-if="!awaitingEmailConfirmation">{{ $t('SignUp') }}</v-btn>
+
+                        </v-form>
+
+                        <span v-if="awaitingEmailConfirmation">
+                            {{ $t('PleaseConfirmMail') }}
+                        </span>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+
+    </v-container>
+</template>
+
+<script setup lang="ts">
+
+import {onMounted, ref, watch} from "vue";
+import {AuthenticationAccountApi} from "@/authapi";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
+import {useI18n} from "vue-i18n";
+import {useRouter} from "vue-router";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+
+const router = useRouter()
+const {t} = useI18n()
+
+const loading = ref(false)
+
+const email = ref('')
+const username = ref('')
+const consent = ref(false)
+const usernameManuallyChanged = ref(false)
+
+const generalError = ref('')
+const emailError = ref('')
+const usernameError = ref('')
+const consentError = ref('')
+
+const awaitingEmailConfirmation = ref(false)
+
+watch(() => email.value, (newValue) => {
+    if (!usernameManuallyChanged.value && email.value.length > 0 && email.value.split('@').length > 0) {
+        username.value = email.value.split('@')[0]
+    }
+})
+
+onMounted(() => {
+    useUserPreferenceStore().loadServerSettings()
+})
+
+function createAccount() {
+    if ((useUserPreferenceStore().serverSettings.termsUrl || useUserPreferenceStore().serverSettings.privacyUrl) && !consent.value) {
+        consentError.value = t('FieldRequired')
+    } else {
+        let authenticationAccountApi = new AuthenticationAccountApi()
+        loading.value = true
+
+        authenticationAccountApi.allauthClientV1AuthSignupPost({client: 'browser', signup: {email: email.value, username: username.value, password: ''}}).then(r => {
+            if (r.meta.isAuthenticated) {
+                setTimeout(() => {
+                    router.push({name: 'StartPage'})
+                    loading.value = false
+                }, 1000)
+            }
+        }).catch(err => {
+            try {
+                err.response.json().then(responseJson => {
+                    if (responseJson.status == 429) {
+                        generalError.value = t('RateLimitHelp')
+                    } else if (responseJson.status == 401) {
+                        if (responseJson.meta.is_authenticated) {
+                            router.push({name: 'StartPage'})
+                        } else {
+                            awaitingEmailConfirmation.value = true
+                        }
+                    } else {
+                        responseJson.errors.forEach(error => {
+                            if (error.param == 'email') {
+                                emailError.value = error.message
+                            } else if (error.param == 'username') {
+                                usernameError.value = error.message
+                            } else {
+                                generalError.value += error.message + ' (' + error.param + ')\n'
+                            }
+                        })
+
+                    }
+                })
+            } catch (e) {
+                console.error(e)
+                useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+            }
+            loading.value = false
+        })
+    }
+}
+
+</script>
+
+<style scoped>
+
+</style>

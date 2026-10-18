@@ -16,6 +16,13 @@ import {TANDOOR_PLUGINS, TandoorPlugin} from "@/types/Plugins.ts";
 
 let routes = [
     {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'StartPage'},
+    // auth related views
+    {path: '/account/login', component: () => import("@/pages/account/LoginPage.vue"), name: 'LoginPage' , meta: {title: 'Login'}},
+    {path: '/account/signup', component: () => import("@/pages/account/SignUpPage.vue"), name: 'SignUpPage' , meta: {title: 'SignUp'}},
+    {path: '/account/social-signup/', component: () => import("@/pages/account/SocialSignupPage.vue"), name: 'SocialSignupPage' , meta: {title: 'SignUp'}},
+    {path: '/account/password-reset', component: () => import("@/pages/account/PasswordResetPage.vue"), name: 'PasswordResetPage' , meta: {title: 'PasswordReset'}},
+    {path: '/account/email-confirm', component: () => import("@/pages/account/EmailConfirmPage.vue"), name: 'EmailConfirmPage' , meta: {title: 'EmailConfirmation'}},
+
     {path: '/search', redirect: {name: 'StartPage'}},
     {path: '/test', component: () => import("@/pages/TestPage.vue"), name: 'view_test'},
     {path: '/welcome', component: () => import("@/pages/WelcomePage.vue"), name: 'WelcomePage', meta: {title: 'Welcome'}},
@@ -49,8 +56,9 @@ let routes = [
 ]
 
 let settings = {
-    path: '/settings', component: () => import("@/pages/SettingsPage.vue"), name: 'SettingsPage', redirect: '/settings/account',
+    path: '/settings', component: () => import("@/pages/SettingsPage.vue"), name: 'SettingsPage', redirect: '/settings/profile',
     children: [
+        {path: 'profile', component: () => import("@/components/settings/ProfileSettings.vue"), name: 'ProfileSettings', meta: {title: 'Settings'}},
         {path: 'account', component: () => import("@/components/settings/AccountSettings.vue"), name: 'AccountSettings', meta: {title: 'Settings'}},
         {path: 'cosmetic', component: () => import("@/components/settings/CosmeticSettings.vue"), name: 'CosmeticSettings', meta: {title: 'Settings'}},
         {path: 'shopping', component: () => import("@/components/settings/ShoppingSettings.vue"), name: 'ShoppingSettings', meta: {title: 'Settings'}},

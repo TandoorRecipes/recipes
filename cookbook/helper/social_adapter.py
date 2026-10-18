@@ -5,7 +5,11 @@ from datetime import timedelta
 
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.conf import settings
+from django.contrib.auth.models import Group
 from django.utils import timezone
+
+from cookbook.helper.permission_helper import create_space_for_user, process_invite_token
+from cookbook.models import Space, UserSpace
 
 _ERROR_FILE = os.path.join(settings.MEDIA_ROOT, '.social_login_errors.json')
 _MAX_ERRORS = 50
@@ -46,13 +50,32 @@ def _store_error(error_entry):
 
 class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
 
+    def is_open_for_signup(self, request, sociallogin):
+        """
+        Whether to allow sign-ups.
+        """
+        if not settings.ENABLE_SIGNUP:
+            return False
+
+        # OAuth callbacks, headless, and other flows: defer to default
+        return super().is_open_for_signup(request, sociallogin)
+
     def pre_social_login(self, request, sociallogin):
-        """Warn when email matching is skipped due to unverified provider emails."""
+        """
+        pre-login check
+        - when SOCIALACCOUNT_EMAIL_AUTHENTICATION is enabled cheks if the provider has unverified emails that are just not linked and provides a warning
+        - checks if social login/signup could not be completed due to conflicting usernames/emails.
+        :param request:
+        :param sociallogin:
+        :return:
+        """
+        # if its an existing account and its linked, just sign in
         if sociallogin.is_existing:
             return
 
         from allauth.account.utils import filter_users_by_email
 
+        # if auto linking is not enabled, no warning is required
         if not getattr(settings, 'SOCIALACCOUNT_EMAIL_AUTHENTICATION', False):
             return
 
@@ -104,3 +127,26 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
         })
 
         super().on_authentication_error(request, provider, error=error, exception=exception, extra_context=extra_context)
+
+    def save_user(self, request, sociallogin, form=None):
+        """
+        create a default space for new users
+        """
+        user = super().save_user(request, sociallogin, form=form)
+
+        if settings.SOCIAL_DEFAULT_ACCESS:
+            space = Space.objects.first()
+            group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
+            if space and group:
+                user_space = UserSpace.objects.create(space=space, user=request.user, active=False)
+                user_space.groups.add(group)
+
+        if 'signup_token' in request.session:
+            value = request.session['signup_token']
+            del request.session['signup_token']
+            request.session.modified = True
+            process_invite_token(user, value)
+
+        create_space_for_user(user)
+
+        return user

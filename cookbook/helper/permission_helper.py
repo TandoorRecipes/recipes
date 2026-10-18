@@ -8,6 +8,7 @@ from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
@@ -16,7 +17,7 @@ from oauth2_provider.settings import oauth2_settings
 from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS
 import random
-from cookbook.models import Recipe, ShareLink, UserSpace, Space
+from cookbook.models import Recipe, ShareLink, UserSpace, Space, InviteLink
 
 
 def get_allowed_groups(groups_required):
@@ -567,3 +568,25 @@ def create_space_for_user(user, name=None):
         user_space.groups.add(Group.objects.filter(name='admin').get())
 
         return user_space
+
+
+def process_invite_token(user, token):
+    """
+    given a user and a token, process the invite link and create the appropriate user space
+    :param user:
+    :param token:
+    :return:
+    """
+    if link := InviteLink.objects.filter(valid_until__gte=timezone.now().date(), used_by=None, uuid=token).first():
+        if user.is_authenticated:
+            if not user.userspace_set.filter(space=link.space).exists():
+                if not link.reusable:
+                    link.used_by = user
+                    link.save()
+
+                UserSpace.objects.filter(user=user).update(active=False)
+                user_space = UserSpace.objects.create(user=user, space=link.space, internal_note=link.internal_note, invite_link=link, household=link.household,
+                                                      active=True)
+                user_space.groups.add(link.group)
+                return True
+    return False

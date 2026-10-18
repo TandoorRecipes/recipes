@@ -1944,9 +1944,12 @@ class ServerSettingsSerializer(serializers.Serializer):
     hosted = serializers.BooleanField()
     debug = serializers.BooleanField()
     version = serializers.CharField()
+    email = serializers.BooleanField()
 
     unauthenticated_theme_from_space = serializers.IntegerField()
     force_theme_from_space = serializers.IntegerField()
+    enable_signup = serializers.BooleanField()
+    socialaccount_only = serializers.BooleanField()
 
     logo_color_32 = serializers.ImageField(default=None)
     logo_color_128 = serializers.CharField(default=None)

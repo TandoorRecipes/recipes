@@ -94,7 +94,7 @@ export function useNavigation() {
             })
         })
 
-        navigation.push({component: VListItem, prependIcon: 'fa-solid fa-arrow-right-from-bracket', title: t('Logout'), href: useDjangoUrls().getDjangoUrl('accounts/logout')})
+        //navigation.push({component: VListItem, prependIcon: 'fa-solid fa-arrow-right-from-bracket', title: t('Logout'), href: useDjangoUrls().getDjangoUrl('accounts/logout')})
 
         return navigation
     }

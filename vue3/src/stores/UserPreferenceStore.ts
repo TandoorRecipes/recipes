@@ -146,7 +146,9 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         return api.apiServerSettingsCurrentRetrieve().then(r => {
             serverSettings.value = r
         }).catch(err => {
-            useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            if (err.response.status != 403) {
+                useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+            }
         })
     }
 

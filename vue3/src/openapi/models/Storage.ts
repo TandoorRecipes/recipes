@@ -20,6 +20,13 @@ import {
     MethodEnumToJSON,
     MethodEnumToJSONTyped,
 } from './MethodEnum';
+import type { ConnectorConfigUrl } from './ConnectorConfigUrl';
+import {
+    ConnectorConfigUrlFromJSON,
+    ConnectorConfigUrlFromJSONTyped,
+    ConnectorConfigUrlToJSON,
+    ConnectorConfigUrlToJSONTyped,
+} from './ConnectorConfigUrl';
 
 /**
  * Adds nested create feature
@@ -65,10 +72,10 @@ export interface Storage {
     token?: string | null;
     /**
      * 
-     * @type {string}
+     * @type {ConnectorConfigUrl}
      * @memberof Storage
      */
-    url?: string | null;
+    url?: ConnectorConfigUrl | null;
     /**
      * 
      * @type {string}
@@ -110,7 +117,7 @@ export function StorageFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
         'username': json['username'] == null ? undefined : json['username'],
         'password': json['password'] == null ? undefined : json['password'],
         'token': json['token'] == null ? undefined : json['token'],
-        'url': json['url'] == null ? undefined : json['url'],
+        'url': json['url'] == null ? undefined : ConnectorConfigUrlFromJSON(json['url']),
         'path': json['path'] == null ? undefined : json['path'],
         'createdBy': json['created_by'],
     };
@@ -133,7 +140,7 @@ export function StorageToJSONTyped(value?: Omit<Storage, 'created_by'> | null, i
         'username': value['username'],
         'password': value['password'],
         'token': value['token'],
-        'url': value['url'],
+        'url': ConnectorConfigUrlToJSON(value['url']),
         'path': value['path'],
     };
 }
