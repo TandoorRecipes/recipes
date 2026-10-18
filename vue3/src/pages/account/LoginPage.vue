@@ -20,9 +20,8 @@
                         <v-divider v-if="socialProviders.length > 0 && !useUserPreferenceStore().serverSettings.socialaccountOnly" class="mt-5 mb-5">{{ $t('or') }}</v-divider>
                         <v-row>
                             <v-col md="6" cols="12" v-for="p in socialProviders" :key="p.id">
-                                <v-btn block @click="startProviderFlow(p.id)" :disabled="providerLoading != '' || loading" :loading="providerLoading == p.id" variant="outlined">{{
-                                        p.name
-                                    }}
+                                <v-btn block @click="startProviderFlow(p.id)" :disabled="providerLoading != '' || loading" :loading="providerLoading == p.id" variant="outlined">
+                                    {{  p.name }}
                                 </v-btn>
                             </v-col>
                         </v-row>
@@ -30,9 +29,7 @@
                         <v-row v-if="useUserPreferenceStore().serverSettings.enableSignup && !useUserPreferenceStore().serverSettings.socialaccountOnly">
                             <v-col>
                                 <v-divider class="mb-5">{{ $t('or') }}</v-divider>
-                                <v-btn block :to="{name: 'SignUpPage'}" variant="elevated" :disabled="providerLoading != ''|| loading" color="info"
-                                       v-if="useUserPreferenceStore().serverSettings.enableSignup">{{ $t('SignUp') }}
-                                </v-btn>
+                                <v-btn block :to="{name: 'SignUpPage'}" variant="elevated" :disabled="providerLoading != ''|| loading" color="info" >{{ $t('SignUp') }}</v-btn>
                             </v-col>
                         </v-row>
 

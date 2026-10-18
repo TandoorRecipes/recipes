@@ -27,7 +27,7 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
 
-from cookbook.forms import Recipe, SpaceCreateForm, SpaceJoinForm, User, UserCreateForm
+from cookbook.forms import Recipe, User, UserCreateForm
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, has_group_permission, share_link_valid, switch_user_active_space, process_invite_token, \
     create_space_for_user

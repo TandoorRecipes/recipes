@@ -36,13 +36,28 @@ class ScopeMiddleware:
                 return self.get_response(request)
 
         # views that should be served with scopes_disabled
-        NO_SCOPE_VIEWS = ['/admin']
+        NO_SCOPE_VIEWS = [
+            '/admin'  # needs to be exempt from scopes otherwise admin wont work
+        ]
         # views that should be served even when no space context is available
-        NO_SPACE_VIEWS = ['/accounts', '/switch-space']  # TODO verify this is all still needed in v2
+        NO_SPACE_VIEWS = []
         # views that should be served without redirection when not authenticated
-        # TODO remove '/accounts'
-        NO_AUTH_VIEWS = ['/setup/', '/accounts', '/invite', '/account/login', '/account/signup', '/account/password-reset', '/account/email-confirm', '/account/social-signup',
-                         '/manifest.json', '/_allauth', '/openapi', '/api/server-settings/current', '/admin']
+        NO_AUTH_VIEWS = ['/media/',  # media is typically public, needed for recipe sharing pictures
+                         '/setup/',  # initial setup page
+                         '/accounts',  # HEADLESS_ONLY disabled most views here but required for 3rd party redirects
+                         '/invite',  # invite link handler needs to be public
+                         '/manifest.json',  # manifest should be on start page as well
+                         '/_allauth',  # auth apis have their own auth handling
+                         '/openapi',  # api client is public
+                         '/api/server-settings/current',  # server settings are needed to control layout on login page
+                         # views for unauthenticated users
+                         '/account/login',
+                         '/account/signup',
+                         '/account/password-reset',
+                         '/account/email-confirm',
+                         '/account/social-signup',
+                         ]
+
         if settings.DEBUG:
             NO_AUTH_VIEWS.append('/__debug__/')
 

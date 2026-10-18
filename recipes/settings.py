@@ -277,7 +277,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ####### Tandoor specific auth settings
 ##################################################################
 
-ENABLE_SIGNUP = False#extract_bool('ENABLE_SIGNUP', False)
+ENABLE_SIGNUP = extract_bool('ENABLE_SIGNUP', False)
 SOCIALACCOUNT_ONLY = extract_bool('SOCIALACCOUNT_ONLY', False)
 
 SOCIAL_DEFAULT_ACCESS = extract_bool('SOCIAL_DEFAULT_ACCESS', False)
