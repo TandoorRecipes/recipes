@@ -7,7 +7,7 @@
                     <v-divider></v-divider>
                     <v-card-text>
 
-                        <v-form v-if="!useUserPreferenceStore().serverSettings.socialaccountOnly">
+                        <v-form v-if="!useUserPreferenceStore().serverSettings.socialaccountOnly" class="mb-5">
                             <v-alert class="mb-4" v-if="generalError" type="warning">{{ generalError }}</v-alert>
 
                             <v-text-field :label="$t('Username')" autofocus v-model="username" :disabled="loading" :error-messages="usernameError" :error="!!usernameError"/>
