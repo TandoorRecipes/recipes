@@ -317,8 +317,8 @@ ACCOUNT_RATE_LIMITS = {
     "change_password": "1/m/user",
     "reset_password": "1/m/ip,1/m/key",
     "reset_password_from_key": "1/m/ip",
-    "signup": "5/m/ip",
-    "login": "5/m/ip",
+    "signup": "1/m/ip",
+    "login": "3/m/ip",
 }
 
 HEADLESS_FRONTEND_URLS = {
@@ -340,11 +340,9 @@ HEADLESS_FRONTEND_URLS = {
 ##################################################################
 
 SOCIAL_PROVIDERS = extract_comma_list('SOCIAL_PROVIDERS')
-SOCIALACCOUNT_EMAIL_VERIFICATION = 'none'
+SOCIALACCOUNT_EMAIL_VERIFICATION = ACCOUNT_EMAIL_VERIFICATION
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = extract_bool('SOCIALACCOUNT_EMAIL_AUTHENTICATION', False)
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = extract_bool('SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT', False)
-SOCIALACCOUNT_LOGIN_ON_GET = extract_bool('SOCIALACCOUNT_LOGIN_ON_GET', False)
-SOCIALACCOUNT_AUTO_SIGNUP = extract_bool('SOCIALACCOUNT_AUTO_SIGNUP', True)
 
 INSTALLED_APPS = INSTALLED_APPS + SOCIAL_PROVIDERS
 
@@ -447,6 +445,7 @@ if ENABLE_METRICS:
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
+        'allauth.headless.contrib.rest_framework.authentication.XSessionTokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
         'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
     ),

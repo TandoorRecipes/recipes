@@ -1,8 +1,9 @@
 import re
 
+from allauth.headless.contrib.rest_framework.authentication import XSessionTokenAuthentication
 from django.contrib.auth.models import User
 from django.db import transaction
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
@@ -92,18 +93,29 @@ class ScopeMiddleware:
             with scope(space=request.space):
                 return self.get_response(request)
         else:
-            # annotate space to requests to api with token auth
-            if request.path.startswith(prefix + '/api/'):
-                try:
-                    if auth := OAuth2Authentication().authenticate(request):
-                        user_space = auth[0].userspace_set.filter(active=True).first()
-                        if user_space:
-                            request.space = user_space.space
-                            request.user_space = user_space
-                            with scope(space=request.space):
-                                return self.get_response(request)
-                except AuthenticationFailed:
-                    return self.get_response(request)
+            # if unauthenticated requests come to the API try authenticating the user trough the OAuth (bearer) token or the session token (django allauth)
+            if request.path.startswith(prefix + '/api/') or request.path.startswith(prefix + '/_allauth/') :
+                authenticators = (
+                    OAuth2Authentication(),
+                    XSessionTokenAuthentication(),
+                )
+                for authenticator in authenticators:
+                    try:
+                        # if the user could be authenticated annotate the space to the request
+                        if auth := authenticator.authenticate(request):
+                            user = auth[0]
+                            request.user = user
+                            user_space = user.userspace_set.filter(active=True).first()
+                            if user_space:
+                                request.space = user_space.space
+                                request.user_space = user_space
+                                with scope(space=request.space):
+                                    return self.get_response(request)
+                    except Exception:
+                        pass
+
+                # if not authentication succeeds return 403 as redirection to login makes no sense for an API
+                return JsonResponse({'detail': 'Authentication credentials were not provided or access is forbidden.'}, status=403)
 
             # allow frontend to be served for shared recipe links
             if re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
@@ -118,8 +130,10 @@ class ScopeMiddleware:
                     with scopes_disabled():
                         return self.get_response(request)
 
+            # allow unauthenticated and space-less callbacks from external auth providers
             if re.match(rf'^{re.escape(prefix)}/accounts/(?:openid_connect/)?[a-zA-Z0-9_-]+/login/callback/?$', request.path):
                 with scopes_disabled():
                     return self.get_response(request)
 
+            # redirect everything that wasn't handled above to login
             return HttpResponseRedirect('/account/login/?next=' + request.path)

@@ -339,7 +339,7 @@ def invite_link(request, token):
             return HttpResponseRedirect(reverse('index'))
         else:
             request.session['signup_token'] = str(token)
-            if settings.HIDE_LOGIN_FORM:
+            if settings.SOCIALACCOUNT_ONLY:
                 return HttpResponseRedirect('/account/login/')
             return HttpResponseRedirect('/account/signup/')
 
