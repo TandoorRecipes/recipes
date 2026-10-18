@@ -93,6 +93,24 @@ class ScopeMiddleware:
             with scope(space=request.space):
                 return self.get_response(request)
         else:
+            # allow frontend to be served for shared recipe links
+            if re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
+                request.space = None
+                with scopes_disabled():
+                    return self.get_response(request)
+
+            # allow frontend to be served for public pages
+            for nav in NO_AUTH_VIEWS:
+                if request.path.startswith(prefix + nav):
+                    request.space = None
+                    with scopes_disabled():
+                        return self.get_response(request)
+
+            # allow unauthenticated and space-less callbacks from external auth providers
+            if re.match(rf'^{re.escape(prefix)}/accounts/(?:openid_connect/)?[a-zA-Z0-9_-]+/login/callback/?$', request.path):
+                with scopes_disabled():
+                    return self.get_response(request)
+
             # if unauthenticated requests come to the API try authenticating the user trough the OAuth (bearer) token or the session token (django allauth)
             if request.path.startswith(prefix + '/api/') or request.path.startswith(prefix + '/_allauth/') :
                 authenticators = (
@@ -116,24 +134,6 @@ class ScopeMiddleware:
 
                 # if not authentication succeeds return 403 as redirection to login makes no sense for an API
                 return JsonResponse({'detail': 'Authentication credentials were not provided or access is forbidden.'}, status=403)
-
-            # allow frontend to be served for shared recipe links
-            if re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
-                request.space = None
-                with scopes_disabled():
-                    return self.get_response(request)
-
-            # allow frontend to be served for public pages
-            for nav in NO_AUTH_VIEWS:
-                if request.path.startswith(prefix + nav):
-                    request.space = None
-                    with scopes_disabled():
-                        return self.get_response(request)
-
-            # allow unauthenticated and space-less callbacks from external auth providers
-            if re.match(rf'^{re.escape(prefix)}/accounts/(?:openid_connect/)?[a-zA-Z0-9_-]+/login/callback/?$', request.path):
-                with scopes_disabled():
-                    return self.get_response(request)
 
             # redirect everything that wasn't handled above to login
             return HttpResponseRedirect('/account/login/?next=' + request.path)
