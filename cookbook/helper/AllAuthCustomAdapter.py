@@ -22,21 +22,8 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
         """
         Whether to allow sign-ups.
         """
-        view_name = getattr(request.resolver_match, 'view_name', '') or ''
-
-        # Social signup form: allow when social providers are configured
-        if view_name == 'socialaccount_signup':
-            return len(settings.SOCIAL_PROVIDERS) > 0
-
-        # Local signup form: require ENABLE_SIGNUP or a valid invite token
-        if view_name == 'account_signup':
-            signup_token = False
-            with scopes_disabled():
-                if 'signup_token' in request.session and InviteLink.objects.filter(
-                        valid_until__gte=timezone.now().date(), used_by=None, uuid=request.session['signup_token']).exists():
-                    signup_token = True
-            if not settings.ENABLE_SIGNUP and not signup_token:
-                return False
+        if not settings.ENABLE_SIGNUP:
+            return False
 
         # OAuth callbacks, headless, and other flows: defer to default
         return super(AllAuthCustomAdapter, self).is_open_for_signup(request)

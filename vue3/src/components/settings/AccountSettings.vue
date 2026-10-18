@@ -8,36 +8,37 @@
         </v-col>
     </v-row>
 
-    <p class="text-h6 mt-3">{{ $t('Email') }}</p>
-    <v-divider class="mb-3"></v-divider>
-    <!-- email change -->
-    <v-row>
-        <v-col>
+    <template v-if="!useUserPreferenceStore().serverSettings.socialaccountOnly">
+        <p class="text-h6 mt-3">{{ $t('Email') }}</p>
+        <v-divider class="mb-3"></v-divider>
+        <!-- email change -->
+        <v-row>
+            <v-col>
 
-            <v-list>
-                <v-list-item v-for="email in emailAddresses" :key="email.email">
-                    {{ email.email }}
-                    <template #append>
-                        <v-chip v-if="email.primary">{{ $t('Primary') }}</v-chip>
-                        <v-chip v-if="email.verified">{{ $t('Verified') }}</v-chip>
-                        <v-chip v-if="!email.verified" color="warning">{{ $t('NotVerified') }}</v-chip>
-                        <!-- <v-btn @click="removeEmail(email.email)" icon="$delete"></v-btn>-->
-                    </template>
-
-                </v-list-item>
-                <v-divider v-if="emailAddresses.length > 0"></v-divider>
-                <v-list-item>
-                    <v-text-field type="email" density="compact" v-model="newEmail" :hint="$t('EmailAddHint')" persistent-hint>
+                <v-list>
+                    <v-list-item v-for="email in emailAddresses" :key="email.email">
+                        {{ email.email }}
                         <template #append>
-                            <v-btn icon="$create" color="create" @click="addEmail()"></v-btn>
+                            <v-chip v-if="email.primary">{{ $t('Primary') }}</v-chip>
+                            <v-chip v-if="email.verified">{{ $t('Verified') }}</v-chip>
+                            <v-chip v-if="!email.verified" color="warning">{{ $t('NotVerified') }}</v-chip>
+                            <!-- <v-btn @click="removeEmail(email.email)" icon="$delete"></v-btn>-->
                         </template>
-                    </v-text-field>
-                </v-list-item>
-            </v-list>
-        </v-col>
-    </v-row>
 
-    <template v-if="!useUserPreferenceStore().serverSettings.hideLoginForm">
+                    </v-list-item>
+                    <v-divider v-if="emailAddresses.length > 0"></v-divider>
+                    <v-list-item>
+                        <v-text-field type="email" density="compact" v-model="newEmail" :hint="$t('EmailAddHint')" persistent-hint>
+                            <template #append>
+                                <v-btn icon="$create" color="create" @click="addEmail()"></v-btn>
+                            </template>
+                        </v-text-field>
+                    </v-list-item>
+                </v-list>
+            </v-col>
+        </v-row>
+
+
         <p class="text-h6 mt-3">{{ $t('Password') }}</p>
         <v-divider class="mb-3"></v-divider>
         <!-- password change -->
@@ -59,8 +60,7 @@
 
     <v-row>
         <v-col>
-
-            <v-data-table :items="socialAccounts" :headers="socialAccountsTableHeader">
+            <v-data-table :items="socialAccounts" :headers="socialAccountsTableHeader" :hide-default-footer="(socialAccounts && socialAccounts.length < 10)">
                 <template v-slot:item.provider="{ item }">
                     {{ item.provider.name }}
                 </template>
@@ -76,7 +76,7 @@
     <v-row>
         <v-col>
 
-            <v-data-table :items="sessions" :headers="sessionsTableHeaders">
+            <v-data-table :items="sessions" :headers="sessionsTableHeaders" :hide-default-footer="sessions.length < 10">
                 <template v-slot:item.createdAt="{ item }">
                     {{ DateTime.fromSeconds(item.createdAt).toLocaleString(DateTime.DATETIME_MED) }}
                 </template>
@@ -148,9 +148,12 @@ const emailAddresses = ref([] as EmailAddress[])
 onMounted(() => {
 
     loadUser()
-    loadEmailAddresses()
     loadSessions()
     loadSocialAccounts()
+
+    if (!useUserPreferenceStore().serverSettings.socialaccountOnly) {
+        loadEmailAddresses()
+    }
 })
 
 /**

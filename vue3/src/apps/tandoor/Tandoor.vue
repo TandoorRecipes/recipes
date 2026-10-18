@@ -480,14 +480,18 @@ function logout() {
 
 }
 
-/* vueform/multiselect */
-
-.multiselect-option.is-pointed {
-    background: #b98766 !important;
+/* Global Link Styles */
+a {
+    color: rgb(var(--v-theme-primary));
+    text-decoration: none;
+    background-color: transparent;
+    transition: color 0.15s ease-in-out, opacity 0.15s ease-in-out;
 }
 
-.multiselect-option.is-selected {
-    background: #b55e4f !important;
+a:hover {
+    color: rgb(var(--v-theme-primary));
+    text-decoration: underline;
+    opacity: 0.85;
 }
 
 </style>

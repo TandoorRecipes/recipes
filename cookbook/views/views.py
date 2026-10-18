@@ -6,6 +6,7 @@ from io import StringIO
 from uuid import UUID
 
 import redis
+from allauth.account.models import EmailAddress
 from allauth.utils import build_absolute_uri
 from django.apps import apps
 from django.conf import settings
@@ -311,6 +312,8 @@ def setup(request):
                         user.save()
 
                         create_space_for_user(user, name=None)
+
+                        EmailAddress.objects.create(user=user, email=f'{user.username}@default-adminmail.tandoor', primary=True, verified=True)
 
                         messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
                         return HttpResponseRedirect(reverse('index'))

@@ -17,14 +17,12 @@
                     <v-divider></v-divider>
                     <v-card-text>
                         <v-form :disabled="loading">
-                            <v-text-field v-model="email" :label="$t('Email')" required></v-text-field>
+                            <v-text-field v-model="email" :label="$t('Email')" @keyup.enter="requestResetLink()" required></v-text-field>
+
+                            <v-btn block variant="elevated" :loading="loading" color="success" @click="requestResetLink()">{{ $t('Send') }}</v-btn>
                         </v-form>
 
                     </v-card-text>
-                    <v-card-actions>
-                        <v-btn type="submit" variant="elevated" :loading="loading" color="primary" @click="requestResetLink()">{{ $t('Send') }}</v-btn>
-
-                    </v-card-actions>
                 </v-card>
             </v-col>
         </v-row>
@@ -48,9 +46,6 @@
             </v-col>
         </v-row>
 
-        <div style="max-width: 400px; margin: auto;" class="text-center mt-2">
-            <a href="">Schon Account? Login! TODO</a>
-        </div>
     </v-container>
 </template>
 

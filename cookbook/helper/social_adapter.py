@@ -50,6 +50,16 @@ def _store_error(error_entry):
 
 class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
 
+    def is_open_for_signup(self, request, sociallogin):
+        """
+        Whether to allow sign-ups.
+        """
+        if not settings.ENABLE_SIGNUP:
+            return False
+
+        # OAuth callbacks, headless, and other flows: defer to default
+        return super().is_open_for_signup(request, sociallogin)
+
     def pre_social_login(self, request, sociallogin):
         """
         pre-login check
@@ -137,8 +147,6 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
             request.session.modified = True
             process_invite_token(user, value)
 
-        # when no space was created trough invite or default create one for the user
-        if len(user.userspace_set.all()) == 0:
-            create_space_for_user(user)
+        create_space_for_user(user)
 
         return user

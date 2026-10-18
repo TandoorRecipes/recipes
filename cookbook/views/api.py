@@ -3263,7 +3263,7 @@ class ServerSettingsViewSet(viewsets.GenericViewSet):
         s['unauthenticated_theme_from_space'] = settings.UNAUTHENTICATED_THEME_FROM_SPACE
         s['force_theme_from_space'] = settings.FORCE_THEME_FROM_SPACE
         s['enable_signup'] = settings.ENABLE_SIGNUP
-        s['hide_login_form'] = settings.HIDE_LOGIN_FORM
+        s['socialaccount_only'] = settings.SOCIALACCOUNT_ONLY
 
         # include the settings handled by the space
         space = None

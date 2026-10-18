@@ -96,7 +96,7 @@ export interface ServerSettings {
      * @type {boolean}
      * @memberof ServerSettings
      */
-    hideLoginForm: boolean;
+    socialaccountOnly: boolean;
     /**
      * 
      * @type {string}
@@ -175,7 +175,7 @@ export function instanceOfServerSettings(value: object): value is ServerSettings
     if (!('unauthenticatedThemeFromSpace' in value) || value['unauthenticatedThemeFromSpace'] === undefined) return false;
     if (!('forceThemeFromSpace' in value) || value['forceThemeFromSpace'] === undefined) return false;
     if (!('enableSignup' in value) || value['enableSignup'] === undefined) return false;
-    if (!('hideLoginForm' in value) || value['hideLoginForm'] === undefined) return false;
+    if (!('socialaccountOnly' in value) || value['socialaccountOnly'] === undefined) return false;
     return true;
 }
 
@@ -201,7 +201,7 @@ export function ServerSettingsFromJSONTyped(json: any, ignoreDiscriminator: bool
         'unauthenticatedThemeFromSpace': json['unauthenticated_theme_from_space'],
         'forceThemeFromSpace': json['force_theme_from_space'],
         'enableSignup': json['enable_signup'],
-        'hideLoginForm': json['hide_login_form'],
+        'socialaccountOnly': json['socialaccount_only'],
         'logoColor32': json['logo_color_32'] == null ? undefined : json['logo_color_32'],
         'logoColor128': json['logo_color_128'] == null ? undefined : json['logo_color_128'],
         'logoColor144': json['logo_color_144'] == null ? undefined : json['logo_color_144'],
@@ -238,7 +238,7 @@ export function ServerSettingsToJSONTyped(value?: ServerSettings | null, ignoreD
         'unauthenticated_theme_from_space': value['unauthenticatedThemeFromSpace'],
         'force_theme_from_space': value['forceThemeFromSpace'],
         'enable_signup': value['enableSignup'],
-        'hide_login_form': value['hideLoginForm'],
+        'socialaccount_only': value['socialaccountOnly'],
         'logo_color_32': value['logoColor32'],
         'logo_color_128': value['logoColor128'],
         'logo_color_144': value['logoColor144'],

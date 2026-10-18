@@ -61,7 +61,6 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.headless',
-    'allauth.mfa',
     'allauth.usersessions',
     'cookbook.apps.CookbookConfig',
     'treebeard',
@@ -278,10 +277,10 @@ AUTH_PASSWORD_VALIDATORS = [
 ####### Tandoor specific auth settings
 ##################################################################
 
-ENABLE_SIGNUP = extract_bool('ENABLE_SIGNUP', False)
-HIDE_LOGIN_FORM = bool(int(os.getenv('HIDE_LOGIN_FORM', False)))
+ENABLE_SIGNUP = False#extract_bool('ENABLE_SIGNUP', False)
+SOCIALACCOUNT_ONLY = extract_bool('SOCIALACCOUNT_ONLY', False)
 
-SOCIAL_DEFAULT_ACCESS = bool(int(os.getenv('SOCIAL_DEFAULT_ACCESS', False)))
+SOCIAL_DEFAULT_ACCESS = extract_bool('SOCIAL_DEFAULT_ACCESS', False)
 SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
 
 ##################################################################
@@ -407,10 +406,8 @@ if REMOTE_USER_AUTH:
 ##################################################################
 # TODO move to a proper config check warning module/page
 
-# if SOCIALACCOUNT_ONLY and not SOCIAL_PROVIDERS:
-#     print('WARNING: SOCIALACCOUNT_ONLY is enabled but no SOCIAL_PROVIDERS are configured. Users will be unable to log in!')
-if HIDE_LOGIN_FORM and not SOCIAL_PROVIDERS and not REMOTE_USER_AUTH:
-    print('WARNING: HIDE_LOGIN_FORM is enabled but no SOCIAL_PROVIDERS or REMOTE_USER_AUTH are configured. Users will be unable to log in!')
+if SOCIALACCOUNT_ONLY and not SOCIAL_PROVIDERS and not REMOTE_USER_AUTH:
+    print('WARNING: SOCIALACCOUNT_ONLY is enabled but no SOCIAL_PROVIDERS or REMOTE_USER_AUTH are configured. Users will be unable to log in!')
 if SOCIALACCOUNT_EMAIL_AUTHENTICATION and not SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT and os.getenv('EMAIL_HOST', '') == '':
     print('WARNING: SOCIALACCOUNT_EMAIL_AUTHENTICATION requires a working email configuration (EMAIL_HOST) when SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT is not enabled.')
 

@@ -7,7 +7,7 @@
                     <v-divider></v-divider>
                     <v-card-text>
 
-                        <v-form v-if="!useUserPreferenceStore().serverSettings.hideLoginForm">
+                        <v-form v-if="!useUserPreferenceStore().serverSettings.socialaccountOnly">
                             <v-alert class="mb-4" v-if="generalError" type="warning">{{ generalError }}</v-alert>
 
                             <v-text-field :label="$t('Username')" autofocus v-model="username" :disabled="loading" :error-messages="usernameError" :error="!!usernameError"/>
@@ -17,21 +17,25 @@
                             <v-btn block @click="login()" variant="elevated" :loading="loading" :disabled="providerLoading != ''" color="success">{{ $t('Login') }}</v-btn>
                         </v-form>
 
-                        <v-divider v-if="socialProviders.length > 0" class="mt-5 mb-5">{{ $t('or') }}</v-divider>
+                        <v-divider v-if="socialProviders.length > 0 && !useUserPreferenceStore().serverSettings.socialaccountOnly" class="mt-5 mb-5">{{ $t('or') }}</v-divider>
                         <v-row>
                             <v-col md="6" cols="12" v-for="p in socialProviders" :key="p.id">
-                                <v-btn block @click="startProviderFlow(p.id)" :disabled="providerLoading != ''" :loading="providerLoading == p.id">{{ p.name }}</v-btn>
+                                <v-btn block @click="startProviderFlow(p.id)" :disabled="providerLoading != '' || loading" :loading="providerLoading == p.id" variant="outlined">{{
+                                        p.name
+                                    }}
+                                </v-btn>
                             </v-col>
                         </v-row>
 
-                        <v-row>
+                        <v-row v-if="useUserPreferenceStore().serverSettings.enableSignup && !useUserPreferenceStore().serverSettings.socialaccountOnly">
                             <v-col>
-                                <v-divider v-if="useUserPreferenceStore().serverSettings.enableSignup" class="mb-5">{{ $t('or') }}</v-divider>
-                                <v-btn block :to="{name: 'SignUpPage'}" variant="elevated"  :disabled="providerLoading != ''|| loading" color="info"
+                                <v-divider class="mb-5">{{ $t('or') }}</v-divider>
+                                <v-btn block :to="{name: 'SignUpPage'}" variant="elevated" :disabled="providerLoading != ''|| loading" color="info"
                                        v-if="useUserPreferenceStore().serverSettings.enableSignup">{{ $t('SignUp') }}
                                 </v-btn>
                             </v-col>
                         </v-row>
+
 
                     </v-card-text>
                 </v-card>
@@ -42,8 +46,15 @@
             <v-col>
                 <div class="text-center mt-2">
                     <router-link :to="{name: 'PasswordResetPage'}">{{ $t('ForgotPassword') }}</router-link>
-                    <a href="#">Test</a>
                 </div>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col class="text-center">
+                <a :href="useUserPreferenceStore().serverSettings.privacyUrl" v-if="useUserPreferenceStore().serverSettings.privacyUrl" class="me-4">{{ $t('PrivacyPolicy') }}</a>
+                <a :href="useUserPreferenceStore().serverSettings.termsUrl" v-if="useUserPreferenceStore().serverSettings.termsUrl" class="me-4">{{ $t('TermsOfService') }}</a>
+                <a :href="useUserPreferenceStore().serverSettings.imprintUrl" v-if="useUserPreferenceStore().serverSettings.imprintUrl" class="me-4">{{ $t('Imprint') }}</a>
             </v-col>
         </v-row>
     </v-container>
