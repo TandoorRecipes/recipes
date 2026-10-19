@@ -111,7 +111,7 @@ class Mealie1(Integration):
                 recipe = Recipe.objects.create(
                     waiting_time=parse_time(r['perform_time']),
                     working_time=parse_time(r['prep_time']),
-                    description=r['description'][:512],
+                    description=(r['description'] or '')[:512],
                     name=clean_name,
                     source_url=r['org_url'],
                     servings=servings,
