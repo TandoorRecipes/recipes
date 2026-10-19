@@ -55,21 +55,31 @@
         </v-row>
     </template>
 
-    <p class="text-h6 mt-3">{{ $t('Account') }}</p>
-    <v-divider class="mb-3"></v-divider>
+    <template v-if="socialProviders.length > 0">
+        <p class="text-h6 mt-3">{{ $t('ExternalProvider') }}</p>
+        <v-divider class="mb-3"></v-divider>
 
-    <v-row>
-        <v-col>
-            <v-data-table :items="socialAccounts" :headers="socialAccountsTableHeader" :hide-default-footer="(socialAccounts && socialAccounts.length < 10)">
-                <template v-slot:item.provider="{ item }">
-                    {{ item.provider.name }}
-                </template>
-                <template v-slot:item.action="{ item }">
-                    <v-btn icon="$delete" variant="plain" @click="removeSocialAccount(item.provider.id, item.uid)"></v-btn>
-                </template>
-            </v-data-table>
-        </v-col>
-    </v-row>
+        <v-row>
+            <v-col>
+                <v-data-table :items="socialAccounts" :headers="socialAccountsTableHeader" :hide-default-footer="(socialAccounts && socialAccounts.length < 10)">
+                    <template v-slot:item.provider="{ item }">
+                        {{ item.provider.name }}
+                    </template>
+                    <template v-slot:item.action="{ item }">
+                        <v-btn icon="$delete" variant="plain" @click="removeSocialAccount(item.provider.id, item.uid)"></v-btn>
+                    </template>
+                </v-data-table>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col md="4" cols="12" v-for="p in socialProviders" :key="p.id">
+                <v-btn block @click="linkProvider(p.id)" variant="outlined">
+                    {{ p.name }}
+                </v-btn>
+            </v-col>
+        </v-row>
+    </template>
 
     <p class="text-h6 mt-3">{{ $t('Manage_Sessions') }}</p>
     <v-divider class="mb-3"></v-divider>
@@ -101,8 +111,8 @@ import {
     AccountPasswordApi,
     AccountProvidersApi,
     AuthenticatedResponse,
-    AuthenticationCurrentSessionApi,
-    EmailAddress,
+    AuthenticationCurrentSessionApi, ConfigurationApi,
+    EmailAddress, Provider,
     ProviderAccount,
     type Session,
     SessionsApi
@@ -113,6 +123,7 @@ import {useI18n} from "vue-i18n";
 import {ApiApi, User} from "@/openapi";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import {DateTime} from "luxon";
+import {getCookie} from "@/utils/cookie.ts";
 
 const {getDjangoUrl} = useDjangoUrls()
 const {t} = useI18n()
@@ -133,6 +144,8 @@ const socialAccountsTableHeader = ref([
     {title: t('Username'), key: 'display'},
     {title: t('Actions'), key: 'action', align: 'end'},
 ])
+const socialProviders = ref<Provider[]>([] as Provider[])
+
 
 const sessions = ref<Session[]>([] as Session[])
 const sessionsTableHeaders = ref([
@@ -150,6 +163,8 @@ onMounted(() => {
     loadUser()
     loadSessions()
     loadSocialAccounts()
+
+    loadProviders()
 
     if (!useUserPreferenceStore().serverSettings.socialaccountOnly) {
         loadEmailAddresses()
@@ -300,6 +315,47 @@ function removeSocialAccount(provider: string, account: string) {
     accountProvidersApi.allauthClientV1AccountProvidersDelete({client: "browser", allauthClientV1AccountProvidersDeleteRequest: {provider: provider, account: account}}).then(r => {
         useMessageStore().addPreparedMessage(PreparedMessage.DELETE_SUCCESS)
         loadSocialAccounts()
+    }).catch(err => {
+        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+    })
+}
+
+function linkProvider(provider: string) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = useDjangoUrls().getDjangoUrl(`/_allauth/browser/v1/auth/provider/redirect`, false);
+
+    const fields: Record<string, string> = {
+        provider: provider,
+        process: 'connect',
+        callback_url: useDjangoUrls().getDjangoUrl(`/settings/account`),
+    };
+
+    const csrfToken = getCookie('csrftoken');
+    if (csrfToken) {
+        fields['csrfmiddlewaretoken'] = csrfToken;
+    }
+
+    for (const [name, value] of Object.entries(fields)) {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        form.appendChild(input);
+    }
+
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+}
+
+function loadProviders() {
+    const configurationApi = new ConfigurationApi()
+
+    configurationApi.allauthClientV1ConfigGet({client: "browser"}).then(r => {
+        if (r.data.socialaccount) {
+            socialProviders.value = r.data.socialaccount.providers
+        }
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     })
