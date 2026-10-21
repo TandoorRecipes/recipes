@@ -13,7 +13,7 @@ if __name__ == '__main__':
     if not os.getenv('SECRET_KEY'):
         load_environment_variables()
 
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'recipe.settings')
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'recipes.settings')
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
