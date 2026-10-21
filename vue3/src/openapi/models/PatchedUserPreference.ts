@@ -238,7 +238,19 @@ export interface PatchedUserPreference {
      */
     showStepIngredients?: boolean;
     /**
-     * 
+     *
+     * @type {boolean}
+     * @memberof PatchedUserPreference
+     */
+    showMealPlan?: boolean;
+    /**
+     *
+     * @type {boolean}
+     * @memberof PatchedUserPreference
+     */
+    showShopping?: boolean;
+    /**
+     *
      * @type {boolean}
      * @memberof PatchedUserPreference
      */
@@ -292,6 +304,8 @@ export function PatchedUserPreferenceFromJSONTyped(json: any, ignoreDiscriminato
         'shoppingAddOnhand': json['shopping_add_onhand'] == null ? undefined : json['shopping_add_onhand'],
         'leftHanded': json['left_handed'] == null ? undefined : json['left_handed'],
         'showStepIngredients': json['show_step_ingredients'] == null ? undefined : json['show_step_ingredients'],
+        'showMealPlan': json['show_meal_plan'] == null ? undefined : json['show_meal_plan'],
+        'showShopping': json['show_shopping'] == null ? undefined : json['show_shopping'],
         'foodChildrenExist': json['food_children_exist'] == null ? undefined : json['food_children_exist'],
     };
 }
@@ -333,6 +347,8 @@ export function PatchedUserPreferenceToJSONTyped(value?: Omit<PatchedUserPrefere
         'shopping_add_onhand': value['shoppingAddOnhand'],
         'left_handed': value['leftHanded'],
         'show_step_ingredients': value['showStepIngredients'],
+        'show_meal_plan': value['showMealPlan'],
+        'show_shopping': value['showShopping'],
     };
 }
 

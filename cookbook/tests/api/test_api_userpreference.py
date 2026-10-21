@@ -91,6 +91,34 @@ def test_preference_update(u1_s1, u2_s1):
         assert not UserPreference.objects.filter(user=auth.get_user(u2_s1)).exists()
 
 
+def test_preference_show_meal_plan_shopping(u1_s1):
+    # meal plan and shopping are shown by default
+    r = u1_s1.get(reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}))
+    response = json.loads(r.content)
+    assert response['show_meal_plan'] is True
+    assert response['show_shopping'] is True
+
+    # both can be hidden
+    r = u1_s1.patch(
+        reverse(
+            DETAIL_URL,
+            args={auth.get_user(u1_s1).id}
+        ),
+        {'show_meal_plan': False, 'show_shopping': False},
+        content_type='application/json'
+    )
+    response = json.loads(r.content)
+    assert r.status_code == 200
+    assert response['show_meal_plan'] is False
+    assert response['show_shopping'] is False
+
+    # changes are persisted
+    r = u1_s1.get(reverse(DETAIL_URL, args={auth.get_user(u1_s1).id}))
+    response = json.loads(r.content)
+    assert response['show_meal_plan'] is False
+    assert response['show_shopping'] is False
+
+
 def test_preference_delete(u1_s1, u2_s1):
     # can't delete other preference
     r = u1_s1.delete(

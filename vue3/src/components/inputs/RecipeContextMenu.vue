@@ -6,10 +6,10 @@
                 <v-list-item :to="{ name: 'ModelEditPage', params: {model: 'recipe', id: recipe.id} }" prepend-icon="$edit">
                     {{ $t('Edit') }}
                 </v-list-item>
-                <v-list-item prepend-icon="$mealplan" @click="mealPlanDialog = true">
+                <v-list-item prepend-icon="$mealplan" @click="mealPlanDialog = true" v-if="useUserPreferenceStore().userSettings.showMealPlan">
                     {{ $t('Add_to_Plan') }}
                 </v-list-item>
-                <v-list-item prepend-icon="$shopping" link>
+                <v-list-item prepend-icon="$shopping" link v-if="useUserPreferenceStore().userSettings.showShopping">
                     {{ $t('Add_to_Shopping') }}
                     <add-to-shopping-dialog :recipe="props.recipe"></add-to-shopping-dialog>
                 </v-list-item>
@@ -55,6 +55,7 @@ import {useRouter} from "vue-router";
 import {useFileApi} from "@/composables/useFileApi.ts";
 import {useI18n} from "vue-i18n";
 import PantryBookingDialog from "@/components/dialogs/PantryBookingDialog.vue";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const router = useRouter()
 const {t} = useI18n()

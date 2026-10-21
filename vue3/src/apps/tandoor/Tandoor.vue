@@ -94,11 +94,11 @@
                 <v-icon icon="fa-fw fas fa-book "/>
             </v-btn>
 
-            <v-btn value="favorites" to="/mealplan">
+            <v-btn value="favorites" to="/mealplan" v-if="useUserPreferenceStore().userSettings.showMealPlan">
                 <v-icon icon="fa-fw fas fa-calendar-alt"></v-icon>
             </v-btn>
 
-            <v-btn value="nearby" to="/shopping">
+            <v-btn value="nearby" to="/shopping" v-if="useUserPreferenceStore().userSettings.showShopping">
                 <v-icon icon="fa-fw fas fa-shopping-cart"></v-icon>
             </v-btn>
 

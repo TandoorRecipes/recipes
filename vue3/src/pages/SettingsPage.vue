@@ -9,8 +9,8 @@
                     <v-divider></v-divider>
                     <v-list-subheader>{{ $t('Settings') }}</v-list-subheader>
                     <v-list-item :to="{name: 'CosmeticSettings'}" prepend-icon="fa-solid fa-palette">{{ $t('Cosmetic') }}</v-list-item>
-                    <v-list-item :to="{name: 'ShoppingSettings'}" prepend-icon="$shopping">{{ $t('Shopping_list') }}</v-list-item>
-                    <v-list-item :to="{name: 'MealPlanSettings'}" prepend-icon="$mealplan">{{ $t('Meal_Plan') }}</v-list-item>
+                    <v-list-item :to="{name: 'ShoppingSettings'}" prepend-icon="$shopping" v-if="useUserPreferenceStore().userSettings.showShopping">{{ $t('Shopping_list') }}</v-list-item>
+                    <v-list-item :to="{name: 'MealPlanSettings'}" prepend-icon="$mealplan" v-if="useUserPreferenceStore().userSettings.showMealPlan">{{ $t('Meal_Plan') }}</v-list-item>
                     <v-list-item :to="{name: 'SearchSettings'}" prepend-icon="$search">{{ $t('Search') }}</v-list-item>
                     <v-divider></v-divider>
                     <v-list-subheader>Space</v-list-subheader>
@@ -41,6 +41,7 @@
 
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {TANDOOR_PLUGINS} from "@/types/Plugins.ts";
+import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 
 const {getDjangoUrl} = useDjangoUrls()
 

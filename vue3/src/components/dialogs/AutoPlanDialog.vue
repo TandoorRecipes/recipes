@@ -26,7 +26,7 @@
                                   prepend-inner-icon="$calendar"
                     ></v-date-input>
 
-                    <v-checkbox v-model="autoMealPlan.addshopping" :label="$t('AddToShopping')" hide-details></v-checkbox>
+                    <v-checkbox v-model="autoMealPlan.addshopping" :label="$t('AddToShopping')" hide-details v-if="useUserPreferenceStore().userSettings.showShopping"></v-checkbox>
                 </v-form>
             </v-card-text>
             <v-card-actions>
@@ -79,7 +79,7 @@ function initializeRequest() {
         servings: 1,
         startDate: DateTime.now().toJSDate(),
         endDate: DateTime.now().plus({day: 7}).toJSDate(),
-        addshopping: useUserPreferenceStore().userSettings.mealplanAutoaddShopping,
+        addshopping: useUserPreferenceStore().userSettings.showShopping && useUserPreferenceStore().userSettings.mealplanAutoaddShopping,
     }
 
     keywordIds.value = []

@@ -14,7 +14,7 @@
         <v-card-text class="pa-0">
             <v-tabs v-model="tab" :disabled="loading" grow>
                 <v-tab prepend-icon="$mealplan" value="plan">{{ $t('Meal_Plan') }}</v-tab>
-                <v-tab prepend-icon="$shopping" value="shopping" :disabled="!isUpdate()">{{ $t('Shopping_list') }}</v-tab>
+                <v-tab prepend-icon="$shopping" value="shopping" :disabled="!isUpdate()" v-if="useUserPreferenceStore().userSettings.showShopping">{{ $t('Shopping_list') }}</v-tab>
             </v-tabs>
         </v-card-text>
 
@@ -30,13 +30,13 @@
                                 <!--                                <v-number-input label="Days" control-variant="split" :min="1"></v-number-input>-->
                                 <!--TODO create days input with +/- synced to date -->
                                 <recipe-card :recipe="editingObj.recipe" :servings="editingObj.servings" v-if="editingObj && editingObj.recipe" link-target="_blank"></recipe-card>
-                                <v-btn prepend-icon="$shopping" color="create" class="mt-1" v-if="!editingObj.shopping && editingObj.recipe && isUpdate()">
+                                <v-btn prepend-icon="$shopping" color="create" class="mt-1" v-if="!editingObj.shopping && editingObj.recipe && isUpdate() && useUserPreferenceStore().userSettings.showShopping">
                                     {{ $t('Add') }}
                                     <add-to-shopping-dialog :recipe="editingObj.recipe" :meal-plan="editingObj"
                                                             @created="editingObj.shopping = true;"></add-to-shopping-dialog>
                                 </v-btn>
 
-                                <v-checkbox :label="$t('AddToShopping')" v-model="editingObj.addshopping" hide-details v-if="editingObj.recipe && !isUpdate()"></v-checkbox>
+                                <v-checkbox :label="$t('AddToShopping')" v-model="editingObj.addshopping" hide-details v-if="editingObj.recipe && !isUpdate() && useUserPreferenceStore().userSettings.showShopping"></v-checkbox>
                             </v-col>
                             <v-col cols="12" md="6">
                                 <v-text-field :label="$t('Title')" v-model="editingObj.title"></v-text-field>
@@ -233,7 +233,7 @@ function initializeEditor() {
                 editingObj.value.mealType = useUserPreferenceStore().userSettings.defaultMealType
             }
 
-            editingObj.value.addshopping = useUserPreferenceStore().userSettings.mealplanAutoaddShopping
+            editingObj.value.addshopping = useUserPreferenceStore().userSettings.showShopping && useUserPreferenceStore().userSettings.mealplanAutoaddShopping
 
             applyItemDefaults(props.itemDefaults)
 

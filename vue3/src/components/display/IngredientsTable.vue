@@ -77,7 +77,7 @@
                                         <number-scaler-dialog :number="i.amount * ingredientFactor"
                                                               @confirm="(target: number) => emit('scale', target/i.amount)"></number-scaler-dialog>
                                     </v-list-item>
-                                    <v-list-item prepend-icon="$shopping" @click="addToShopping(i)">
+                                    <v-list-item prepend-icon="$shopping" @click="addToShopping(i)" v-if="useUserPreferenceStore().userSettings.showShopping">
                                         {{ $t('Shopping') }}
                                     </v-list-item>
                                     <v-list-item link v-if="i.food" :to="{name: 'ModelEditPage', params: { model:'Food', id: i.food.id}}" :prepend-icon="TFood.icon">
