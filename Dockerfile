@@ -1,57 +1,86 @@
-FROM python:3.13-alpine3.23
+# old dockerfile updated
+# ==========================================
+# Stage 1 - Build Stage
+# ==========================================
+FROM python:3.13-alpine3.23 AS build
 
-#Install all dependencies.
-RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx tini envsubst nodejs npm
+# Install build dependencies
+# Added g++ and rust for newer python package compilation
+RUN apk add --no-cache git yarn gcc musl-dev postgresql-dev zlib-dev \
+    jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev \
+    python3-dev xmlsec-dev xmlsec build-base g++ curl rust
 
-#Print all logs without buffering it.
+# Set environment variables
 ENV PYTHONUNBUFFERED=1 \
     DOCKER=true
 
-#This port will be used by gunicorn.
-EXPOSE 80 8080
-
-#Create app dir and install requirements.
-RUN mkdir /opt/recipes
+# Create app directory
 WORKDIR /opt/recipes
 
-COPY requirements.txt ./
-
-# remove Development dependencies from requirements.txt
+# 1. Handle Python Dependencies first for caching
+COPY ./requirements.txt ./
 RUN sed -i '/# Development/,$d' requirements.txt
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl rust && \
-    python -m venv venv && \
+
+# Create venv and install wheels
+RUN python -m venv venv && \
     /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
-    venv/bin/pip debug -v && \
-    venv/bin/pip install wheel==0.45.1 && \
-    venv/bin/pip install setuptools_rust==1.10.2 && \
-    venv/bin/pip install -r requirements.txt --no-cache-dir &&\
-    apk --purge del .build-deps
+    /opt/recipes/venv/bin/pip install wheel==0.45.1 setuptools_rust==1.10.2 && \
+    /opt/recipes/venv/bin/pip install -r requirements.txt --no-cache-dir
 
-#Copy project and execute it.
-COPY . ./
+# 2. Handle Vue Frontend with optimized caching
+WORKDIR /vue3
+COPY ./vue3/package.json ./vue3/yarn.lock ./
+RUN yarn install --frozen-lockfile
 
-RUN <<EOF
-    # delete default nginx config and link it to tandoors config
-    rm -rf /etc/nginx/http.d
-    ln -s /opt/recipes/http.d /etc/nginx/http.d
-    # allow all write/read but set sticky bit to restrict non-root to only create files (conf templating in boot.sh)
-    chmod 1777 /opt/recipes/http.d/
-    # create symlinks to access and error log to show them on stdout
-    ln -sf /dev/stdout /var/log/nginx/access.log
-    ln -sf /dev/stderr /var/log/nginx/error.log
-EOF
+COPY ./vue3/ .
+RUN yarn build && \
+    find . -type d -name "node_modules" | xargs rm -rf
 
-# commented for now https://github.com/TandoorRecipes/recipes/issues/3478
-#HEALTHCHECK --interval=30s \
-#            --timeout=5s \
-#            --start-period=10s \
-#            --retries=3 \
-#            CMD [ "/usr/bin/wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/openapi" ]
+# 3. Finalize app source
+WORKDIR /opt/recipes
+COPY . .
+# Sync the built frontend into the Django static structure
+RUN cp -r /cookbook/static/vue3 /opt/recipes/cookbook/static/vue3 2>/dev/null || true
 
-# collect information from git repositories
-RUN /opt/recipes/venv/bin/python version.py
-# delete git repositories to reduce image size
-RUN find . -type d -name ".git" | xargs rm -rf
+# Generate version info and cleanup
+RUN /opt/recipes/venv/bin/python version.py && \
+    find . -type d -name ".git" | xargs rm -rf && \
+    rm -rf .pytest_cache docs tests
 
+# ==========================================
+# Stage 2 - Runtime Stage
+# ==========================================
+FROM python:3.13-alpine3.23
+
+# Install only runtime libraries (no compilers/node)
+RUN apk add --no-cache \
+    postgresql-libs \
+    postgresql-client \
+    gettext \
+    zlib \
+    libjpeg \
+    libwebp \
+    libxml2 \
+    libxslt \
+    openldap \
+    git \
+    libgcc \
+    libstdc++ \
+    tini \
+    envsubst
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    DOCKER=true
+
+WORKDIR /opt/recipes
+
+# Copy only the necessary artifacts from the build stage
+COPY --from=build /opt/recipes /opt/recipes
+
+# Expose Gunicorn/Django port
+EXPOSE 8080
+
+# Use Tini as the init process for better signal handling
 RUN chmod +x boot.sh
 ENTRYPOINT ["/sbin/tini", "--", "/opt/recipes/boot.sh"]
