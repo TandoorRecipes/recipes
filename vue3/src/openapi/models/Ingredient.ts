@@ -89,7 +89,13 @@ export interface Ingredient {
      */
     noAmount?: boolean;
     /**
-     * 
+     *
+     * @type {number}
+     * @memberof Ingredient
+     */
+    propertiesConsumedFraction?: number;
+    /**
+     *
      * @type {string}
      * @memberof Ingredient
      */
@@ -140,6 +146,7 @@ export function IngredientFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'order': json['order'] == null ? undefined : json['order'],
         'isHeader': json['is_header'] == null ? undefined : json['is_header'],
         'noAmount': json['no_amount'] == null ? undefined : json['no_amount'],
+        'propertiesConsumedFraction': json['properties_consumed_fraction'] == null ? undefined : json['properties_consumed_fraction'],
         'originalText': json['original_text'] == null ? undefined : json['original_text'],
         'usedInRecipes': json['used_in_recipes'],
         'checked': json['checked'],
@@ -165,6 +172,7 @@ export function IngredientToJSONTyped(value?: Omit<Ingredient, 'conversions'|'us
         'order': value['order'],
         'is_header': value['isHeader'],
         'no_amount': value['noAmount'],
+        'properties_consumed_fraction': value['propertiesConsumedFraction'],
         'original_text': value['originalText'],
     };
 }
