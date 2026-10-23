@@ -190,7 +190,8 @@ class Integration:
                         if isinstance(self, cookbook.integration.cookmate.Cookmate):
                             new_file_list = []
                             for file in file_list:
-                                new_file_list += etree.parse(BytesIO(self.safe_read(import_zip, file.filename))).getroot().getchildren()
+                                parser = etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False)
+                                new_file_list += etree.parse(BytesIO(self.safe_read(import_zip, file.filename)), parser=parser).getroot().getchildren()
                             il.total_recipes = len(new_file_list)
                             file_list = new_file_list
 

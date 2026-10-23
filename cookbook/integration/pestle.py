@@ -6,6 +6,7 @@ import json
 
 import requests
 
+from cookbook.helper.HelperFunctions import safe_request
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import (
     parse_servings,
@@ -154,7 +155,7 @@ class Pestle(Integration):
                 recipe.save()
 
         if "image" in recipe_dict and len(recipe_dict["image"]) > 0:
-            response = requests.get(recipe_dict["image"][0]["url"])
+            response = safe_request('GET', recipe_dict["image"][0]["url"])
             if response.ok and response.content:
                 self.import_recipe_image(
                     recipe,

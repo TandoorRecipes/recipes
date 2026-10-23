@@ -11,7 +11,8 @@ from cookbook.models import Ingredient, Keyword, Recipe, Step
 class Rezeptsuitede(Integration):
 
     def split_recipe_file(self, file):
-        return etree.parse(file).getroot().getchildren()
+        parser = etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False)
+        return etree.parse(file, parser=parser).getroot().getchildren()
 
     def get_recipe_from_file(self, file):
         recipe_xml = file
