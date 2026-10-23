@@ -52,9 +52,9 @@ const mealPlan = computed(() => {
 
 const itemTitle = computed(() => {
     if (mealPlan.value.title != null && mealPlan.value.title !== "") {
-        return mealPlan.value.recipe.name
-    } else if (mealPlan.value.recipe != undefined) {
         return mealPlan.value.title
+    } else if (mealPlan.value.recipe != undefined) {
+        return mealPlan.value.recipe.name
     } else {
         return 'ERROR'
     }
