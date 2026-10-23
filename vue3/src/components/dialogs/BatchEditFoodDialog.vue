@@ -24,17 +24,17 @@
 
                                     <v-spacer></v-spacer>
                                     <v-label :text="$t('Substitutes')"></v-label>
-                                    <v-model-select model="Food" v-model="batchUpdateRequest.foodBatchUpdate.substituteAdd" :return-object="false" create>
+                                    <v-model-select model="Food" v-model="batchUpdateRequest.foodBatchUpdate.substituteAdd" :return-object="false" multiple chips create>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-add"></v-icon>
                                         </template>
                                     </v-model-select>
-                                    <v-model-select model="Food" v-model="batchUpdateRequest.foodBatchUpdate.substituteRemove" :return-object="false" create>
+                                    <v-model-select model="Food" v-model="batchUpdateRequest.foodBatchUpdate.substituteRemove" :return-object="false" multiple chips create>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-minus"></v-icon>
                                         </template>
                                     </v-model-select>
-                                    <v-model-select model="Food" v-model="batchUpdateRequest.foodBatchUpdate.substituteSet" :return-object="false" create>
+                                    <v-model-select model="Food" v-model="batchUpdateRequest.foodBatchUpdate.substituteSet" :return-object="false" multiple chips create>
                                         <template #prepend>
                                             <v-icon icon="fa-solid fa-equals"></v-icon>
                                         </template>

@@ -1320,7 +1320,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             foods = Food.objects.filter(id__in=serializer.validated_data['foods'], space=self.request.space)
             safe_food_ids = Food.objects.filter(id__in=serializer.validated_data['foods'], space=self.request.space).values_list('id', flat=True)
 
-            if 'category' in serializer.validated_data:
+            if 'category' in serializer.validated_data and SupermarketCategory.objects.filter(id=serializer.validated_data['category'], space=request.space).exists():
                 foods.update(supermarket_category_id=serializer.validated_data['category'])
 
             if 'ignore_shopping' in serializer.validated_data and serializer.validated_data['ignore_shopping'] is not None:
@@ -1345,13 +1345,16 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
 
             # ---------- substitutes -------------
             if 'substitute_add' in serializer.validated_data:
-                add_to_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id', serializer.validated_data['substitute_add'])
+                add_to_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id',
+                                Food.objects.filter(id__in=serializer.validated_data['substitute_add'], space=request.space).values_list('id', flat=True))
 
             if 'substitute_remove' in serializer.validated_data:
-                remove_from_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id', serializer.validated_data['substitute_remove'])
+                remove_from_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id',
+                                     Food.objects.filter(id__in=serializer.validated_data['substitute_remove'], space=request.space).values_list('id', flat=True))
 
             if 'substitute_set' in serializer.validated_data and len(serializer.validated_data['substitute_set']) > 0:
-                set_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id', serializer.validated_data['substitute_set'])
+                set_relation(Food.substitute.through, 'from_food_id', safe_food_ids, 'to_food_id',
+                             Food.objects.filter(id__in=serializer.validated_data['substitute_set'], space=request.space).values_list('id', flat=True))
 
             if 'substitute_remove_all' in serializer.validated_data and serializer.validated_data['substitute_remove_all']:
                 remove_all_from_relation(Food.substitute.through, 'from_food_id', safe_food_ids)
@@ -1384,14 +1387,16 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
 
             # ---------- shopping lists -------------
             if 'shopping_lists_add' in serializer.validated_data:
-                add_to_relation(Food.shopping_lists.through, 'food_id', safe_food_ids, 'shoppinglist_id', serializer.validated_data['shopping_lists_add'])
+                add_to_relation(Food.shopping_lists.through, 'food_id', safe_food_ids, 'shoppinglist_id',
+                                ShoppingList.objects.filter(id__in=serializer.validated_data['shopping_lists_add'], space=request.space).values_list('id', flat=True))
 
             if 'shopping_lists_remove' in serializer.validated_data:
                 remove_from_relation(Food.shopping_lists.through, 'food_id', safe_food_ids, 'shoppinglist_id',
-                                     serializer.validated_data['shopping_lists_remove'])
+                                     ShoppingList.objects.filter(id__in=serializer.validated_data['shopping_lists_remove'], space=request.space).values_list('id', flat=True))
 
             if 'shopping_lists_set' in serializer.validated_data and len(serializer.validated_data['shopping_lists_set']) > 0:
-                set_relation(Food.shopping_lists.through, 'food_id', safe_food_ids, 'shoppinglist_id', serializer.validated_data['shopping_lists_set'])
+                set_relation(Food.shopping_lists.through, 'food_id', safe_food_ids, 'shoppinglist_id',
+                             ShoppingList.objects.filter(id__in=serializer.validated_data['shopping_lists_set'], space=request.space).values_list('id', flat=True))
 
             if 'shopping_lists_remove_all' in serializer.validated_data and serializer.validated_data['shopping_lists_remove_all']:
                 remove_all_from_relation(Food.shopping_lists.through, 'food_id', safe_food_ids)
@@ -1912,7 +1917,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
         servings = request.data.get('servings', None)
         list_recipe = request.data.get('list_recipe', None)
         mealplan = request.data.get('mealplan', None)
-        SLR = RecipeShoppingEditor(request ,id=list_recipe, recipe=obj, mealplan=mealplan,
+        SLR = RecipeShoppingEditor(request, id=list_recipe, recipe=obj, mealplan=mealplan,
                                    servings=servings)
 
         if servings and servings <= 0:
@@ -1965,21 +1970,24 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).values_list('id', flat=True)
 
             if 'keywords_add' in serializer.validated_data:
+                safe_keyword_ids = Keyword.objects.filter(id__in=serializer.validated_data['keywords_add'], space=request.space).values_list('id', flat=True)
                 keyword_relations = []
                 for r in recipes:
-                    for k in serializer.validated_data['keywords_add']:
+                    for k in safe_keyword_ids:
                         keyword_relations.append(Recipe.keywords.through(recipe_id=r.pk, keyword_id=k))
                 Recipe.keywords.through.objects.bulk_create(keyword_relations, ignore_conflicts=True, unique_fields=('recipe_id', 'keyword_id',))
 
             if 'keywords_remove' in serializer.validated_data:
-                for k in serializer.validated_data['keywords_remove']:
+                safe_keyword_ids = Keyword.objects.filter(id__in=serializer.validated_data['keywords_remove'], space=request.space).values_list('id', flat=True)
+                for k in safe_keyword_ids:
                     Recipe.keywords.through.objects.filter(recipe_id__in=safe_recipe_ids, keyword_id=k).delete()
 
             if 'keywords_set' in serializer.validated_data and len(serializer.validated_data['keywords_set']) > 0:
+                safe_keyword_ids = Keyword.objects.filter(id__in=serializer.validated_data['keywords_set'], space=request.space).values_list('id', flat=True)
                 keyword_relations = []
                 Recipe.keywords.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
                 for r in recipes:
-                    for k in serializer.validated_data['keywords_set']:
+                    for k in safe_keyword_ids:
                         keyword_relations.append(Recipe.keywords.through(recipe_id=r.pk, keyword_id=k))
                 Recipe.keywords.through.objects.bulk_create(keyword_relations, ignore_conflicts=True, unique_fields=('recipe_id', 'keyword_id',))
 
@@ -2003,7 +2011,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
 
             if 'shared_add' in serializer.validated_data:
                 shared_relation = []
-                space_user_ids = UserSpace.objects.filter(space=request.space).values_list('id', flat=True)
+                space_user_ids = UserSpace.objects.filter(space=request.space).values_list('user_id', flat=True)
                 for r in recipes:
                     for u in serializer.validated_data['shared_add']:
                         if u in space_user_ids:
@@ -2017,7 +2025,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
             if 'shared_set' in serializer.validated_data and len(serializer.validated_data['shared_set']) > 0:
                 shared_relation = []
                 Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
-                space_user_ids = UserSpace.objects.filter(space=request.space).values_list('id', flat=True)
+                space_user_ids = UserSpace.objects.filter(space=request.space).values_list('user_id', flat=True)
                 for r in recipes:
                     for u in serializer.validated_data['shared_set']:
                         if u in space_user_ids:
@@ -2218,9 +2226,32 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
             if mealplan is not None:
                 self.queryset = self.queryset.filter(mealplan_id=mealplan)
 
+        # filter for recipes that are inaccessible to the user
+        self.queryset = self.queryset.filter(
+            Q(recipe__isnull=True)
+            | (Q(recipe__space=self.request.space)
+            & (Q(recipe__private=False)
+            | Q(recipe__created_by=self.request.user)
+            | Q(recipe__shared=self.request.user)))
+        )
+
+        # check that neither the mealplan nor the recipe in the meal plan are inaccessible to the user
+        household_ids = get_household_user_ids(self.request.user_space)
+        self.queryset = self.queryset.filter(
+            Q(mealplan__isnull=True)
+            | (Q(mealplan__space=self.request.space)
+            & (Q(mealplan__created_by=self.request.user)
+            | Q(mealplan__created_by_id__in=household_ids))
+            & (Q(mealplan__recipe__isnull=True)
+            | (Q(mealplan__recipe__space=self.request.space)
+            & (Q(mealplan__recipe__private=False)
+            | Q(mealplan__recipe__created_by=self.request.user)
+            | Q(mealplan__recipe__shared=self.request.user)))))
+        )
+
         return self.queryset.filter(Q(entries__isnull=True)
                                     | Q(entries__created_by=self.request.user)
-                                    | Q(entries__created_by__in=get_household_user_ids(self.request.user_space))).distinct().all()
+                                    | Q(entries__created_by__in=household_ids)).distinct().all()
 
     @decorators.action(detail=True, methods=['POST'], serializer_class=ShoppingListEntryBulkCreateSerializer, permission_classes=[CustomIsUser])
     def bulk_create_entries(self, request, pk):
@@ -2231,33 +2262,57 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
         serializer = self.serializer_class(data=request.data)
 
         if serializer.is_valid():
+            entries_data = serializer.validated_data['entries']
+            shopping_lists_ids = serializer.validated_data.get('shopping_lists_ids')
+
+            requested_unit_ids = {e['unit_id'] for e in entries_data if e.get('unit_id')}
+            requested_food_ids = {e['food_id'] for e in entries_data if e.get('food_id')}
+            requested_ingredient_ids = {e['ingredient_id'] for e in entries_data if e.get('ingredient_id')}
+
+            safe_unit_ids = set(Unit.objects.filter(space_id=request.space.id, id__in=requested_unit_ids).values_list('id', flat=True))
+            safe_food_ids = set(Food.objects.filter(space_id=request.space.id, id__in=requested_food_ids).values_list('id', flat=True))
+            safe_ingredient_ids = set(Ingredient.objects.filter(space_id=request.space.id, id__in=requested_ingredient_ids).values_list('id', flat=True))
+
             entries = []
-            for e in serializer.validated_data['entries']:
+            for e in entries_data:
+                if e.get('unit_id') and e['unit_id'] not in safe_unit_ids:
+                    continue
+                if not e.get('food_id') or e['food_id'] not in safe_food_ids:
+                    continue
+                if e.get('ingredient_id') and e['ingredient_id'] not in safe_ingredient_ids:
+                    continue
                 entry = ShoppingListEntry(
                     list_recipe_id=obj.pk,
                     amount=e['amount'],
-                    unit_id=e['unit_id'],
+                    unit_id=e.get('unit_id'),
                     food_id=e['food_id'],
-                    ingredient_id=e['ingredient_id'],
+                    ingredient_id=e.get('ingredient_id'),
                     created_by_id=request.user.id,
                     space_id=request.space.id,
                 )
                 entries.append(entry)
 
-            ShoppingListEntry.objects.bulk_create(entries)
+            created_entries = ShoppingListEntry.objects.bulk_create(entries)
 
             list_relations = []
-            for e in entries:
-                if serializer.validated_data['shopping_lists_ids']:
-                    for sLId in serializer.validated_data['shopping_lists_ids']:
+            if shopping_lists_ids:
+                for e in created_entries:
+                    for sLId in shopping_lists_ids:
                         list_relations.append(ShoppingListEntry.shopping_lists.through(shoppinglistentry_id=e.pk, shoppinglist_id=sLId))
-                else:
-                    if e.food.shopping_lists.count() > 0:
-                        e.shopping_lists.set(e.food.shopping_lists.all())
+            else:
+                food_to_lists = {}
+                food_lists_qs = Food.objects.filter(id__in=safe_food_ids, shopping_lists__isnull=False).values_list('id', 'shopping_lists__id')
+                for food_id, list_id in food_lists_qs:
+                    food_to_lists.setdefault(food_id, []).append(list_id)
 
-            ShoppingListEntry.shopping_lists.through.objects.bulk_create(list_relations, ignore_conflicts=True, unique_fields=('shoppinglistentry_id', 'shoppinglist_id',))
+                for e in created_entries:
+                    for sLId in food_to_lists.get(e.food_id, []):
+                        list_relations.append(ShoppingListEntry.shopping_lists.through(shoppinglistentry_id=e.pk, shoppinglist_id=sLId))
 
-            ConnectorManager.add_work(ActionType.CREATED, *entries)
+            if list_relations:
+                ShoppingListEntry.shopping_lists.through.objects.bulk_create(list_relations, ignore_conflicts=True, unique_fields=('shoppinglistentry_id', 'shoppinglist_id',))
+
+            ConnectorManager.add_work(ActionType.CREATED, *created_entries)
             return Response(serializer.validated_data)
         else:
             return Response(serializer.errors, 400)
@@ -2329,6 +2384,29 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
         except Exception:
             traceback.print_exc()
 
+        # filter for recipes that are inaccessible to the user
+        self.queryset = self.queryset.filter(
+            Q(list_recipe__recipe__isnull=True)
+            | (Q(list_recipe__recipe__space=self.request.space)
+               & (Q(list_recipe__recipe__private=False)
+                  | Q(list_recipe__recipe__created_by=self.request.user)
+                  | Q(list_recipe__recipe__shared=self.request.user)))
+        )
+
+        # check that neither the mealplan nor the recipe in the meal plan are inaccessible to the user
+        household_ids = get_household_user_ids(self.request.user_space)
+        self.queryset = self.queryset.filter(
+            Q(list_recipe__mealplan__isnull=True)
+            | (Q(list_recipe__mealplan__space=self.request.space)
+               & (Q(list_recipe__mealplan__created_by=self.request.user)
+                  | Q(list_recipe__mealplan__created_by_id__in=household_ids))
+               & (Q(list_recipe__mealplan__recipe__isnull=True)
+                  | (Q(list_recipe__mealplan__recipe__space=self.request.space)
+                     & (Q(list_recipe__mealplan__recipe__private=False)
+                        | Q(list_recipe__mealplan__recipe__created_by=self.request.user)
+                        | Q(list_recipe__mealplan__recipe__shared=self.request.user)))))
+        )
+
         if self.detail:
             return self.queryset
         else:
@@ -2377,14 +2455,15 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
             # ---------- shopping lists -------------
             if 'shopping_lists_add' in serializer.validated_data:
                 add_to_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids, 'shoppinglist_id',
-                                serializer.validated_data['shopping_lists_add'])
+                                ShoppingList.objects.filter(id__in=serializer.validated_data['shopping_lists_add'], space=request.space).values_list('id', flat=True))
 
             if 'shopping_lists_remove' in serializer.validated_data:
                 remove_from_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids, 'shoppinglist_id',
-                                     serializer.validated_data['shopping_lists_remove'])
+                                     ShoppingList.objects.filter(id__in=serializer.validated_data['shopping_lists_remove'], space=request.space).values_list('id', flat=True))
 
             if 'shopping_lists_set' in serializer.validated_data and len(serializer.validated_data['shopping_lists_set']) > 0:
-                set_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids, 'shoppinglist_id', serializer.validated_data['shopping_lists_set'])
+                set_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids, 'shoppinglist_id',
+                             ShoppingList.objects.filter(id__in=serializer.validated_data['shopping_lists_set'], space=request.space).values_list('id', flat=True))
 
             if 'shopping_lists_remove_all' in serializer.validated_data and serializer.validated_data['shopping_lists_remove_all']:
                 remove_all_from_relation(ShoppingListEntry.shopping_lists.through, 'shoppinglistentry_id', safe_entry_ids)

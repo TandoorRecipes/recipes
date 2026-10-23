@@ -49,14 +49,14 @@ def has_group_permission(request, groups, no_cache=False):
         return False
     groups_allowed = get_allowed_groups(groups)
 
-    CACHE_KEY = 'GROUP_CACHE_' + str(request.user.pk)
+    CACHE_KEY = f'GROUP_CACHE_{request.user.pk}_{request.space.pk}'
     user_groups = cache.get(CACHE_KEY, default=None)
 
     if no_cache or user_groups is None:
         # always reset to invalidate should a cache exist
         user_groups = []
         if user_space := request.user.userspace_set.filter(active=True):
-            if len(user_space) == 1: # more than one active space is not supported and should error
+            if len(user_space) == 1:  # more than one active space is not supported and should error
                 user_groups = user_space.first().groups.values_list('name', flat=True)
 
     cache.set(CACHE_KEY, user_groups, timeout=30)
@@ -371,6 +371,37 @@ class CustomIsShare(permissions.BasePermission):
         return False
 
 
+def has_recipe_permission(request, recipe):
+    """
+    Custom permission class for recipe api endpoint
+    """
+    share = request.query_params.get('share', None)
+    if share:
+        if share_link_valid(recipe, share):
+            return True
+        # Invalid share link - check if user has normal access
+        # If not, raise 404 to avoid leaking recipe existence
+        if recipe.space != request.space:
+            raise Http404()
+        # User is in same space, fall through to normal permission check
+    if recipe.private:
+        return ((recipe.created_by == request.user) or (request.user in recipe.shared.all())) and recipe.space == request.space
+    else:
+        return ((has_group_permission(request, ['guest']) and request.method in SAFE_METHODS)
+                or has_group_permission(request, ['user'])) and recipe.space == request.space
+
+
+def has_meal_plan_permission(request, mealplan):
+    household_ids = get_household_user_ids(request.user_space)
+
+    if request.user == mealplan.created_by or mealplan.created_by in household_ids:
+        if mealplan.recipe:
+            return has_recipe_permission(request, mealplan.recipe)
+        else:
+            return True
+    return False
+
+
 class CustomRecipePermission(permissions.BasePermission):
     """
     Custom permission class for recipe api endpoint
@@ -383,20 +414,7 @@ class CustomRecipePermission(permissions.BasePermission):
             request, ['user'])) or (share and request.method in SAFE_METHODS and 'pk' in view.kwargs)
 
     def has_object_permission(self, request, view, obj):
-        share = request.query_params.get('share', None)
-        if share:
-            if share_link_valid(obj, share):
-                return True
-            # Invalid share link - check if user has normal access
-            # If not, raise 404 to avoid leaking recipe existence
-            if obj.space != request.space:
-                raise Http404()
-            # User is in same space, fall through to normal permission check
-        if obj.private:
-            return ((obj.created_by == request.user) or (request.user in obj.shared.all())) and obj.space == request.space
-        else:
-            return ((has_group_permission(request, ['guest']) and request.method in SAFE_METHODS)
-                    or has_group_permission(request, ['user'])) and obj.space == request.space
+        return has_recipe_permission(request, obj)
 
 
 class CustomAiProviderPermission(permissions.BasePermission):

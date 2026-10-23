@@ -27,10 +27,12 @@ UNINSTALL_INSTALLED_APPS = [
 
 # disable extras not needed for testing
 for x in UNINSTALL_MIDDLEWARE:
-    MIDDLEWARE.remove(x)  # noqa: F405
+    if x in MIDDLEWARE:
+        MIDDLEWARE.remove(x)  # noqa: F405
 
 for y in UNINSTALL_INSTALLED_APPS:
-    INSTALLED_APPS.remove(y)  # noqa: F405
+    if y in INSTALLED_APPS:
+        INSTALLED_APPS.remove(y)  # noqa: F405
 
 # Disable external connectors during tests to prevent the ConnectorManager
 # daemon thread from holding a DB connection that blocks test DB teardown
