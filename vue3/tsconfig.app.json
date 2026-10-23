@@ -6,6 +6,7 @@
     "composite": true,
     "verbatimModuleSyntax": false,
     "baseUrl": ".",
+    "lib": ["ES2020", "DOM", "DOM.Iterable", "webworker"], // extend to add webworker lib
     "paths": {
       "@/*": ["./src/*"]
     }
