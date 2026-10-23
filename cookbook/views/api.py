@@ -45,7 +45,7 @@ from drf_spectacular.types import OpenApiTypes
 from drf_spectacular.utils import OpenApiParameter, extend_schema, extend_schema_view, OpenApiExample, inline_serializer
 from icalendar import Calendar, Event
 from litellm import completion, BadRequestError
-from litellm.exceptions import Timeout as LitellmTimeout
+from litellm.exceptions import Timeout as LitellmTimeout, ServiceUnavailableError
 from oauth2_provider.models import AccessToken
 from recipe_scrapers import scrape_html
 from recipe_scrapers._exceptions import NoSchemaFoundInWildMode
@@ -2902,6 +2902,12 @@ class AiImportView(APIView):
                         raise Exception(f'AI provider URL not allowed: {ai_provider.url}')
                     ai_request['api_base'] = ai_provider.url
                 ai_response = completion(**ai_request)
+            except ServiceUnavailableError:
+                response = {
+                    'error': True,
+                    'msg': 'The AI service is currently unavailable. Please try again later.',
+                }
+                return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_503_SERVICE_UNAVAILABLE)
             except LitellmTimeout:
                 response = {
                     'error': True,
