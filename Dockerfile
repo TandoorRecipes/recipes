@@ -1,4 +1,4 @@
-FROM python:3.15-alpine3.24
+FROM python:3.14-alpine3.24
 
 #Install all dependencies.
 RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx tini envsubst nodejs npm
