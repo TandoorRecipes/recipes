@@ -289,7 +289,7 @@ class Mealie1(Integration):
                                          space=self.request.space))
                             self.import_log.imported_recipes += 1
                             self.import_log.save()
-            properties = Property.objects.bulk_create(properties_relation)
+            properties = Property.objects.bulk_create(properties_relation, ignore_conflicts=True)
             property_ids = []
             for p in properties:
                 recipe_properties_relation.append(Recipe.properties.through(recipe_id=recipes_dict[p.open_data_food_slug], property_id=p.pk))
@@ -409,6 +409,8 @@ class Mealie1(Integration):
                         self.import_log.imported_recipes += 1
                         self.import_log.save()
             except Exception:
+                self.import_log.imported_recipes += 1
+                self.import_log.save()
                 pass
 
         return recipes
