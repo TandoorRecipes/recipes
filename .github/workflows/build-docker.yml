@@ -37,7 +37,7 @@ jobs:
       # Build Vue 3 frontend
       - uses: actions/setup-node@v7
         with:
-          node-version: '22'
+          node-version: '24'
           cache: yarn
           cache-dependency-path: vue3/yarn.lock
       - name: Install dependencies
