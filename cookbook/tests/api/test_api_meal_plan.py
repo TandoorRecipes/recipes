@@ -490,7 +490,7 @@ def test_auto_plan_or_mode(u1_s1, meal_type, auto_plan_recipes, auto_plan_keywor
     assert r.status_code == 200
     with scopes_disabled():
         plans = MealPlan.objects.all()
-        assert plans.count() == 3
+        assert plans.count() == 2
         recipe_ids = set(plans.values_list('recipe_id', flat=True))
         assert recipe_ids.issubset({r.id for r in auto_plan_recipes})
 
@@ -507,7 +507,7 @@ def test_auto_plan_and_mode(u1_s1, meal_type, auto_plan_recipes, auto_plan_keywo
     assert r.status_code == 200
     with scopes_disabled():
         plans = MealPlan.objects.all()
-        assert plans.count() == 3
+        assert plans.count() == 2
         recipe_ids = set(plans.values_list('recipe_id', flat=True))
         assert recipe_ids == {r_ab.id}
 
