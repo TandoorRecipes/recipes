@@ -17,7 +17,7 @@
     "luxon": "^3.7.2",
     "mavon-editor": "^3.0.1",
     "pinia": "^3.0.4",
-    "vue": "^3.5.13",
+    "vue": "^3.5.44",
     "vue-draggable-plus": "^0.6.1",
     "vue-i18n": "^11.2.8",
     "vue-router": "^4.5.0",
