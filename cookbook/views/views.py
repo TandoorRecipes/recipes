@@ -12,7 +12,7 @@ from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.cache import caches
 from django.core.exceptions import ValidationError, PermissionDenied, BadRequest
@@ -27,11 +27,11 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
 
-from cookbook.forms import Recipe, User, UserCreateForm
+from cookbook.forms import Recipe, UserCreateForm
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, has_group_permission, share_link_valid, switch_user_active_space, process_invite_token, \
     create_space_for_user
-from cookbook.models import InviteLink, ShareLink, Space, UserSpace
+from cookbook.models import ShareLink, Space
 from cookbook.templatetags.theming_tags import get_theming_values
 from cookbook.version_info import VERSION_INFO
 from recipes.settings import PLUGINS, BASE_DIR
