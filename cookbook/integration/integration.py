@@ -190,7 +190,8 @@ class Integration:
                         if isinstance(self, cookbook.integration.cookmate.Cookmate):
                             new_file_list = []
                             for file in file_list:
-                                new_file_list += etree.parse(BytesIO(self.safe_read(import_zip, file.filename))).getroot().getchildren()
+                                parser = etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False)
+                                new_file_list += etree.parse(BytesIO(self.safe_read(import_zip, file.filename)), parser=parser).getroot().getchildren()
                             il.total_recipes = len(new_file_list)
                             file_list = new_file_list
 
@@ -227,7 +228,7 @@ class Integration:
                                     fn = "" if not hasattr(z, 'filename') else f'IMPORTING {z.filename}'
                                     self.handle_exception(e, log=il, message=f'-------------------- \nERROR {fn}\n{e}\n--------------------\n')
                         import_zip.close()
-                    elif '.json' in f['name'] or '.xml' in f['name'] or '.txt' in f['name'] or '.mmf' in f['name'] or '.rk' in f['name'] or '.melarecipe' in f['name']:
+                    elif '.json' in f['name'] or '.xml' in f['name'] or '.txt' in f['name'] or '.mmf' in f['name'] or '.rk' in f['name'] or '.melarecipe' in f['name'] or '.pestle' in f['name']:
                         data_list = self.split_recipe_file(f['file'])
                         il.total_recipes += len(data_list)
                         for d in data_list:

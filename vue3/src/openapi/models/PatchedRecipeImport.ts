@@ -18,6 +18,7 @@ import {
     StorageFromJSON,
     StorageFromJSONTyped,
     StorageToJSON,
+    StorageToJSONTyped,
 } from './Storage';
 
 /**
@@ -49,13 +50,13 @@ export interface PatchedRecipeImport {
      * @type {string}
      * @memberof PatchedRecipeImport
      */
-    fileUid?: string;
+    readonly fileUid?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedRecipeImport
      */
-    filePath?: string;
+    readonly filePath?: string;
     /**
      * 
      * @type {Date}
@@ -90,17 +91,20 @@ export function PatchedRecipeImportFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedRecipeImportToJSON(value?: Omit<PatchedRecipeImport, 'createdAt'> | null): any {
+export function PatchedRecipeImportToJSON(json: any): PatchedRecipeImport {
+    return PatchedRecipeImportToJSONTyped(json, false);
+}
+
+export function PatchedRecipeImportToJSONTyped(value?: Omit<PatchedRecipeImport, 'file_uid'|'file_path'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
         'storage': StorageToJSON(value['storage']),
         'name': value['name'],
-        'file_uid': value['fileUid'],
-        'file_path': value['filePath'],
     };
 }
 

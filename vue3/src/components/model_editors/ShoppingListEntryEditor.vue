@@ -24,8 +24,8 @@
                         </v-btn>
                     </template>
                 </v-number-input>
-                <model-select model="Unit" allow-create v-model="editingObj.unit"></model-select>
-                <model-select model="Food" allow-create v-model="editingObj.food"></model-select>
+                <v-model-select model="Unit" create v-model="editingObj.unit"></v-model-select>
+                <v-model-select model="Food" create v-model="editingObj.food"></v-model-select>
             </v-form>
         </v-card-text>
     </model-editor-base>
@@ -39,6 +39,7 @@ import {ShoppingListEntry} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<ShoppingListEntry>, required: false, default: null},

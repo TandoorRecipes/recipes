@@ -18,6 +18,7 @@ import {
     IngredientFromJSON,
     IngredientFromJSONTyped,
     IngredientToJSON,
+    IngredientToJSONTyped,
 } from './Ingredient';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedIngredientList {
      * @type {string}
      * @memberof PaginatedIngredientList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedIngredientList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Ingredient>}
@@ -85,17 +86,22 @@ export function PaginatedIngredientListFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PaginatedIngredientListToJSON(value?: PaginatedIngredientList | null): any {
+export function PaginatedIngredientListToJSON(json: any): PaginatedIngredientList {
+    return PaginatedIngredientListToJSONTyped(json, false);
+}
+
+export function PaginatedIngredientListToJSONTyped(value?: PaginatedIngredientList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(IngredientToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

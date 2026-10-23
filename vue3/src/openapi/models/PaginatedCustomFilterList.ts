@@ -18,6 +18,7 @@ import {
     CustomFilterFromJSON,
     CustomFilterFromJSONTyped,
     CustomFilterToJSON,
+    CustomFilterToJSONTyped,
 } from './CustomFilter';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedCustomFilterList {
      * @type {string}
      * @memberof PaginatedCustomFilterList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedCustomFilterList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<CustomFilter>}
@@ -85,17 +86,22 @@ export function PaginatedCustomFilterListFromJSONTyped(json: any, ignoreDiscrimi
     };
 }
 
-export function PaginatedCustomFilterListToJSON(value?: PaginatedCustomFilterList | null): any {
+export function PaginatedCustomFilterListToJSON(json: any): PaginatedCustomFilterList {
+    return PaginatedCustomFilterListToJSONTyped(json, false);
+}
+
+export function PaginatedCustomFilterListToJSONTyped(value?: PaginatedCustomFilterList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(CustomFilterToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

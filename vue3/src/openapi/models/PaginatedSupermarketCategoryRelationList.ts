@@ -18,6 +18,7 @@ import {
     SupermarketCategoryRelationFromJSON,
     SupermarketCategoryRelationFromJSONTyped,
     SupermarketCategoryRelationToJSON,
+    SupermarketCategoryRelationToJSONTyped,
 } from './SupermarketCategoryRelation';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedSupermarketCategoryRelationList {
      * @type {string}
      * @memberof PaginatedSupermarketCategoryRelationList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedSupermarketCategoryRelationList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<SupermarketCategoryRelation>}
@@ -85,17 +86,22 @@ export function PaginatedSupermarketCategoryRelationListFromJSONTyped(json: any,
     };
 }
 
-export function PaginatedSupermarketCategoryRelationListToJSON(value?: PaginatedSupermarketCategoryRelationList | null): any {
+export function PaginatedSupermarketCategoryRelationListToJSON(json: any): PaginatedSupermarketCategoryRelationList {
+    return PaginatedSupermarketCategoryRelationListToJSONTyped(json, false);
+}
+
+export function PaginatedSupermarketCategoryRelationListToJSONTyped(value?: PaginatedSupermarketCategoryRelationList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(SupermarketCategoryRelationToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

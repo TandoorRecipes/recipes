@@ -103,10 +103,15 @@ export function PatchedOpenDataVersionFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PatchedOpenDataVersionToJSON(value?: PatchedOpenDataVersion | null): any {
+export function PatchedOpenDataVersionToJSON(json: any): PatchedOpenDataVersion {
+    return PatchedOpenDataVersionToJSONTyped(json, false);
+}
+
+export function PatchedOpenDataVersionToJSONTyped(value?: PatchedOpenDataVersion | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

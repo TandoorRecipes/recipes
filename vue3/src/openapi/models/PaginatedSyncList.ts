@@ -18,6 +18,7 @@ import {
     SyncFromJSON,
     SyncFromJSONTyped,
     SyncToJSON,
+    SyncToJSONTyped,
 } from './Sync';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedSyncList {
      * @type {string}
      * @memberof PaginatedSyncList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedSyncList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Sync>}
@@ -85,17 +86,22 @@ export function PaginatedSyncListFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function PaginatedSyncListToJSON(value?: PaginatedSyncList | null): any {
+export function PaginatedSyncListToJSON(json: any): PaginatedSyncList {
+    return PaginatedSyncListToJSONTyped(json, false);
+}
+
+export function PaginatedSyncListToJSONTyped(value?: PaginatedSyncList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(SyncToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

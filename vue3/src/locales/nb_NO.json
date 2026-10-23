@@ -988,5 +988,6 @@
     "make_now_count": "Maksimalt manglende ingredienser",
     "show_ingredients_table": "Vis en tabell med ingrediensene ved siden av trinnets tekst",
     "show_step_ingredients_setting_help": "Vis ingredienstabellen ved siden av oppskriftstrinnene. Gjelder ved oppretting. Kan endres for hvert enkelt oppskriftstrinn.",
-    "MealPlanShoppingHelp": "Oppføringer på handlelisten din kan knyttes til en måltidsplan for å sortere listen eller oppdatere/slette dem alle samtidig. Når du oppretter en måltidsplan med en oppskrift, kan handlelisteoppføringer for den oppskriften opprettes automatisk (innstilling). "
+    "MealPlanShoppingHelp": "Oppføringer på handlelisten din kan knyttes til en måltidsplan for å sortere listen eller oppdatere/slette dem alle samtidig. Når du oppretter en måltidsplan med en oppskrift, kan handlelisteoppføringer for den oppskriften opprettes automatisk (innstilling). ",
+    "AllowedAiUrlHelp": "URL-adresser må være tillatt i innstillingene for Server AI_ALLOWED_URLS."
 }

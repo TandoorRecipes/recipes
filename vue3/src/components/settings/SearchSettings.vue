@@ -28,11 +28,11 @@
             <v-number-input v-model="searchPreferences.trigramThreshold" :precision="2" :min="0.01" :max="1" :step="0.1" :label="$t('TrigramThreshold')" persistent-hint
                             :hint="$t('TrigramThresholdHelp')"></v-number-input>
 
-            <ModelSelect model="SearchFields" mode="tags" v-model="searchPreferences.unaccent" :label="$t('IgnoreAccents')" :hint="$t('IgnoreAccentsHelp')"></ModelSelect>
-            <ModelSelect model="SearchFields" mode="tags" v-model="searchPreferences.icontains" :label="$t('PartialMatch')" :hint="$t('PartialMatchHelp')"></ModelSelect>
-            <ModelSelect model="SearchFields" mode="tags" v-model="searchPreferences.istartswith" :label="$t('StartsWith')" :hint="$t('StartsWithHelp')"></ModelSelect>
-            <ModelSelect model="SearchFields" mode="tags" v-model="searchPreferences.fulltext" :label="$t('Fulltext')" :hint="$t('FulltextHelp')"></ModelSelect>
-            <ModelSelect model="SearchFields" mode="tags" v-model="searchPreferences.trigram" :label="$t('Fuzzy')" :hint="$t('FuzzySearchHelp')"></ModelSelect>
+            <v-model-select model="SearchFields" chips multiple v-model="searchPreferences.unaccent" :label="$t('IgnoreAccents')" :hint="$t('IgnoreAccentsHelp')"></v-model-select>
+            <v-model-select model="SearchFields" chips multiple v-model="searchPreferences.icontains" :label="$t('PartialMatch')" :hint="$t('PartialMatchHelp')"></v-model-select>
+            <v-model-select model="SearchFields" chips multiple v-model="searchPreferences.istartswith" :label="$t('StartsWith')" :hint="$t('StartsWithHelp')"></v-model-select>
+            <v-model-select model="SearchFields" chips multiple v-model="searchPreferences.fulltext" :label="$t('Fulltext')" :hint="$t('FulltextHelp')"></v-model-select>
+            <v-model-select model="SearchFields" chips multiple v-model="searchPreferences.trigram" :label="$t('Fuzzy')" :hint="$t('FuzzySearchHelp')"></v-model-select>
 
             <v-btn class="mt-3" color="success" @click="updateSearchSettings()" prepend-icon="$save" :loading="loading">
                 {{ $t('Save') }}
@@ -49,6 +49,7 @@ import {ApiApi, SearchFields, SearchPreference} from "@/openapi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const searchMethods = ref([
     {title: 'Simple', value: 'plain'},

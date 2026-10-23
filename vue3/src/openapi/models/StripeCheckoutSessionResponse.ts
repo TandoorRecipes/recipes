@@ -65,10 +65,15 @@ export function StripeCheckoutSessionResponseFromJSONTyped(json: any, ignoreDisc
     };
 }
 
-export function StripeCheckoutSessionResponseToJSON(value?: StripeCheckoutSessionResponse | null): any {
+export function StripeCheckoutSessionResponseToJSON(json: any): StripeCheckoutSessionResponse {
+    return StripeCheckoutSessionResponseToJSONTyped(json, false);
+}
+
+export function StripeCheckoutSessionResponseToJSONTyped(value?: StripeCheckoutSessionResponse | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'session_id': value['sessionId'],

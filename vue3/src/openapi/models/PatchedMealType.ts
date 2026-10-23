@@ -42,13 +42,13 @@ export interface PatchedMealType {
      * @type {string}
      * @memberof PatchedMealType
      */
-    time?: string;
+    time?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedMealType
      */
-    color?: string;
+    color?: string | null;
     /**
      * 
      * @type {number}
@@ -83,10 +83,15 @@ export function PatchedMealTypeFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function PatchedMealTypeToJSON(value?: Omit<PatchedMealType, 'createdBy'> | null): any {
+export function PatchedMealTypeToJSON(json: any): PatchedMealType {
+    return PatchedMealTypeToJSONTyped(json, false);
+}
+
+export function PatchedMealTypeToJSONTyped(value?: Omit<PatchedMealType, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

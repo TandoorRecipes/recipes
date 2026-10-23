@@ -18,6 +18,7 @@ import {
     AiProviderFromJSON,
     AiProviderFromJSONTyped,
     AiProviderToJSON,
+    AiProviderToJSONTyped,
 } from './AiProvider';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedAiProviderList {
      * @type {string}
      * @memberof PaginatedAiProviderList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedAiProviderList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<AiProvider>}
@@ -85,17 +86,22 @@ export function PaginatedAiProviderListFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PaginatedAiProviderListToJSON(value?: PaginatedAiProviderList | null): any {
+export function PaginatedAiProviderListToJSON(json: any): PaginatedAiProviderList {
+    return PaginatedAiProviderListToJSONTyped(json, false);
+}
+
+export function PaginatedAiProviderListToJSONTyped(value?: PaginatedAiProviderList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(AiProviderToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

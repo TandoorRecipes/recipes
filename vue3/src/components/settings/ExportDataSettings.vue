@@ -6,8 +6,8 @@
         <v-select :items="exportFormats" :label="$t('Type')" v-model="exportType"></v-select>
 
         <v-checkbox :label="$t('AllRecipes')" v-model="allRecipes" :disabled="selectedRecipes.length > 0 || selectedFilter != null"></v-checkbox>
-        <ModelSelect model="Recipe" mode="tags" v-model="selectedRecipes" :disabled="allRecipes || selectedFilter != null"></ModelSelect>
-        <ModelSelect model="CustomFilter" mode="single" v-model="selectedFilter" :disabled="selectedRecipes.length > 0 || allRecipes"></ModelSelect>
+        <v-model-select model="Recipe" multiple chips v-model="selectedRecipes" :disabled="allRecipes || selectedFilter != null"></v-model-select>
+        <v-model-select model="CustomFilter" v-model="selectedFilter" :disabled="selectedRecipes.length > 0 || allRecipes"></v-model-select>
 
         <v-btn @click="doExport()" :loading="loading" :disabled="selectedRecipes.length == 0 && selectedFilter == null && !allRecipes">{{ $t('Export') }}</v-btn>
 
@@ -34,6 +34,7 @@ import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {ApiApi, CustomFilter, ExportLog, Recipe} from "@/openapi";
 import {useDjangoUrls} from "@/composables/useDjangoUrls.ts";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const exportType = ref('DEFAULT')
 const allRecipes = ref(false)

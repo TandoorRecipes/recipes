@@ -18,6 +18,7 @@ import {
     BookmarkletImportListFromJSON,
     BookmarkletImportListFromJSONTyped,
     BookmarkletImportListToJSON,
+    BookmarkletImportListToJSONTyped,
 } from './BookmarkletImportList';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedBookmarkletImportListList {
      * @type {string}
      * @memberof PaginatedBookmarkletImportListList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedBookmarkletImportListList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<BookmarkletImportList>}
@@ -85,17 +86,22 @@ export function PaginatedBookmarkletImportListListFromJSONTyped(json: any, ignor
     };
 }
 
-export function PaginatedBookmarkletImportListListToJSON(value?: PaginatedBookmarkletImportListList | null): any {
+export function PaginatedBookmarkletImportListListToJSON(json: any): PaginatedBookmarkletImportListList {
+    return PaginatedBookmarkletImportListListToJSONTyped(json, false);
+}
+
+export function PaginatedBookmarkletImportListListToJSONTyped(value?: PaginatedBookmarkletImportListList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(BookmarkletImportListToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

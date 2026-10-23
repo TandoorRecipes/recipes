@@ -18,6 +18,7 @@ import {
     HouseholdFromJSON,
     HouseholdFromJSONTyped,
     HouseholdToJSON,
+    HouseholdToJSONTyped,
 } from './Household';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedHouseholdList {
      * @type {string}
      * @memberof PaginatedHouseholdList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedHouseholdList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<Household>}
@@ -85,17 +86,22 @@ export function PaginatedHouseholdListFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PaginatedHouseholdListToJSON(value?: PaginatedHouseholdList | null): any {
+export function PaginatedHouseholdListToJSON(json: any): PaginatedHouseholdList {
+    return PaginatedHouseholdListToJSONTyped(json, false);
+}
+
+export function PaginatedHouseholdListToJSONTyped(value?: PaginatedHouseholdList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(HouseholdToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

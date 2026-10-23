@@ -18,6 +18,7 @@ import {
     EnterpriseSocialEmbedFromJSON,
     EnterpriseSocialEmbedFromJSONTyped,
     EnterpriseSocialEmbedToJSON,
+    EnterpriseSocialEmbedToJSONTyped,
 } from './EnterpriseSocialEmbed';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedEnterpriseSocialEmbedList {
      * @type {string}
      * @memberof PaginatedEnterpriseSocialEmbedList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedEnterpriseSocialEmbedList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<EnterpriseSocialEmbed>}
@@ -85,17 +86,22 @@ export function PaginatedEnterpriseSocialEmbedListFromJSONTyped(json: any, ignor
     };
 }
 
-export function PaginatedEnterpriseSocialEmbedListToJSON(value?: PaginatedEnterpriseSocialEmbedList | null): any {
+export function PaginatedEnterpriseSocialEmbedListToJSON(json: any): PaginatedEnterpriseSocialEmbedList {
+    return PaginatedEnterpriseSocialEmbedListToJSONTyped(json, false);
+}
+
+export function PaginatedEnterpriseSocialEmbedListToJSONTyped(value?: PaginatedEnterpriseSocialEmbedList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(EnterpriseSocialEmbedToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

@@ -18,7 +18,15 @@ import {
     EnterpriseBillingPlanFromJSON,
     EnterpriseBillingPlanFromJSONTyped,
     EnterpriseBillingPlanToJSON,
+    EnterpriseBillingPlanToJSONTyped,
 } from './EnterpriseBillingPlan';
+import type { BillingRegionEnum } from './BillingRegionEnum';
+import {
+    BillingRegionEnumFromJSON,
+    BillingRegionEnumFromJSONTyped,
+    BillingRegionEnumToJSON,
+    BillingRegionEnumToJSONTyped,
+} from './BillingRegionEnum';
 
 /**
  * 
@@ -31,44 +39,52 @@ export interface PatchedEnterpriseSpace {
      * @type {number}
      * @memberof PatchedEnterpriseSpace
      */
-    space?: number;
+    readonly space?: number;
     /**
      * 
      * @type {string}
      * @memberof PatchedEnterpriseSpace
      */
-    billingLicensedModules?: string;
+    readonly billingLicensedModules?: string;
     /**
      * 
      * @type {string}
      * @memberof PatchedEnterpriseSpace
      */
-    billingCustomerId?: string;
+    readonly billingCustomerId?: string | null;
     /**
      * 
      * @type {EnterpriseBillingPlan}
      * @memberof PatchedEnterpriseSpace
      */
-    billingPlan?: EnterpriseBillingPlan;
+    readonly billingPlan?: EnterpriseBillingPlan;
     /**
      * 
      * @type {string}
      * @memberof PatchedEnterpriseSpace
      */
-    billingSubscriptionId?: string;
+    readonly billingSubscriptionId?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedEnterpriseSpace
      */
-    billingSubscriptionStatus?: string;
+    readonly billingSubscriptionStatus?: string | null;
     /**
      * 
      * @type {number}
      * @memberof PatchedEnterpriseSpace
      */
-    billingMonthlyPrice?: number;
+    readonly billingMonthlyPrice?: number;
+    /**
+     * 
+     * @type {BillingRegionEnum}
+     * @memberof PatchedEnterpriseSpace
+     */
+    billingRegion?: BillingRegionEnum | null;
 }
+
+
 
 /**
  * Check if a given object implements the PatchedEnterpriseSpace interface.
@@ -94,22 +110,22 @@ export function PatchedEnterpriseSpaceFromJSONTyped(json: any, ignoreDiscriminat
         'billingSubscriptionId': json['billing_subscription_id'] == null ? undefined : json['billing_subscription_id'],
         'billingSubscriptionStatus': json['billing_subscription_status'] == null ? undefined : json['billing_subscription_status'],
         'billingMonthlyPrice': json['billing_monthly_price'] == null ? undefined : json['billing_monthly_price'],
+        'billingRegion': json['billing_region'] == null ? undefined : BillingRegionEnumFromJSON(json['billing_region']),
     };
 }
 
-export function PatchedEnterpriseSpaceToJSON(value?: PatchedEnterpriseSpace | null): any {
+export function PatchedEnterpriseSpaceToJSON(json: any): PatchedEnterpriseSpace {
+    return PatchedEnterpriseSpaceToJSONTyped(json, false);
+}
+
+export function PatchedEnterpriseSpaceToJSONTyped(value?: Omit<PatchedEnterpriseSpace, 'space'|'billing_licensed_modules'|'billing_customer_id'|'billing_plan'|'billing_subscription_id'|'billing_subscription_status'|'billing_monthly_price'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
-        'space': value['space'],
-        'billing_licensed_modules': value['billingLicensedModules'],
-        'billing_customer_id': value['billingCustomerId'],
-        'billing_plan': EnterpriseBillingPlanToJSON(value['billingPlan']),
-        'billing_subscription_id': value['billingSubscriptionId'],
-        'billing_subscription_status': value['billingSubscriptionStatus'],
-        'billing_monthly_price': value['billingMonthlyPrice'],
+        'billing_region': BillingRegionEnumToJSON(value['billingRegion']),
     };
 }
 

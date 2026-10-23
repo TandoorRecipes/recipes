@@ -47,11 +47,11 @@
                     <v-number-input :label="$t('Time')" v-model="step.time" :min="0" :step="5" control-variant="split"></v-number-input>
                 </v-col>
                 <v-col cols="12" md="6" v-if="showRecipe || step.stepRecipe != null">
-                    <model-select model="Recipe" v-model="step.stepRecipeData"
-                                  @update:modelValue="step.stepRecipe = (step.stepRecipeData != null) ? step.stepRecipeData.id! : null"></model-select>
+                    <v-model-select model="Recipe" v-model="step.stepRecipeData" :chips="false"
+                                  @update:modelValue="step.stepRecipe = (step.stepRecipeData != null) ? step.stepRecipeData.id! : null"></v-model-select>
                 </v-col>
                 <v-col cols="12" md="6" v-if="showFile || step.file != null">
-                    <model-select model="UserFile" v-model="step.file"></model-select>
+                    <v-model-select model="UserFile" v-model="step.file"></v-model-select>
                 </v-col>
             </v-row>
 
@@ -76,11 +76,11 @@
                                         </div>
                                     </div>
                                     <div class="flex-col flex-grow-0  ma-1" style="min-width: 15%" v-if="!ingredient.isHeader ">
-                                        <model-select model="Unit" v-model="ingredient.unit" density="compact" allow-create hide-details
-                                                      :disabled="ingredient.noAmount"></model-select>
+                                        <v-model-select model="Unit" v-model="ingredient.unit" density="compact" create hide-details
+                                                      :disabled="ingredient.noAmount"></v-model-select>
                                     </div>
                                     <div class="flex-col flex-grow-1  ma-1" style="min-width: 15%" v-if="!ingredient.isHeader">
-                                        <model-select model="Food" v-model="ingredient.food" density="compact" allow-create hide-details></model-select>
+                                        <v-model-select model="Food" v-model="ingredient.food" density="compact" create hide-details></v-model-select>
                                     </div>
                                     <div class="flex-col ma-1" style="min-width: 15%" :class="{'flex-grow-1': ingredient.isHeader, 'flex-grow-0': !ingredient.isHeader}"
                                          @keydown.tab="event => handleIngredientNoteTab(event, index)">
@@ -199,11 +199,11 @@
                                     :min="0" :precision="useUserPreferenceStore().userSettings.ingredientDecimals"
                                     :disabled="step.ingredients[editingIngredientIndex].noAmount"
                                     v-if="!step.ingredients[editingIngredientIndex].isHeader"></v-number-input>
-                    <model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit" :label="$t('Unit')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
+                    <v-model-select model="Unit" v-model="step.ingredients[editingIngredientIndex].unit"  v-if="!step.ingredients[editingIngredientIndex].isHeader"
                                   :disabled="step.ingredients[editingIngredientIndex].noAmount"
-                                  allow-create></model-select>
-                    <model-select model="Food" v-model="step.ingredients[editingIngredientIndex].food" :label="$t('Food')" v-if="!step.ingredients[editingIngredientIndex].isHeader"
-                                  allow-create></model-select>
+                                  create></v-model-select>
+                    <v-model-select model="Food" v-model="step.ingredients[editingIngredientIndex].food" v-if="!step.ingredients[editingIngredientIndex].isHeader"
+                                  create></v-model-select>
                     <v-text-field :label="(step.ingredients[editingIngredientIndex].isHeader) ?$t('Headline')  : $t('Note')"
                                   v-model="step.ingredients[editingIngredientIndex].note"></v-text-field>
 
@@ -244,6 +244,7 @@ import IngredientString from "@/components/display/IngredientString.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore";
 import StepIngredientSorterDialog from "@/components/dialogs/StepIngredientSorterDialog.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const emit = defineEmits(['delete', 'move'])
 

@@ -18,6 +18,7 @@ import {
     MealTypeFromJSON,
     MealTypeFromJSONTyped,
     MealTypeToJSON,
+    MealTypeToJSONTyped,
 } from './MealType';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedMealTypeList {
      * @type {string}
      * @memberof PaginatedMealTypeList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedMealTypeList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<MealType>}
@@ -85,17 +86,22 @@ export function PaginatedMealTypeListFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function PaginatedMealTypeListToJSON(value?: PaginatedMealTypeList | null): any {
+export function PaginatedMealTypeListToJSON(json: any): PaginatedMealTypeList {
+    return PaginatedMealTypeListToJSONTyped(json, false);
+}
+
+export function PaginatedMealTypeListToJSONTyped(value?: PaginatedMealTypeList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(MealTypeToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

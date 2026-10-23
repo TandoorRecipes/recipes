@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import Food, Recipe, ShareLink, Unit
+from cookbook.models import Food, Recipe, ShareLink, Unit, Keyword
 from cookbook.tests.conftest import get_random_json_recipe, validate_recipe
 
 LIST_URL = 'api:recipe-list'
@@ -259,3 +259,58 @@ def test_food_properties_skipped_on_create(u1_s1, space_1):
     assert r.status_code == 200
     get_response = json.loads(r.content)
     assert len(get_response['food_properties']) > 0
+
+
+def test_batch_update_keywords(u1_s1, space_1, space_2, recipe_1_s1):
+    with scopes_disabled():
+        kw1 = Keyword.objects.create(name='Keyword 1', space=space_1)
+        kw2 = Keyword.objects.create(name='Keyword 2', space=space_1)
+        kw_foreign = Keyword.objects.create(name='Foreign Keyword', space=space_2)
+
+    # Add keywords (foreign keyword must be ignored)
+    r = u1_s1.put(
+        reverse('api:recipe-batch-update'),
+        {'recipes': [recipe_1_s1.id], 'keywords_add': [kw1.id, kw_foreign.id]},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert recipe_1_s1.keywords.filter(id=kw1.id).exists()
+        assert not recipe_1_s1.keywords.filter(id=kw_foreign.id).exists()
+
+    # Set keywords
+    r = u1_s1.put(
+        reverse('api:recipe-batch-update'),
+        {'recipes': [recipe_1_s1.id], 'keywords_set': [kw2.id, kw_foreign.id]},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert recipe_1_s1.keywords.filter(id=kw2.id).exists()
+        assert not recipe_1_s1.keywords.filter(id=kw1.id).exists()
+        assert not recipe_1_s1.keywords.filter(id=kw_foreign.id).exists()
+
+    # Remove keyword
+    r = u1_s1.put(
+        reverse('api:recipe-batch-update'),
+        {'recipes': [recipe_1_s1.id], 'keywords_remove': [kw2.id]},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert not recipe_1_s1.keywords.filter(id=kw2.id).exists()
+
+    # Remove all keywords
+    recipe_1_s1.keywords.add(kw1)
+    r = u1_s1.put(
+        reverse('api:recipe-batch-update'),
+        {'recipes': [recipe_1_s1.id], 'keywords_remove_all': True},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert recipe_1_s1.keywords.count() == 0

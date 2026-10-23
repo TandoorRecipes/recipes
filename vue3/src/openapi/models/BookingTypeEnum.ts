@@ -30,7 +30,7 @@ export type BookingTypeEnum = typeof BookingTypeEnum[keyof typeof BookingTypeEnu
 export function instanceOfBookingTypeEnum(value: any): boolean {
     for (const key in BookingTypeEnum) {
         if (Object.prototype.hasOwnProperty.call(BookingTypeEnum, key)) {
-            if (BookingTypeEnum[key] === value) {
+            if (BookingTypeEnum[key as keyof typeof BookingTypeEnum] === value) {
                 return true;
             }
         }
@@ -48,5 +48,9 @@ export function BookingTypeEnumFromJSONTyped(json: any, ignoreDiscriminator: boo
 
 export function BookingTypeEnumToJSON(value?: BookingTypeEnum | null): any {
     return value as any;
+}
+
+export function BookingTypeEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): BookingTypeEnum {
+    return value as BookingTypeEnum;
 }
 

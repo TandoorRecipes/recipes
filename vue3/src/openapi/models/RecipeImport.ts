@@ -18,6 +18,7 @@ import {
     StorageFromJSON,
     StorageFromJSONTyped,
     StorageToJSON,
+    StorageToJSONTyped,
 } from './Storage';
 
 /**
@@ -49,13 +50,13 @@ export interface RecipeImport {
      * @type {string}
      * @memberof RecipeImport
      */
-    fileUid?: string;
+    readonly fileUid: string;
     /**
      * 
      * @type {string}
      * @memberof RecipeImport
      */
-    filePath?: string;
+    readonly filePath: string;
     /**
      * 
      * @type {Date}
@@ -70,6 +71,8 @@ export interface RecipeImport {
 export function instanceOfRecipeImport(value: object): value is RecipeImport {
     if (!('storage' in value) || value['storage'] === undefined) return false;
     if (!('name' in value) || value['name'] === undefined) return false;
+    if (!('fileUid' in value) || value['fileUid'] === undefined) return false;
+    if (!('filePath' in value) || value['filePath'] === undefined) return false;
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     return true;
 }
@@ -87,23 +90,26 @@ export function RecipeImportFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'id': json['id'] == null ? undefined : json['id'],
         'storage': StorageFromJSON(json['storage']),
         'name': json['name'],
-        'fileUid': json['file_uid'] == null ? undefined : json['file_uid'],
-        'filePath': json['file_path'] == null ? undefined : json['file_path'],
+        'fileUid': json['file_uid'],
+        'filePath': json['file_path'],
         'createdAt': (new Date(json['created_at'])),
     };
 }
 
-export function RecipeImportToJSON(value?: Omit<RecipeImport, 'createdAt'> | null): any {
+export function RecipeImportToJSON(json: any): RecipeImport {
+    return RecipeImportToJSONTyped(json, false);
+}
+
+export function RecipeImportToJSONTyped(value?: Omit<RecipeImport, 'file_uid'|'file_path'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
         'storage': StorageToJSON(value['storage']),
         'name': value['name'],
-        'file_uid': value['fileUid'],
-        'file_path': value['filePath'],
     };
 }
 

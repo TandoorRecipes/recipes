@@ -30,7 +30,7 @@ export type AlignmentEnum = typeof AlignmentEnum[keyof typeof AlignmentEnum];
 export function instanceOfAlignmentEnum(value: any): boolean {
     for (const key in AlignmentEnum) {
         if (Object.prototype.hasOwnProperty.call(AlignmentEnum, key)) {
-            if (AlignmentEnum[key] === value) {
+            if (AlignmentEnum[key as keyof typeof AlignmentEnum] === value) {
                 return true;
             }
         }
@@ -48,5 +48,9 @@ export function AlignmentEnumFromJSONTyped(json: any, ignoreDiscriminator: boole
 
 export function AlignmentEnumToJSON(value?: AlignmentEnum | null): any {
     return value as any;
+}
+
+export function AlignmentEnumToJSONTyped(value: any, ignoreDiscriminator: boolean): AlignmentEnum {
+    return value as AlignmentEnum;
 }
 

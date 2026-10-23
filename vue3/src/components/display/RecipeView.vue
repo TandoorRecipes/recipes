@@ -126,11 +126,11 @@
                 <v-card-text>
                     {{ $t('ConvertUsingAI') }}
 
-                    <model-select model="AiProvider" v-model="selectedAiProvider">
+                    <v-model-select model="AiProvider" v-model="selectedAiProvider">
                         <template #append>
                             <v-btn @click="aiConvertRecipe()" icon="fa-solid fa-person-running" color="success"></v-btn>
                         </template>
-                    </model-select>
+                    </v-model-select>
                     <v-spacer class="mt-10"></v-spacer>
                 </v-card-text>
             </v-card>
@@ -216,6 +216,7 @@ import {useFileApi} from "@/composables/useFileApi.ts";
 import PrivateRecipeBadge from "@/components/display/PrivateRecipeBadge.vue";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import RecipeScalingDialog from "@/components/dialogs/RecipeScalingDialog.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const {request, release} = useWakeLock()
 const {doAiImport, fileApiLoading} = useFileApi()

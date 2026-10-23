@@ -14,7 +14,7 @@
             <v-form :disabled="loading">
 
                 <v-text-field :label="$t('Path')" v-model="editingObj.path"></v-text-field>
-                <model-select :label="$t('Storage')" model="Storage" v-model="editingObj.storage"></model-select>
+                <v-model-select :label="$t('Storage')" model="Storage" v-model="editingObj.storage"></v-model-select>
                 <v-checkbox :label="$t('Enabled')" v-model="editingObj.active"></v-checkbox>
 
                 <p>{{$t('Updated')}}: {{editingObj.updatedAt}}</p>
@@ -32,6 +32,7 @@ import { Sync} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<Sync>, required: false, default: null},

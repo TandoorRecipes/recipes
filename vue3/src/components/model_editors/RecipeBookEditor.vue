@@ -26,20 +26,20 @@
                     <v-form :disabled="loading">
                         <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
                         <v-textarea :label="$t('Description')" v-model="editingObj.description" rows="3"></v-textarea>
-                        <model-select model="User" v-model="editingObj.shared" mode="tags"></model-select>
-                        <model-select model="CustomFilter" v-model="editingObj.filter"></model-select>
+                        <v-model-select model="User" v-model="editingObj.shared" chips multiple></v-model-select>
+                        <v-model-select model="CustomFilter" v-model="editingObj.filter"></v-model-select>
                         <v-number-input :label="$t('Order')" :hint="$t('OrderInformation')" v-model="editingObj.order"></v-number-input>
                     </v-form>
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="recipes">
-                    <model-select model="Recipe" v-model="selectedRecipe">
+                    <v-model-select model="Recipe" v-model="selectedRecipes" multiple chips>
                         <template #append>
-                            <v-btn icon color="create" @click="addRecipeToBook()">
+                            <v-btn icon color="create" @click="addRecipesToBook()">
                                 <v-icon icon="$create"></v-icon>
                             </v-btn>
                         </template>
-                    </model-select>
+                    </v-model-select>
                     <v-data-table-server
                         @update:options="loadRecipeBookEntries"
                         :items="recipeBookEntries"
@@ -69,6 +69,7 @@ import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {ErrorMessageType, MessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import {useI18n} from "vue-i18n";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<RecipeBook>, required: false, default: null},
@@ -92,7 +93,7 @@ const {t} = useI18n()
 const tab = ref("book")
 const recipeBookEntries = ref([] as RecipeBookEntry[])
 
-const selectedRecipe = ref({} as Recipe)
+const selectedRecipes = ref([] as Recipe[])
 
 const tablePage = ref(1)
 const itemCount = ref(0)
@@ -123,31 +124,32 @@ function initializeEditor() {
 }
 
 /**
- * add selected recipe into the book and client list
+ * add selected recipes into the book and client list
  */
-function addRecipeToBook() {
+function addRecipesToBook() {
     let api = new ApiApi()
 
-    if (Object.keys(selectedRecipe.value).length > 0) {
-        let duplicateFound = false
+    if (selectedRecipes.value.length > 0) {
+        selectedRecipes.value.forEach(selectedRecipe => {
+            let duplicateFound = false
 
-        recipeBookEntries.value.forEach(rBE => {
-            if (rBE.recipe == selectedRecipe.value.id) {
-                duplicateFound = true
+            recipeBookEntries.value.forEach(rBE => {
+                if (rBE.recipe == selectedRecipe.id) {
+                    duplicateFound = true
+                }
+            })
+
+            if (!duplicateFound) {
+                api.apiRecipeBookEntryCreate({recipeBookEntry: {book: editingObj.value.id!, recipe: selectedRecipe.id!}}).then(r => {
+                    recipeBookEntries.value.push(r)
+                }).catch(err => {
+                    useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
+                })
+            } else {
+                useMessageStore().addMessage(MessageType.WARNING, t('WarningRecipeBookEntryDuplicate'), 5000)
             }
         })
-
-        if (!duplicateFound) {
-            api.apiRecipeBookEntryCreate({recipeBookEntry: {book: editingObj.value.id!, recipe: selectedRecipe.value.id!}}).then(r => {
-                recipeBookEntries.value.push(r)
-                selectedRecipe.value = {} as Recipe
-            }).catch(err => {
-                useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
-            })
-        } else {
-            selectedRecipe.value = {} as Recipe
-            useMessageStore().addMessage(MessageType.WARNING, $t('WarningRecipeBookEntryDuplicate'), 5000)
-        }
+        selectedRecipes.value = []
     }
 }
 

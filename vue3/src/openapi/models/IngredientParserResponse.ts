@@ -18,6 +18,7 @@ import {
     IngredientSimpleFromJSON,
     IngredientSimpleFromJSONTyped,
     IngredientSimpleToJSON,
+    IngredientSimpleToJSONTyped,
 } from './IngredientSimple';
 
 /**
@@ -64,10 +65,15 @@ export function IngredientParserResponseFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function IngredientParserResponseToJSON(value?: IngredientParserResponse | null): any {
+export function IngredientParserResponseToJSON(json: any): IngredientParserResponse {
+    return IngredientParserResponseToJSONTyped(json, false);
+}
+
+export function IngredientParserResponseToJSONTyped(value?: IngredientParserResponse | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'ingredient': IngredientSimpleToJSON(value['ingredient']),

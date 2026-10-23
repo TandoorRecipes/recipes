@@ -18,6 +18,7 @@ import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -95,7 +96,7 @@ export interface PatchedOpenDataProperty {
      * @type {number}
      * @memberof PatchedOpenDataProperty
      */
-    fdcId?: number;
+    fdcId?: number | null;
     /**
      * 
      * @type {string}
@@ -138,10 +139,15 @@ export function PatchedOpenDataPropertyFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PatchedOpenDataPropertyToJSON(value?: Omit<PatchedOpenDataProperty, 'createdBy'> | null): any {
+export function PatchedOpenDataPropertyToJSON(json: any): PatchedOpenDataProperty {
+    return PatchedOpenDataPropertyToJSONTyped(json, false);
+}
+
+export function PatchedOpenDataPropertyToJSONTyped(value?: Omit<PatchedOpenDataProperty, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

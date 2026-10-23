@@ -18,30 +18,35 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { Keyword } from './Keyword';
 import {
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
+    KeywordToJSONTyped,
 } from './Keyword';
 import type { Step } from './Step';
 import {
     StepFromJSON,
     StepFromJSONTyped,
     StepToJSON,
+    StepToJSONTyped,
 } from './Step';
 import type { Property } from './Property';
 import {
     PropertyFromJSON,
     PropertyFromJSONTyped,
     PropertyToJSON,
+    PropertyToJSONTyped,
 } from './Property';
 import type { NutritionInformation } from './NutritionInformation';
 import {
     NutritionInformationFromJSON,
     NutritionInformationFromJSONTyped,
     NutritionInformationToJSON,
+    NutritionInformationToJSONTyped,
 } from './NutritionInformation';
 
 /**
@@ -67,7 +72,7 @@ export interface Recipe {
      * @type {string}
      * @memberof Recipe
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
@@ -121,7 +126,7 @@ export interface Recipe {
      * @type {string}
      * @memberof Recipe
      */
-    sourceUrl?: string;
+    sourceUrl?: string | null;
     /**
      * 
      * @type {boolean}
@@ -139,7 +144,7 @@ export interface Recipe {
      * @type {NutritionInformation}
      * @memberof Recipe
      */
-    nutrition?: NutritionInformation;
+    nutrition?: NutritionInformation | null;
     /**
      * 
      * @type {Array<Property>}
@@ -163,7 +168,7 @@ export interface Recipe {
      * @type {string}
      * @memberof Recipe
      */
-    filePath?: string;
+    readonly filePath: string;
     /**
      * 
      * @type {string}
@@ -219,6 +224,7 @@ export function instanceOfRecipe(value: object): value is Recipe {
     if (!('createdAt' in value) || value['createdAt'] === undefined) return false;
     if (!('updatedAt' in value) || value['updatedAt'] === undefined) return false;
     if (!('foodProperties' in value) || value['foodProperties'] === undefined) return false;
+    if (!('filePath' in value) || value['filePath'] === undefined) return false;
     if (!('rating' in value) || value['rating'] === undefined) return false;
     if (!('lastCooked' in value) || value['lastCooked'] === undefined) return false;
     return true;
@@ -252,7 +258,7 @@ export function RecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): Re
         'properties': json['properties'] == null ? undefined : ((json['properties'] as Array<any>).map(PropertyFromJSON)),
         'foodProperties': json['food_properties'],
         'servings': json['servings'] == null ? undefined : json['servings'],
-        'filePath': json['file_path'] == null ? undefined : json['file_path'],
+        'filePath': json['file_path'],
         'servingsText': json['servings_text'] == null ? undefined : json['servings_text'],
         'diameter': json['diameter'] == null ? undefined : json['diameter'],
         'diameterText': json['diameter_text'] == null ? undefined : json['diameter_text'],
@@ -263,10 +269,15 @@ export function RecipeFromJSONTyped(json: any, ignoreDiscriminator: boolean): Re
     };
 }
 
-export function RecipeToJSON(value?: Omit<Recipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'> | null): any {
+export function RecipeToJSON(json: any): Recipe {
+    return RecipeToJSONTyped(json, false);
+}
+
+export function RecipeToJSONTyped(value?: Omit<Recipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'file_path'|'rating'|'last_cooked'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -282,7 +293,6 @@ export function RecipeToJSON(value?: Omit<Recipe, 'image'|'createdBy'|'createdAt
         'nutrition': NutritionInformationToJSON(value['nutrition']),
         'properties': value['properties'] == null ? undefined : ((value['properties'] as Array<any>).map(PropertyToJSON)),
         'servings': value['servings'],
-        'file_path': value['filePath'],
         'servings_text': value['servingsText'],
         'diameter': value['diameter'],
         'diameter_text': value['diameterText'],

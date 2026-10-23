@@ -18,6 +18,7 @@ import {
     ConnectorConfigFromJSON,
     ConnectorConfigFromJSONTyped,
     ConnectorConfigToJSON,
+    ConnectorConfigToJSONTyped,
 } from './ConnectorConfig';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedConnectorConfigList {
      * @type {string}
      * @memberof PaginatedConnectorConfigList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedConnectorConfigList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<ConnectorConfig>}
@@ -85,17 +86,22 @@ export function PaginatedConnectorConfigListFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function PaginatedConnectorConfigListToJSON(value?: PaginatedConnectorConfigList | null): any {
+export function PaginatedConnectorConfigListToJSON(json: any): PaginatedConnectorConfigList {
+    return PaginatedConnectorConfigListToJSONTyped(json, false);
+}
+
+export function PaginatedConnectorConfigListToJSONTyped(value?: PaginatedConnectorConfigList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(ConnectorConfigToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

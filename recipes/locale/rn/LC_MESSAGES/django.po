@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 09:33+0200\n"
+"POT-Creation-Date: 2026-06-24 18:06+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -102,6 +102,6 @@ msgstr ""
 msgid "Tandoor Recipe Manager"
 msgstr ""
 
-#: .\recipes\settings.py:611 .\recipes\settings.py:634
+#: .\recipes\settings.py:618 .\recipes\settings.py:641
 msgid "English"
 msgstr ""

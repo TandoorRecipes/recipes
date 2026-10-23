@@ -8,7 +8,7 @@
 
                 </v-col>
                 <v-col>
-                    <v-btn color="primary" class="float-right" href="https://tandoor.dev/manage" target="_blank">{{ $t('ManageSubscription') }}</v-btn>
+                    <v-btn color="primary" class="float-right" :to="{name: 'EnterpriseSettingsBillingSubscription'}" target="_blank">{{ $t('ManageSubscription') }}</v-btn>
 
                 </v-col>
             </v-row>

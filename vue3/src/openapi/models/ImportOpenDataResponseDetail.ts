@@ -69,10 +69,15 @@ export function ImportOpenDataResponseDetailFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function ImportOpenDataResponseDetailToJSON(value?: ImportOpenDataResponseDetail | null): any {
+export function ImportOpenDataResponseDetailToJSON(json: any): ImportOpenDataResponseDetail {
+    return ImportOpenDataResponseDetailToJSONTyped(json, false);
+}
+
+export function ImportOpenDataResponseDetailToJSONTyped(value?: ImportOpenDataResponseDetail | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'total_created': value['totalCreated'],

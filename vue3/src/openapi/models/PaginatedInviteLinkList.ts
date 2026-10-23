@@ -18,6 +18,7 @@ import {
     InviteLinkFromJSON,
     InviteLinkFromJSONTyped,
     InviteLinkToJSON,
+    InviteLinkToJSONTyped,
 } from './InviteLink';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedInviteLinkList {
      * @type {string}
      * @memberof PaginatedInviteLinkList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedInviteLinkList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<InviteLink>}
@@ -85,17 +86,22 @@ export function PaginatedInviteLinkListFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PaginatedInviteLinkListToJSON(value?: PaginatedInviteLinkList | null): any {
+export function PaginatedInviteLinkListToJSON(json: any): PaginatedInviteLinkList {
+    return PaginatedInviteLinkListToJSONTyped(json, false);
+}
+
+export function PaginatedInviteLinkListToJSONTyped(value?: PaginatedInviteLinkList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(InviteLinkToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

@@ -18,6 +18,7 @@ import {
     SyncLogFromJSON,
     SyncLogFromJSONTyped,
     SyncLogToJSON,
+    SyncLogToJSONTyped,
 } from './SyncLog';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedSyncLogList {
      * @type {string}
      * @memberof PaginatedSyncLogList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedSyncLogList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<SyncLog>}
@@ -85,17 +86,22 @@ export function PaginatedSyncLogListFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function PaginatedSyncLogListToJSON(value?: PaginatedSyncLogList | null): any {
+export function PaginatedSyncLogListToJSON(json: any): PaginatedSyncLogList {
+    return PaginatedSyncLogListToJSONTyped(json, false);
+}
+
+export function PaginatedSyncLogListToJSONTyped(value?: PaginatedSyncLogList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(SyncLogToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

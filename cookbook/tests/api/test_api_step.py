@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from django.contrib import auth
 from django.db.models import OuterRef, Subquery
 from django.urls import reverse
 from django_scopes import scopes_disabled
@@ -35,6 +36,19 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
     assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 0
     assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 2
 
+    # ingredients that are part of a private recipe should not be listable by users not shared in that recipe
+    with scopes_disabled():
+        recipe_1_s1.private = True
+        recipe_1_s1.save()
+
+    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 0
+    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 0
+
+    with scopes_disabled():
+        recipe_1_s1.shared.add(auth.get_user(u1_s2))
+
+    assert json.loads(u1_s1.get(reverse(LIST_URL)).content)['count'] == 0
+    assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 2
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
@@ -62,6 +76,34 @@ def test_update(arg, request, recipe_1_s1):
         if r.status_code == 200:
             assert response['instruction'] == 'new'
 
+@pytest.mark.parametrize("arg", [
+    ['a_u', 403],
+    ['g1_s1', 403],
+    ['u1_s1', 200],
+    ['a1_s1', 404],
+    ['g1_s2', 403],
+    ['u1_s2', 404],
+    ['a1_s2', 404],
+])
+def test_update_privater_recipe(arg, request, recipe_1_s1):
+    with scopes_disabled():
+        recipe_1_s1.private = True
+        recipe_1_s1.save()
+
+        s = recipe_1_s1.steps.first()
+        c = request.getfixturevalue(arg[0])
+        r = c.patch(
+            reverse(
+                DETAIL_URL,
+                args={s.id}
+            ),
+            {'instruction': 'new'},
+            content_type='application/json'
+        )
+        response = json.loads(r.content)
+        assert r.status_code == arg[1]
+        if r.status_code == 200:
+            assert response['instruction'] == 'new'
 
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
@@ -88,7 +130,7 @@ def test_add(arg, request, u1_s2):
         assert r.status_code == 404
 
 
-def test_delete(u1_s1, u1_s2, recipe_1_s1):
+def test_delete(u1_s1, u1_s2, a1_s1, recipe_1_s1):
     with scopes_disabled():
         s = recipe_1_s1.steps.first()
         r = u1_s2.delete(
@@ -98,6 +140,20 @@ def test_delete(u1_s1, u1_s2, recipe_1_s1):
             )
         )
         assert r.status_code == 404
+
+        recipe_1_s1.private = True
+        recipe_1_s1.save()
+
+        r = a1_s1.delete(
+            reverse(
+                DETAIL_URL,
+                args={s.id}
+            )
+        )
+        assert r.status_code == 404
+
+        recipe_1_s1.private = False
+        recipe_1_s1.save()
 
         r = u1_s1.delete(
             reverse(

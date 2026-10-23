@@ -18,6 +18,7 @@ import {
     FdcQueryFoodsFromJSON,
     FdcQueryFoodsFromJSONTyped,
     FdcQueryFoodsToJSON,
+    FdcQueryFoodsToJSONTyped,
 } from './FdcQueryFoods';
 
 /**
@@ -80,10 +81,15 @@ export function FdcQueryFromJSONTyped(json: any, ignoreDiscriminator: boolean): 
     };
 }
 
-export function FdcQueryToJSON(value?: FdcQuery | null): any {
+export function FdcQueryToJSON(json: any): FdcQuery {
+    return FdcQueryToJSONTyped(json, false);
+}
+
+export function FdcQueryToJSONTyped(value?: FdcQuery | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'totalHits': value['totalHits'],

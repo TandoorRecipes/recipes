@@ -87,14 +87,19 @@ export function AccessTokenFromJSONTyped(json: any, ignoreDiscriminator: boolean
     };
 }
 
-export function AccessTokenToJSON(value?: Omit<AccessToken, 'token'|'created'|'updated'> | null): any {
+export function AccessTokenToJSON(json: any): AccessToken {
+    return AccessTokenToJSONTyped(json, false);
+}
+
+export function AccessTokenToJSONTyped(value?: Omit<AccessToken, 'token'|'created'|'updated'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
-        'expires': ((value['expires']).toISOString()),
+        'expires': value['expires'].toISOString(),
         'scope': value['scope'],
     };
 }

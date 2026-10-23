@@ -54,7 +54,7 @@ export interface AiProvider {
      * @type {string}
      * @memberof AiProvider
      */
-    url?: string;
+    url?: string | null;
     /**
      * 
      * @type {boolean}
@@ -66,7 +66,7 @@ export interface AiProvider {
      * @type {number}
      * @memberof AiProvider
      */
-    space?: number;
+    space?: number | null;
     /**
      * 
      * @type {Date}
@@ -115,10 +115,15 @@ export function AiProviderFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function AiProviderToJSON(value?: Omit<AiProvider, 'createdAt'|'updatedAt'> | null): any {
+export function AiProviderToJSON(json: any): AiProvider {
+    return AiProviderToJSONTyped(json, false);
+}
+
+export function AiProviderToJSONTyped(value?: Omit<AiProvider, 'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

@@ -34,7 +34,7 @@
                               v-model="useUserPreferenceStore().deviceSettings.shopping_show_selected_supermarket_only"></v-switch>
                 </v-list-item>
                 <v-list-item>
-                    <model-select model="Supermarket" append-to-body v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket"></model-select>
+                    <v-model-select model="Supermarket" v-model="useUserPreferenceStore().deviceSettings.shopping_selected_supermarket"></v-model-select>
                 </v-list-item>
 
                 <v-list-item>
@@ -273,7 +273,7 @@
                         <v-card>
                             <v-card-title>{{ $t('Recipes') }} / {{ $t('Meal_Plan') }}</v-card-title>
                             <v-card-text>
-                                <ModelSelect model="Recipe" v-model="manualAddRecipe" append-to-body>
+                                <v-model-select model="Recipe" v-model="manualAddRecipe">
                                     <template #append>
                                         <v-btn icon="$create" color="create" :disabled="manualAddRecipe == undefined">
                                             <v-icon icon="$create"></v-icon>
@@ -281,7 +281,7 @@
                                                                     @created="useShoppingStore().refreshFromAPI(); manualAddRecipe = undefined"></add-to-shopping-dialog>
                                         </v-btn>
                                     </template>
-                                </ModelSelect>
+                                </v-model-select>
 
                                 <v-list>
                                     <v-list-item v-for="r in useShoppingStore().getAssociatedRecipes()">
@@ -362,6 +362,7 @@ import AddToShoppingDialog from "@/components/dialogs/AddToShoppingDialog.vue";
 import {TSupermarket} from "@/types/Models.ts";
 import ShoppingListSelectChip from "@/components/inputs/ShoppingListSelectChip.vue";
 import CategorySelectChip from "@/components/inputs/CategorySelectChip.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const {t} = useI18n()
 

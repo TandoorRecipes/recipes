@@ -1,7 +1,9 @@
 <template>
     <v-app>
         <v-app-bar color="tandoor" flat density="comfortable" v-if="!useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode">
-
+            <a href="https://tandoor.dev">
+                <v-img src="../../assets/brand_logo.svg" width="140px" class="ms-2"></v-img>
+            </a>
         </v-app-bar>
         <v-app-bar :color="useUserPreferenceStore().activeSpace.navBgColor ? useUserPreferenceStore().activeSpace.navBgColor : useUserPreferenceStore().userSettings.navBgColor"
                    flat density="comfortable" v-if="useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().isPrintMode"
@@ -13,7 +15,6 @@
                 <v-img :src="useUserPreferenceStore().activeSpace.navLogo.preview" width="140px" class="ms-2"
                        v-if="useUserPreferenceStore().userSettings.navShowLogo && useUserPreferenceStore().activeSpace.navLogo != undefined"></v-img>
             </router-link>
-
 
             <v-spacer></v-spacer>
             <global-search-dialog></global-search-dialog>
@@ -35,6 +36,7 @@
                         <v-divider></v-divider>
 
                         <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getUserNavigation()"></component>
+                        <v-list-item prepend-icon="fa-solid fa-arrow-right-from-bracket" @click="logout()">{{ $t('Logout') }}</v-list-item>
                     </v-list>
                 </v-menu>
             </v-avatar>
@@ -44,7 +46,7 @@
                    v-if="useUserPreferenceStore().isAuthenticated && useUserPreferenceStore().activeSpace.maxRecipes == 10 && useUserPreferenceStore().serverSettings.hosted">
             <p class="text-center w-100">
                 {{ $t('HostedFreeVersion') }}
-                <v-btn color="success" size="small" variant="flat" href="https://tandoor.dev/manage">{{ $t('UpgradeNow') }}</v-btn>
+                <v-btn color="success" size="small" variant="flat" :to="{name: 'EnterpriseSettingsBillingSubscription'}">{{ $t('UpgradeNow') }}</v-btn>
             </p>
         </v-app-bar>
         <v-app-bar color="warning" v-if="useUserPreferenceStore().isAuthenticated && isSpaceAboveLimit(useUserPreferenceStore().activeSpace)">
@@ -104,6 +106,7 @@
                 <v-icon icon="fa-fw fas fa-bars"></v-icon>
                 <v-bottom-sheet activator="parent" close-on-content-click>
                     <v-list nav>
+                        <menu-user-info></menu-user-info>
                         <component :is="item.component" :="item" :key="item.title" v-for="item in useNavigation().getBottomNavigation()"></component>
                     </v-list>
                 </v-bottom-sheet>
@@ -127,15 +130,16 @@ import {toVuetifyLocale} from "@/vuetify"
 import VSnackbarQueued from "@/components/display/VSnackbarQueued.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore";
 import NavigationDrawerContextMenu from "@/components/display/NavigationDrawerContextMenu.vue";
-import {nextTick, onMounted, ref} from "vue";
+import {nextTick, onMounted} from "vue";
 import {isSpaceAboveLimit} from "@/utils/logic_utils";
 import {useTitle} from "@vueuse/core";
 import HelpDialog from "@/components/dialogs/HelpDialog.vue";
 import {useNavigation} from "@/composables/useNavigation.ts";
 import {useRouter} from "vue-router";
 import {useI18n} from "vue-i18n";
-import {THousehold, TSpace} from "@/types/Models.ts";
 import MenuUserInfo from "@/components/display/MenuUserInfo.vue";
+import {AuthenticationCurrentSessionApi} from "@/authapi";
+import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 
 const {lgAndUp} = useDisplay()
 const {t} = useI18n()
@@ -144,9 +148,15 @@ const title = useTitle()
 const router = useRouter()
 
 onMounted(() => {
+    init()
+})
+
+function init() {
     useUserPreferenceStore().init().then(() => {
-        if (useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.spaceSetupCompleted) {
+        if (useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().activeSpace.spaceSetupCompleted) {
             router.push({name: 'WelcomePage'})
+        } else if (router.currentRoute.value.name == 'LoginPage' && useUserPreferenceStore().isAuthenticated) {
+            router.push({name: 'StartPage'})
         }
     })
 
@@ -156,13 +166,13 @@ onMounted(() => {
     if (locale != null) {
         current.value = toVuetifyLocale(locale.toLowerCase())
     }
-})
+}
 
 /**
  * global title update handler, might be overridden by page specific handlers
  */
 router.afterEach((to, from) => {
-    if (to.name == 'StartPage' && useUserPreferenceStore().initCompleted && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!) {
+    if (to.name == 'StartPage' && useUserPreferenceStore().initCompleted && useUserPreferenceStore().isAuthenticated && !useUserPreferenceStore().activeSpace.spaceSetupCompleted != undefined && !useUserPreferenceStore().activeSpace.spaceSetupCompleted && useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id!) {
         router.push({name: 'WelcomePage'})
     } else if (to.name == 'StartPage' &&
         useUserPreferenceStore().initCompleted &&
@@ -170,9 +180,16 @@ router.afterEach((to, from) => {
         !useUserPreferenceStore().activeSpace.householdSetupCompleted != undefined &&
         !useUserPreferenceStore().activeSpace.householdSetupCompleted &&
         useUserPreferenceStore().activeSpace.createdBy.id! == useUserPreferenceStore().userSettings.user.id! &&
-        useUserPreferenceStore().activeUserSpace?.household == undefined ) {
+        useUserPreferenceStore().activeUserSpace?.household == undefined) {
         router.push({name: 'HouseholdPage'})
+    } else if (to.name == 'LoginPage' && useUserPreferenceStore().initCompleted && useUserPreferenceStore().isAuthenticated) {
+        router.push({name: 'StartPage'})
     }
+
+    if (from.fullPath.startsWith('/account/') && !to.fullPath.startsWith('/account/')) {
+        init()
+    }
+
     nextTick(() => {
         if (to.meta.title) {
             title.value = t(to.meta.title)
@@ -181,6 +198,18 @@ router.afterEach((to, from) => {
         }
     })
 })
+
+function logout() {
+    let authenticationCurrentSessionApi = new AuthenticationCurrentSessionApi()
+
+    authenticationCurrentSessionApi.allauthClientV1AuthSessionDelete({client: "browser"}).then(r => {
+    }).catch(err => {
+
+    }).finally(() => {
+        useUserPreferenceStore().isAuthenticated = false
+        router.push({name: 'LoginPage'})
+    })
+}
 
 </script>
 
@@ -451,14 +480,18 @@ router.afterEach((to, from) => {
 
 }
 
-/* vueform/multiselect */
-
-.multiselect-option.is-pointed {
-    background: #b98766 !important;
+/* Global Link Styles */
+a {
+    color: rgb(var(--v-theme-primary));
+    text-decoration: none;
+    background-color: transparent;
+    transition: color 0.15s ease-in-out, opacity 0.15s ease-in-out;
 }
 
-.multiselect-option.is-selected {
-    background: #b55e4f !important;
+a:hover {
+    color: rgb(var(--v-theme-primary));
+    text-decoration: underline;
+    opacity: 0.85;
 }
 
 </style>

@@ -184,13 +184,13 @@ server {
     #error_log /var/log/nginx/error.log;
 
     # serve media files
-    location /static/ {
-        alias /var/www/recipes/staticfiles;
-    }
-    
-    location /media/ {
-        alias /var/www/recipes/mediafiles;
-    }
+   location /static/ {
+    alias /var/www/recipes/staticfiles/;
+}
+
+location /media/ {
+    alias /var/www/recipes/mediafiles/;
+}
 
     location / {
         proxy_set_header Host $http_host;

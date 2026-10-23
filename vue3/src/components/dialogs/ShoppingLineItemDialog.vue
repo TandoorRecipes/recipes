@@ -6,10 +6,10 @@
             <v-card-text class="pt-0 pr-4 pl-4">
 
                 <v-label>{{ $t('Choose_Category') }}</v-label>
-                <model-select model="SupermarketCategory" @update:modelValue="category => useShoppingStore().updateCategories([shoppingListFood], category)" allow-create></model-select>
+                <v-model-select model="SupermarketCategory" @update:modelValue="category => useShoppingStore().updateCategories([shoppingListFood], category)" create></v-model-select>
 
                 <v-label>{{ $t('ShoppingList') }}</v-label>
-                <model-select model="ShoppingList" @update:modelValue="shoppingListUpdate" mode="tags" allow-create></model-select>
+                <v-model-select model="ShoppingList" @update:modelValue="shoppingListUpdate" multiple chips create></v-model-select>
 
                 <v-row>
                     <v-col class="pr-0">
@@ -141,6 +141,7 @@ import {isDelayed, isShoppingListFoodDelayed} from "@/utils/logic_utils";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 import ShoppingListsBar from "@/components/display/ShoppingListsBar.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const {mobile} = useDisplay()
 

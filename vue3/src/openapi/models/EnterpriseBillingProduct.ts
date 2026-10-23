@@ -42,13 +42,13 @@ export interface EnterpriseBillingProduct {
      * @type {number}
      * @memberof EnterpriseBillingProduct
      */
-    priceDiscount?: number;
+    priceDiscount?: number | null;
     /**
      * Text to show as reason for the discount
      * @type {string}
      * @memberof EnterpriseBillingProduct
      */
-    discountReason?: string;
+    discountReason?: string | null;
     /**
      * 
      * @type {string}
@@ -72,7 +72,7 @@ export interface EnterpriseBillingProduct {
      * @type {number}
      * @memberof EnterpriseBillingProduct
      */
-    aiCredits?: number;
+    aiCredits?: number | null;
     /**
      * 
      * @type {boolean}
@@ -115,10 +115,15 @@ export function EnterpriseBillingProductFromJSONTyped(json: any, ignoreDiscrimin
     };
 }
 
-export function EnterpriseBillingProductToJSON(value?: EnterpriseBillingProduct | null): any {
+export function EnterpriseBillingProductToJSON(json: any): EnterpriseBillingProduct {
+    return EnterpriseBillingProductToJSONTyped(json, false);
+}
+
+export function EnterpriseBillingProductToJSONTyped(value?: EnterpriseBillingProduct | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

@@ -6,12 +6,13 @@ from io import StringIO
 from uuid import UUID
 
 import redis
+from allauth.account.models import EmailAddress
 from allauth.utils import build_absolute_uri
 from django.apps import apps
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.cache import caches
 from django.core.exceptions import ValidationError, PermissionDenied, BadRequest
@@ -26,10 +27,11 @@ from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
 
-from cookbook.forms import Recipe, SpaceCreateForm, SpaceJoinForm, User, UserCreateForm
+from cookbook.forms import Recipe, UserCreateForm
 from cookbook.helper.HelperFunctions import str2bool
-from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, has_group_permission, share_link_valid, switch_user_active_space
-from cookbook.models import InviteLink, ShareLink, Space, UserSpace
+from cookbook.helper.permission_helper import CustomIsGuest, GroupRequiredMixin, has_group_permission, share_link_valid, switch_user_active_space, process_invite_token, \
+    create_space_for_user
+from cookbook.models import ShareLink, Space
 from cookbook.templatetags.theming_tags import get_theming_values
 from cookbook.version_info import VERSION_INFO
 from recipes.settings import PLUGINS, BASE_DIR
@@ -42,16 +44,13 @@ def index(request, path=None, resource=None):
             if User.objects.count() < 1 and 'django.contrib.auth.backends.RemoteUserBackend' not in settings.AUTHENTICATION_BACKENDS:
                 return HttpResponseRedirect(reverse_lazy('view_setup'))
 
-    if 'signup_token' in request.session:
+    if 'signup_token' in request.session and request.user.is_authenticated:
         value = request.session['signup_token']
         del request.session['signup_token']
         request.session.modified = True
-        return HttpResponseRedirect(reverse('view_invite', args=[value]))
+        process_invite_token(request.user, value)
 
-    if request.user.is_authenticated or re.search(r'/recipe/\d+/', request.path[:512]) and request.GET.get('share'):
-        return render(request, 'frontend/tandoor.html', {})
-    else:
-        return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
+    return render(request, 'frontend/tandoor.html', {})
 
 
 def redirect_recipe_view(request, pk):
@@ -70,7 +69,7 @@ def search(request):
     if settings.V3_BETA:
         return HttpResponseRedirect(reverse('vue3'))
 
-    if has_group_permission(request.user, ('guest',)):
+    if has_group_permission(request, ('guest',)):
         return render(request, 'search.html', {})
     else:
         if request.user.is_authenticated:
@@ -81,61 +80,6 @@ def search(request):
 
 def no_groups(request):
     return render(request, 'no_groups_info.html')
-
-
-@login_required
-def space_overview(request):
-    if request.POST:
-        create_form = SpaceCreateForm(request.POST, prefix='create')
-        join_form = SpaceJoinForm(request.POST, prefix='join')
-        if settings.HOSTED and request.user.username == 'demo':
-            messages.add_message(request, messages.WARNING, _('This feature is not available in the demo version!'))
-        else:
-            if create_form.is_valid():
-                if Space.objects.filter(created_by=request.user).count() >= request.user.userpreference.max_owned_spaces:
-                    messages.add_message(request, messages.ERROR,
-                                         _('You have the reached the maximum amount of spaces that can be owned by you.') + f' ({request.user.userpreference.max_owned_spaces})')
-                    return HttpResponseRedirect(reverse('view_space_overview'))
-
-                created_space = Space.objects.create(name=create_form.cleaned_data['name'],
-                                                     created_by=request.user,
-                                                     max_file_storage_mb=settings.SPACE_DEFAULT_MAX_FILES,
-                                                     max_recipes=settings.SPACE_DEFAULT_MAX_RECIPES,
-                                                     max_users=settings.SPACE_DEFAULT_MAX_USERS,
-                                                     allow_sharing=settings.SPACE_DEFAULT_ALLOW_SHARING,
-                                                     ai_enabled=settings.SPACE_AI_ENABLED,
-                                                     ai_credits_monthly=settings.SPACE_AI_CREDITS_MONTHLY, )
-
-                user_space = UserSpace.objects.create(space=created_space, user=request.user, active=False)
-                user_space.groups.add(Group.objects.filter(name='admin').get())
-
-                messages.add_message(request, messages.SUCCESS,
-                                     _('You have successfully created your own recipe space. Start by adding some recipes or invite other people to join you.'))
-                return HttpResponseRedirect(reverse('view_switch_space', args=[user_space.space.pk]))
-
-            if join_form.is_valid():
-                return HttpResponseRedirect(reverse('view_invite', args=[join_form.cleaned_data['token']]))
-    else:
-        if settings.SOCIAL_DEFAULT_ACCESS and len(request.user.userspace_set.all()) == 0:
-            space = Space.objects.first()
-            group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
-            if space and group:
-                user_space = UserSpace.objects.create(space=space, user=request.user, active=False)
-                user_space.groups.add(group)
-                return HttpResponseRedirect(reverse('index'))
-            else:
-                if not space:
-                    print(f'WARNING: SOCIAL_DEFAULT_ACCESS is enabled but no Space exists. Cannot auto-assign user {request.user}.')
-                if not group:
-                    print(f'WARNING: SOCIAL_DEFAULT_GROUP={settings.SOCIAL_DEFAULT_GROUP!r} does not match any Group. Cannot auto-assign user {request.user}.')
-        if 'signup_token' in request.session:
-            return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
-
-        create_form = SpaceCreateForm(initial={'name': f'{request.user.get_user_display_name()}\'s Space'})
-        join_form = SpaceJoinForm()
-
-    return render(request, 'space_overview.html', {'create_form': create_form, 'join_form': join_form})
-
 
 @login_required
 def switch_space(request, space_id):
@@ -155,7 +99,7 @@ def recipe_pdf_viewer(request, pk):
     with scopes_disabled():
         recipe = get_object_or_404(Recipe, pk=pk)
         if share_link_valid(recipe, request.GET.get('share', None)) or (has_group_permission(
-                request.user, ['guest']) and recipe.space == request.space):
+                request, ['guest']) and recipe.space == request.space):
             return render(request, 'pdf_viewer.html', {'recipe_id': pk, 'share': request.GET.get('share', None)})
         return HttpResponseRedirect(reverse('index'))
 
@@ -367,8 +311,12 @@ def setup(request):
                         user.set_password(form.cleaned_data['password'])
                         user.save()
 
+                        create_space_for_user(user, name=None)
+
+                        EmailAddress.objects.create(user=user, email=f'{user.username}@default-adminmail.tandoor', primary=True, verified=True)
+
                         messages.add_message(request, messages.SUCCESS, _('User has been created, please login!'))
-                        return HttpResponseRedirect(reverse('account_login'))
+                        return HttpResponseRedirect(reverse('index'))
                     except ValidationError as e:
                         for m in e:
                             form.add_error('password', m)
@@ -386,24 +334,14 @@ def invite_link(request, token):
             print('Malformed Invite Link supplied!')
             return HttpResponseRedirect(reverse('index'))
 
-        if link := InviteLink.objects.filter(valid_until__gte=timezone.now().date(), used_by=None, uuid=token).first():
-            if request.user.is_authenticated:
-                if not request.user.userspace_set.filter(space=link.space).exists():
-                    if not link.reusable:
-                        link.used_by = request.user
-                        link.save()
-
-                    UserSpace.objects.filter(user=request.user).update(active=False)
-                    user_space = UserSpace.objects.create(user=request.user, space=link.space, internal_note=link.internal_note, invite_link=link, household=link.household, active=True)
-
-                    user_space.groups.add(link.group)
-
-                return HttpResponseRedirect(reverse('index'))
-            else:
-                request.session['signup_token'] = str(token)
-                if settings.SOCIALACCOUNT_ONLY:
-                    return HttpResponseRedirect(reverse('account_login'))
-                return HttpResponseRedirect(reverse('account_signup'))
+        if request.user.is_authenticated:
+            process_invite_token(request.user, token)
+            return HttpResponseRedirect(reverse('index'))
+        else:
+            request.session['signup_token'] = str(token)
+            if settings.SOCIALACCOUNT_ONLY:
+                return HttpResponseRedirect('/account/login/')
+            return HttpResponseRedirect('/account/signup/')
 
     return HttpResponseRedirect(reverse('index'))
 

@@ -4,6 +4,7 @@ Reproduction tests for open data importer bugs.
 #4231 - French food names stay English after FR import
 #3030 - UNIQUE constraint failure on existing space
 #2972 - Inconsistent update behavior (fields not updated)
+#4713 - Open Data Import fails when 'Property' is unselected
 #939  - MP Tree performance (not tested here - requires benchmarking)
 """
 import pytest
@@ -368,3 +369,84 @@ class TestErrorHandlingGranularity:
         with scopes_disabled():
             assert Food.objects.filter(space=space_1, name='Onion').exists()
             assert Food.objects.filter(space=space_1, name='Tomato').count() == 1
+
+
+@pytest.mark.django_db
+class TestIssue4713_PropertyUnselected:
+    """
+    #4713: Open Data Import fails with KeyError when the 'property' datatype is
+    unselected but 'food' is imported.
+
+    Root cause: import_food() unconditionally iterates each food's
+    properties['type_values'] and looks up self.slug_id_cache['property'][...].
+    That cache is only populated when property types were imported (they get an
+    open_data_slug). When the user unselects 'Property', import_property() is
+    never run, the cache is empty, and the food data still carries type_values,
+    so the lookup raises KeyError (e.g. 'property-fats').
+    """
+
+    def _food_with_property(self, name, property_slug='property-fats', value=81):
+        return _food_entry(
+            name,
+            properties={
+                'food_amount': 100,
+                'food_unit': 'g',
+                'type_values': [
+                    {'property_type': property_slug, 'property_value': value},
+                ],
+            },
+        )
+
+    def test_import_food_without_property_datatype_does_not_raise(self, space_1):
+        """
+        Food carries a property whose type was never imported (property
+        unselected). import_food must not raise KeyError and must still create
+        the food.
+        """
+        food_data = _make_open_data(
+            foods={
+                'food-butter': self._food_with_property('Butter'),
+            },
+        )
+
+        request = _make_request(space_1)
+        importer = OpenDataImporter(request, food_data, update_existing=False)
+
+        # BUG #4713: this raised KeyError: 'property-fats' before the fix
+        try:
+            _import_with_scopes_disabled(importer, 'import_food')
+        except KeyError as e:
+            pytest.fail(f"Bug #4713 reproduced: import_food raised KeyError({e})")
+
+        with scopes_disabled():
+            assert Food.objects.filter(space=space_1, open_data_slug='food-butter').exists(), (
+                "Food should still be created when the property datatype is unselected"
+            )
+
+    def test_import_food_with_property_datatype_still_links_properties(self, space_1):
+        """
+        When the property datatype IS imported first, the food property is still
+        created and linked. Guards the fix against over-skipping.
+        """
+        from cookbook.models import Property, PropertyType
+
+        property_data = {
+            'property-fats': {'name': 'Fats', 'unit': 'g', 'fdc_id': None},
+        }
+        food_data = {
+            'food-butter': self._food_with_property('Butter'),
+        }
+        data = _make_open_data(foods=food_data)
+        data['property'] = property_data
+
+        request = _make_request(space_1)
+        importer = OpenDataImporter(request, data, update_existing=False)
+
+        _import_with_scopes_disabled(importer, 'import_property')
+        _import_with_scopes_disabled(importer, 'import_food')
+
+        with scopes_disabled():
+            fats = PropertyType.objects.get(space=space_1, open_data_slug='property-fats')
+            prop = Property.objects.get(space=space_1, open_data_food_slug='food-butter')
+            assert prop.property_type_id == fats.id
+            assert float(prop.property_amount) == 81

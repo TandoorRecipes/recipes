@@ -54,31 +54,31 @@ export interface RecipeBatchUpdate {
      * @type {number}
      * @memberof RecipeBatchUpdate
      */
-    workingTime?: number;
+    workingTime?: number | null;
     /**
      * 
      * @type {number}
      * @memberof RecipeBatchUpdate
      */
-    waitingTime?: number;
+    waitingTime?: number | null;
     /**
      * 
      * @type {number}
      * @memberof RecipeBatchUpdate
      */
-    servings?: number;
+    servings?: number | null;
     /**
      * 
      * @type {string}
      * @memberof RecipeBatchUpdate
      */
-    servingsText?: string;
+    servingsText?: string | null;
     /**
      * 
      * @type {boolean}
      * @memberof RecipeBatchUpdate
      */
-    _private?: boolean;
+    _private?: boolean | null;
     /**
      * 
      * @type {Array<number>}
@@ -108,13 +108,13 @@ export interface RecipeBatchUpdate {
      * @type {boolean}
      * @memberof RecipeBatchUpdate
      */
-    showIngredientOverview?: boolean;
+    showIngredientOverview?: boolean | null;
     /**
      * 
      * @type {boolean}
      * @memberof RecipeBatchUpdate
      */
-    clearDescription?: boolean;
+    clearDescription?: boolean | null;
 }
 
 /**
@@ -160,10 +160,15 @@ export function RecipeBatchUpdateFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function RecipeBatchUpdateToJSON(value?: RecipeBatchUpdate | null): any {
+export function RecipeBatchUpdateToJSON(json: any): RecipeBatchUpdate {
+    return RecipeBatchUpdateToJSONTyped(json, false);
+}
+
+export function RecipeBatchUpdateToJSONTyped(value?: RecipeBatchUpdate | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'recipes': value['recipes'],

@@ -18,6 +18,7 @@ import {
     OpenDataCategoryFromJSON,
     OpenDataCategoryFromJSONTyped,
     OpenDataCategoryToJSON,
+    OpenDataCategoryToJSONTyped,
 } from './OpenDataCategory';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedOpenDataCategoryList {
      * @type {string}
      * @memberof PaginatedOpenDataCategoryList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedOpenDataCategoryList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<OpenDataCategory>}
@@ -85,17 +86,22 @@ export function PaginatedOpenDataCategoryListFromJSONTyped(json: any, ignoreDisc
     };
 }
 
-export function PaginatedOpenDataCategoryListToJSON(value?: PaginatedOpenDataCategoryList | null): any {
+export function PaginatedOpenDataCategoryListToJSON(json: any): PaginatedOpenDataCategoryList {
+    return PaginatedOpenDataCategoryListToJSONTyped(json, false);
+}
+
+export function PaginatedOpenDataCategoryListToJSONTyped(value?: PaginatedOpenDataCategoryList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(OpenDataCategoryToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

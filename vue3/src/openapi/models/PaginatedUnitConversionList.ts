@@ -18,6 +18,7 @@ import {
     UnitConversionFromJSON,
     UnitConversionFromJSONTyped,
     UnitConversionToJSON,
+    UnitConversionToJSONTyped,
 } from './UnitConversion';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedUnitConversionList {
      * @type {string}
      * @memberof PaginatedUnitConversionList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedUnitConversionList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<UnitConversion>}
@@ -85,17 +86,22 @@ export function PaginatedUnitConversionListFromJSONTyped(json: any, ignoreDiscri
     };
 }
 
-export function PaginatedUnitConversionListToJSON(value?: PaginatedUnitConversionList | null): any {
+export function PaginatedUnitConversionListToJSON(json: any): PaginatedUnitConversionList {
+    return PaginatedUnitConversionListToJSONTyped(json, false);
+}
+
+export function PaginatedUnitConversionListToJSONTyped(value?: PaginatedUnitConversionList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(UnitConversionToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

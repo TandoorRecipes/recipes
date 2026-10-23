@@ -7,10 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 09:33+0200\n"
+"POT-Creation-Date: 2026-06-24 18:06+0200\n"
 "PO-Revision-Date: 2026-05-02 22:56+0000\n"
-"Last-Translator: Tandoor Translate user 403 "
-"<mirunaku@users.noreply.translate.tandoor.dev>\n"
+"Last-Translator: Tandoor Translate user 403 <mirunaku@users.noreply."
+"translate.tandoor.dev>\n"
 "Language-Team: Estonian <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/et/>\n"
 "Language: et\n"
@@ -186,11 +186,11 @@ msgstr "vaakumküpsetus"
 msgid "You must supply a servings size"
 msgstr "Teil tuleb lisada portsjoni suurus"
 
-#: .\cookbook\helper\template_helper.py:135
-#: .\cookbook\helper\template_helper.py:137
-#: .\cookbook\helper\template_helper.py:139
-#: .\cookbook\helper\template_helper.py:141
-#: .\cookbook\helper\template_helper.py:143
+#: .\cookbook\helper\template_helper.py:156
+#: .\cookbook\helper\template_helper.py:158
+#: .\cookbook\helper\template_helper.py:160
+#: .\cookbook\helper\template_helper.py:162
+#: .\cookbook\helper\template_helper.py:164
 msgid "Could not parse template code."
 msgstr "Mallikoodi tõlgendamine ei õnnestunud."
 
@@ -203,14 +203,30 @@ msgstr "Lemmik"
 msgid "I made this"
 msgstr "Mina tegin selle"
 
-#: .\cookbook\integration\integration.py:233
+#: .\cookbook\integration\integration.py:67
+msgid "Too many files in zip"
+msgstr ""
+
+#: .\cookbook\integration\integration.py:71
+msgid "Zip file too large"
+msgstr ""
+
+#: .\cookbook\integration\integration.py:84
+msgid "Nested zip files too deep"
+msgstr ""
+
+#: .\cookbook\integration\integration.py:92
+msgid "File in zip too large"
+msgstr ""
+
+#: .\cookbook\integration\integration.py:270
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
 msgstr ""
 "Importija ootas .zip-faili. Kas valisite oma andmete jaoks õige failitüübi?"
 
-#: .\cookbook\integration\integration.py:235
+#: .\cookbook\integration\integration.py:272
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
@@ -218,11 +234,11 @@ msgstr ""
 "Impordi käigus tekkis ootamatu viga. Palun veenduge, et olete üles laadinud "
 "õige faili."
 
-#: .\cookbook\integration\integration.py:239
+#: .\cookbook\integration\integration.py:276
 msgid "The following recipes were ignored because they already existed:"
 msgstr "Järgnevad retseptid jäeti vahele, sest need olid juba olemas:"
 
-#: .\cookbook\integration\integration.py:242
+#: .\cookbook\integration\integration.py:279
 #, python-format
 msgid "Imported %s recipes."
 msgstr "Imporditi %s retsepti."
@@ -385,8 +401,8 @@ msgid ""
 "Maximum file storage for space in MB. 0 for unlimited, -1 to disable file "
 "upload."
 msgstr ""
-"Maksimaalne failide salvestusruum megabaitides (MB). 0 tähendab piiramatut, -"
-"1 keelab failide üleslaadimise."
+"Maksimaalne failide salvestusruum megabaitides (MB). 0 tähendab piiramatut, "
+"-1 keelab failide üleslaadimise."
 
 #: .\cookbook\models.py:513
 msgid "Search"
@@ -677,8 +693,8 @@ msgid ""
 "            ."
 msgstr ""
 "Palun kinnitage, et\n"
-"            <a href=\"mailto:%(email)s\">%(email)s</a> on kasutaja %"
-"(user_display)s e-posti aadress\n"
+"            <a href=\"mailto:%(email)s\">%(email)s</a> on kasutaja "
+"%(user_display)s e-posti aadress\n"
 "            ."
 
 #: .\cookbook\templates\account\email_confirm.html:22
@@ -1152,8 +1168,8 @@ msgstr ""
 "Saadaval on mitu allpool kirjeldatud meetodit, mis kontrollivad, kuidas "
 "otsingukäitumine peaks mitme sõna otsimisel reageerima.\n"
 "Täielikke tehnilisi üksikasju nende toimimise kohta saab vaadata <a "
-"href=https://www.postgresql.org/docs/current/textsearch-"
-"controls.html#TEXTSEARCH-PARSING-QUERIES>PostgreSQL-i veebisaidilt.</a>\n"
+"href=https://www.postgresql.org/docs/current/textsearch-controls."
+"html#TEXTSEARCH-PARSING-QUERIES>PostgreSQL-i veebisaidilt.</a>\n"
 "            "
 
 #: .\cookbook\templates\search_info.html:29
@@ -1258,8 +1274,8 @@ msgstr ""
 "„els” jne ning arvutatakse skoor, mis näitab, kui suures ulatuses "
 "andmebaasis olevad sõnad genereeritud trigrammidega kokku langevad.\n"
 "            Trigramm-otsingu üheks suurimaks eeliseks on asjaolu, et otsides "
-"näiteks sõna „võileib”, leiab süsteem üles ka trükivigadega variandid (nt „"
-"võileip”), mis muude meetodite puhul jääksid leidmata.\n"
+"näiteks sõna „võileib”, leiab süsteem üles ka trükivigadega variandid (nt "
+"„võileip”), mis muude meetodite puhul jääksid leidmata.\n"
 "            "
 
 #: .\cookbook\templates\search_info.html:69
@@ -1311,10 +1327,10 @@ msgstr ""
 "Muude valikute puhul saate otsingu sisse lülitada mis tahes väljal või "
 "kõikidel väljadel korraga ning need kombineeritakse omavahel vaikimisi "
 "loogilise operaatoriga „VÕI” (OR).\n"
-"Näiteks kui määrate välja „Nimi” otsingutüübiks „Algab”, väljade „Nimi” ja „"
-"Kirjeldus” tüübiks „Osaline vaste” ning väljade „Koostisosad” ja „Märksõnad” "
-"tüübiks „Täistekstiotsing”, genereerib otsisõna „õun” päringu, mis tagastab "
-"retseptid järgmistel tingimustel:\n"
+"Näiteks kui määrate välja „Nimi” otsingutüübiks „Algab”, väljade „Nimi” ja "
+"„Kirjeldus” tüübiks „Osaline vaste” ning väljade „Koostisosad” ja "
+"„Märksõnad” tüübiks „Täistekstiotsing”, genereerib otsisõna „õun” päringu, "
+"mis tagastab retseptid järgmistel tingimustel:\n"
 "\n"
 "   - Retsepti nimi algab sõnaga „õun”\n"
 "   - VÕI retsepti nimi sisaldab sõna „õun”\n"
@@ -1410,7 +1426,8 @@ msgstr ""
 #: .\cookbook\templates\socialaccount\connections.html:44
 msgid ""
 "You currently have no social network accounts connected to this account."
-msgstr "Teil pole hetkel selle kontoga seotud ühtegi sotsiaalvõrgustiku kontot."
+msgstr ""
+"Teil pole hetkel selle kontoga seotud ühtegi sotsiaalvõrgustiku kontot."
 
 #: .\cookbook\templates\socialaccount\connections.html:47
 msgid "Add a 3rd Party Account"
@@ -1441,8 +1458,8 @@ msgstr "Logi sisse %(provider)s kaudu"
 #, python-format
 msgid "You are about to sign in using a third party account from %(provider)s."
 msgstr ""
-"Olete sisse logimas, kasutades kolmanda osapoole kontot pakkujalt %(provider)"
-"s."
+"Olete sisse logimas, kasutades kolmanda osapoole kontot pakkujalt "
+"%(provider)s."
 
 #: .\cookbook\templates\socialaccount\login.html:20
 msgid "Continue"
@@ -1556,8 +1573,8 @@ msgstr ""
 "\n"
 "        Tandoor Recipes on avatud lähtekoodiga tasuta tarkvararakendus. See "
 "on leitav\n"
-"        <a href=\"https://github.com/TandoorRecipes/recipes\">GitHubist</a>"
-".\n"
+"        <a href=\"https://github.com/TandoorRecipes/recipes\">GitHubist</"
+"a>.\n"
 "        Muudatuste logid on leitavad <a href=\"https://github.com/"
 "TandoorRecipes/recipes/releases\">siit</a>.\n"
 "    "
@@ -1610,8 +1627,8 @@ msgid ""
 msgstr ""
 "Meediumifailide serveerimine otse guncorn/pythoni kaudu ei ole soovitatav!\n"
 "            Palun järgige samme, mida on kirjeldatud\n"
-"            <a href=\"https://github.com/vabene1111/recipes/releases/tag/"
-"0.8.1\">siin</a>, et uuendada\n"
+"            <a href=\"https://github.com/vabene1111/recipes/releases/"
+"tag/0.8.1\">siin</a>, et uuendada\n"
 "            oma installatsiooni.\n"
 "        "
 
@@ -1638,8 +1655,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"            Teil ei ole <code>.env</code> failis seadistatud <code>"
-"SECRET_KEY</code>-d. Django kasutas vaikimisi\n"
+"            Teil ei ole <code>.env</code> failis seadistatud "
+"<code>SECRET_KEY</code>-d. Django kasutas vaikimisi\n"
 "            standardset võtit,\n"
 "            mis on kaasas paigaldusega, on avalikult teada ja ebaturvaline! "
 "Palun määrake\n"
@@ -1890,7 +1907,7 @@ msgstr ""
 "Tagastab kõik kirjed, millel on sama toit kui antud koodil. Kui kood on "
 "antud, siis toidu parameetrit eiratakse"
 
-#: .\cookbook\views\api.py:869 .\cookbook\views\api.py:902
+#: .\cookbook\views\api.py:869 .\cookbook\views\api.py:903
 msgid "Returns all entries with the given food id"
 msgstr "Tagastab kõik kanded antud toidu id-ga"
 
@@ -1898,27 +1915,27 @@ msgstr "Tagastab kõik kanded antud toidu id-ga"
 msgid "Returns all entries with the given inventory location id"
 msgstr "Tagastab kõik kirjed antud laokoha id-ga"
 
-#: .\cookbook\views\api.py:903
+#: .\cookbook\views\api.py:904
 msgid "Returns all entries with the given entry id"
 msgstr "Tagastab kõik kirjed antud kirje id-ga"
 
-#: .\cookbook\views\api.py:1106
+#: .\cookbook\views\api.py:1107
 #, python-brace-format
 msgid "{obj.name} was removed from the shopping list."
 msgstr "{obj.name} eemaldati ostunimekirjast."
 
-#: .\cookbook\views\api.py:1111 .\cookbook\views\api.py:1912
+#: .\cookbook\views\api.py:1112 .\cookbook\views\api.py:1922
 #, python-brace-format
 msgid "{obj.name} was added to the shopping list."
 msgstr "{obj.name} lisati ostunimekirja."
 
-#: .\cookbook\views\api.py:1228 .\cookbook\views\api.py:2030
-#: .\cookbook\views\api.py:2710 .\cookbook\views\api.py:2871
+#: .\cookbook\views\api.py:1229 .\cookbook\views\api.py:2040
+#: .\cookbook\views\api.py:2722 .\cookbook\views\api.py:2889
 msgid "You must select an AI provider to perform your request."
 msgstr "Päringu täitmiseks peate valima AI teebuspakkuja."
 
-#: .\cookbook\views\api.py:1235 .\cookbook\views\api.py:2037
-#: .\cookbook\views\api.py:2717 .\cookbook\views\api.py:2878
+#: .\cookbook\views\api.py:1236 .\cookbook\views\api.py:2047
+#: .\cookbook\views\api.py:2729 .\cookbook\views\api.py:2896
 msgid ""
 "You don't have any credits remaining to use AI or AI features are not "
 "enabled for your space."
@@ -1926,7 +1943,7 @@ msgstr ""
 "Teil ei ole AI kasutamiseks krediiti jälgi või ei ole AI funktsioonid teie "
 "tööruumis lubatud."
 
-#: .\cookbook\views\api.py:1479
+#: .\cookbook\views\api.py:1484
 msgid ""
 "Filter meal plans from date (inclusive). If nothing is given its today - 90 "
 "days."
@@ -1934,7 +1951,7 @@ msgstr ""
 "Filtreeri toidukavasid kuupäeva järgi (kaasa arvatud). Kui midagi pole "
 "märgitud, on selleks täna - 90 päeva."
 
-#: .\cookbook\views\api.py:1481
+#: .\cookbook\views\api.py:1486
 msgid ""
 "Filter meal plans to date (inclusive). If nothing is given its today + 360 "
 "days."
@@ -1942,32 +1959,32 @@ msgstr ""
 "Filtreeri toidukordi kuupäevani (k.a). Kui midagi pole märgitud, on selleks "
 "täna + 360 päeva."
 
-#: .\cookbook\views\api.py:1484
+#: .\cookbook\views\api.py:1489
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
 msgstr ""
 "Filtreeri toidukavasid MealType ID järgi. Mitme valiku puhul korda "
 "parameetrit."
 
-#: .\cookbook\views\api.py:1573
+#: .\cookbook\views\api.py:1578
 msgid "No recipes found."
 msgstr "Retsepte ei leitud."
 
-#: .\cookbook\views\api.py:1670
+#: .\cookbook\views\api.py:1677
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr "Retsepti ID, mille juurde samm kuulub. Mitme korduva parameetri puhul."
 
-#: .\cookbook\views\api.py:1672
+#: .\cookbook\views\api.py:1679
 msgid "Query string matched (fuzzy) against object name."
 msgstr "Päringusõne on (hägusalt) vastavusse viidud objekti nimega."
 
-#: .\cookbook\views\api.py:1708
+#: .\cookbook\views\api.py:1718
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
 msgstr ""
 "Oringupäringu vaste (hägus) retsepti nimega. Tulevikus ka täistekstotsing."
 
-#: .\cookbook\views\api.py:1710
+#: .\cookbook\views\api.py:1720
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
@@ -1975,175 +1992,175 @@ msgstr ""
 "Märksõna ID, mis retseptil peaks olema. Mitme puhul korda parameetrit. "
 "Võrdväärne keywords_or-iga"
 
-#: .\cookbook\views\api.py:1711
+#: .\cookbook\views\api.py:1721
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
 "Märksõnade ID-d, korda mitme puhul. Tagasta retseptid mis tahes märksõnaga"
 
-#: .\cookbook\views\api.py:1712
+#: .\cookbook\views\api.py:1722
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr ""
 "Märksõna ID-d, korda mitme puhul. Tagasta retseptid, millel on kõik need "
 "märksõnad."
 
-#: .\cookbook\views\api.py:1713
+#: .\cookbook\views\api.py:1723
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr ""
 "Märksõnade ID-d, korda mitme puhul. Välista retseptid, mis sisaldavad mõnda "
 "neist märksõnadest."
 
-#: .\cookbook\views\api.py:1714
+#: .\cookbook\views\api.py:1724
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr ""
 "Märksõnade ID-d, mitme puhul korda. Välista retseptid, millel on kõik need "
 "märksõnad."
 
-#: .\cookbook\views\api.py:1716
+#: .\cookbook\views\api.py:1726
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr "Toidu ID, mis retseptil peaks olema. Mitme puhul korda parameetrit."
 
-#: .\cookbook\views\api.py:1717
+#: .\cookbook\views\api.py:1727
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr ""
 "Toidu ID-d, korda mitme puhul. Tagasta retseptid, mis sisaldavad mistahes "
 "neist toitudest"
 
-#: .\cookbook\views\api.py:1718
+#: .\cookbook\views\api.py:1728
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr ""
 "Toidu ID-d, korda mitme puhul. Tagasta retseptid, mis sisaldavad kõiki "
 "toiduaineid."
 
-#: .\cookbook\views\api.py:1719
+#: .\cookbook\views\api.py:1729
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr ""
 "Toidu ID-d, korda mitme puhul. Välista retseptid, mis sisaldavad mistahes "
 "neist toitudest."
 
-#: .\cookbook\views\api.py:1720
+#: .\cookbook\views\api.py:1730
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr ""
 "Toidu ID-d, korda mitme puhul. Välista retseptid, mis sisaldavad kõiki neid "
 "toite."
 
-#: .\cookbook\views\api.py:1722
+#: .\cookbook\views\api.py:1732
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr "Retseptiraamatu ID. Mitme puhul korda parameetrit."
 
-#: .\cookbook\views\api.py:1723
+#: .\cookbook\views\api.py:1733
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
 msgstr ""
 "Raamatu ID-d, korda mitme puhul. Tagasta retseptid, mis on seotud ükskõik "
 "millise nendest raamatutest"
 
-#: .\cookbook\views\api.py:1724
+#: .\cookbook\views\api.py:1734
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
 msgstr "Raamatu ID-d, korda mitme puhul. Tagasta retseptid kõigi raamatutega."
 
-#: .\cookbook\views\api.py:1725
+#: .\cookbook\views\api.py:1735
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
 "Raamatu ID-d, korda mitme puhul. Välista retseptid, mis sisaldavad mõnda "
 "neist raamatutest."
 
-#: .\cookbook\views\api.py:1726
+#: .\cookbook\views\api.py:1736
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
 msgstr ""
 "Raamatu ID-d, korda mitme puhul. Välista retseptid, mis sisaldavad kõiki "
 "neid raamatuid."
 
-#: .\cookbook\views\api.py:1728
+#: .\cookbook\views\api.py:1738
 msgid "ID of unit a recipe should have."
 msgstr "Ühiku ID, mis retseptil peaks olema."
 
-#: .\cookbook\views\api.py:1730
+#: .\cookbook\views\api.py:1740
 msgid "Exact rating of recipe"
 msgstr "Retsepti täpne hinnang"
 
-#: .\cookbook\views\api.py:1731
+#: .\cookbook\views\api.py:1741
 msgid "Rating a recipe should have or greater."
 msgstr "Retsepti hinnang peaks olema või suurem."
 
-#: .\cookbook\views\api.py:1732
+#: .\cookbook\views\api.py:1742
 msgid "Rating a recipe should have or smaller."
 msgstr "Retsepti hinnang peaks olema või väiksem."
 
-#: .\cookbook\views\api.py:1734
+#: .\cookbook\views\api.py:1744
 msgid "Filter recipes cooked X times."
 msgstr "Filtreeri retsepte, mida on valmistatud X korda."
 
-#: .\cookbook\views\api.py:1735
+#: .\cookbook\views\api.py:1745
 msgid "Filter recipes cooked X times or more."
 msgstr "Filtreeri retseptid, mida on valmistatud X korda või rohkem."
 
-#: .\cookbook\views\api.py:1736
+#: .\cookbook\views\api.py:1746
 msgid "Filter recipes cooked X times or less."
 msgstr "Filtreeri retseptid, mida on valmistatud X korda või vähem."
 
-#: .\cookbook\views\api.py:1738
+#: .\cookbook\views\api.py:1748
 msgid "Filter recipes created on the given date."
 msgstr "Filtreeri antud kuupäeval loodud retseptid."
 
-#: .\cookbook\views\api.py:1739
+#: .\cookbook\views\api.py:1749
 msgid "Filter recipes created on the given date or after."
 msgstr "Filtreeri retseptid, mis on loodud antud kuupäeval või hiljem."
 
-#: .\cookbook\views\api.py:1740
+#: .\cookbook\views\api.py:1750
 msgid "Filter recipes created on the given date or before."
 msgstr "Filtreeri retseptid, mis on loodud antud kuupäeval või varem."
 
-#: .\cookbook\views\api.py:1742 .\cookbook\views\api.py:1743
-#: .\cookbook\views\api.py:1744
+#: .\cookbook\views\api.py:1752 .\cookbook\views\api.py:1753
+#: .\cookbook\views\api.py:1754
 msgid "Filter recipes updated on the given date."
 msgstr "Filtreeri antud kuupäeval uuendatud retsepte."
 
-#: .\cookbook\views\api.py:1746
+#: .\cookbook\views\api.py:1756
 msgid "Filter recipes last cooked on the given date or after."
 msgstr ""
 "Filtreeri retseptid, mida on viimati valmistatud antud kuupäeval või pärast "
 "seda."
 
-#: .\cookbook\views\api.py:1747
+#: .\cookbook\views\api.py:1757
 msgid "Filter recipes last cooked on the given date or before."
 msgstr ""
 "Filtreeri retseptid, mida on viimati valmistatud antud kuupäeval või varem."
 
-#: .\cookbook\views\api.py:1749 .\cookbook\views\api.py:1750
+#: .\cookbook\views\api.py:1759 .\cookbook\views\api.py:1760
 msgid "Filter recipes lasts viewed on the given date."
 msgstr "Filtreeri retseptid antud kuupäeval vaadatu järgi."
 
-#: .\cookbook\views\api.py:1752
+#: .\cookbook\views\api.py:1762
 msgid "Filter recipes for ones created by the given user ID"
 msgstr "Filtreeri retsepte antud kasutaja ID järgi"
 
-#: .\cookbook\views\api.py:1753
+#: .\cookbook\views\api.py:1763
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
 msgstr "Kas tagastada tuleks ainult sisesed retseptid. [tõene/<b>väär</b>]"
 
-#: .\cookbook\views\api.py:1754
+#: .\cookbook\views\api.py:1764
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
 msgstr "Tagastab tulemused juhuslikus järjekorras. [tõene/<b>väär</b>]"
 
-#: .\cookbook\views\api.py:1756
+#: .\cookbook\views\api.py:1766
 msgid ""
 "Determines the order of the results. Options are: score,-score,name,-name,"
 "lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-"
 "created_at,lastviewed,-lastviewed"
 msgstr ""
 "Määrab tulemuste järjekorra. Valikud on: score,-score,name,-name,lastcooked,-"
-"lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-"
-"created_at,lastviewed,-lastviewed"
+"lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-created_at,"
+"lastviewed,-lastviewed"
 
-#: .\cookbook\views\api.py:1758
+#: .\cookbook\views\api.py:1768
 msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgstr ""
 "Tagastab otsingutulemustes esimesena uued tulemused. [tõene/<b>väär</b>]"
 
-#: .\cookbook\views\api.py:1759
+#: .\cookbook\views\api.py:1769
 msgid ""
 "Returns the given number of recently viewed recipes before search results "
 "(if given)"
@@ -2151,22 +2168,23 @@ msgstr ""
 "Tagastab antud arvu viimati vaadatud retsepte enne otsingutulemusi (kui need "
 "on olemas)"
 
-#: .\cookbook\views\api.py:1760
+#: .\cookbook\views\api.py:1770
 msgid "ID of a custom filter. Returns all recipes matched by that filter."
 msgstr ""
 "Kohandatud filtri ID. Tagastab kõik sellele filtrile vastavad retseptid."
 
-#: .\cookbook\views\api.py:1761
+#: .\cookbook\views\api.py:1771
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr ""
 "Filtreeri retseptid, mida saab valmistada käesolevatest toiduainetest. "
 "[tõene/<b>väär</b>]"
 
-#: .\cookbook\views\api.py:1762
+#: .\cookbook\views\api.py:1772
 msgid "Include child keywords and foods in search results. [<b>true</b>/false]"
-msgstr "Kaasa otsingutulemustesse alamvõtmesõnad ja toidud. [<b>tõene</b>/väär]"
+msgstr ""
+"Kaasa otsingutulemustesse alamvõtmesõnad ja toidud. [<b>tõene</b>/väär]"
 
-#: .\cookbook\views\api.py:2147
+#: .\cookbook\views\api.py:2159
 msgid ""
 "Return the PropertyTypes matching the property category.  Repeat for "
 "multiple."
@@ -2174,25 +2192,25 @@ msgstr ""
 "Tagasta omaduste kategooriale vastavad PropertyTypes tüübid. Korda mitme "
 "puhul."
 
-#: .\cookbook\views\api.py:2178 .\cookbook\views\api.py:2256
+#: .\cookbook\views\api.py:2190 .\cookbook\views\api.py:2268
 msgid "Returns only entries associated with the given mealplan id"
 msgstr "Tagastab ainult antud toidukava id-ga seotud sissekanded"
 
-#: .\cookbook\views\api.py:2254
+#: .\cookbook\views\api.py:2266
 msgid ""
 "Returns only elements updated after the given timestamp in ISO 8601 format."
 msgstr ""
 "Tagastab ainult elemendid, mida on uuendatud pärast antud ajatemplit ISO "
 "8601 vormingus."
 
-#: .\cookbook\views\api.py:2454
+#: .\cookbook\views\api.py:2466
 msgid ""
 "Return the Automations matching the automation type.  Repeat for multiple."
 msgstr ""
 "Tagasta automatiseerimistüübiga kattuvad automatiseerimised. Korda mitme "
 "puhul."
 
-#: .\cookbook\views\api.py:2471
+#: .\cookbook\views\api.py:2483
 msgid ""
 "Text field to store data that gets carried over to the UserSpace created "
 "from the InviteLink"
@@ -2200,48 +2218,48 @@ msgstr ""
 "Tekstiväli andmete salvestamiseks, mis kantakse üle InviteLinkist loodud "
 "UserSpace’i"
 
-#: .\cookbook\views\api.py:2472
+#: .\cookbook\views\api.py:2484
 msgid "Only return InviteLinks that have not been used yet."
 msgstr ""
 "Tagasta ainult need kutselingid (InviteLinks), mida ei ole veel kasutatud."
 
-#: .\cookbook\views\api.py:2499
+#: .\cookbook\views\api.py:2511
 msgid "Return the CustomFilters matching the model type.  Repeat for multiple."
 msgstr ""
 "Tagasta mudelitüübiga ühtivad CustomFilters (kohandatud filtrid). Korda "
 "mitme puhul."
 
-#: .\cookbook\views\api.py:2599
+#: .\cookbook\views\api.py:2611
 msgid "Nothing to do."
 msgstr "Pole midagi teha."
 
-#: .\cookbook\views\api.py:2644
+#: .\cookbook\views\api.py:2656
 #, python-format
 msgid ""
 "The requested page could not be loaded. The server returned %(status_code)s."
 msgstr "Soovitud lehte ei saanud laadida. Server tagastas %(status_code)s."
 
-#: .\cookbook\views\api.py:2652
+#: .\cookbook\views\api.py:2664
 msgid "Connection Refused."
 msgstr "Ühendusest keelduti."
 
-#: .\cookbook\views\api.py:2656
+#: .\cookbook\views\api.py:2668
 msgid "Bad URL Schema."
 msgstr "Vigane URL-skeem."
 
-#: .\cookbook\views\api.py:2681
+#: .\cookbook\views\api.py:2693
 msgid "No usable data could be found."
 msgstr "Kasutatavaid andmeid ei leitud."
 
-#: .\cookbook\views\api.py:2950 .\cookbook\views\api.py:3119
+#: .\cookbook\views\api.py:2970 .\cookbook\views\api.py:3139
 msgid "File is above space limit"
 msgstr "Fail on ületanud mahupiirangu"
 
-#: .\cookbook\views\api.py:2973 .\cookbook\views\api.py:3136
+#: .\cookbook\views\api.py:2993 .\cookbook\views\api.py:3156
 msgid "Importing is not implemented for this provider"
 msgstr "Importimine pole selle pakkuja jaoks rakendatud"
 
-#: .\cookbook\views\api.py:3002
+#: .\cookbook\views\api.py:3022
 msgid ""
 "PDF export is no longer available. Use your browser's print function (Ctrl"
 "+P) to save recipes as PDF."
@@ -2249,15 +2267,15 @@ msgstr ""
 "PDF-eksport pole enam saadaval. Kasutage retseptide PDF-ina salvestamiseks "
 "oma brauseri printimisfunktsiooni (Ctrl+P)."
 
-#: .\cookbook\views\api.py:3335
+#: .\cookbook\views\api.py:3365
 msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr "See funktsioon ei ole Tandoori pilveversioonis veel saadaval!"
 
-#: .\cookbook\views\api.py:3356
+#: .\cookbook\views\api.py:3386
 msgid "Sync successful!"
 msgstr "Sünkroonimine õnnestus!"
 
-#: .\cookbook\views\api.py:3359
+#: .\cookbook\views\api.py:3389
 msgid "Error synchronizing with Storage"
 msgstr "Viga hoidlaga sünkroonimisel"
 

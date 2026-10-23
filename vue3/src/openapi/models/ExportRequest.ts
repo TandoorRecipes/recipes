@@ -18,12 +18,14 @@ import {
     CustomFilterFromJSON,
     CustomFilterFromJSONTyped,
     CustomFilterToJSON,
+    CustomFilterToJSONTyped,
 } from './CustomFilter';
 import type { RecipeSimple } from './RecipeSimple';
 import {
     RecipeSimpleFromJSON,
     RecipeSimpleFromJSONTyped,
     RecipeSimpleToJSON,
+    RecipeSimpleToJSONTyped,
 } from './RecipeSimple';
 
 /**
@@ -55,7 +57,7 @@ export interface ExportRequest {
      * @type {CustomFilter}
      * @memberof ExportRequest
      */
-    customFilter?: CustomFilter;
+    customFilter?: CustomFilter | null;
 }
 
 /**
@@ -83,10 +85,15 @@ export function ExportRequestFromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function ExportRequestToJSON(value?: ExportRequest | null): any {
+export function ExportRequestToJSON(json: any): ExportRequest {
+    return ExportRequestToJSONTyped(json, false);
+}
+
+export function ExportRequestToJSONTyped(value?: ExportRequest | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'type': value['type'],

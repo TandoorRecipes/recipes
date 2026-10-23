@@ -27,6 +27,14 @@ def test_ingredient_parser(arg, u1_s1):
         "4 ½ Zwiebeln": (4.5, None, "Zwiebeln", ""),
         "1/2 EL Mehl": (0.5, "EL", "Mehl", ""),
         "1/2 Zwiebel": (0.5, None, "Zwiebel", ""),
+        "4 tablespoons/58 grams unsalted butter": (4, "tablespoons", "unsalted butter", "58 grams"),
+        "⅔ cup/140 grams granulated sugar": (2 / 3, "cup", "granulated sugar", "140 grams"),
+        "1½ cups (210 grams) self-rising flour": (1.5, "cups", "self-rising flour", "210 grams"),
+        "1 1/2 cups / 355 ml water": (1.5, "cups", "water", "355 ml"),
+        "1 1/2 cups (355 ml) water": (1.5, "cups", "water", "355 ml"),
+        "4 tablespoons/58 grams unsalted butter, melted": (4, "tablespoons", "unsalted butter", "melted 58 grams"),
+        "1 cup/240 ml milk (warm)": (1, "cup", "milk", "warm 240 ml"),
+        "2 lb/oz package meat": (2, "lb/oz", "package meat", ""),
         "1/5g Mehl, gesiebt": (0.2, "g", "Mehl", "gesiebt"),
         "1/2 Zitrone, ausgepresst": (0.5, None, "Zitrone", "ausgepresst"),
         "etwas Mehl": (0, None, "etwas Mehl", ""),
@@ -110,3 +118,20 @@ def test_ingredient_parser(arg, u1_s1):
             parsed = ingredient_parser.parse(key)
             print(f'testing if {key} becomes {val}')
             assert parsed == val
+
+
+def test_ingredient_parser_too_long_error_hint(u1_s1):
+    user = auth.get_user(u1_s1)
+    space = user.userspace_set.first().space
+    request = RequestFactory()
+    request.user = user
+    request.space = space
+    ingredient_parser = IngredientParser(request, False)
+
+    too_long_ingredient = 'a' * 600
+
+    with scope(space=space):
+        with pytest.raises(ValueError) as e:
+            ingredient_parser.parse(too_long_ingredient)
+
+    assert too_long_ingredient[:100] in str(e.value)

@@ -30,7 +30,7 @@ export interface EnterpriseBillingReferralLink {
      * @type {number}
      * @memberof EnterpriseBillingReferralLink
      */
-    createdBy?: number;
+    createdBy?: number | null;
     /**
      * 
      * @type {number}
@@ -78,10 +78,15 @@ export function EnterpriseBillingReferralLinkFromJSONTyped(json: any, ignoreDisc
     };
 }
 
-export function EnterpriseBillingReferralLinkToJSON(value?: Omit<EnterpriseBillingReferralLink, 'createdAt'> | null): any {
+export function EnterpriseBillingReferralLinkToJSON(json: any): EnterpriseBillingReferralLink {
+    return EnterpriseBillingReferralLinkToJSONTyped(json, false);
+}
+
+export function EnterpriseBillingReferralLinkToJSONTyped(value?: Omit<EnterpriseBillingReferralLink, 'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

@@ -18,6 +18,7 @@ import {
     OpenDataPropertyFromJSON,
     OpenDataPropertyFromJSONTyped,
     OpenDataPropertyToJSON,
+    OpenDataPropertyToJSONTyped,
 } from './OpenDataProperty';
 
 /**
@@ -71,10 +72,15 @@ export function OpenDataFoodPropertyFromJSONTyped(json: any, ignoreDiscriminator
     };
 }
 
-export function OpenDataFoodPropertyToJSON(value?: OpenDataFoodProperty | null): any {
+export function OpenDataFoodPropertyToJSON(json: any): OpenDataFoodProperty {
+    return OpenDataFoodPropertyToJSONTyped(json, false);
+}
+
+export function OpenDataFoodPropertyToJSONTyped(value?: OpenDataFoodProperty | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

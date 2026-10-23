@@ -28,9 +28,9 @@
                         <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
                         <v-text-field :label="$t('Plural')" v-model="editingObj.pluralName"></v-text-field>
                         <v-textarea :label="$t('Description')" v-model="editingObj.description"></v-textarea>
-                        <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
-                        <model-select :label="$t('Category')" v-model="editingObj.supermarketCategory" model="SupermarketCategory" allow-create append-to-body></model-select>
-                        <model-select :label="$t('ShoppingList')" :hint="$t('DefaultShoppingListHelp')" v-model="editingObj.shoppingLists" model="ShoppingList" mode="tags" allow-create append-to-body></model-select>
+
+                        <v-model-select :label="$t('Category')" v-model="editingObj.supermarketCategory" model="SupermarketCategory" create ></v-model-select>
+                        <v-model-select :label="$t('ShoppingList')" :hint="$t('DefaultShoppingListHelp')" v-model="editingObj.shoppingLists" model="ShoppingList" create chips multiple></v-model-select>
                     </v-form>
                 </v-tabs-window-item>
 
@@ -51,12 +51,10 @@
                         </v-number-input>
 
                         <v-number-input :label="$t('Properties_Food_Amount')" v-model="editingObj.propertiesFoodAmount" :precision="2"></v-number-input>
-                        <model-select :label="$t('Properties_Food_Unit')" v-model="editingObj.propertiesFoodUnit" model="Unit"></model-select>
+                        <v-model-select :label="$t('Properties_Food_Unit')" v-model="editingObj.propertiesFoodUnit" model="Unit"></v-model-select>
 
                         <properties-editor v-model="editingObj" :amount-for="propertiesAmountFor"></properties-editor>
 
-                        <!-- TODO remove once append to body for model select is working properly -->
-                        <v-spacer style="margin-top: 80px;"></v-spacer>
                     </v-form>
                 </v-tabs-window-item>
 
@@ -85,8 +83,7 @@
                                         <v-number-input :label="$t('Amount')" :step="10" v-model="uc.baseAmount" control-variant="stacked" :precision="3" hide-details></v-number-input>
                                     </v-col>
                                     <v-col md="6">
-                                        <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
-                                        <model-select v-model="uc.baseUnit" model="Unit" hide-details></model-select>
+                                        <v-model-select v-model="uc.baseUnit" model="Unit" hide-details></v-model-select>
                                     </v-col>
                                 </v-row>
                                 <v-row dense>
@@ -99,16 +96,13 @@
                                         <v-number-input :label="$t('Amount')" :step="10" v-model="uc.convertedAmount" control-variant="stacked" :precision="3"></v-number-input>
                                     </v-col>
                                     <v-col md="6">
-                                        <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
-                                        <model-select v-model="uc.convertedUnit" model="Unit"></model-select>
+                                        <v-model-select v-model="uc.convertedUnit" model="Unit"></v-model-select>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
 
                         </v-card>
                     </v-form>
-                    <!-- TODO remove once append to body for model select is working properly -->
-                        <v-spacer style="margin-top: 80px;"></v-spacer>
                 </v-tabs-window-item>
 
                 <v-tabs-window-item value="hierarchy">
@@ -117,10 +111,10 @@
                     <v-checkbox :label="$t('substitute_siblings')" :hint="$t('substitute_siblings_help')" v-model="editingObj.substituteSiblings" persistent-hint></v-checkbox>
                     <v-checkbox :label="$t('substitute_children')" :hint="$t('substitute_children_help')" v-model="editingObj.substituteChildren" persistent-hint></v-checkbox>
 
-                    <ModelSelect model="FoodInheritField" v-model="editingObj.inheritFields" :label="$t('InheritFields')" :hint="$t('InheritFields_help')"
-                                 mode="tags"></ModelSelect>
-                    <ModelSelect model="FoodInheritField" v-model="editingObj.childInheritFields" :label="$t('ChildInheritFields')" :hint="$t('ChildInheritFields_help')"
-                                 mode="tags"></ModelSelect>
+                    <v-model-select model="FoodInheritField" v-model="editingObj.inheritFields" :label="$t('InheritFields')" :hint="$t('InheritFields_help')"
+                                 chips multiple></v-model-select>
+                    <v-model-select model="FoodInheritField" v-model="editingObj.childInheritFields" :label="$t('ChildInheritFields')" :hint="$t('ChildInheritFields_help')"
+                                 chips multiple></v-model-select>
 
                     <!-- TODO remove once append to body for model select is working properly -->
                         <v-spacer style="margin-top: 100px;"></v-spacer>
@@ -128,12 +122,12 @@
 
                 <v-tabs-window-item value="misc">
                     <v-form :disabled="loading" class="mt-5">
-                        <ModelSelect model="Recipe" v-model="editingObj.recipe" :label="$t('Recipe')"></ModelSelect>
+                        <v-model-select model="Recipe" v-model="editingObj.recipe"></v-model-select>
                         <v-text-field :label="$t('Website')" v-model="editingObj.url"></v-text-field>
                         <v-checkbox :label="$t('OnHand')" :hint="$t('OnHand_help')" v-model="editingObj.foodOnhand" persistent-hint></v-checkbox>
                         <v-checkbox :label="$t('Ignore_Shopping')" :hint="$t('ignore_shopping_help')" v-model="editingObj.ignoreShopping" persistent-hint></v-checkbox>
                         <v-divider class="mt-2 mb-2"></v-divider>
-                        <ModelSelect model="Food" v-model="editingObj.substitute" :label="$t('Substitutes')" :hint="$t('substitute_help')" mode="tags"></ModelSelect>
+                        <v-model-select model="Food" v-model="editingObj.substitute" :label="$t('Substitutes')" :hint="$t('substitute_help')" multiple chips></v-model-select>
 
                         <!-- TODO re-add reset inheritance button/api call /function (previously annotated field on food -->
                         <v-text-field :label="$t('Open_Data_Slug')" :hint="$t('open_data_help_text')" persistent-hint v-model="editingObj.openDataSlug" disabled></v-text-field>
@@ -165,6 +159,7 @@ import FdcSearchDialog from "@/components/dialogs/FdcSearchDialog.vue";
 import {openFdcPage} from "@/utils/fdc.ts";
 import {DateTime} from "luxon";
 import HierarchyEditor from "@/components/inputs/HierarchyEditor.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 
 const props = defineProps({

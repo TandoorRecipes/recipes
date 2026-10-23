@@ -7,7 +7,7 @@
 
     <v-row class="d-none d-md-flex mt-2" v-for="p in editingObj.properties" dense>
         <v-col cols="0" md="6">
-            <v-number-input :step="10" v-model="p.propertyAmount" control-variant="stacked" :precision="2">
+            <v-number-input :step="10" v-model="p.propertyAmount" control-variant="stacked" :precision="2" density="compact" hide-details>
                 <template #append-inner v-if="p.propertyType">
                     <v-chip class="me-4">{{ p.propertyType.unit }} / {{ props.amountFor }}
                     </v-chip>
@@ -15,13 +15,13 @@
             </v-number-input>
         </v-col>
         <v-col cols="0" md="6">
-            <model-select v-model="p.propertyType" model="PropertyType">
+            <v-model-select v-model="p.propertyType" model="PropertyType" density="compact" hide-details>
                 <template #append>
-                    <v-btn color="delete" icon @click="deleteProperty(p)">
+                    <v-btn color="delete" size="small" icon @click="deleteProperty(p)">
                         <v-icon icon="$delete"></v-icon>
                     </v-btn>
                 </template>
-            </model-select>
+            </v-model-select>
         </v-col>
     </v-row>
     <v-list class="d-md-none">
@@ -48,6 +48,7 @@ import {computed, nextTick, onMounted, ref} from "vue";
 import AiActionButton from "@/components/buttons/AiActionButton.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const props = defineProps({
     amountFor: {type: String, required: true},

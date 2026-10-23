@@ -26,17 +26,17 @@
             <v-card v-if="activeObjs.length == 1" :title="activeObjs[0].name" :prepend-icon="genericModel.model.icon" variant="outlined">
                 <v-card-text>
                     <v-label>{{$t('AddChild')}}</v-label>
-                    <model-select :model="genericModel.model.name" v-model="addChildObj" allow-create>
+                    <v-model-select :model="genericModel.model.name" v-model="addChildObj" create>
                         <template #append>
                             <v-btn color="save" icon="$save" :disabled="addChildObj == undefined" @click="moveObject(addChildObj,activeObjs[0].id!); addChildObj = undefined"></v-btn>
                         </template>
-                    </model-select>
+                    </v-model-select>
                     <v-label>{{$t('Parent')}}</v-label>
-                    <model-select :model="genericModel.model.name" v-model="setParentObj" allow-create>
+                    <v-model-select :model="genericModel.model.name" v-model="setParentObj" create>
                         <template #append>
                             <v-btn color="save" icon="$save" :disabled="setParentObj == undefined" @click="moveObject(activeObjs[0], setParentObj.id!); setParentObj = undefined"></v-btn>
                         </template>
-                    </model-select>
+                    </v-model-select>
 
                     <v-btn @click="moveObject(activeObjs[0],0)" class="mt-2" color="warning" prepend-icon="fa-solid fa-link-slash" block>
                         {{$t('RemoveParent')}}
@@ -64,6 +64,7 @@ import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {EditorSupportedModels, EditorSupportedTypes, getGenericModelFromString} from "@/types/Models.ts";
 import {useI18n} from "vue-i18n";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 type Tree<T> = T & { children: Tree<T>[] };
 

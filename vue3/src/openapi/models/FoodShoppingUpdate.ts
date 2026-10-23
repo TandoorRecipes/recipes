@@ -18,6 +18,7 @@ import {
     DeleteEnumFromJSON,
     DeleteEnumFromJSONTyped,
     DeleteEnumToJSON,
+    DeleteEnumToJSONTyped,
 } from './DeleteEnum';
 
 /**
@@ -37,13 +38,13 @@ export interface FoodShoppingUpdate {
      * @type {number}
      * @memberof FoodShoppingUpdate
      */
-    amount?: number;
+    amount?: number | null;
     /**
      * ID of unit to use for the shopping list
      * @type {number}
      * @memberof FoodShoppingUpdate
      */
-    unit?: number;
+    unit?: number | null;
     /**
      * When set to true will delete all food from active shopping lists.
      * 
@@ -53,6 +54,8 @@ export interface FoodShoppingUpdate {
      */
     _delete: DeleteEnum | null;
 }
+
+
 
 /**
  * Check if a given object implements the FoodShoppingUpdate interface.
@@ -79,10 +82,15 @@ export function FoodShoppingUpdateFromJSONTyped(json: any, ignoreDiscriminator: 
     };
 }
 
-export function FoodShoppingUpdateToJSON(value?: FoodShoppingUpdate | null): any {
+export function FoodShoppingUpdateToJSON(json: any): FoodShoppingUpdate {
+    return FoodShoppingUpdateToJSONTyped(json, false);
+}
+
+export function FoodShoppingUpdateToJSONTyped(value?: FoodShoppingUpdate | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

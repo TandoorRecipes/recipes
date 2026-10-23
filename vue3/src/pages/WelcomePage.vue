@@ -25,10 +25,10 @@
                             <v-text-field v-model="space.name" :label="$t('Name')"></v-text-field>
 
                             <v-select :label="$t('Theme')" v-model="useUserPreferenceStore().userSettings.theme"
-                                      :items="[{title: 'Tandoor', value: 'TANDOOR'}, {title: 'Tandoor Dark', value: 'TANDOOR_DARK'}, ]">
+                                      :items="[{title: $t('Light'), value: 'TANDOOR'}, {title: $t('Dark'), value: 'TANDOOR_DARK'}, ]">
                             </v-select>
 
-                            <v-text-field v-model="useUserPreferenceStore().userSettings.defaultUnit" :label="$t('Default_Unit')"></v-text-field>
+                            <v-text-field v-model="useUserPreferenceStore().userSettings.defaultUnit" :label="$t('Default_Unit')" :hint="$t('DefaultUnitHelp')" persistent-hint></v-text-field>
 
                         </v-card-text>
                     </v-card>

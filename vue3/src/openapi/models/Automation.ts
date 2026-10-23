@@ -18,6 +18,7 @@ import {
     AutomationTypeEnumFromJSON,
     AutomationTypeEnumFromJSONTyped,
     AutomationTypeEnumToJSON,
+    AutomationTypeEnumToJSONTyped,
 } from './AutomationTypeEnum';
 
 /**
@@ -49,25 +50,25 @@ export interface Automation {
      * @type {string}
      * @memberof Automation
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Automation
      */
-    param1?: string;
+    param1?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Automation
      */
-    param2?: string;
+    param2?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Automation
      */
-    param3?: string;
+    param3?: string | null;
     /**
      * 
      * @type {number}
@@ -87,6 +88,8 @@ export interface Automation {
      */
     readonly createdBy: number;
 }
+
+
 
 /**
  * Check if a given object implements the Automation interface.
@@ -120,10 +123,15 @@ export function AutomationFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function AutomationToJSON(value?: Omit<Automation, 'createdBy'> | null): any {
+export function AutomationToJSON(json: any): Automation {
+    return AutomationToJSONTyped(json, false);
+}
+
+export function AutomationToJSONTyped(value?: Omit<Automation, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

@@ -18,6 +18,7 @@ import {
     ImportOpenDataVersionMetaDataFromJSON,
     ImportOpenDataVersionMetaDataFromJSONTyped,
     ImportOpenDataVersionMetaDataToJSON,
+    ImportOpenDataVersionMetaDataToJSONTyped,
 } from './ImportOpenDataVersionMetaData';
 
 /**
@@ -208,10 +209,15 @@ export function ImportOpenDataMetaDataFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function ImportOpenDataMetaDataToJSON(value?: ImportOpenDataMetaData | null): any {
+export function ImportOpenDataMetaDataToJSON(json: any): ImportOpenDataMetaData {
+    return ImportOpenDataMetaDataToJSONTyped(json, false);
+}
+
+export function ImportOpenDataMetaDataToJSONTyped(value?: ImportOpenDataMetaData | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'versions': value['versions'],

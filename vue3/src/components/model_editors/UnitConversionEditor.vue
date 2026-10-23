@@ -14,7 +14,7 @@
             <v-form>
                 <v-row>
                     <v-col>
-                        <model-select model="Food" v-model="editingObj.food" :label="$t('Food')"></model-select>
+                        <v-model-select model="Food" v-model="editingObj.food"></v-model-select>
                     </v-col>
                 </v-row>
                 <v-row>
@@ -22,8 +22,7 @@
                         <v-number-input :label="$t('Amount')" :step="10" v-model="editingObj.baseAmount" control-variant="stacked" :precision="3" :min="0.001"></v-number-input>
                     </v-col>
                     <v-col md="6">
-                        <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
-                        <model-select  v-model="editingObj.baseUnit" model="Unit"></model-select>
+                        <v-model-select  v-model="editingObj.baseUnit" model="Unit"></v-model-select>
                     </v-col>
                 </v-row>
                 <v-row class="mt-0">
@@ -36,8 +35,7 @@
                         <v-number-input :label="$t('Amount')" :step="10" v-model="editingObj.convertedAmount" control-variant="stacked" :precision="3" :min="0.001"></v-number-input>
                     </v-col>
                     <v-col md="6">
-                        <!-- TODO fix card overflow invisible, overflow-visible class is not working -->
-                        <model-select  v-model="editingObj.convertedUnit" model="Unit"></model-select>
+                        <v-model-select  v-model="editingObj.convertedUnit" model="Unit"></v-model-select>
                     </v-col>
                 </v-row>
                 <v-row>
@@ -59,6 +57,7 @@ import {UnitConversion} from "@/openapi";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<UnitConversion>, required: false, default: null},

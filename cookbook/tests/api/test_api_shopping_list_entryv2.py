@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django_scopes import scopes_disabled
 
-from cookbook.models import ShoppingListEntry, Household, UserSpace
+from cookbook.models import ShoppingListEntry, Household, UserSpace, ShoppingList
 from cookbook.tests.factories import ShoppingListEntryFactory
 
 LIST_URL = 'api:shoppinglistentry-list'
@@ -217,3 +217,60 @@ def test_recent(sle, u1_s1):
     assert [x['checked'] for x in r['results']].count(False) == 9
 
 # TODO test auto onhand
+
+
+def test_bulk_shopping_lists(u1_s1, space_1, space_2, sle):
+    with scopes_disabled():
+        list1 = ShoppingList.objects.create(name='List 1', space=space_1)
+        list_foreign = ShoppingList.objects.create(name='Foreign List', space=space_2)
+
+    entry_ids = [sle[0].id, sle[1].id]
+
+    # Add shopping lists (foreign list should be ignored)
+    r = u1_s1.post(
+        reverse('api:shoppinglistentry-bulk'),
+        {'ids': entry_ids, 'shopping_lists_add': [list1.id, list_foreign.id]},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert sle[0].shopping_lists.filter(id=list1.id).exists()
+        assert not sle[0].shopping_lists.filter(id=list_foreign.id).exists()
+        assert sle[1].shopping_lists.filter(id=list1.id).exists()
+
+    # Set shopping lists
+    r = u1_s1.post(
+        reverse('api:shoppinglistentry-bulk'),
+        {'ids': [sle[0].id], 'shopping_lists_set': [list1.id, list_foreign.id]},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert sle[0].shopping_lists.filter(id=list1.id).exists()
+        assert not sle[0].shopping_lists.filter(id=list_foreign.id).exists()
+
+    # Remove shopping lists
+    r = u1_s1.post(
+        reverse('api:shoppinglistentry-bulk'),
+        {'ids': [sle[0].id], 'shopping_lists_remove': [list1.id]},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert not sle[0].shopping_lists.filter(id=list1.id).exists()
+
+    # Remove all shopping lists
+    sle[0].shopping_lists.add(list1)
+    r = u1_s1.post(
+        reverse('api:shoppinglistentry-bulk'),
+        {'ids': [sle[0].id, sle[1].id], 'shopping_lists_remove_all': True},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert sle[0].shopping_lists.count() == 0
+        assert sle[1].shopping_lists.count() == 0

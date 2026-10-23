@@ -18,6 +18,7 @@ import {
     SyncFromJSON,
     SyncFromJSONTyped,
     SyncToJSON,
+    SyncToJSONTyped,
 } from './Sync';
 
 /**
@@ -86,10 +87,15 @@ export function SyncLogFromJSONTyped(json: any, ignoreDiscriminator: boolean): S
     };
 }
 
-export function SyncLogToJSON(value?: Omit<SyncLog, 'sync'|'createdAt'> | null): any {
+export function SyncLogToJSON(json: any): SyncLog {
+    return SyncLogToJSONTyped(json, false);
+}
+
+export function SyncLogToJSONTyped(value?: Omit<SyncLog, 'sync'|'created_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

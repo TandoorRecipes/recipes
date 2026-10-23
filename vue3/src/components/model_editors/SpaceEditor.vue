@@ -65,7 +65,7 @@
                     <v-checkbox v-model="editingObj.aiEnabled" :label="$t('Enabled')" :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser" hide-details></v-checkbox>
 
                     <template v-if="editingObj.aiEnabled">
-                        <model-select model="AiProvider" :label="$t('Default')" v-model="editingObj.aiDefaultProvider"></model-select>
+                        <v-model-select model="AiProvider" :label="$t('Default') + ' ' + $t('AiProvider')" v-model="editingObj.aiDefaultProvider"></v-model-select>
 
                         <v-number-input v-model="editingObj.aiCreditsMonthly" :precision="2" :label="$t('MonthlyCredits')"
                                         :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser"></v-number-input>
@@ -92,6 +92,7 @@ import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import editor from "mavon-editor";
 import SpaceLimitsInfo from "@/components/display/SpaceLimitsInfo.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<Space>, required: false, default: null},

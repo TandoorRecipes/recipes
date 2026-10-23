@@ -8,6 +8,7 @@ from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
+from django.utils import timezone
 from django.utils.translation import gettext as _
 from django_scopes import scopes_disabled
 from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
@@ -16,7 +17,7 @@ from oauth2_provider.settings import oauth2_settings
 from rest_framework import permissions
 from rest_framework.permissions import SAFE_METHODS
 import random
-from cookbook.models import Recipe, ShareLink, UserSpace, Space
+from cookbook.models import Recipe, ShareLink, UserSpace, Space, InviteLink
 
 
 def get_allowed_groups(groups_required):
@@ -34,36 +35,37 @@ def get_allowed_groups(groups_required):
     return groups_allowed
 
 
-def has_group_permission(user, groups, no_cache=False):
+def has_group_permission(request, groups, no_cache=False):
     """
     Tests if a given user is member of a certain group (or any higher group)
     Superusers always bypass permission checks.
     Unauthenticated users can't be member of any group thus always return false.
-    :param no_cache: (optional) do not return cached results, always check agains DB
-    :param user: django auth user object
+    :param no_cache: (optional) do not return cached results, always check against DB
+    :param request: the django request checking permission for
     :param groups: list or tuple of groups the user should be checked for
     :return: True if user is in allowed groups, false otherwise
     """
-    if not user.is_authenticated:
+    if not request.user.is_authenticated:
         return False
     groups_allowed = get_allowed_groups(groups)
 
-    CACHE_KEY = hash((inspect.stack()[0][3], (user.pk, user.username, user.email), groups_allowed))
-    if not no_cache:
-        cached_result = cache.get(CACHE_KEY, default=None)
-        if cached_result is not None:
-            return cached_result
+    CACHE_KEY = f'GROUP_CACHE_{request.user.pk}_{request.space.pk}'
+    user_groups = cache.get(CACHE_KEY, default=None)
 
-    result = False
-    if user.is_authenticated:
-        if user_space := user.userspace_set.filter(active=True):
-            if len(user_space) != 1:
-                result = False  # do not allow any group permission if more than one space is active, needs to be changed when simultaneous multi-space-tenancy is added
-            elif bool(user_space.first().groups.filter(name__in=groups_allowed)):
-                result = True
+    if no_cache or user_groups is None:
+        # always reset to invalidate should a cache exist
+        user_groups = []
+        if user_space := request.user.userspace_set.filter(active=True):
+            if len(user_space) == 1:  # more than one active space is not supported and should error
+                user_groups = user_space.first().groups.values_list('name', flat=True)
 
-    cache.set(CACHE_KEY, result, timeout=10)
-    return result
+    cache.set(CACHE_KEY, user_groups, timeout=30)
+
+    for group in user_groups:
+        if group in groups_allowed:
+            return True
+
+    return False
 
 
 def is_object_owner(user, obj):
@@ -188,19 +190,6 @@ def share_link_valid(recipe, share):
 
 # Django Views
 
-def group_required(*groups_required):
-    """
-    Decorator that tests the requesting user to be member
-    of at least one of the provided groups or higher level groups
-    :param groups_required: list of required groups
-    :return: true if member of group, false otherwise
-    """
-
-    def in_groups(u):
-        return has_group_permission(u, groups_required)
-
-    return user_passes_test(in_groups, login_url='view_no_perm')
-
 
 class GroupRequiredMixin(object):
     """
@@ -210,7 +199,7 @@ class GroupRequiredMixin(object):
     groups_required = None
 
     def dispatch(self, request, *args, **kwargs):
-        if not has_group_permission(request.user, self.groups_required):
+        if not has_group_permission(request, self.groups_required):
             if not request.user.is_authenticated:
                 messages.add_message(request, messages.ERROR, _('You are not logged in and therefore cannot view this page!'))
                 return HttpResponseRedirect(reverse_lazy('account_login') + '?next=' + request.path)
@@ -337,10 +326,10 @@ class CustomIsGuest(permissions.BasePermission):
     message = _('You do not have the required permissions to view this page!')
 
     def has_permission(self, request, view):
-        return has_group_permission(request.user, ['guest'])
+        return has_group_permission(request, ['guest'])
 
     def has_object_permission(self, request, view, obj):
-        return has_group_permission(request.user, ['guest'])
+        return has_group_permission(request, ['guest'])
 
 
 class CustomIsUser(permissions.BasePermission):
@@ -351,7 +340,7 @@ class CustomIsUser(permissions.BasePermission):
     message = _('You do not have the required permissions to view this page!')
 
     def has_permission(self, request, view):
-        return has_group_permission(request.user, ['user'])
+        return has_group_permission(request, ['user'])
 
 
 class CustomIsAdmin(permissions.BasePermission):
@@ -362,7 +351,7 @@ class CustomIsAdmin(permissions.BasePermission):
     message = _('You do not have the required permissions to view this page!')
 
     def has_permission(self, request, view):
-        return has_group_permission(request.user, ['admin'])
+        return has_group_permission(request, ['admin'])
 
 
 class CustomIsShare(permissions.BasePermission):
@@ -382,6 +371,37 @@ class CustomIsShare(permissions.BasePermission):
         return False
 
 
+def has_recipe_permission(request, recipe):
+    """
+    Custom permission class for recipe api endpoint
+    """
+    share = request.query_params.get('share', None)
+    if share:
+        if share_link_valid(recipe, share):
+            return True
+        # Invalid share link - check if user has normal access
+        # If not, raise 404 to avoid leaking recipe existence
+        if recipe.space != request.space:
+            raise Http404()
+        # User is in same space, fall through to normal permission check
+    if recipe.private:
+        return ((recipe.created_by == request.user) or (request.user in recipe.shared.all())) and recipe.space == request.space
+    else:
+        return ((has_group_permission(request, ['guest']) and request.method in SAFE_METHODS)
+                or has_group_permission(request, ['user'])) and recipe.space == request.space
+
+
+def has_meal_plan_permission(request, mealplan):
+    household_ids = get_household_user_ids(request.user_space)
+
+    if request.user == mealplan.created_by or mealplan.created_by in household_ids:
+        if mealplan.recipe:
+            return has_recipe_permission(request, mealplan.recipe)
+        else:
+            return True
+    return False
+
+
 class CustomRecipePermission(permissions.BasePermission):
     """
     Custom permission class for recipe api endpoint
@@ -390,24 +410,11 @@ class CustomRecipePermission(permissions.BasePermission):
 
     def has_permission(self, request, view):  # user is either at least a guest or a share link is given and the request is safe
         share = request.query_params.get('share', None)
-        return ((has_group_permission(request.user, ['guest']) and request.method in SAFE_METHODS) or has_group_permission(
-            request.user, ['user'])) or (share and request.method in SAFE_METHODS and 'pk' in view.kwargs)
+        return ((has_group_permission(request, ['guest']) and request.method in SAFE_METHODS) or has_group_permission(
+            request, ['user'])) or (share and request.method in SAFE_METHODS and 'pk' in view.kwargs)
 
     def has_object_permission(self, request, view, obj):
-        share = request.query_params.get('share', None)
-        if share:
-            if share_link_valid(obj, share):
-                return True
-            # Invalid share link - check if user has normal access
-            # If not, raise 404 to avoid leaking recipe existence
-            if obj.space != request.space:
-                raise Http404()
-            # User is in same space, fall through to normal permission check
-        if obj.private:
-            return ((obj.created_by == request.user) or (request.user in obj.shared.all())) and obj.space == request.space
-        else:
-            return ((has_group_permission(request.user, ['guest']) and request.method in SAFE_METHODS)
-                    or has_group_permission(request.user, ['user'])) and obj.space == request.space
+        return has_recipe_permission(request, obj)
 
 
 class CustomAiProviderPermission(permissions.BasePermission):
@@ -420,13 +427,13 @@ class CustomAiProviderPermission(permissions.BasePermission):
     message = _('You do not have the required permissions to view this page!')
 
     def has_permission(self, request, view):  # user is either at least a user and the request is safe
-        return (has_group_permission(request.user, ['user']) and request.method in SAFE_METHODS) or (has_group_permission(request.user, ['admin']) or request.user.is_superuser)
+        return (has_group_permission(request, ['user']) and request.method in SAFE_METHODS) or (has_group_permission(request, ['admin']) or request.user.is_superuser)
 
     # editing of global providers allowed for superusers, space providers by admins and users can read only access
     def has_object_permission(self, request, view, obj):
         return ((obj.space is None and request.user.is_superuser)
-                or (obj.space == request.space and has_group_permission(request.user, ['admin']))
-                or (obj.space == request.space and has_group_permission(request.user, ['user']) and request.method in SAFE_METHODS))
+                or (obj.space == request.space and has_group_permission(request, ['admin']))
+                or (obj.space == request.space and has_group_permission(request, ['user']) and request.method in SAFE_METHODS))
 
 
 class CustomUserPermission(permissions.BasePermission):
@@ -436,10 +443,10 @@ class CustomUserPermission(permissions.BasePermission):
     message = _('You do not have the required permissions to view this page!')
 
     def has_permission(self, request, view):  # a space filtered user list is visible for everyone
-        return has_group_permission(request.user, ['guest'])
+        return has_group_permission(request, ['guest'])
 
     def has_object_permission(self, request, view, obj):  # object write permissions are only available for user
-        if request.method in SAFE_METHODS and 'pk' in view.kwargs and has_group_permission(request.user, ['guest']) and request.space in obj.userspace_set.all():
+        if request.method in SAFE_METHODS and 'pk' in view.kwargs and has_group_permission(request, ['guest']) and request.space in obj.userspace_set.all():
             return True
         elif request.user == obj:
             return True
@@ -579,3 +586,25 @@ def create_space_for_user(user, name=None):
         user_space.groups.add(Group.objects.filter(name='admin').get())
 
         return user_space
+
+
+def process_invite_token(user, token):
+    """
+    given a user and a token, process the invite link and create the appropriate user space
+    :param user:
+    :param token:
+    :return:
+    """
+    if link := InviteLink.objects.filter(valid_until__gte=timezone.now().date(), used_by=None, uuid=token).first():
+        if user.is_authenticated:
+            if not user.userspace_set.filter(space=link.space).exists():
+                if not link.reusable:
+                    link.used_by = user
+                    link.save()
+
+                UserSpace.objects.filter(user=user).update(active=False)
+                user_space = UserSpace.objects.create(user=user, space=link.space, internal_note=link.internal_note, invite_link=link, household=link.household,
+                                                      active=True)
+                user_space.groups.add(link.group)
+                return True
+    return False

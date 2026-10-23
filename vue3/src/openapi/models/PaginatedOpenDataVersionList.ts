@@ -18,6 +18,7 @@ import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -37,13 +38,13 @@ export interface PaginatedOpenDataVersionList {
      * @type {string}
      * @memberof PaginatedOpenDataVersionList
      */
-    next?: string;
+    next?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PaginatedOpenDataVersionList
      */
-    previous?: string;
+    previous?: string | null;
     /**
      * 
      * @type {Array<OpenDataVersion>}
@@ -85,17 +86,22 @@ export function PaginatedOpenDataVersionListFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function PaginatedOpenDataVersionListToJSON(value?: PaginatedOpenDataVersionList | null): any {
+export function PaginatedOpenDataVersionListToJSON(json: any): PaginatedOpenDataVersionList {
+    return PaginatedOpenDataVersionListToJSONTyped(json, false);
+}
+
+export function PaginatedOpenDataVersionListToJSONTyped(value?: PaginatedOpenDataVersionList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'count': value['count'],
         'next': value['next'],
         'previous': value['previous'],
         'results': ((value['results'] as Array<any>).map(OpenDataVersionToJSON)),
-        'timestamp': value['timestamp'] == null ? undefined : ((value['timestamp']).toISOString()),
+        'timestamp': value['timestamp'] == null ? value['timestamp'] : value['timestamp'].toISOString(),
     };
 }
 

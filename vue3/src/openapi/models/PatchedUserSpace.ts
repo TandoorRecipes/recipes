@@ -18,18 +18,21 @@ import {
     GroupFromJSON,
     GroupFromJSONTyped,
     GroupToJSON,
+    GroupToJSONTyped,
 } from './Group';
 import type { User } from './User';
 import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { Household } from './Household';
 import {
     HouseholdFromJSON,
     HouseholdFromJSONTyped,
     HouseholdToJSON,
+    HouseholdToJSONTyped,
 } from './Household';
 
 /**
@@ -67,7 +70,7 @@ export interface PatchedUserSpace {
      * @type {Household}
      * @memberof PatchedUserSpace
      */
-    household?: Household;
+    household?: Household | null;
     /**
      * 
      * @type {boolean}
@@ -79,13 +82,13 @@ export interface PatchedUserSpace {
      * @type {string}
      * @memberof PatchedUserSpace
      */
-    internalNote?: string;
+    internalNote?: string | null;
     /**
      * 
      * @type {number}
      * @memberof PatchedUserSpace
      */
-    readonly inviteLink?: number;
+    readonly inviteLink?: number | null;
     /**
      * 
      * @type {Date}
@@ -130,10 +133,15 @@ export function PatchedUserSpaceFromJSONTyped(json: any, ignoreDiscriminator: bo
     };
 }
 
-export function PatchedUserSpaceToJSON(value?: Omit<PatchedUserSpace, 'user'|'space'|'inviteLink'|'createdAt'|'updatedAt'> | null): any {
+export function PatchedUserSpaceToJSON(json: any): PatchedUserSpace {
+    return PatchedUserSpaceToJSONTyped(json, false);
+}
+
+export function PatchedUserSpaceToJSONTyped(value?: Omit<PatchedUserSpace, 'user'|'space'|'invite_link'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

@@ -13,11 +13,19 @@
  */
 
 import { mapValues } from '../runtime';
+import type { ConnectorConfigUrl } from './ConnectorConfigUrl';
+import {
+    ConnectorConfigUrlFromJSON,
+    ConnectorConfigUrlFromJSONTyped,
+    ConnectorConfigUrlToJSON,
+    ConnectorConfigUrlToJSONTyped,
+} from './ConnectorConfigUrl';
 import type { ConnectorConfigTypeEnum } from './ConnectorConfigTypeEnum';
 import {
     ConnectorConfigTypeEnumFromJSON,
     ConnectorConfigTypeEnumFromJSONTyped,
     ConnectorConfigTypeEnumToJSON,
+    ConnectorConfigTypeEnumToJSONTyped,
 } from './ConnectorConfigTypeEnum';
 
 /**
@@ -46,22 +54,22 @@ export interface PatchedConnectorConfig {
     type?: ConnectorConfigTypeEnum;
     /**
      * 
-     * @type {string}
+     * @type {ConnectorConfigUrl}
      * @memberof PatchedConnectorConfig
      */
-    url?: string;
+    url?: ConnectorConfigUrl | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedConnectorConfig
      */
-    token?: string;
+    token?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedConnectorConfig
      */
-    todoEntity?: string;
+    todoEntity?: string | null;
     /**
      * Is Connector Enabled
      * @type {boolean}
@@ -100,6 +108,8 @@ export interface PatchedConnectorConfig {
     readonly createdBy?: number;
 }
 
+
+
 /**
  * Check if a given object implements the PatchedConnectorConfig interface.
  */
@@ -120,7 +130,7 @@ export function PatchedConnectorConfigFromJSONTyped(json: any, ignoreDiscriminat
         'id': json['id'] == null ? undefined : json['id'],
         'name': json['name'] == null ? undefined : json['name'],
         'type': json['type'] == null ? undefined : ConnectorConfigTypeEnumFromJSON(json['type']),
-        'url': json['url'] == null ? undefined : json['url'],
+        'url': json['url'] == null ? undefined : ConnectorConfigUrlFromJSON(json['url']),
         'token': json['token'] == null ? undefined : json['token'],
         'todoEntity': json['todo_entity'] == null ? undefined : json['todo_entity'],
         'enabled': json['enabled'] == null ? undefined : json['enabled'],
@@ -132,16 +142,21 @@ export function PatchedConnectorConfigFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PatchedConnectorConfigToJSON(value?: Omit<PatchedConnectorConfig, 'createdBy'> | null): any {
+export function PatchedConnectorConfigToJSON(json: any): PatchedConnectorConfig {
+    return PatchedConnectorConfigToJSONTyped(json, false);
+}
+
+export function PatchedConnectorConfigToJSONTyped(value?: Omit<PatchedConnectorConfig, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
         'name': value['name'],
         'type': ConnectorConfigTypeEnumToJSON(value['type']),
-        'url': value['url'],
+        'url': ConnectorConfigUrlToJSON(value['url']),
         'token': value['token'],
         'todo_entity': value['todoEntity'],
         'enabled': value['enabled'],

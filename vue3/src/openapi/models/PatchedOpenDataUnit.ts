@@ -18,18 +18,21 @@ import {
     BaseUnitEnumFromJSON,
     BaseUnitEnumFromJSONTyped,
     BaseUnitEnumToJSON,
+    BaseUnitEnumToJSONTyped,
 } from './BaseUnitEnum';
 import type { OpenDataUnitTypeEnum } from './OpenDataUnitTypeEnum';
 import {
     OpenDataUnitTypeEnumFromJSON,
     OpenDataUnitTypeEnumFromJSONTyped,
     OpenDataUnitTypeEnumToJSON,
+    OpenDataUnitTypeEnumToJSONTyped,
 } from './OpenDataUnitTypeEnum';
 import type { OpenDataVersion } from './OpenDataVersion';
 import {
     OpenDataVersionFromJSON,
     OpenDataVersionFromJSONTyped,
     OpenDataVersionToJSON,
+    OpenDataVersionToJSONTyped,
 } from './OpenDataVersion';
 
 /**
@@ -128,6 +131,8 @@ export interface PatchedOpenDataUnit {
     readonly createdBy?: string;
 }
 
+
+
 /**
  * Check if a given object implements the PatchedOpenDataUnit interface.
  */
@@ -157,10 +162,15 @@ export function PatchedOpenDataUnitFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PatchedOpenDataUnitToJSON(value?: Omit<PatchedOpenDataUnit, 'createdBy'> | null): any {
+export function PatchedOpenDataUnitToJSON(json: any): PatchedOpenDataUnit {
+    return PatchedOpenDataUnitToJSONTyped(json, false);
+}
+
+export function PatchedOpenDataUnitToJSONTyped(value?: Omit<PatchedOpenDataUnit, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

@@ -18,18 +18,21 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { SearchFields } from './SearchFields';
 import {
     SearchFieldsFromJSON,
     SearchFieldsFromJSONTyped,
     SearchFieldsToJSON,
+    SearchFieldsToJSONTyped,
 } from './SearchFields';
 import type { SearchEnum } from './SearchEnum';
 import {
     SearchEnumFromJSON,
     SearchEnumFromJSONTyped,
     SearchEnumToJSON,
+    SearchEnumToJSONTyped,
 } from './SearchEnum';
 
 /**
@@ -61,31 +64,31 @@ export interface PatchedSearchPreference {
      * @type {Array<SearchFields>}
      * @memberof PatchedSearchPreference
      */
-    unaccent?: Array<SearchFields>;
+    unaccent?: Array<SearchFields> | null;
     /**
      * 
      * @type {Array<SearchFields>}
      * @memberof PatchedSearchPreference
      */
-    icontains?: Array<SearchFields>;
+    icontains?: Array<SearchFields> | null;
     /**
      * 
      * @type {Array<SearchFields>}
      * @memberof PatchedSearchPreference
      */
-    istartswith?: Array<SearchFields>;
+    istartswith?: Array<SearchFields> | null;
     /**
      * 
      * @type {Array<SearchFields>}
      * @memberof PatchedSearchPreference
      */
-    trigram?: Array<SearchFields>;
+    trigram?: Array<SearchFields> | null;
     /**
      * 
      * @type {Array<SearchFields>}
      * @memberof PatchedSearchPreference
      */
-    fulltext?: Array<SearchFields>;
+    fulltext?: Array<SearchFields> | null;
     /**
      * 
      * @type {number}
@@ -93,6 +96,8 @@ export interface PatchedSearchPreference {
      */
     trigramThreshold?: number;
 }
+
+
 
 /**
  * Check if a given object implements the PatchedSearchPreference interface.
@@ -123,10 +128,15 @@ export function PatchedSearchPreferenceFromJSONTyped(json: any, ignoreDiscrimina
     };
 }
 
-export function PatchedSearchPreferenceToJSON(value?: Omit<PatchedSearchPreference, 'user'> | null): any {
+export function PatchedSearchPreferenceToJSON(json: any): PatchedSearchPreference {
+    return PatchedSearchPreferenceToJSONTyped(json, false);
+}
+
+export function PatchedSearchPreferenceToJSONTyped(value?: Omit<PatchedSearchPreference, 'user'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'search': SearchEnumToJSON(value['search']),

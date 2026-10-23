@@ -988,5 +988,7 @@
     "Upgrade": "Actualizar",
     "UsedInRecipes": "Usado en recetas",
     "Yearly": "Anual",
-    "help_translate": "Ayuda a traducir"
+    "help_translate": "Ayuda a traducir",
+    "Editor": "Editor",
+    "AllowedAiUrlHelp": "Se deben permitir las URLs en la configuración del servidor AI_ALLOWED_URLS."
 }

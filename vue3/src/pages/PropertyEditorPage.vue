@@ -3,11 +3,11 @@
         <v-card :loading="recipeLoading || propertyTypesLoading">
             <v-card-title>{{ $t('Property_Editor') }}</v-card-title>
             <v-card-text>
-                <model-select append-to-body model="Recipe" v-model="recipe" @update:model-value="loadRecipe(recipe.id!)">
+                <v-model-select model="Recipe" v-model="recipe" @update:model-value="loadRecipe(recipe.id!)">
                     <template #append>
                         <v-btn icon="fa-solid fa-arrow-up-right-from-square" :to="{name : 'RecipeViewPage', params: {id: recipe.id }}" v-if="recipe != undefined"></v-btn>
                     </template>
-                </model-select>
+                </v-model-select>
             </v-card-text>
         </v-card>
         <v-row>
@@ -87,8 +87,8 @@
                             </v-number-input>
                         </td>
                         <td>
-                            <model-select model="Unit" density="compact" v-model="ingredient.food.propertiesFoodUnit" hide-details @update:model-value="updateFood(ingredient)"
-                                          :loading="ingredient.loading"></model-select>
+                            <v-model-select model="Unit" density="compact" v-model="ingredient.food.propertiesFoodUnit" hide-details @update:model-value="updateFood(ingredient)"
+                                          :loading="ingredient.loading"></v-model-select>
                         </td>
                         <td v-for="p in ingredient.food.properties" v-bind:key="`${ingredient.food.id}_${p.propertyType.id}`">
                             <v-number-input v-model="p.propertyAmount" density="compact" hide-details v-if="p.propertyAmount != null" @change="updateFood(ingredient)"
@@ -160,11 +160,11 @@
             <v-card-text>
                 <p>{{ $t('Update_Existing_Data') }}</p>
 
-                <model-select model="Unit" :label="$t('Properties_Food_Unit')" v-model="dialogUnit">
+                <v-model-select model="Unit" :label="$t('Properties_Food_Unit')" v-model="dialogUnit">
                     <template v-slot:append>
                         <v-btn @click="changeAllUnits(dialogUnit)" icon="$save" color="save" :disabled="dialogUnit == undefined"></v-btn>
                     </template>
-                </model-select>
+                </v-model-select>
 
                 <v-text-field type="number" :label="$t('Properties_Food_Amount')" v-model="dialogAmount">
                     <template v-slot:append>
@@ -190,6 +190,7 @@ import {useUrlSearchParams} from "@vueuse/core";
 import BtnCopy from "@/components/buttons/BtnCopy.vue";
 import FdcSearchDialog from "@/components/dialogs/FdcSearchDialog.vue";
 import {openFdcPage} from "@/utils/fdc.ts";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 type IngredientLoading = Ingredient & { loading?: boolean }
 

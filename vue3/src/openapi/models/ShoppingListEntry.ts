@@ -18,30 +18,35 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { FoodShopping } from './FoodShopping';
 import {
     FoodShoppingFromJSON,
     FoodShoppingFromJSONTyped,
     FoodShoppingToJSON,
+    FoodShoppingToJSONTyped,
 } from './FoodShopping';
 import type { ShoppingList } from './ShoppingList';
 import {
     ShoppingListFromJSON,
     ShoppingListFromJSONTyped,
     ShoppingListToJSON,
+    ShoppingListToJSONTyped,
 } from './ShoppingList';
 import type { ShoppingListRecipe } from './ShoppingListRecipe';
 import {
     ShoppingListRecipeFromJSON,
     ShoppingListRecipeFromJSONTyped,
     ShoppingListRecipeToJSON,
+    ShoppingListRecipeToJSONTyped,
 } from './ShoppingListRecipe';
 import type { Unit } from './Unit';
 import {
     UnitFromJSON,
     UnitFromJSONTyped,
     UnitToJSON,
+    UnitToJSONTyped,
 } from './Unit';
 
 /**
@@ -61,7 +66,7 @@ export interface ShoppingListEntry {
      * @type {number}
      * @memberof ShoppingListEntry
      */
-    listRecipe?: number;
+    listRecipe?: number | null;
     /**
      * 
      * @type {Array<ShoppingList>}
@@ -79,7 +84,7 @@ export interface ShoppingListEntry {
      * @type {Unit}
      * @memberof ShoppingListEntry
      */
-    unit?: Unit;
+    unit?: Unit | null;
     /**
      * 
      * @type {number}
@@ -103,7 +108,7 @@ export interface ShoppingListEntry {
      * @type {number}
      * @memberof ShoppingListEntry
      */
-    ingredient?: number;
+    ingredient?: number | null;
     /**
      * 
      * @type {ShoppingListRecipe}
@@ -133,13 +138,13 @@ export interface ShoppingListEntry {
      * @type {Date}
      * @memberof ShoppingListEntry
      */
-    completedAt?: Date;
+    completedAt?: Date | null;
     /**
      * 
      * @type {Date}
      * @memberof ShoppingListEntry
      */
-    delayUntil?: Date;
+    delayUntil?: Date | null;
     /**
      * If a mealplan id is given try to find existing or create new ShoppingListRecipe with that meal plan and link entry to it
      * @type {number}
@@ -190,10 +195,15 @@ export function ShoppingListEntryFromJSONTyped(json: any, ignoreDiscriminator: b
     };
 }
 
-export function ShoppingListEntryToJSON(value?: Omit<ShoppingListEntry, 'listRecipeData'|'createdBy'|'createdAt'|'updatedAt'> | null): any {
+export function ShoppingListEntryToJSON(json: any): ShoppingListEntry {
+    return ShoppingListEntryToJSONTyped(json, false);
+}
+
+export function ShoppingListEntryToJSONTyped(value?: Omit<ShoppingListEntry, 'list_recipe_data'|'created_by'|'created_at'|'updated_at'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -205,8 +215,8 @@ export function ShoppingListEntryToJSON(value?: Omit<ShoppingListEntry, 'listRec
         'order': value['order'],
         'checked': value['checked'],
         'ingredient': value['ingredient'],
-        'completed_at': value['completedAt'] == null ? undefined : ((value['completedAt'] as any).toISOString()),
-        'delay_until': value['delayUntil'] == null ? undefined : ((value['delayUntil'] as any).toISOString()),
+        'completed_at': value['completedAt'] == null ? value['completedAt'] : value['completedAt'].toISOString(),
+        'delay_until': value['delayUntil'] == null ? value['delayUntil'] : value['delayUntil'].toISOString(),
         'mealplan_id': value['mealplanId'],
     };
 }

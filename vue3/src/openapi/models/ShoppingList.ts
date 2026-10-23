@@ -42,7 +42,7 @@ export interface ShoppingList {
      * @type {string}
      * @memberof ShoppingList
      */
-    color?: string;
+    color?: string | null;
 }
 
 /**
@@ -69,10 +69,15 @@ export function ShoppingListFromJSONTyped(json: any, ignoreDiscriminator: boolea
     };
 }
 
-export function ShoppingListToJSON(value?: ShoppingList | null): any {
+export function ShoppingListToJSON(json: any): ShoppingList {
+    return ShoppingListToJSONTyped(json, false);
+}
+
+export function ShoppingListToJSONTyped(value?: ShoppingList | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

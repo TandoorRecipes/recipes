@@ -29,11 +29,11 @@
                                 <v-btn value="move" prepend-icon="fa-solid fa-arrow-right">{{ $t('Move') }}</v-btn>
                             </v-btn-toggle>
 
-                            <model-select model="InventoryEntry" v-model="inventoryEntry" v-if="['remove','move'].includes(bookingMode)"
+                            <v-model-select model="InventoryEntry" v-model="inventoryEntry" v-if="['remove','move'].includes(bookingMode)"
                                           @update:modelValue="inventoryEntrySelected()">
-                            </model-select>
+                            </v-model-select>
 
-                            <model-select model="Food" allow-create v-model="food" v-if="['add'].includes(bookingMode)"></model-select>
+                            <v-model-select model="Food" allow-create v-model="food" v-if="['add'].includes(bookingMode)"></v-model-select>
 
                             <v-card variant="outlined" class="mb-4" v-if="inventoryEntry">
                                 <v-card-title>
@@ -49,21 +49,21 @@
                                 </v-card-text>
                             </v-card>
 
-                            <model-select model="InventoryLocation" v-model="inventoryLocation" v-if="['add','move'].includes(bookingMode)">
+                            <v-model-select model="InventoryLocation" v-model="inventoryLocation" v-if="['add','move'].includes(bookingMode)">
                                 <template #append>
                                     <v-btn icon>
                                         <v-icon icon="$create"></v-icon>
                                         <model-edit-dialog model="InventoryLocation" @create="args => inventoryLocation = args"></model-edit-dialog>
                                     </v-btn>
                                 </template>
-                            </model-select>
+                            </v-model-select>
                             <v-text-field :label="$t('SubLocation')" :hint="$t('SubLocationHelp')" v-model="subLocation" v-if="['add','move'].includes(bookingMode)"></v-text-field>
 
                             <closable-help-alert :text="$t('CodeHelp')" class="mb-2"></closable-help-alert>
                             <v-text-field :label="$t('Code')" v-model="code" v-if="['add'].includes(bookingMode)"></v-text-field>
 
                             <v-number-input :label="$t('Amount')" :precision="2" v-model="amount" v-if="['add', 'remove'].includes(bookingMode)"></v-number-input>
-                            <model-select model="Unit" allow-create v-model="unit" v-if="['add'].includes(bookingMode)"></model-select>
+                            <v-model-select model="Unit" create v-model="unit" v-if="['add'].includes(bookingMode)"></v-model-select>
 
                             <v-date-input :label="$t('Expires')" v-model="expires" v-if="['add'].includes(bookingMode)">
                                 <template #append-inner>
@@ -211,6 +211,7 @@ import {toNumberArray} from "@/utils/utils.ts";
 import InventoryEntryLogTable from "@/components/tables/InventoryEntryLogTable.vue";
 import {TInventoryLocation} from "@/types/Models.ts";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
+import VModelSelect from "@/components/inputs/VModelSelect.vue";
 
 const {t} = useI18n()
 

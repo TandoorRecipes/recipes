@@ -1,6 +1,44 @@
 Besides the normal django username and password authentication this application supports multiple
 methods of central account management and authentication.
 
+## 3rd Party Clients
+To login from a third party client (e.g. mobile apps) you need to obtain a session token. 
+
+1. POST username/password as a JSON body to https://recipes.your.domain/_allauth/app/v1/auth/login
+2. If the login was successful you will receive a JSON response like this. If the email was not yet confirmed or MFA is added in the future, there might be intermediate steps.
+```json
+{
+    "status": 200,
+    "data": {
+        "user": {
+            "id": 3,
+            "display": "vabene1111",
+            "email": "vabene@mail.com",
+            "has_usable_password": true,
+            "username": "vabene"
+        },
+        "methods": [
+            {
+                "method": "password",
+                "at": 1792337277.024626,
+                "username": "vabene1111"
+            }
+        ]
+    },
+    "meta": {
+        "is_authenticated": true,
+        "session_token": "TOKEN"
+    }
+} 
+```
+3. Use the session token the `X-Session-Token` header for your requests to the Tandoor API. 
+
+Refer to the [Allauth documentation](https://docs.allauth.org/en/latest/) or look at Tandoors implementation for examples on how to implement the different authentication
+functions if you want to use them in your client. 
+
+You can also create an ApiToken trough the API and use that for subsequent requests but using the session token is preferred as it allows to deauthenticate using session management or 
+password changes. 
+
 ## Allauth
 [Django Allauth](https://docs.allauth.org/en/latest/) is an awesome project that
 allows you to use a [huge number](https://docs.allauth.org/en/latest/socialaccount/providers/index.html) of different
@@ -12,19 +50,18 @@ They basically explain everything in their documentation, but the following is a
 !!! warning "Public Providers"
     If you choose Google, Github or any other publicly available service as your authentication provider anyone
     with an account on that site can create an account on your installation.
-    A new account does not have any permission but it is still **not recommended** to give public access to
-    your installation.
+    A new account does not have any permission but you should still consider if you want anyone to be able to use your instance. 
 
 Choose a provider from the [list](https://docs.allauth.org/en/latest/socialaccount/providers/index.html) and install it using the environment variable `SOCIAL_PROVIDERS` as shown
 in the example below.
 
-When at least one social provider is set up, the social login sign in buttons should appear on the login page. The example below enables Nextcloud and the generic OpenID Connect providers.
+When at least one social provider is set up, the social login sign in buttons should appear on the login page. 
+The example below enables Nextcloud and the generic OpenID Connect providers.
 
 ```ini
 SOCIAL_PROVIDERS=allauth.socialaccount.providers.openid_connect,allauth.socialaccount.providers.nextcloud
 ```
 
-<!-- prettier-ignore -->
 !!! warning "Formatting"
     The exact formatting is important so make sure to follow the steps explained here!
 
@@ -39,7 +76,7 @@ as environment files loaded by docker compose don't support multiple lines for a
 The line data needs to either be in json or as Python dictionary syntax.
 
 Take the example configuration from the allauth docs, fill in your settings and then inline the whole object
-(you can use a service like [www.freeformatter.com](https://www.freeformatter.com/json-formatter.html) for formatting).
+(you can use a service like [jsoning.com](https://jsoning.com/formatter/) for formatting).
 Assign it to the additional `SOCIALACCOUNT_PROVIDERS` variable.
 
 The example below is for a generic OIDC provider with PKCE enabled. Most values need to be customized for your specifics!
@@ -63,15 +100,13 @@ SOCIALACCOUNT_PROVIDERS_FILE=/run/secrets/socialaccount_providers.txt
 
 Provider credentials (client ID, secret, provider type) can also be configured via the Django Admin
 interface instead of the `SOCIALACCOUNT_PROVIDERS` environment variable. All other social login
-settings (e.g., `SOCIALACCOUNT_LOGIN_ON_GET`, `SOCIALACCOUNT_EMAIL_AUTHENTICATION`) must still be
-set as environment variables.
+settings must still be set as environment variables.
 
 1. Navigate to `/admin/` and log in with a superuser account.
 2. Under **Sites**, edit the default site to match the URL of your installation (or create a new one).
 3. Under **Social accounts → Social applications**, create a new application with the required information from the [allauth provider documentation](https://docs.allauth.org/en/latest/socialaccount/providers/index.html).
 4. Make sure to add your site to the application's list of available sites.
 
-<!-- prettier-ignore -->
 !!! warning
     You still need `SOCIAL_PROVIDERS` set in your environment to load the allauth provider module
     (e.g., `allauth.socialaccount.providers.openid_connect`). The Django Admin only replaces the
@@ -95,99 +130,6 @@ SOCIALACCOUNT_PROVIDERS='{"openid_connect":{"APPS":[{"provider_id":"keycloak","n
 
 You are now able to sign in using Keycloak after a restart of the service.
 
-### Skipping the Confirmation Page
-
-By default, clicking a social login button shows an intermediate "Continue to provider" page before redirecting.
-To skip this and go directly to the provider:
-
-> default `0` - options `0`, `1`
-
-```ini
-SOCIALACCOUNT_LOGIN_ON_GET=1
-```
-
-### Email-Based Account Matching
-
-By default, if a user signs in with a social provider whose email matches an existing Tandoor account, allauth will
-**not** automatically link them. You can enable email-based authentication to allow this:
-
-> default `0` - options `0`, `1`
-
-```ini
-SOCIALACCOUNT_EMAIL_AUTHENTICATION=1
-```
-
-When enabled, users who sign in via a social provider will be matched to an existing account if the email address
-matches. The user will receive an email confirmation to verify ownership before the accounts are linked.
-
-To skip the email confirmation step and link accounts automatically (less secure, but simpler):
-
-> default `0` - options `0`, `1`
-
-```ini
-SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT=1
-```
-
-<!-- prettier-ignore -->
-!!! warning "Security"
-    Enabling `SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT` means any social provider that reports a matching
-    email address will be linked to the existing account without verification. Only enable this if you trust
-    all configured social providers to return verified email addresses.
-
-<!-- prettier-ignore -->
-!!! warning "Verified Emails Required"
-    Email matching only works when the social provider marks the email address as **verified**.
-    If your provider returns unverified emails, matching is silently skipped and a new account is
-    created instead. A warning will appear in the server logs and on the System page when this happens.
-    Without `SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT`, a working email configuration
-    (`EMAIL_HOST`) is also required to send the verification email to the user.
-
-### Social-Only Authentication
-
-There are two options for hiding the local username/password login form:
-
-**`HIDE_LOGIN_FORM`** — Hides the login form from the UI, but local authentication still works.
-An admin can force the form to appear by navigating to `/accounts/login/?form=1`. Use this if you want
-social login as the default but need a break-glass fallback for emergencies.
-
-> default `0` - options `0`, `1`
-
-```ini
-HIDE_LOGIN_FORM=1
-```
-
-**`SOCIALACCOUNT_ONLY`** — Fully disables local authentication at the allauth level. No password login,
-no password-based signup, no break-glass. Use this only if you are certain all users (including admins)
-will always authenticate through the social provider.
-
-> default `0` - options `0`, `1`
-
-```ini
-SOCIALACCOUNT_ONLY=1
-```
-
-<!-- prettier-ignore -->
-!!! tip
-    For most setups, `HIDE_LOGIN_FORM=1` is the safer choice. It keeps the UI clean while
-    preserving local admin access as a fallback via `/accounts/login/?form=1`.
-
-### Controlling Social Signup
-
-By default, new users signing in via a social provider are automatically created.
-To require users to go through a signup form (e.g., to accept terms of service):
-
-> default `1` - options `0`, `1`
-
-```ini
-SOCIALACCOUNT_AUTO_SIGNUP=0
-```
-
-<!-- prettier-ignore -->
-!!! warning "ENABLE_SIGNUP does not affect social login"
-    `ENABLE_SIGNUP=0` only disables the local registration form. Social login will still create new
-    accounts automatically unless you also set `SOCIALACCOUNT_AUTO_SIGNUP=0`. If you want to prevent
-    all new account creation, you must disable both.
-
 ### Example: Social Login with Invite-Based Space Access
 
 To set up Tandoor with social login as the primary method and control space access via invite links:
@@ -195,8 +137,7 @@ To set up Tandoor with social login as the primary method and control space acce
 ```ini
 SOCIAL_PROVIDERS=allauth.socialaccount.providers.openid_connect
 SOCIALACCOUNT_PROVIDERS=<your provider config>
-HIDE_LOGIN_FORM=1
-SOCIALACCOUNT_LOGIN_ON_GET=1
+SOCIALACCOUNT_ONLY=1
 SOCIALACCOUNT_EMAIL_AUTHENTICATION=1
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT=1
 ```
@@ -217,20 +158,11 @@ With this configuration:
     To truly restrict who can create accounts, configure access controls at your identity provider
     (e.g., limit which users or groups can access the Tandoor application in Authentik/Keycloak).
 
-<!-- prettier-ignore -->
-!!! note
-    `SOCIALACCOUNT_AUTO_SIGNUP` only controls whether **new** users are auto-created or shown a signup form.
-    Email matching for **existing** accounts (via `SOCIALACCOUNT_EMAIL_AUTHENTICATION`) works independently
-    and always bypasses the signup form when a match is found.
 
 ### Session Management
 
-Users can view and manage their active sessions at `/accounts/sessions/`. This page shows all active
+Users can view and manage their active sessions at `/settings/account/`. This page shows all active
 sessions and allows ending individual sessions or all other sessions ("logout everywhere").
-
-### Linking accounts
-To link an account to an already existing normal user go to the settings page of the user and link it.
-Here you can also unlink your account if you no longer want to use a social login method.
 
 ### Troubleshooting Social Login
 

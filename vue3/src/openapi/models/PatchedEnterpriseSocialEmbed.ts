@@ -18,18 +18,21 @@ import {
     AlignmentEnumFromJSON,
     AlignmentEnumFromJSONTyped,
     AlignmentEnumToJSON,
+    AlignmentEnumToJSONTyped,
 } from './AlignmentEnum';
 import type { EnterpriseSocialEmbedTypeEnum } from './EnterpriseSocialEmbedTypeEnum';
 import {
     EnterpriseSocialEmbedTypeEnumFromJSON,
     EnterpriseSocialEmbedTypeEnumFromJSONTyped,
     EnterpriseSocialEmbedTypeEnumToJSON,
+    EnterpriseSocialEmbedTypeEnumToJSONTyped,
 } from './EnterpriseSocialEmbedTypeEnum';
 import type { Keyword } from './Keyword';
 import {
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
+    KeywordToJSONTyped,
 } from './Keyword';
 
 /**
@@ -73,13 +76,13 @@ export interface PatchedEnterpriseSocialEmbed {
      * @type {string}
      * @memberof PatchedEnterpriseSocialEmbed
      */
-    backgroundColor?: string;
+    backgroundColor?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedEnterpriseSocialEmbed
      */
-    accentColor?: string;
+    accentColor?: string | null;
     /**
      * 
      * @type {string}
@@ -87,6 +90,8 @@ export interface PatchedEnterpriseSocialEmbed {
      */
     uuid?: string;
 }
+
+
 
 /**
  * Check if a given object implements the PatchedEnterpriseSocialEmbed interface.
@@ -116,10 +121,15 @@ export function PatchedEnterpriseSocialEmbedFromJSONTyped(json: any, ignoreDiscr
     };
 }
 
-export function PatchedEnterpriseSocialEmbedToJSON(value?: PatchedEnterpriseSocialEmbed | null): any {
+export function PatchedEnterpriseSocialEmbedToJSON(json: any): PatchedEnterpriseSocialEmbed {
+    return PatchedEnterpriseSocialEmbedToJSONTyped(json, false);
+}
+
+export function PatchedEnterpriseSocialEmbedToJSONTyped(value?: PatchedEnterpriseSocialEmbed | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

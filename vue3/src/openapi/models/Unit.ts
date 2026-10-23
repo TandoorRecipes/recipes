@@ -70,25 +70,25 @@ export interface Unit {
      * @type {string}
      * @memberof Unit
      */
-    pluralName?: string;
+    pluralName?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Unit
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Unit
      */
-    baseUnit?: string;
+    baseUnit?: string | null;
     /**
      * 
      * @type {string}
      * @memberof Unit
      */
-    openDataSlug?: string;
+    openDataSlug?: string | null;
 }
 
 /**
@@ -118,10 +118,15 @@ export function UnitFromJSONTyped(json: any, ignoreDiscriminator: boolean): Unit
     };
 }
 
-export function UnitToJSON(value?: Unit | null): any {
+export function UnitToJSON(json: any): Unit {
+    return UnitToJSONTyped(json, false);
+}
+
+export function UnitToJSONTyped(value?: Unit | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

@@ -18,6 +18,7 @@ import {
     PropertyTypeFromJSON,
     PropertyTypeFromJSONTyped,
     PropertyTypeToJSON,
+    PropertyTypeToJSONTyped,
 } from './PropertyType';
 
 /**
@@ -71,7 +72,7 @@ export interface PatchedProperty {
      * @type {number}
      * @memberof PatchedProperty
      */
-    propertyAmount?: number;
+    propertyAmount?: number | null;
     /**
      * 
      * @type {PropertyType}
@@ -103,10 +104,15 @@ export function PatchedPropertyFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function PatchedPropertyToJSON(value?: PatchedProperty | null): any {
+export function PatchedPropertyToJSON(json: any): PatchedProperty {
+    return PatchedPropertyToJSONTyped(json, false);
+}
+
+export function PatchedPropertyToJSONTyped(value?: PatchedProperty | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],

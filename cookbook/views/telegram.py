@@ -3,17 +3,20 @@ import traceback
 
 import requests
 from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
 
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.HelperFunctions import safe_request
-from cookbook.helper.permission_helper import group_required
+from cookbook.helper.permission_helper import has_group_permission
 from cookbook.models import ShoppingListEntry, TelegramBot
 
 
-@group_required('user')
 def setup_bot(request, pk):
+    if not has_group_permission(request, ['user']):
+        return redirect(reverse('index'))
+
     bot = get_object_or_404(TelegramBot, pk=pk, space=request.space)
 
     hook_url = f'{request.build_absolute_uri("/")}telegram/hook/{bot.webhook_token}/'
@@ -25,8 +28,11 @@ def setup_bot(request, pk):
                         'info_response': json.loads(info_response.content.decode())}, json_dumps_params={'indent': 4})
 
 
-@group_required('user')
+
 def remove_bot(request, pk):
+    if not has_group_permission(request, ['user']):
+        return redirect(reverse('index'))
+
     bot = get_object_or_404(TelegramBot, pk=pk, space=request.space)
 
     remove_response = safe_request('GET', f'https://api.telegram.org/bot{bot.token}/deleteWebhook')

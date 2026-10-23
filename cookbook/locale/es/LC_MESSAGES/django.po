@@ -14,8 +14,8 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-03 09:33+0200\n"
-"PO-Revision-Date: 2025-06-23 08:28+0000\n"
-"Last-Translator: Ángel <1024mb@users.noreply.translate.tandoor.dev>\n"
+"PO-Revision-Date: 2026-06-26 16:49+0000\n"
+"Last-Translator: samuel <samuelparedesraigoso@gmail.com>\n"
 "Language-Team: Spanish <http://translate.tandoor.dev/projects/tandoor/"
 "recipes-backend/es/>\n"
 "Language: es\n"
@@ -23,7 +23,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.8.4\n"
+"X-Generator: Weblate 5.16.2\n"
 
 #: .\cookbook\forms.py:58
 msgid "Default"
@@ -95,12 +95,12 @@ msgid "You cannot interact with this object as it is not owned by you!"
 msgstr "¡No puede interactuar con este objeto ya que no es de tu propiedad!"
 
 #: .\cookbook\helper\permission_helper.py:323
-#, fuzzy
-#| msgid "You cannot interact with this object as it is not owned by you!"
 msgid ""
 "You cannot interact with this object because you are not in the same "
 "household as the user who created it!"
-msgstr "¡No puede interactuar con este objeto ya que no es de tu propiedad!"
+msgstr ""
+"¡No puedes interactuar con este objeto porque no perteneces al mismo hogar "
+"que el usuario que lo creó!"
 
 #: .\cookbook\helper\permission_helper.py:505
 msgid "You have reached the maximum number of recipes for your space."
@@ -108,7 +108,7 @@ msgstr "Ha alcanzado el número máximo de recetas para su espacio."
 
 #: .\cookbook\helper\permission_helper.py:517
 msgid "You have more users than allowed in your space."
-msgstr "Tenés mas usuarios que los permitidos en tu espacio"
+msgstr "Tienes más usuarios que los permitidos en tu espacio."
 
 #: .\cookbook\helper\recipe_url_import.py:312
 msgid "reverse rotation"
@@ -135,54 +135,52 @@ msgid "ferment"
 msgstr "fermentar"
 
 #: .\cookbook\helper\recipe_url_import.py:318
-#, fuzzy
-#| msgid "Last cooked"
 msgid "slow cook"
-msgstr "Cocinado por última vez"
+msgstr "cocción lenta"
 
 #: .\cookbook\helper\recipe_url_import.py:319
 msgid "egg boiler"
-msgstr ""
+msgstr "hervir huevos"
 
 #: .\cookbook\helper\recipe_url_import.py:320
 msgid "kettle"
-msgstr ""
+msgstr "hervidor"
 
 #: .\cookbook\helper\recipe_url_import.py:321
 msgid "blend"
-msgstr ""
+msgstr "mezcla"
 
 #: .\cookbook\helper\recipe_url_import.py:322
 msgid "pre-clean"
-msgstr ""
+msgstr "limpieza previa"
 
 #: .\cookbook\helper\recipe_url_import.py:323
 msgid "high temperature"
-msgstr ""
+msgstr "alta temperatura"
 
 #: .\cookbook\helper\recipe_url_import.py:324
 msgid "rice cooker"
-msgstr ""
+msgstr "arrocera"
 
 #: .\cookbook\helper\recipe_url_import.py:325
 msgid "caramelize"
-msgstr ""
+msgstr "caramelizar"
 
 #: .\cookbook\helper\recipe_url_import.py:326
 msgid "peeler"
-msgstr ""
+msgstr "pelador"
 
 #: .\cookbook\helper\recipe_url_import.py:327
 msgid "slicer"
-msgstr ""
+msgstr "rebanadora"
 
 #: .\cookbook\helper\recipe_url_import.py:328
 msgid "grater"
-msgstr ""
+msgstr "rallador"
 
 #: .\cookbook\helper\recipe_url_import.py:329
 msgid "spiralizer"
-msgstr ""
+msgstr "espiralizador"
 
 #: .\cookbook\helper\recipe_url_import.py:330
 msgid "sous-vide"
@@ -246,7 +244,7 @@ msgstr "Carbohidratos"
 
 #: .\cookbook\integration\mealie1.py:244
 msgid "Cholesterol"
-msgstr ""
+msgstr "Colesterol"
 
 #: .\cookbook\integration\mealie1.py:245
 #: .\cookbook\migrations\0190_auto_20230525_1506.py:17
@@ -255,33 +253,31 @@ msgstr "Grasa"
 
 #: .\cookbook\integration\mealie1.py:246
 msgid "Fiber"
-msgstr ""
+msgstr "Fibra"
 
 #: .\cookbook\integration\mealie1.py:247
-#, fuzzy
-#| msgid "Proteins"
 msgid "Protein"
-msgstr "Proteinas"
+msgstr "Proteina"
 
 #: .\cookbook\integration\mealie1.py:248
 msgid "Saturated Fat"
-msgstr ""
+msgstr "Grasas saturadas"
 
 #: .\cookbook\integration\mealie1.py:249
 msgid "Sodium"
-msgstr ""
+msgstr "Sodio"
 
 #: .\cookbook\integration\mealie1.py:250
 msgid "Sugar"
-msgstr ""
+msgstr "Azucar"
 
 #: .\cookbook\integration\mealie1.py:251
 msgid "Trans Fat"
-msgstr ""
+msgstr "Grasas trans"
 
 #: .\cookbook\integration\mealie1.py:252
 msgid "Unsaturated Fat"
-msgstr ""
+msgstr "Grasas insaturadas"
 
 #: .\cookbook\integration\openeats.py:28
 msgid "Recipe source:"
@@ -301,13 +297,15 @@ msgstr "Fuente"
 
 #: .\cookbook\integration\pdfexport.py:9
 msgid "Method not implemented in storage integration"
-msgstr ""
+msgstr "Método no implementado en la integración de almacenamiento"
 
 #: .\cookbook\integration\pdfexport.py:13
 msgid ""
 "PDF export is not currently available. Use your browser's print function "
 "(Ctrl+P) to save recipes as PDF."
 msgstr ""
+"Actualmente, la exportación a PDF no está disponible. Utilice la función de "
+"impresión de su navegador (Ctrl+P) para guardar las recetas como PDF."
 
 #: .\cookbook\integration\recettetek.py:52
 #: .\cookbook\integration\recipekeeper.py:70
@@ -335,7 +333,6 @@ msgid "Section"
 msgstr "Sección"
 
 #: .\cookbook\management\commands\fix_duplicate_properties.py:15
-#, fuzzy
 msgid "Fixes foods with "
 msgstr "Corrige alimentos con "
 
@@ -431,7 +428,7 @@ msgstr "Objetivo"
 
 #: .\cookbook\models.py:1407
 msgid "Add"
-msgstr ""
+msgstr "añadir"
 
 #: .\cookbook\models.py:1408 .\cookbook\templates\account\email.html:43
 #: .\cookbook\templates\socialaccount\connections.html:36
@@ -439,10 +436,8 @@ msgid "Remove"
 msgstr "Eliminar"
 
 #: .\cookbook\models.py:1409
-#, fuzzy
-#| msgid "Move Up"
 msgid "Move"
-msgstr "Mover Arriba"
+msgstr "Mover"
 
 #: .\cookbook\models.py:1621 .\cookbook\templates\search_info.html:28
 msgid "Simple"
@@ -522,22 +517,20 @@ msgstr "Has alcanzado el límite de cargas de archivo."
 
 #: .\cookbook\serializer.py:304
 msgid "The given file type is not allowed."
-msgstr ""
+msgstr "El tipo de archivo especificado no está permitido."
 
 #: .\cookbook\serializer.py:444 .\cookbook\views\views.py:97
-#, fuzzy
-#| msgid "You have reached the maximum number of recipes for your space."
 msgid ""
 "You have the reached the maximum amount of spaces that can be owned by you."
-msgstr "Ha alcanzado el número máximo de recetas para su espacio."
+msgstr "Has alcanzado la cantidad máxima de espacios que puedes poseer."
 
 #: .\cookbook\serializer.py:457
 msgid "Space Name must be unique."
-msgstr ""
+msgstr "El nombre del espacio debe ser unico."
 
 #: .\cookbook\serializer.py:505
 msgid "You must select at least one group."
-msgstr ""
+msgstr "Debes seleccionar al menos un grupo."
 
 #: .\cookbook\serializer.py:1838
 msgid "Hello"
@@ -602,11 +595,13 @@ msgstr "Cantidad de alimento a agregar a la lista de compras"
 
 #: .\cookbook\serializer.py:2072
 msgid "ID of unit to use for the shopping list"
-msgstr ""
+msgstr "Identificación de la unidad que se utilizará para la lista de compras"
 
 #: .\cookbook\serializer.py:2074
 msgid "When set to true will delete all food from active shopping lists."
 msgstr ""
+"Cuando se establece en verdadero, se eliminarán todos los alimentos de las "
+"listas de compra activas."
 
 #: .\cookbook\templates\404.html:5
 msgid "404 Error"
@@ -627,33 +622,32 @@ msgstr "Reportar un error"
 #: .\cookbook\templates\account\email.html:6
 #: .\cookbook\templates\account\email.html:10
 msgid "E-mail Addresses"
-msgstr ""
+msgstr "Direccion de e-mail"
 
 #: .\cookbook\templates\account\email.html:12
 msgid "The following e-mail addresses are associated with your account:"
 msgstr ""
+"Las siguientes direcciones de correo electrónico están asociadas a su cuenta:"
 
 #: .\cookbook\templates\account\email.html:29
 msgid "Verified"
-msgstr ""
+msgstr "Verificado"
 
 #: .\cookbook\templates\account\email.html:31
 msgid "Unverified"
-msgstr ""
+msgstr "No verificado"
 
 #: .\cookbook\templates\account\email.html:33
 msgid "Primary"
-msgstr ""
+msgstr "Primario"
 
 #: .\cookbook\templates\account\email.html:40
-#, fuzzy
-#| msgid "Make Header"
 msgid "Make Primary"
-msgstr "Crear encabezado"
+msgstr "Hacer principal"
 
 #: .\cookbook\templates\account\email.html:42
 msgid "Re-send Verification"
-msgstr ""
+msgstr "Renviar verificacion"
 
 #: .\cookbook\templates\account\email.html:51
 msgid "Warning:"
@@ -664,23 +658,27 @@ msgid ""
 "You currently do not have any e-mail address set up. You should really add "
 "an e-mail address so you can receive notifications, reset your password, etc."
 msgstr ""
+"Actualmente no tienes ninguna dirección de correo electrónico configurada. "
+"Deberías añadir una para recibir notificaciones, restablecer tu contraseña, "
+"etc."
 
 #: .\cookbook\templates\account\email.html:57
 msgid "Add E-mail Address"
-msgstr ""
+msgstr "Añadir direccion de E-mail"
 
 #: .\cookbook\templates\account\email.html:62
 msgid "Add E-mail"
-msgstr ""
+msgstr "añadir E-mail"
 
 #: .\cookbook\templates\account\email.html:72
 msgid "Do you really want to remove the selected e-mail address?"
 msgstr ""
+"¿De verdad quieres eliminar la dirección de correo electrónico seleccionada?"
 
 #: .\cookbook\templates\account\email_confirm.html:6
 #: .\cookbook\templates\account\email_confirm.html:10
 msgid "Confirm E-mail Address"
-msgstr ""
+msgstr "Confirma direccion de E-mail"
 
 #: .\cookbook\templates\account\email_confirm.html:16
 #, python-format
@@ -690,6 +688,9 @@ msgid ""
 "for user %(user_display)s\n"
 "            ."
 msgstr ""
+"<a href=\"mailto:%(email)s\">Por favor confirme que <a href=\"mailto:%(email)"
+"s\">%(email)s</a>es una dirección de correo electrónico para la usuario%"
+"(user_display)s."
 
 #: .\cookbook\templates\account\email_confirm.html:22
 msgid "Confirm"
@@ -702,11 +703,14 @@ msgid ""
 "            <a href=\"%(email_url)s\">issue a new e-mail confirmation "
 "request</a>."
 msgstr ""
+"Este enlace de confirmación por correo electrónico ha caducado o no es "
+"válido. Por favor\n"
+" envíe una nueva solicitud de confirmación por correo electrónico."
 
 #: .\cookbook\templates\account\login.html:8
 #: .\cookbook\templates\openid\login.html:8
 msgid "Login"
-msgstr "Iniciar sesión"
+msgstr "Logearse"
 
 #: .\cookbook\templates\account\login.html:15
 #: .\cookbook\templates\account\login.html:34
@@ -725,19 +729,17 @@ msgstr "Iniciar sesión"
 #: .\cookbook\templates\account\password_reset_done.html:33
 #: .\cookbook\templates\socialaccount\signup.html:8
 #: .\cookbook\templates\socialaccount\signup.html:56
-#, fuzzy
-#| msgid "Sign In"
 msgid "Sign Up"
 msgstr "Iniciar sesión"
 
 #: .\cookbook\templates\account\login.html:41
 msgid "Lost your password?"
-msgstr ""
+msgstr "Has olvidado tu contrraseña?"
 
 #: .\cookbook\templates\account\login.html:42
 #: .\cookbook\templates\account\password_reset.html:29
 msgid "Reset My Password"
-msgstr ""
+msgstr "restablecer mi conterasña"
 
 #: .\cookbook\templates\account\login.html:52
 #: .\cookbook\templates\system.html:228

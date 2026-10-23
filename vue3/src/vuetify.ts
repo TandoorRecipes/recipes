@@ -34,6 +34,10 @@ export default createVuetify({
         // VNumberInput: {
         //     decimalSeparator: 0.1.toLocaleString().replace(/\d/g, '')
         // }
+        // chips use the close icon defined as delete in the aliases but trash can does not look good
+        VChip: {
+            closeIcon: 'fa-solid fa-circle-xmark'
+        }
     },
     locale: {
         locale: 'en',

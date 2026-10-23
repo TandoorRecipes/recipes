@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-03 09:33+0200\n"
+"POT-Creation-Date: 2026-06-24 18:06+0200\n"
 "PO-Revision-Date: 2023-04-12 11:55+0000\n"
 "Last-Translator: noxonad <noxonad@proton.me>\n"
 "Language-Team: Bulgarian <http://translate.tandoor.dev/projects/tandoor/"
@@ -194,11 +194,11 @@ msgstr ""
 msgid "You must supply a servings size"
 msgstr "Трябва да предоставите размер на порции"
 
-#: .\cookbook\helper\template_helper.py:135
-#: .\cookbook\helper\template_helper.py:137
-#: .\cookbook\helper\template_helper.py:139
-#: .\cookbook\helper\template_helper.py:141
-#: .\cookbook\helper\template_helper.py:143
+#: .\cookbook\helper\template_helper.py:156
+#: .\cookbook\helper\template_helper.py:158
+#: .\cookbook\helper\template_helper.py:160
+#: .\cookbook\helper\template_helper.py:162
+#: .\cookbook\helper\template_helper.py:164
 msgid "Could not parse template code."
 msgstr "Не можа да се анализира синтактичен код на шаблона."
 
@@ -211,7 +211,23 @@ msgstr "Любим"
 msgid "I made this"
 msgstr ""
 
-#: .\cookbook\integration\integration.py:233
+#: .\cookbook\integration\integration.py:67
+msgid "Too many files in zip"
+msgstr ""
+
+#: .\cookbook\integration\integration.py:71
+msgid "Zip file too large"
+msgstr ""
+
+#: .\cookbook\integration\integration.py:84
+msgid "Nested zip files too deep"
+msgstr ""
+
+#: .\cookbook\integration\integration.py:92
+msgid "File in zip too large"
+msgstr ""
+
+#: .\cookbook\integration\integration.py:270
 msgid ""
 "Importer expected a .zip file. Did you choose the correct importer type for "
 "your data ?"
@@ -219,7 +235,7 @@ msgstr ""
 "Вносителят очаква .zip файл. Избрахте ли правилния тип вносител за вашите "
 "данни?"
 
-#: .\cookbook\integration\integration.py:235
+#: .\cookbook\integration\integration.py:272
 msgid ""
 "An unexpected error occurred during the import. Please make sure you have "
 "uploaded a valid file."
@@ -227,11 +243,11 @@ msgstr ""
 "По време на импортирането възникна неочаквана грешка. Моля, уверете се, че "
 "сте качили валиден файл."
 
-#: .\cookbook\integration\integration.py:239
+#: .\cookbook\integration\integration.py:276
 msgid "The following recipes were ignored because they already existed:"
 msgstr "Следните рецепти бяха игнорирани, защото вече съществуваха:"
 
-#: .\cookbook\integration\integration.py:242
+#: .\cookbook\integration\integration.py:279
 #, python-format
 msgid "Imported %s recipes."
 msgstr "Импортирани %s рецепти."
@@ -1943,7 +1959,7 @@ msgid ""
 "food parameter is ignored"
 msgstr ""
 
-#: .\cookbook\views\api.py:869 .\cookbook\views\api.py:902
+#: .\cookbook\views\api.py:869 .\cookbook\views\api.py:903
 msgid "Returns all entries with the given food id"
 msgstr ""
 
@@ -1951,45 +1967,45 @@ msgstr ""
 msgid "Returns all entries with the given inventory location id"
 msgstr ""
 
-#: .\cookbook\views\api.py:903
+#: .\cookbook\views\api.py:904
 msgid "Returns all entries with the given entry id"
 msgstr ""
 
-#: .\cookbook\views\api.py:1106
+#: .\cookbook\views\api.py:1107
 #, python-brace-format
 msgid "{obj.name} was removed from the shopping list."
 msgstr "{obj.name} беше премахнат от списъка за пазаруване."
 
-#: .\cookbook\views\api.py:1111 .\cookbook\views\api.py:1912
+#: .\cookbook\views\api.py:1112 .\cookbook\views\api.py:1922
 #, python-brace-format
 msgid "{obj.name} was added to the shopping list."
 msgstr "{obj.name} беше добавен към списъка за пазаруване."
 
-#: .\cookbook\views\api.py:1228 .\cookbook\views\api.py:2030
-#: .\cookbook\views\api.py:2710 .\cookbook\views\api.py:2871
+#: .\cookbook\views\api.py:1229 .\cookbook\views\api.py:2040
+#: .\cookbook\views\api.py:2722 .\cookbook\views\api.py:2889
 msgid "You must select an AI provider to perform your request."
 msgstr ""
 
-#: .\cookbook\views\api.py:1235 .\cookbook\views\api.py:2037
-#: .\cookbook\views\api.py:2717 .\cookbook\views\api.py:2878
+#: .\cookbook\views\api.py:1236 .\cookbook\views\api.py:2047
+#: .\cookbook\views\api.py:2729 .\cookbook\views\api.py:2896
 msgid ""
 "You don't have any credits remaining to use AI or AI features are not "
 "enabled for your space."
 msgstr ""
 
-#: .\cookbook\views\api.py:1479
+#: .\cookbook\views\api.py:1484
 msgid ""
 "Filter meal plans from date (inclusive). If nothing is given its today - 90 "
 "days."
 msgstr ""
 
-#: .\cookbook\views\api.py:1481
+#: .\cookbook\views\api.py:1486
 msgid ""
 "Filter meal plans to date (inclusive). If nothing is given its today + 360 "
 "days."
 msgstr ""
 
-#: .\cookbook\views\api.py:1484
+#: .\cookbook\views\api.py:1489
 #, fuzzy
 #| msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgid "Filter meal plans with MealType ID. For multiple repeat parameter."
@@ -1997,21 +2013,21 @@ msgstr ""
 "Идентификатор на рецептата, част от която е стъпка. За параметър за "
 "многократно повторение."
 
-#: .\cookbook\views\api.py:1573
+#: .\cookbook\views\api.py:1578
 msgid "No recipes found."
 msgstr ""
 
-#: .\cookbook\views\api.py:1670
+#: .\cookbook\views\api.py:1677
 msgid "ID of recipe a step is part of. For multiple repeat parameter."
 msgstr ""
 "Идентификатор на рецептата, част от която е стъпка. За параметър за "
 "многократно повторение."
 
-#: .\cookbook\views\api.py:1672
+#: .\cookbook\views\api.py:1679
 msgid "Query string matched (fuzzy) against object name."
 msgstr "Низът на заявката съответства (размито) спрямо името на обекта."
 
-#: .\cookbook\views\api.py:1708
+#: .\cookbook\views\api.py:1718
 msgid ""
 "Query string matched (fuzzy) against recipe name. In the future also "
 "fulltext search."
@@ -2019,7 +2035,7 @@ msgstr ""
 "Низът на заявката съвпада (размито) с името на рецептата. В бъдеще също и "
 "пълнотекстово търсене."
 
-#: .\cookbook\views\api.py:1710
+#: .\cookbook\views\api.py:1720
 msgid ""
 "ID of keyword a recipe should have. For multiple repeat parameter. "
 "Equivalent to keywords_or"
@@ -2027,119 +2043,119 @@ msgstr ""
 "Идентификатор на ключовата дума, която рецептата трябва да има. За параметър "
 "за многократно повторение. Еквивалентно на keywords_or"
 
-#: .\cookbook\views\api.py:1711
+#: .\cookbook\views\api.py:1721
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with any of the keywords"
 msgstr ""
 "Идентификатори на ключови думи, повторете за няколко. Връща рецепти с някоя "
 "от ключовите думи"
 
-#: .\cookbook\views\api.py:1712
+#: .\cookbook\views\api.py:1722
 msgid ""
 "Keyword IDs, repeat for multiple. Return recipes with all of the keywords."
 msgstr ""
 "Идентификатори на ключови думи, повторете за няколко. Връща рецепти с всички "
 "ключови думи."
 
-#: .\cookbook\views\api.py:1713
+#: .\cookbook\views\api.py:1723
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with any of the keywords."
 msgstr ""
 "Идентификатори на ключови думи, повторете за няколко. Изключва рецепти с "
 "някоя от ключовите думи."
 
-#: .\cookbook\views\api.py:1714
+#: .\cookbook\views\api.py:1724
 msgid ""
 "Keyword IDs, repeat for multiple. Exclude recipes with all of the keywords."
 msgstr ""
 "Идентификатори на ключови думи, повторете за няколко. Изключва рецепти с "
 "всички ключови думи."
 
-#: .\cookbook\views\api.py:1716
+#: .\cookbook\views\api.py:1726
 msgid "ID of food a recipe should have. For multiple repeat parameter."
 msgstr ""
 "Идентификация на храната, която рецептата трябва да има. За параметър за "
 "многократно повторение."
 
-#: .\cookbook\views\api.py:1717
+#: .\cookbook\views\api.py:1727
 msgid "Food IDs, repeat for multiple. Return recipes with any of the foods"
 msgstr ""
 "Идентификатори на храни, повторете за няколко. Връща рецепти с някоя от "
 "храните"
 
-#: .\cookbook\views\api.py:1718
+#: .\cookbook\views\api.py:1728
 msgid "Food IDs, repeat for multiple. Return recipes with all of the foods."
 msgstr ""
 "Идентификатори на храни, повторете за няколко. Връща рецептите с всички "
 "храни."
 
-#: .\cookbook\views\api.py:1719
+#: .\cookbook\views\api.py:1729
 msgid "Food IDs, repeat for multiple. Exclude recipes with any of the foods."
 msgstr ""
 "Идентификатори на храни, повторете за няколко. Изключва рецепти с някоя от "
 "храните."
 
-#: .\cookbook\views\api.py:1720
+#: .\cookbook\views\api.py:1730
 msgid "Food IDs, repeat for multiple. Exclude recipes with all of the foods."
 msgstr ""
 "Идентификатори на храни, повторете за няколко. Изключва рецепти с всички "
 "храни."
 
-#: .\cookbook\views\api.py:1722
+#: .\cookbook\views\api.py:1732
 msgid "ID of book a recipe should be in. For multiple repeat parameter."
 msgstr ""
 "Идентификатор на книгата, в която трябва да е рецепта. За параметър за "
 "многократно повторение."
 
-#: .\cookbook\views\api.py:1723
+#: .\cookbook\views\api.py:1733
 msgid "Book IDs, repeat for multiple. Return recipes with any of the books"
 msgstr ""
 "Идентификационен № на книги, повторете за няколко. Връща рецепти с някоя от "
 "книгите"
 
-#: .\cookbook\views\api.py:1724
+#: .\cookbook\views\api.py:1734
 msgid "Book IDs, repeat for multiple. Return recipes with all of the books."
 msgstr ""
 "Идентификационен № на книги, повторете за няколко. Връща рецептите с всички "
 "книги."
 
-#: .\cookbook\views\api.py:1725
+#: .\cookbook\views\api.py:1735
 msgid "Book IDs, repeat for multiple. Exclude recipes with any of the books."
 msgstr ""
 "Идентификационен № на книги, повторете за няколко. Изключва рецептите с "
 "някоя от книгите."
 
-#: .\cookbook\views\api.py:1726
+#: .\cookbook\views\api.py:1736
 msgid "Book IDs, repeat for multiple. Exclude recipes with all of the books."
 msgstr ""
 "Идентификационен № на книги, повторете за няколко. Изключва рецептите от "
 "всички книги."
 
-#: .\cookbook\views\api.py:1728
+#: .\cookbook\views\api.py:1738
 msgid "ID of unit a recipe should have."
 msgstr "Идентификатор на единицата, която рецептата трябва да има."
 
-#: .\cookbook\views\api.py:1730
+#: .\cookbook\views\api.py:1740
 msgid "Exact rating of recipe"
 msgstr ""
 
-#: .\cookbook\views\api.py:1731
+#: .\cookbook\views\api.py:1741
 #, fuzzy
 #| msgid "ID of unit a recipe should have."
 msgid "Rating a recipe should have or greater."
 msgstr "Идентификатор на единицата, която рецептата трябва да има."
 
-#: .\cookbook\views\api.py:1732
+#: .\cookbook\views\api.py:1742
 #, fuzzy
 #| msgid "ID of unit a recipe should have."
 msgid "Rating a recipe should have or smaller."
 msgstr "Идентификатор на единицата, която рецептата трябва да има."
 
-#: .\cookbook\views\api.py:1734
+#: .\cookbook\views\api.py:1744
 msgid "Filter recipes cooked X times."
 msgstr ""
 
-#: .\cookbook\views\api.py:1735
+#: .\cookbook\views\api.py:1745
 #, fuzzy
 #| msgid ""
 #| "Filter recipes cooked X times or more.  Negative values returns cooked "
@@ -2149,11 +2165,11 @@ msgstr ""
 "Филтрирайте рецепти, приготвени X пъти или повече. Отрицателните стойности "
 "връщат приготвени по-малко от X пъти"
 
-#: .\cookbook\views\api.py:1736
+#: .\cookbook\views\api.py:1746
 msgid "Filter recipes cooked X times or less."
 msgstr ""
 
-#: .\cookbook\views\api.py:1738
+#: .\cookbook\views\api.py:1748
 #, fuzzy
 #| msgid ""
 #| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
@@ -2163,7 +2179,7 @@ msgstr ""
 "Филтрирайте рецептите, създадени на или след ГГГГ-ММ-ДД. Предварително – "
 "филтрира на или преди дата."
 
-#: .\cookbook\views\api.py:1739
+#: .\cookbook\views\api.py:1749
 #, fuzzy
 #| msgid ""
 #| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
@@ -2173,7 +2189,7 @@ msgstr ""
 "Филтрирайте рецептите, създадени на или след ГГГГ-ММ-ДД. Предварително – "
 "филтрира на или преди дата."
 
-#: .\cookbook\views\api.py:1740
+#: .\cookbook\views\api.py:1750
 #, fuzzy
 #| msgid ""
 #| "Filter recipes created on or after YYYY-MM-DD. Prepending - filters on or "
@@ -2183,8 +2199,8 @@ msgstr ""
 "Филтрирайте рецептите, създадени на или след ГГГГ-ММ-ДД. Предварително – "
 "филтрира на или преди дата."
 
-#: .\cookbook\views\api.py:1742 .\cookbook\views\api.py:1743
-#: .\cookbook\views\api.py:1744
+#: .\cookbook\views\api.py:1752 .\cookbook\views\api.py:1753
+#: .\cookbook\views\api.py:1754
 #, fuzzy
 #| msgid ""
 #| "Filter recipes updated on or after YYYY-MM-DD. Prepending - filters on or "
@@ -2194,7 +2210,7 @@ msgstr ""
 "Филтрирайте рецептите, актуализирани на или след ГГГГ-ММ-ДД. Предварително – "
 "филтрира на или преди дата."
 
-#: .\cookbook\views\api.py:1746
+#: .\cookbook\views\api.py:1756
 #, fuzzy
 #| msgid ""
 #| "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters "
@@ -2204,7 +2220,7 @@ msgstr ""
 "Филтрирайте последно приготвените рецепти на или след ГГГГ-ММ-ДД. "
 "Предварително – филтрира на или преди дата."
 
-#: .\cookbook\views\api.py:1747
+#: .\cookbook\views\api.py:1757
 #, fuzzy
 #| msgid ""
 #| "Filter recipes last cooked on or after YYYY-MM-DD. Prepending - filters "
@@ -2214,7 +2230,7 @@ msgstr ""
 "Филтрирайте последно приготвените рецепти на или след ГГГГ-ММ-ДД. "
 "Предварително – филтрира на или преди дата."
 
-#: .\cookbook\views\api.py:1749 .\cookbook\views\api.py:1750
+#: .\cookbook\views\api.py:1759 .\cookbook\views\api.py:1760
 #, fuzzy
 #| msgid ""
 #| "Filter recipes lasts viewed on or after YYYY-MM-DD. Prepending - filters "
@@ -2224,69 +2240,69 @@ msgstr ""
 "Филтрирането на рецептите последно разглеждани на или след ГГГГ-ММ-ДД. "
 "Предварително – филтрира на или преди дата."
 
-#: .\cookbook\views\api.py:1752
+#: .\cookbook\views\api.py:1762
 msgid "Filter recipes for ones created by the given user ID"
 msgstr ""
 
-#: .\cookbook\views\api.py:1753
+#: .\cookbook\views\api.py:1763
 msgid "If only internal recipes should be returned. [true/<b>false</b>]"
 msgstr "Ако трябва да се върнат само вътрешни рецепти. [вярно/<b>невярно</b>]"
 
-#: .\cookbook\views\api.py:1754
+#: .\cookbook\views\api.py:1764
 msgid "Returns the results in randomized order. [true/<b>false</b>]"
 msgstr "Връща резултатите в произволен ред. [вярно/<b>невярно</b>]"
 
-#: .\cookbook\views\api.py:1756
+#: .\cookbook\views\api.py:1766
 msgid ""
 "Determines the order of the results. Options are: score,-score,name,-name,"
 "lastcooked,-lastcooked,rating,-rating,times_cooked,-times_cooked,created_at,-"
 "created_at,lastviewed,-lastviewed"
 msgstr ""
 
-#: .\cookbook\views\api.py:1758
+#: .\cookbook\views\api.py:1768
 msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgstr ""
 "Първо връща нови резултати в резултатите от търсенето. [вярно/<b>невярно</b>]"
 
-#: .\cookbook\views\api.py:1759
+#: .\cookbook\views\api.py:1769
 msgid ""
 "Returns the given number of recently viewed recipes before search results "
 "(if given)"
 msgstr ""
 
-#: .\cookbook\views\api.py:1760
+#: .\cookbook\views\api.py:1770
 msgid "ID of a custom filter. Returns all recipes matched by that filter."
 msgstr ""
 
-#: .\cookbook\views\api.py:1761
+#: .\cookbook\views\api.py:1771
 msgid "Filter recipes that can be made with OnHand food. [true/<b>false</b>]"
 msgstr ""
 "Филтрирайте рецепти, които могат да се приготвят с храна в наличност. [вярно/"
 "<b>невярно</b>]"
 
-#: .\cookbook\views\api.py:1762
+#: .\cookbook\views\api.py:1772
 #, fuzzy
 #| msgid "Returns new results first in search results. [true/<b>false</b>]"
 msgid "Include child keywords and foods in search results. [<b>true</b>/false]"
 msgstr ""
 "Първо връща нови резултати в резултатите от търсенето. [вярно/<b>невярно</b>]"
 
-#: .\cookbook\views\api.py:2147
+#: .\cookbook\views\api.py:2159
 msgid ""
 "Return the PropertyTypes matching the property category.  Repeat for "
 "multiple."
 msgstr ""
 
-#: .\cookbook\views\api.py:2178 .\cookbook\views\api.py:2256
+#: .\cookbook\views\api.py:2190 .\cookbook\views\api.py:2268
 msgid "Returns only entries associated with the given mealplan id"
 msgstr ""
 
-#: .\cookbook\views\api.py:2254
+#: .\cookbook\views\api.py:2266
 msgid ""
 "Returns only elements updated after the given timestamp in ISO 8601 format."
 msgstr ""
 
-#: .\cookbook\views\api.py:2454
+#: .\cookbook\views\api.py:2466
 #, fuzzy
 #| msgid ""
 #| "Returns the shopping list entry with a primary key of id.  Multiple "
@@ -2297,17 +2313,17 @@ msgstr ""
 "Връща записа в списъка за пазаруване с първичен ключ на идентификатора. "
 "Разрешени са множество стойности."
 
-#: .\cookbook\views\api.py:2471
+#: .\cookbook\views\api.py:2483
 msgid ""
 "Text field to store data that gets carried over to the UserSpace created "
 "from the InviteLink"
 msgstr ""
 
-#: .\cookbook\views\api.py:2472
+#: .\cookbook\views\api.py:2484
 msgid "Only return InviteLinks that have not been used yet."
 msgstr ""
 
-#: .\cookbook\views\api.py:2499
+#: .\cookbook\views\api.py:2511
 #, fuzzy
 #| msgid ""
 #| "Returns the shopping list entry with a primary key of id.  Multiple "
@@ -2317,51 +2333,51 @@ msgstr ""
 "Връща записа в списъка за пазаруване с първичен ключ на идентификатора. "
 "Разрешени са множество стойности."
 
-#: .\cookbook\views\api.py:2599
+#: .\cookbook\views\api.py:2611
 msgid "Nothing to do."
 msgstr "Няма нищо за правене."
 
-#: .\cookbook\views\api.py:2644
+#: .\cookbook\views\api.py:2656
 #, python-format
 msgid ""
 "The requested page could not be loaded. The server returned %(status_code)s."
 msgstr ""
 
-#: .\cookbook\views\api.py:2652
+#: .\cookbook\views\api.py:2664
 msgid "Connection Refused."
 msgstr "Връзката е отказана."
 
-#: .\cookbook\views\api.py:2656
+#: .\cookbook\views\api.py:2668
 msgid "Bad URL Schema."
 msgstr "Лоша URL схема."
 
-#: .\cookbook\views\api.py:2681
+#: .\cookbook\views\api.py:2693
 msgid "No usable data could be found."
 msgstr "Не бяха намерени полезни данни."
 
-#: .\cookbook\views\api.py:2950 .\cookbook\views\api.py:3119
+#: .\cookbook\views\api.py:2970 .\cookbook\views\api.py:3139
 msgid "File is above space limit"
 msgstr ""
 
-#: .\cookbook\views\api.py:2973 .\cookbook\views\api.py:3136
+#: .\cookbook\views\api.py:2993 .\cookbook\views\api.py:3156
 msgid "Importing is not implemented for this provider"
 msgstr "Импортирането не е реализирано за този доставчик"
 
-#: .\cookbook\views\api.py:3002
+#: .\cookbook\views\api.py:3022
 msgid ""
 "PDF export is no longer available. Use your browser's print function (Ctrl"
 "+P) to save recipes as PDF."
 msgstr ""
 
-#: .\cookbook\views\api.py:3335
+#: .\cookbook\views\api.py:3365
 msgid "This feature is not yet available in the hosted version of tandoor!"
 msgstr "Тази функция все още не е налична в хостваната версия на tandoor!"
 
-#: .\cookbook\views\api.py:3356
+#: .\cookbook\views\api.py:3386
 msgid "Sync successful!"
 msgstr "Синхронизирането успешно!"
 
-#: .\cookbook\views\api.py:3359
+#: .\cookbook\views\api.py:3389
 msgid "Error synchronizing with Storage"
 msgstr "Грешка при синхронизирането с хранилището"
 

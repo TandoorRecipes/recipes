@@ -18,30 +18,35 @@ import {
     UserFromJSON,
     UserFromJSONTyped,
     UserToJSON,
+    UserToJSONTyped,
 } from './User';
 import type { Keyword } from './Keyword';
 import {
     KeywordFromJSON,
     KeywordFromJSONTyped,
     KeywordToJSON,
+    KeywordToJSONTyped,
 } from './Keyword';
 import type { Step } from './Step';
 import {
     StepFromJSON,
     StepFromJSONTyped,
     StepToJSON,
+    StepToJSONTyped,
 } from './Step';
 import type { Property } from './Property';
 import {
     PropertyFromJSON,
     PropertyFromJSONTyped,
     PropertyToJSON,
+    PropertyToJSONTyped,
 } from './Property';
 import type { NutritionInformation } from './NutritionInformation';
 import {
     NutritionInformationFromJSON,
     NutritionInformationFromJSONTyped,
     NutritionInformationToJSON,
+    NutritionInformationToJSONTyped,
 } from './NutritionInformation';
 
 /**
@@ -67,13 +72,13 @@ export interface PatchedRecipe {
      * @type {string}
      * @memberof PatchedRecipe
      */
-    description?: string;
+    description?: string | null;
     /**
      * 
      * @type {string}
      * @memberof PatchedRecipe
      */
-    readonly image?: string;
+    readonly image?: string | null;
     /**
      * 
      * @type {Array<Keyword>}
@@ -121,7 +126,7 @@ export interface PatchedRecipe {
      * @type {string}
      * @memberof PatchedRecipe
      */
-    sourceUrl?: string;
+    sourceUrl?: string | null;
     /**
      * 
      * @type {boolean}
@@ -139,7 +144,7 @@ export interface PatchedRecipe {
      * @type {NutritionInformation}
      * @memberof PatchedRecipe
      */
-    nutrition?: NutritionInformation;
+    nutrition?: NutritionInformation | null;
     /**
      * 
      * @type {Array<Property>}
@@ -151,7 +156,7 @@ export interface PatchedRecipe {
      * @type {any}
      * @memberof PatchedRecipe
      */
-    readonly foodProperties?: any;
+    readonly foodProperties?: any | null;
     /**
      * 
      * @type {number}
@@ -163,7 +168,7 @@ export interface PatchedRecipe {
      * @type {string}
      * @memberof PatchedRecipe
      */
-    filePath?: string;
+    readonly filePath?: string;
     /**
      * 
      * @type {string}
@@ -187,13 +192,13 @@ export interface PatchedRecipe {
      * @type {number}
      * @memberof PatchedRecipe
      */
-    readonly rating?: number;
+    readonly rating?: number | null;
     /**
      * 
      * @type {Date}
      * @memberof PatchedRecipe
      */
-    readonly lastCooked?: Date;
+    readonly lastCooked?: Date | null;
     /**
      * 
      * @type {boolean}
@@ -254,10 +259,15 @@ export function PatchedRecipeFromJSONTyped(json: any, ignoreDiscriminator: boole
     };
 }
 
-export function PatchedRecipeToJSON(value?: Omit<PatchedRecipe, 'image'|'createdBy'|'createdAt'|'updatedAt'|'foodProperties'|'rating'|'lastCooked'> | null): any {
+export function PatchedRecipeToJSON(json: any): PatchedRecipe {
+    return PatchedRecipeToJSONTyped(json, false);
+}
+
+export function PatchedRecipeToJSONTyped(value?: Omit<PatchedRecipe, 'image'|'created_by'|'created_at'|'updated_at'|'food_properties'|'file_path'|'rating'|'last_cooked'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
@@ -273,7 +283,6 @@ export function PatchedRecipeToJSON(value?: Omit<PatchedRecipe, 'image'|'created
         'nutrition': NutritionInformationToJSON(value['nutrition']),
         'properties': value['properties'] == null ? undefined : ((value['properties'] as Array<any>).map(PropertyToJSON)),
         'servings': value['servings'],
-        'file_path': value['filePath'],
         'servings_text': value['servingsText'],
         'diameter': value['diameter'],
         'diameter_text': value['diameterText'],

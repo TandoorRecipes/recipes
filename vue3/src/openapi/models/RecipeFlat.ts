@@ -64,10 +64,15 @@ export function RecipeFlatFromJSONTyped(json: any, ignoreDiscriminator: boolean)
     };
 }
 
-export function RecipeFlatToJSON(value?: Omit<RecipeFlat, 'name'|'image'> | null): any {
+export function RecipeFlatToJSON(json: any): RecipeFlat {
+    return RecipeFlatToJSONTyped(json, false);
+}
+
+export function RecipeFlatToJSONTyped(value?: Omit<RecipeFlat, 'name'|'image'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
+
     return {
         
         'id': value['id'],
