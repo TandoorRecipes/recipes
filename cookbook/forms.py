@@ -1,18 +1,8 @@
-from datetime import datetime
-
-from allauth.account.forms import ResetPasswordForm, SignupForm
-from allauth.socialaccount.forms import SignupForm as SocialSignupForm
 from django import forms
-from django.conf import settings
-from django.contrib.auth.models import Group
-from django.core.exceptions import ValidationError
 from django.forms import widgets
 from django.utils.translation import gettext_lazy as _
-from django_scopes import scopes_disabled
-from django_scopes.forms import SafeModelChoiceField
-from hcaptcha.fields import hCaptchaField
 
-from .models import InviteLink, Recipe, Space, User, UserPreference, UserSpace
+from .models import Recipe
 
 
 class SelectWidget(widgets.Select):
