@@ -172,9 +172,14 @@
                                 <v-textarea v-model="sourceImportText" label="JSON/HTML" :loading="loading" v-if="importType == 'source'" :hint="$t('SourceImportHelp')"
                                             persistent-hint autofocus @keydown.enter="loadRecipeFromUrl({data: sourceImportText})"></v-textarea>
 
-                                <v-alert v-if="importResponse.error" :title="$t('Error')" :text="importResponse.msg" color="warning">
 
+                                <v-alert v-if="importResponse.error && importResponse.msg.includes('403')" :title="$t('Error')" color="warning">
+                                    {{ $t('ImportNotAllowed') }}
+                                    <template #append>
+                                        <v-btn @click="importType = 'bookmarklet'; stepper = 'bookmarklet'" variant="outlined" append-icon="fa-solid fa-arrow-right">{{ $t('Bookmarklet') }}</v-btn>
+                                    </template>
                                 </v-alert>
+                                <v-alert v-if="importResponse.error && !importResponse.msg.includes('403')" :title="$t('Error')" :text="importResponse.msg" color="warning"></v-alert>
 
                                 <v-stepper-actions>
                                     <template #prev>
@@ -242,18 +247,18 @@
                                 <v-row>
                                     <v-col class="text-center">
                                         <v-btn-group border divided>
-                                            <ai-action-button 
-                                                :text="$t('Auto_Sort')" 
-                                                prepend-icon="$ai" 
-                                                :loading="aiStepSortLoading" 
-                                                @selected="aiStepSort" 
+                                            <ai-action-button
+                                                :text="$t('Auto_Sort')"
+                                                prepend-icon="$ai"
+                                                :loading="aiStepSortLoading"
+                                                @selected="aiStepSort"
                                                 :disabled="!importResponse.recipe?.steps || importResponse.recipe.steps.length < 1">
                                             </ai-action-button>
-                                            
+
                                             <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps()">
                                                 <span v-if="!mobile">{{ $t('Split') }}</span>
                                             </v-btn>
-                                            
+
                                             <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps()">
                                                 <span v-if="!mobile">{{ $t('Merge') }}</span>
                                             </v-btn>

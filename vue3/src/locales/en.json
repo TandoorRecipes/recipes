@@ -330,6 +330,7 @@
   "ImportIntoTandoor": "Import into Tandoor",
   "ImportIntoTandoorHelp": "To import this recipe into your own Tandoor collection follow the following steps.",
   "ImportMealPlans": "Import mealplans",
+  "ImportNotAllowed": "The external server does not allow imports. You might use the bookmarklet to import directly from the page. Please only use this function if its legal in your juristiction.",
   "ImportShoppingList": "Import shoppinglists",
   "Import_Error": "An Error occurred during your import. Please expand the Details at the bottom of the page to view it.",
   "Import_Not_Yet_Supported": "Import not yet supported",

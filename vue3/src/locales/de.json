@@ -332,6 +332,7 @@
   "ImportIntoTandoor": "In Tandoor importieren",
   "ImportIntoTandoorHelp": "Um das Rezept in deine eigene Tandoor Sammlung zu importieren, befolge die folgenden Schritte.",
   "ImportMealPlans": "Speisepläne importieren",
+  "ImportNotAllowed": "Der externe Server hat die Anfrage abgelehnt. Mithilfe des Lesezeichen Importers kann die Seite ggf. dennoch importiert werden. Bitte nutzte diese Funktion nur, wenn du dazu berechtigt bist. ",
   "ImportShoppingList": "Einkaufslisten importieren",
   "Import_Error": "Es ist ein Fehler beim Importieren aufgetreten. Bitte sieh dir die ausgeklappten Details unten auf der Seite an.",
   "Import_Not_Yet_Supported": "Importieren wird noch nicht unterstützt",
