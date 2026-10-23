@@ -68,6 +68,16 @@ def test_update(arg, request, obj_1):
         assert response['servings'] == 2
 
 
+def test_update_decimal_servings(u1_s1, obj_1):
+    r = u1_s1.patch(
+        reverse(DETAIL_URL, args={obj_1.id}),
+        {'servings': 1.5},
+        content_type='application/json'
+    )
+    assert r.status_code == 200
+    assert float(json.loads(r.content)['servings']) == 1.5
+
+
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 201],
