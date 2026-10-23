@@ -1,6 +1,7 @@
 from io import BytesIO
 
 from cookbook.helper.HelperFunctions import safe_request
+from cookbook.helper.image_processing import get_filetype
 from cookbook.helper.ingredient_parser import IngredientParser
 from cookbook.helper.recipe_url_import import parse_servings, parse_servings_text, parse_time
 from cookbook.integration.integration import Integration
@@ -64,13 +65,37 @@ class Cookmate(Integration):
                             food=f, unit=u, amount=amount, note=note, original_text=ingredient.text.strip(), space=self.request.space,
                         ))
 
-        if recipe_xml.find('imageurl') is not None:
-            try:
-                url = recipe_xml.find('imageurl').text.strip()
-                response = safe_request('GET', url)
-                self.import_recipe_image(recipe, BytesIO(response.content))
-            except Exception as e:
-                print('failed to import image ', str(e))
+        # Cookmate stores photos added on the device inside the archive and references them via
+        # <imagepath>, while recipes clipped from the web reference a remote image via <imageurl>.
+        # Prefer the locally stored image and fall back to the remote url.
+        # note: lxml elements must always be compared with "is not None" since truth testing
+        # elements that only contain text (e.g. a self-closing or text-only imagepath) is unreliable.
+        try:
+            image_bytes = None
+            filetype = '.jpeg'
+
+            image_path_el = recipe_xml.find('imagepath')
+            if image_path_el is not None:
+                if image_path := (image_path_el.text or '').strip().replace('\\', '/'):
+                    if import_zip := getattr(self, 'import_zip', None):
+                        for f in import_zip.filelist:
+                            normalized = f.filename.replace('\\', '/')
+                            if normalized == image_path or normalized.endswith('/' + image_path.rsplit('/', 1)[-1]):
+                                image_bytes = BytesIO(self.safe_read(import_zip, f))
+                                filetype = get_filetype(f.filename)
+                                break
+
+            if image_bytes is None:
+                image_url_el = recipe_xml.find('imageurl')
+                if image_url_el is not None:
+                    if url := (image_url_el.text or '').strip():
+                        response = safe_request('GET', url)
+                        image_bytes = BytesIO(response.content)
+
+            if image_bytes is not None:
+                self.import_recipe_image(recipe, image_bytes, filetype=filetype)
+        except Exception as e:
+            print(recipe.name, ': failed to import image ', str(e))
 
         recipe.save()
 
