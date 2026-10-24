@@ -1,8 +1,7 @@
 import {useDjangoUrls} from "@/composables/useDjangoUrls";
 import {ref} from "vue";
 import {getCookie} from "@/utils/cookie";
-import {AiProvider, RecipeFromSourceResponseFromJSON, RecipeImageFromJSON, ResponseError, UserFile, UserFileFromJSON} from "@/openapi";
-import {tr} from "vuetify/locale";
+import {ApiApi, RecipeFromSourceResponseFromJSON, RecipeImageFromJSON, ResponseError, UserFile} from "@/openapi";
 
 
 /**
@@ -20,35 +19,13 @@ export function useFileApi() {
      * @param id optional id to update existing user file
      */
     function createOrUpdateUserFile(name: string, file: File | null, id?: number): Promise<UserFile> {
-        let formData = new FormData()
-        formData.append('name', name)
-
-        if (file != null) {
-            formData.append('file', file)
-        }
-
         fileApiLoading.value = true
-
-        let fetchUrl = getDjangoUrl('api/user-file/')
-        let fetchMethod = 'POST'
-        if (id) {
-            fetchUrl += `${id}/`
-            fetchMethod = 'PUT'
-        }
-
-        return fetch(fetchUrl, {
-            method: fetchMethod,
-            headers: {'X-CSRFToken': getCookie('csrftoken')},
-            body: formData
-        }).then(r => {
-            if (r.ok) {
-                return r.json().then(r => {
-                    return UserFileFromJSON(r)
-                })
-            } else {
-                throw new ResponseError(r)
-            }
-        }).finally(() => {
+        const api = new ApiApi()
+        const request = {name, file: file ?? undefined}
+        const requestPromise = id
+            ? api.apiUserFileUpdate({id, ...request})
+            : api.apiUserFileCreate(request)
+        return requestPromise.finally(() => {
             fileApiLoading.value = false
         })
     }
@@ -68,11 +45,15 @@ export function useFileApi() {
             formData.append('image_url', imageUrl)
         }
 
+        fileApiLoading.value = true
         return fetch(getDjangoUrl(`api/recipe/${recipeId}/image/`), {
             method: 'PUT',
             headers: {'X-CSRFToken': getCookie('csrftoken')},
             body: formData
         }).then(r => {
+            if (!r.ok) {
+                throw new ResponseError(r)
+            }
             return r.json().then(r => {
                 return RecipeImageFromJSON(r)
             })

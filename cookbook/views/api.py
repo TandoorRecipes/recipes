@@ -1895,13 +1895,12 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
 
             if image is not None:
                 img = handle_image(request, image, filetype)
+                if img is None:
+                    return Response({'image': ['The uploaded file is not a valid image.']}, status=400)
                 obj.image.save(f'{uuid.uuid4()}_{obj.pk}{filetype}', img)
                 obj.save()
                 return Response(serializer.data)
-            else:
-                obj.image = None
-                obj.save()
-                return Response(serializer.data)
+            return Response({'image': ['The image could not be downloaded or processed.']}, status=400)
 
         return Response(serializer.errors, 400)
 

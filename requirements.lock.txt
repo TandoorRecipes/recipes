@@ -1,0 +1,530 @@
+# Fully pinned transitive dependencies for requirements.txt (Python 3.12, all platforms).
+# Regenerate: uv pip compile requirements.txt --universal --python-version 3.12 -o requirements.lock.txt --no-header
+aiohappyeyeballs==2.7.1
+    # via aiohttp
+aiohttp==3.14.3
+    # via
+    #   -r requirements.txt
+    #   litellm
+    #   pytubefix
+aiosignal==1.4.0
+    # via aiohttp
+annotated-types==0.8.0
+    # via pydantic
+anyio==4.15.1
+    # via
+    #   httpx
+    #   openai
+asgiref==3.12.1
+    # via
+    #   django
+    #   django-allauth
+    #   django-cors-headers
+asttokens==3.0.2
+    # via stack-data
+attrs==26.1.0
+    # via
+    #   aiohttp
+    #   jsonschema
+    #   referencing
+autopep8==2.3.2
+    # via -r requirements.txt
+beautifulsoup4==4.15.0
+    # via
+    #   -r requirements.txt
+    #   mf2py
+    #   recipe-scrapers
+bleach==6.4.0
+    # via -r requirements.txt
+boto3==1.43.89
+    # via
+    #   -r requirements.txt
+    #   litellm
+botocore==1.43.103
+    # via
+    #   boto3
+    #   s3transfer
+certifi==2026.7.22
+    # via
+    #   httpcore
+    #   httpx
+    #   requests
+cffi==2.1.1 ; platform_python_implementation != 'PyPy'
+    # via cryptography
+charset-normalizer==3.5.1
+    # via requests
+click==8.5.0
+    # via
+    #   huggingface-hub
+    #   litellm
+colorama==0.4.6 ; sys_platform == 'win32'
+    # via
+    #   ipython
+    #   pytest
+    #   qrcode
+    #   tqdm
+coverage==7.16.1
+    # via pytest-cov
+crispy-bootstrap4==2026.2
+    # via -r requirements.txt
+cryptography==50.0.1
+    # via
+    #   -r requirements.txt
+    #   fido2
+    #   jwcrypto
+    #   pyjwt
+defusedxml==0.7.1
+    # via python3-openid
+distro==1.9.0
+    # via openai
+django==5.2.16
+    # via
+    #   -r requirements.txt
+    #   crispy-bootstrap4
+    #   django-allauth
+    #   django-annoying
+    #   django-auth-ldap
+    #   django-cors-headers
+    #   django-crispy-forms
+    #   django-debug-toolbar
+    #   django-oauth-toolkit
+    #   django-prometheus
+    #   django-scopes
+    #   django-storages
+    #   django-treebeard
+    #   django-vite
+    #   djangorestframework
+    #   drf-spectacular
+    #   drf-spectacular-sidecar
+django-allauth==65.18.0
+    # via -r requirements.txt
+django-annoying==0.10.8
+    # via -r requirements.txt
+django-auth-ldap==5.3.0
+    # via -r requirements.txt
+django-cleanup==9.0.0
+    # via -r requirements.txt
+django-cors-headers==4.9.0
+    # via -r requirements.txt
+django-crispy-forms==2.4
+    # via
+    #   -r requirements.txt
+    #   crispy-bootstrap4
+django-debug-toolbar==8.0.0
+    # via -r requirements.txt
+django-hcaptcha==0.2.0
+    # via -r requirements.txt
+django-oauth-toolkit==3.4.1
+    # via -r requirements.txt
+django-prometheus==2.5.0
+    # via -r requirements.txt
+django-scopes==2.1.0
+    # via -r requirements.txt
+django-storages==1.14.6
+    # via -r requirements.txt
+django-treebeard==4.7.1
+    # via -r requirements.txt
+django-vite==3.1.0
+    # via -r requirements.txt
+djangorestframework==3.18.0
+    # via
+    #   -r requirements.txt
+    #   drf-spectacular
+drf-spectacular==0.30.0
+    # via -r requirements.txt
+drf-spectacular-sidecar==2026.9.1
+    # via -r requirements.txt
+drf-writable-nested==0.7.2
+    # via -r requirements.txt
+execnet==2.1.2
+    # via pytest-xdist
+executing==2.2.1
+    # via stack-data
+extruct==0.18.0
+    # via recipe-scrapers
+factory-boy==3.3.3
+    # via pytest-factoryboy
+faker==40.39.0
+    # via factory-boy
+fastuuid==0.14.0
+    # via litellm
+fido2==2.2.1
+    # via django-allauth
+filelock==4.0.3
+    # via huggingface-hub
+flake8==7.3.0
+    # via -r requirements.txt
+frappe-client==0.1.0.dev0
+    # via -r requirements.txt
+frozenlist==1.8.0
+    # via
+    #   aiohttp
+    #   aiosignal
+fsspec==2026.9.0
+    # via huggingface-hub
+gunicorn==26.2.0
+    # via -r requirements.txt
+h11==0.16.0
+    # via httpcore
+hf-xet==1.6.0 ; platform_machine == 'AMD64' or platform_machine == 'aarch64' or platform_machine == 'amd64' or platform_machine == 'arm64' or platform_machine == 'x86_64'
+    # via huggingface-hub
+hiredis==3.4.1
+    # via -r requirements.txt
+html-text==0.7.1
+    # via extruct
+html5lib==1.1
+    # via
+    #   mf2py
+    #   microdata
+    #   pyrdfa3
+httpcore==1.0.9
+    # via httpx
+httpx==0.28.1
+    # via
+    #   huggingface-hub
+    #   litellm
+    #   openai
+huggingface-hub==1.33.0
+    # via tokenizers
+icalendar==7.3.0
+    # via -r requirements.txt
+idna==3.20
+    # via
+    #   anyio
+    #   httpx
+    #   requests
+    #   yarl
+importlib-metadata==8.9.0
+    # via
+    #   litellm
+    #   yapf
+inflection==0.5.1
+    # via
+    #   -r requirements.txt
+    #   drf-spectacular
+    #   pytest-factoryboy
+iniconfig==2.3.0
+    # via pytest
+ipython==9.17.1
+    # via frappe-client
+ipython-pygments-lexers==1.1.1
+    # via ipython
+isodate==0.7.2
+    # via
+    #   python3-saml
+    #   recipe-scrapers
+jedi==0.20.0
+    # via ipython
+jinja2==3.1.6
+    # via
+    #   -r requirements.txt
+    #   litellm
+    #   pytest-html
+jiter==0.17.0
+    # via openai
+jmespath==1.1.0
+    # via
+    #   boto3
+    #   botocore
+jsonschema==4.26.0
+    # via
+    #   drf-spectacular
+    #   litellm
+jsonschema-specifications==2025.9.1
+    # via jsonschema
+jstyleson==0.0.2
+    # via extruct
+jwcrypto==1.6.1
+    # via django-oauth-toolkit
+litellm==1.100.0
+    # via -r requirements.txt
+lxml==6.1.3
+    # via
+    #   -r requirements.txt
+    #   extruct
+    #   html-text
+    #   lxml-html-clean
+    #   python3-saml
+    #   webdavclient3
+    #   xmlsec
+lxml-html-clean==0.4.5
+    # via
+    #   extruct
+    #   html-text
+markdown==3.10.3
+    # via -r requirements.txt
+markupsafe==3.0.3
+    # via jinja2
+matplotlib-inline==0.2.2
+    # via ipython
+mccabe==0.7.0
+    # via flake8
+mf2py==2.0.2
+    # via extruct
+microdata==0.8.0
+    # via -r requirements.txt
+mock==5.2.0
+    # via -r requirements.txt
+multidict==6.9.1
+    # via
+    #   aiohttp
+    #   yarl
+nodejs-wheel-binaries==24.19.0
+    # via pytubefix
+oauthlib==3.3.1
+    # via
+    #   django-allauth
+    #   django-oauth-toolkit
+    #   requests-oauthlib
+openai==2.54.0
+    # via litellm
+packaging==26.3
+    # via
+    #   huggingface-hub
+    #   pytest
+    #   pytest-factoryboy
+parso==0.8.7
+    # via jedi
+pexpect==4.9.0 ; sys_platform != 'emscripten' and sys_platform != 'win32'
+    # via ipython
+pillow==12.3.0
+    # via -r requirements.txt
+platformdirs==4.11.15
+    # via yapf
+pluggy==1.6.0
+    # via
+    #   pytest
+    #   pytest-cov
+prometheus-client==0.26.0
+    # via django-prometheus
+prompt-toolkit==3.0.53
+    # via ipython
+propcache==0.5.4
+    # via
+    #   aiohttp
+    #   yarl
+psutil==7.2.2 ; sys_platform != 'cygwin' and sys_platform != 'emscripten'
+    # via ipython
+psycopg2-binary==2.9.12
+    # via -r requirements.txt
+ptyprocess==0.7.0 ; sys_platform != 'emscripten' and sys_platform != 'win32'
+    # via pexpect
+pure-eval==0.2.4
+    # via stack-data
+pyasn1==0.6.4
+    # via
+    #   pyasn1-modules
+    #   python-ldap
+pyasn1-modules==0.4.2
+    # via python-ldap
+pycodestyle==2.14.0
+    # via
+    #   autopep8
+    #   flake8
+pycparser==3.0 ; implementation_name != 'PyPy' and platform_python_implementation != 'PyPy'
+    # via cffi
+pydantic==2.13.5
+    # via
+    #   litellm
+    #   openai
+    #   pydantic-settings
+pydantic-core==2.46.5
+    # via pydantic
+pydantic-settings==2.15.0
+    # via litellm
+pyflakes==3.4.0
+    # via flake8
+pygments==2.21.0
+    # via
+    #   ipython
+    #   ipython-pygments-lexers
+    #   pytest
+pyjwt==2.13.0
+    # via
+    #   -r requirements.txt
+    #   django-allauth
+pyparsing==3.3.3
+    # via rdflib
+pyrdfa3==3.6.5
+    # via extruct
+pytest==9.0.3
+    # via
+    #   -r requirements.txt
+    #   pytest-asyncio
+    #   pytest-cov
+    #   pytest-django
+    #   pytest-factoryboy
+    #   pytest-html
+    #   pytest-metadata
+    #   pytest-xdist
+pytest-asyncio==1.4.0
+    # via -r requirements.txt
+pytest-cov==6.2.1
+    # via -r requirements.txt
+pytest-django==4.11.1
+    # via -r requirements.txt
+pytest-factoryboy==2.8.1
+    # via -r requirements.txt
+pytest-html==4.1.1
+    # via -r requirements.txt
+pytest-metadata==3.1.1
+    # via pytest-html
+pytest-xdist==3.8.0
+    # via -r requirements.txt
+python-dateutil==2.9.0.post0
+    # via
+    #   botocore
+    #   icalendar
+    #   webdavclient3
+python-dotenv==1.2.3
+    # via
+    #   -r requirements.txt
+    #   litellm
+    #   pydantic-settings
+python-ldap==3.4.7
+    # via
+    #   -r requirements.txt
+    #   django-auth-ldap
+python3-openid==3.2.0
+    # via -r requirements.txt
+python3-saml==1.16.0
+    # via -r requirements.txt
+pytubefix==10.11.0
+    # via -r requirements.txt
+pyyaml==6.0.3
+    # via
+    #   -r requirements.txt
+    #   drf-spectacular
+    #   huggingface-hub
+qrcode==8.2
+    # via django-allauth
+rapidfuzz==3.14.6
+    # via thefuzz
+rdflib==7.6.0
+    # via
+    #   extruct
+    #   pyrdfa3
+recipe-scrapers==15.12.0
+    # via -r requirements.txt
+redis==8.1.0
+    # via -r requirements.txt
+referencing==0.37.0
+    # via
+    #   jsonschema
+    #   jsonschema-specifications
+regex==2026.9.3
+    # via
+    #   -r requirements.txt
+    #   tiktoken
+requests==2.34.2
+    # via
+    #   -r requirements.txt
+    #   django-allauth
+    #   django-oauth-toolkit
+    #   frappe-client
+    #   mf2py
+    #   pyrdfa3
+    #   requests-hardened
+    #   requests-oauthlib
+    #   stripe
+    #   tiktoken
+    #   webdavclient3
+requests-hardened==1.3.0
+    # via -r requirements.txt
+requests-oauthlib==2.0.0
+    # via -r requirements.txt
+rpds-py==2026.6.3
+    # via
+    #   jsonschema
+    #   referencing
+s3transfer==0.19.2
+    # via boto3
+six==1.17.0
+    # via
+    #   -r requirements.txt
+    #   django-annoying
+    #   html5lib
+    #   python-dateutil
+sniffio==1.3.1
+    # via openai
+soupsieve==2.10
+    # via beautifulsoup4
+sqlparse==0.6.0
+    # via
+    #   django
+    #   django-debug-toolbar
+stack-data==0.6.3
+    # via ipython
+stripe==14.0.0
+    # via -r requirements.txt
+thefuzz==0.22.1
+    # via -r requirements.txt
+tiktoken==0.14.0
+    # via litellm
+tokenizers==0.23.2
+    # via litellm
+tomli==2.4.1
+    # via yapf
+tqdm==4.70.1
+    # via
+    #   huggingface-hub
+    #   openai
+traitlets==5.16.1
+    # via
+    #   ipython
+    #   matplotlib-inline
+typing-extensions==4.16.0
+    # via
+    #   aiohttp
+    #   aiosignal
+    #   anyio
+    #   beautifulsoup4
+    #   huggingface-hub
+    #   icalendar
+    #   jwcrypto
+    #   openai
+    #   pydantic
+    #   pydantic-core
+    #   pytest-asyncio
+    #   pytest-factoryboy
+    #   referencing
+    #   stripe
+    #   typing-inspection
+typing-inspection==0.4.4
+    # via
+    #   pydantic
+    #   pydantic-settings
+tzdata==2026.4
+    # via
+    #   django
+    #   faker
+    #   icalendar
+uritemplate==4.2.0
+    # via
+    #   -r requirements.txt
+    #   drf-spectacular
+urllib3==2.8.0
+    # via
+    #   botocore
+    #   django-oauth-toolkit
+    #   requests
+w3lib==2.4.1
+    # via extruct
+wcwidth==0.9.1
+    # via prompt-toolkit
+webdavclient3==3.14.7
+    # via -r requirements.txt
+webencodings==0.6.1
+    # via
+    #   bleach
+    #   html5lib
+whitenoise==6.12.0
+    # via -r requirements.txt
+xmlsec==1.3.17
+    # via python3-saml
+yapf==0.40.2
+    # via -r requirements.txt
+yarl==1.25.1
+    # via aiohttp
+zipp==4.1.0
+    # via importlib-metadata
