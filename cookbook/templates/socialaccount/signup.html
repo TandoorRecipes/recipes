@@ -22,35 +22,35 @@
         <div class="form-group">
             {{ form.email |as_crispy_field }}
         </div>
-        <div class="form-group">
-            {{ form.email2 |as_crispy_field }}
-        </div>
-        {% if TERMS_URL != '' or PRIVACY_URL != '' %}
-            <div class="form-group">
-                {{ form.terms |as_crispy_field }}
-                <small>
-                    {% trans 'I accept the following' %}
-                    {% if TERMS_URL != '' %}
-                        <a href="{{ TERMS_URL }}" target="_blank"
-                           rel="noreferrer nofollow">{% trans 'Terms and Conditions' %}</a>
-                    {% endif %}
-                    {% if TERMS_URL != '' or PRIVACY_URL != '' %}
-                        {% trans 'and' %}
-                    {% endif %}
-                    {% if PRIVACY_URL != '' %}
-                        <a href="{{ PRIVACY_URL }}" target="_blank"
-                           rel="noreferrer nofollow">{% trans 'Privacy Policy' %}</a>
-                    {% endif %}
-                </small>
-            </div>
-        {% endif %}
-
-        {% if CAPTCHA_ENABLED %}
-            <div class="form-group">
-                {{ form.captcha.errors }}
-                {{ form.captcha }}
-            </div>
-        {% endif %}
+{#        <div class="form-group">#}
+{#            {{ form.email2 |as_crispy_field }}#}
+{#        </div>#}
+{#        {% if TERMS_URL != '' or PRIVACY_URL != '' %}#}
+{#            <div class="form-group">#}
+{#                {{ form.terms |as_crispy_field }}#}
+{#                <small>#}
+{#                    {% trans 'I accept the following' %}#}
+{#                    {% if TERMS_URL != '' %}#}
+{#                        <a href="{{ TERMS_URL }}" target="_blank"#}
+{#                           rel="noreferrer nofollow">{% trans 'Terms and Conditions' %}</a>#}
+{#                    {% endif %}#}
+{#                    {% if TERMS_URL != '' or PRIVACY_URL != '' %}#}
+{#                        {% trans 'and' %}#}
+{#                    {% endif %}#}
+{#                    {% if PRIVACY_URL != '' %}#}
+{#                        <a href="{{ PRIVACY_URL }}" target="_blank"#}
+{#                           rel="noreferrer nofollow">{% trans 'Privacy Policy' %}</a>#}
+{#                    {% endif %}#}
+{#                </small>#}
+{#            </div>#}
+{#        {% endif %}#}
+{##}
+{#        {% if CAPTCHA_ENABLED %}#}
+{#            <div class="form-group">#}
+{#                {{ form.captcha.errors }}#}
+{#                {{ form.captcha }}#}
+{#            </div>#}
+{#        {% endif %}#}
 
 
         <button type="submit" class="btn btn-primary">{% trans "Sign Up" %} &raquo;</button>

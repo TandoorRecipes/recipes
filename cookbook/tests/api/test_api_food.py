@@ -7,7 +7,7 @@ from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
-from cookbook.models import Food, Ingredient, ShoppingListEntry, Household, UserSpace
+from cookbook.models import Food, Ingredient, ShoppingListEntry, Household, UserSpace, ShoppingList
 from cookbook.tests.factories import (FoodFactory, IngredientFactory, ShoppingListEntryFactory,
                                       SupermarketCategoryFactory)
 
@@ -703,3 +703,113 @@ def test_shopping_status_checked_excluded(u1_s1, space_1):
 
     r = json.loads(u1_s1.get(reverse(DETAIL_URL, args={food.id})).content)
     assert str(r['shopping']) == 'False'
+
+
+def test_batch_update_substitutes(u1_s1, space_1, space_2):
+    with scopes_disabled():
+        food1 = FoodFactory(space=space_1)
+        food2 = FoodFactory(space=space_1)
+        sub1 = FoodFactory(space=space_1)
+        sub_foreign = FoodFactory(space=space_2)
+
+    # Add substitutes (including a foreign space food that should be ignored)
+    r = u1_s1.put(
+        reverse('api:food-batch-update'),
+        {'foods': [food1.id, food2.id], 'substitute_add': [sub1.id, sub_foreign.id]},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert food1.substitute.filter(id=sub1.id).exists()
+        assert not food1.substitute.filter(id=sub_foreign.id).exists()
+        assert food2.substitute.filter(id=sub1.id).exists()
+
+    # Remove substitute
+    r = u1_s1.put(
+        reverse('api:food-batch-update'),
+        {'foods': [food1.id], 'substitute_remove': [sub1.id]},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert not food1.substitute.filter(id=sub1.id).exists()
+
+    # Set substitute
+    r = u1_s1.put(
+        reverse('api:food-batch-update'),
+        {'foods': [food1.id], 'substitute_set': [sub1.id, sub_foreign.id]},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert food1.substitute.filter(id=sub1.id).exists()
+        assert not food1.substitute.filter(id=sub_foreign.id).exists()
+
+    # Remove all substitutes
+    r = u1_s1.put(
+        reverse('api:food-batch-update'),
+        {'foods': [food1.id, food2.id], 'substitute_remove_all': True},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert food1.substitute.count() == 0
+        assert food2.substitute.count() == 0
+
+
+def test_batch_update_shopping_lists(u1_s1, space_1, space_2):
+    with scopes_disabled():
+        food1 = FoodFactory(space=space_1)
+        list1 = ShoppingList.objects.create(name='List 1', space=space_1)
+        list_foreign = ShoppingList.objects.create(name='Foreign List', space=space_2)
+
+    # Add shopping lists (foreign space list should be ignored)
+    r = u1_s1.put(
+        reverse('api:food-batch-update'),
+        {'foods': [food1.id], 'shopping_lists_add': [list1.id, list_foreign.id]},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert food1.shopping_lists.filter(id=list1.id).exists()
+        assert not food1.shopping_lists.filter(id=list_foreign.id).exists()
+
+    # Set shopping lists
+    r = u1_s1.put(
+        reverse('api:food-batch-update'),
+        {'foods': [food1.id], 'shopping_lists_set': [list1.id, list_foreign.id]},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert food1.shopping_lists.filter(id=list1.id).exists()
+        assert not food1.shopping_lists.filter(id=list_foreign.id).exists()
+
+    # Remove shopping list
+    r = u1_s1.put(
+        reverse('api:food-batch-update'),
+        {'foods': [food1.id], 'shopping_lists_remove': [list1.id]},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert not food1.shopping_lists.filter(id=list1.id).exists()
+
+    # Remove all shopping lists
+    food1.shopping_lists.add(list1)
+    r = u1_s1.put(
+        reverse('api:food-batch-update'),
+        {'foods': [food1.id], 'shopping_lists_remove_all': True},
+        content_type='application/json',
+    )
+    assert r.status_code == 200
+
+    with scopes_disabled():
+        assert food1.shopping_lists.count() == 0

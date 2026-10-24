@@ -84,9 +84,7 @@ urlpatterns = [
 
     path('setup/', views.setup, name='view_setup'),
     path('no-group/', views.no_groups, name='view_no_group'),
-    #path('space-overview/', views.space_overview, name='view_space_overview'),
-    #path('switch-space/<int:space_id>', views.switch_space, name='view_switch_space'),
-    #path('no-perm/', views.no_perm, name='view_no_perm'),
+
     path('invite/<slug:token>', views.invite_link, name='view_invite'),
     path('invite/<slug:token>/', views.invite_link, name='view_invite'),
 
@@ -129,7 +127,6 @@ urlpatterns = [
     path('openapi/', SpectacularAPIView.as_view(api_version=TANDOOR_VERSION), name='openapi-schema'),
     path('api/', include((router.urls, 'api'))),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('api-token-auth/', CustomAuthToken.as_view()),
 
     path('offline/', views.offline, name='view_offline'),
     path('service-worker.js', views.service_worker, name='service_worker'),

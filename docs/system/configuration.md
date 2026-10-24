@@ -44,14 +44,14 @@ ALLOWED_HOSTS=recipes.mydomain.com
 Multiple parameters are required to configure the database.
 *Note: You can setup parameters for a test database by defining all of the parameters preceded by `TEST_` e.g. TEST_DB_ENGINE=*
 
-| Var               | Options                                                            | Description                                                             |
-|-------------------|--------------------------------------------------------------------|-------------------------------------------------------------------------|
-| DB_ENGINE         | django.db.backends.postgresql (default) django.db.backends.sqlite3 | Type of database connection. Production should always use postgresql.   |
-| POSTGRES_HOST     | any                                                                | Used to connect to database server. Use container name in docker setup. |
-| POSTGRES_DB       | any                                                                | Name of database.                                                       |
-| POSTGRES_PORT     | 1-65535                                                            | Port of database, Postgresql default `5432`                             |
-| POSTGRES_USER     | any                                                                | Username for database connection.                                       |
-| POSTGRES_PASSWORD | any                                                                | Password for database connection.                                       |
+| Var               | Options                                                                          | Description                                                             |
+|-------------------|----------------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| DB_ENGINE         | django.db.backends.postgresql (recommended) django.db.backends.sqlite3 (default) | Type of database connection. Production should always use postgresql.   |
+| POSTGRES_HOST     | any                                                                              | Used to connect to database server. Use container name in docker setup. |
+| POSTGRES_DB       | any                                                                              | Name of database.                                                       |
+| POSTGRES_PORT     | 1-65535                                                                          | Port of database, Postgresql default `5432`                             |
+| POSTGRES_USER     | any                                                                              | Username for database connection.                                       |
+| POSTGRES_PASSWORD | any                                                                              | Password for database connection.                                       |
 
 #### Password file
 
@@ -330,25 +330,17 @@ There are some rate limits that can be configured.
 ### Authentication
 
 All configurable variables regarding authentication.
-Please also visit the [dedicated docs page](https://docs.tandoor.dev/features/authentication/) for more information.
+You can find some examples on the [dedicated docs page](https://docs.tandoor.dev/features/authentication/).
 
 #### Default Permissions
-
-Configures if a newly created user (from social auth or public signup) should automatically join into the given space and
-default group.
-
-This setting is targeted at private, single space instances that typically have a custom authentication system managing
-access to the data.
-
-!!! danger
-    With public signup enabled this will give everyone access to the data in the given space
-
-!!! warning
-    This feature might be deprecated in favor of a space join and public viewing system in the future
 
 > default `0` (disabled) - options `0`, `1`
 
 When enabled, new social login users will automatically join the first existing space with the group configured in `SOCIAL_DEFAULT_GROUP`.
+
+!!! danger
+    With public signup enabled this will give everyone access to the data in the given space. You should probably only use this when using a trusted 
+    authentication system. 
 
 ```
 SOCIAL_DEFAULT_ACCESS = 1
@@ -364,12 +356,8 @@ SOCIAL_DEFAULT_GROUP=guest
 
 > default `0` - options `0`, `1`
 
-Allow everyone to create local accounts on your application instance (without an invite link)
-You might want to setup HCAPTCHA to prevent bots from creating accounts/spam.
+Allows creation of accounts, both local (username/password) and social accounts trough third party providers.
 
-!!! info
-    `ENABLE_SIGNUP` only controls the local registration form. Social login can still create accounts
-    unless `SOCIALACCOUNT_AUTO_SIGNUP=0` is also set. See the [authentication docs](../features/authentication.md#controlling-social-signup) for details.
 
 ```
 ENABLE_SIGNUP=0
@@ -377,7 +365,7 @@ ENABLE_SIGNUP=0
 
 #### Social Auth
 
-Allows you to set up external OAuth providers. See the [authentication feature docs](../features/authentication.md) for detailed configuration guides.
+Allows you to set up external authentication providers. See the [authentication feature docs](../features/authentication.md) for detailed configuration guides.
 
 ```
 SOCIAL_PROVIDERS=allauth.socialaccount.providers.openid_connect
@@ -388,10 +376,7 @@ SOCIALACCOUNT_PROVIDERS='{"openid_connect":{"APPS":[{"provider_id":"myidp","name
 |---------|---------|-------------|
 | `SOCIALACCOUNT_PROVIDERS` | — | Provider configuration (JSON or Python dict) |
 | `SOCIALACCOUNT_PROVIDERS_FILE` | — | Path to file containing provider configuration |
-| `HIDE_LOGIN_FORM` | `0` | Hide local login form, break-glass via `?form=1` ([details](../features/authentication.md#social-only-authentication)) |
-| `SOCIALACCOUNT_ONLY` | `0` | Fully disable local auth ([details](../features/authentication.md#social-only-authentication)) |
-| `SOCIALACCOUNT_LOGIN_ON_GET` | `0` | Skip confirmation page ([details](../features/authentication.md#skipping-the-confirmation-page)) |
-| `SOCIALACCOUNT_AUTO_SIGNUP` | `1` | Auto-create accounts on social login ([details](../features/authentication.md#controlling-social-signup)) |
+| `SOCIALACCOUNT_ONLY` | `0` | Fully disable username/password auth ([details](../features/authentication.md#social-only-authentication)) |
 | `SOCIALACCOUNT_EMAIL_AUTHENTICATION` | `0` | Match social logins to existing accounts by email ([details](../features/authentication.md#email-based-account-matching)) |
 | `SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT` | `0` | Skip email verification when matching ([details](../features/authentication.md#email-based-account-matching)) |
 

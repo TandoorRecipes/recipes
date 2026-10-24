@@ -28,7 +28,8 @@ from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.ai_helper import get_monthly_token_usage
 from cookbook.helper.image_processing import is_file_type_allowed
-from cookbook.helper.permission_helper import above_space_limit, create_space_for_user, get_household_user_ids, CustomRecipePermission
+from cookbook.helper.permission_helper import above_space_limit, create_space_for_user, get_household_user_ids, CustomRecipePermission, has_meal_plan_permission, \
+    has_recipe_permission
 from cookbook.helper.property_helper import FoodPropertyHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
@@ -1217,7 +1218,7 @@ class RecipeSerializer(RecipeBaseSerializer):
             'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings', 'file_path', 'servings_text', 'diameter', 'diameter_text', 'rating',
             'last_cooked', 'private', 'shared'
         )
-        read_only_fields = ['image', 'created_by', 'created_at', 'food_properties', 'file_path',]
+        read_only_fields = ['image', 'created_by', 'created_at', 'food_properties', 'file_path', ]
 
     def validate(self, data):
         above_limit, msg = above_space_limit(self.context['request'].space)
@@ -1371,6 +1372,18 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
         obj, created = RecipeBookEntry.objects.get_or_create(book=book, recipe=recipe)
         return obj
 
+    def update(self, instance, validated_data):
+        book = validated_data['book']
+        recipe = validated_data['recipe']
+        if not book.get_owner() == self.context['request'].user and not self.context['request'].user in book.get_shared():
+            raise NotFound(detail=None, code=None)
+
+        crp = CustomRecipePermission()
+        if not crp.has_object_permission(self.context['request'], None, recipe):
+            raise NotFound(detail=None, code=None)
+
+        return super().update(instance, validated_data)
+
     class Meta:
         model = RecipeBookEntry
         fields = ('id', 'book', 'book_content', 'recipe', 'recipe_content',)
@@ -1476,6 +1489,16 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     servings = CustomDecimalField()
     created_by = UserSerializer(read_only=True)
 
+    def validate_mealplan(self, mealplan):
+        if not has_meal_plan_permission(self.context['request'], mealplan):
+            raise ValidationError('Permission Denied')
+        return mealplan
+
+    def validate_recipe(self, recipe):
+        if not has_recipe_permission(self.context['request'], recipe):
+            raise ValidationError('Permission Denied')
+        return recipe
+
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
         validated_data['created_by'] = self.context['request'].user
@@ -1574,7 +1597,7 @@ class ShoppingListEntrySerializer(WritableNestedModelSerializer):
         validated_data['space'] = self.context['request'].space
         validated_data['created_by'] = self.context['request'].user
 
-        if 'mealplan_id' in validated_data:
+        if 'mealplan_id' in validated_data and MealPlan.objects.filter(id=validated_data['mealplan_id'], space=self.context['request'].space).exists():
             if existing_slr := ShoppingListRecipe.objects.filter(mealplan_id=validated_data['mealplan_id'], space=self.context['request'].space).first():
                 validated_data['list_recipe'] = existing_slr
             else:
@@ -1942,9 +1965,12 @@ class ServerSettingsSerializer(serializers.Serializer):
     hosted = serializers.BooleanField()
     debug = serializers.BooleanField()
     version = serializers.CharField()
+    email = serializers.BooleanField()
 
     unauthenticated_theme_from_space = serializers.IntegerField()
     force_theme_from_space = serializers.IntegerField()
+    enable_signup = serializers.BooleanField()
+    socialaccount_only = serializers.BooleanField()
 
     logo_color_32 = serializers.ImageField(default=None)
     logo_color_128 = serializers.CharField(default=None)

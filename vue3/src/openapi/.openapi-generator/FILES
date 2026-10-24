@@ -1,12 +1,10 @@
 apis/ApiApi.ts
-apis/ApiTokenAuthApi.ts
 apis/index.ts
 index.ts
 models/AccessToken.ts
 models/AiLog.ts
 models/AiProvider.ts
 models/AlignmentEnum.ts
-models/AuthToken.ts
 models/AutoMealPlan.ts
 models/Automation.ts
 models/AutomationTypeEnum.ts
@@ -17,6 +15,7 @@ models/BookmarkletImport.ts
 models/BookmarkletImportList.ts
 models/ConnectorConfig.ts
 models/ConnectorConfigTypeEnum.ts
+models/ConnectorConfigUrl.ts
 models/CookLog.ts
 models/CustomFilter.ts
 models/DefaultPageEnum.ts
@@ -57,6 +56,7 @@ models/InventoryEntry.ts
 models/InventoryLocation.ts
 models/InventoryLog.ts
 models/InviteLink.ts
+models/InviteLinkEmail.ts
 models/InvoiceSystemEnum.ts
 models/Keyword.ts
 models/KeywordLabel.ts

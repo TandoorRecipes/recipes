@@ -1,4 +1,4 @@
-FROM python:3.13-alpine3.23
+FROM python:3.14-alpine3.24
 
 #Install all dependencies.
 RUN apk add --no-cache postgresql-libs postgresql-client gettext zlib libjpeg libwebp libxml2-dev libxslt-dev openldap git libgcc libstdc++ nginx tini envsubst nodejs npm
@@ -22,8 +22,8 @@ RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-de
     python -m venv venv && \
     /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
     venv/bin/pip debug -v && \
-    venv/bin/pip install wheel==0.45.1 && \
-    venv/bin/pip install setuptools_rust==1.10.2 && \
+    venv/bin/pip install wheel==0.48.0 && \
+    venv/bin/pip install setuptools_rust==1.13.0 && \
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
     apk --purge del .build-deps
 

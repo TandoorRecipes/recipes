@@ -20,6 +20,13 @@ import {
     MethodEnumToJSON,
     MethodEnumToJSONTyped,
 } from './MethodEnum';
+import type { ConnectorConfigUrl } from './ConnectorConfigUrl';
+import {
+    ConnectorConfigUrlFromJSON,
+    ConnectorConfigUrlFromJSONTyped,
+    ConnectorConfigUrlToJSON,
+    ConnectorConfigUrlToJSONTyped,
+} from './ConnectorConfigUrl';
 
 /**
  * Adds nested create feature
@@ -65,10 +72,10 @@ export interface PatchedStorage {
     token?: string | null;
     /**
      * 
-     * @type {string}
+     * @type {ConnectorConfigUrl}
      * @memberof PatchedStorage
      */
-    url?: string | null;
+    url?: ConnectorConfigUrl | null;
     /**
      * 
      * @type {string}
@@ -108,7 +115,7 @@ export function PatchedStorageFromJSONTyped(json: any, ignoreDiscriminator: bool
         'username': json['username'] == null ? undefined : json['username'],
         'password': json['password'] == null ? undefined : json['password'],
         'token': json['token'] == null ? undefined : json['token'],
-        'url': json['url'] == null ? undefined : json['url'],
+        'url': json['url'] == null ? undefined : ConnectorConfigUrlFromJSON(json['url']),
         'path': json['path'] == null ? undefined : json['path'],
         'createdBy': json['created_by'] == null ? undefined : json['created_by'],
     };
@@ -131,7 +138,7 @@ export function PatchedStorageToJSONTyped(value?: Omit<PatchedStorage, 'created_
         'username': value['username'],
         'password': value['password'],
         'token': value['token'],
-        'url': value['url'],
+        'url': ConnectorConfigUrlToJSON(value['url']),
         'path': value['path'],
     };
 }

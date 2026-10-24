@@ -1,27 +1,42 @@
-{% extends "base.html" %}
-{% load crispy_forms_filters %}
 {% load static %}
 {% load i18n %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <title>{% trans "Cookbook Setup" %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, minimal-ui, shrink-to-fit=no">
+    <meta name="robots" content="noindex,nofollow"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
 
-{% block title %}{% trans "Cookbook Setup" %}{% endblock %}
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
 
-{% block extra_head %}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q"
+            crossorigin="anonymous"></script>
+
     {{ form.media }}
-{% endblock %}
-
-{% block content %}
-
+</head>
+<body>
+<div class="container">
     <h1>{% trans 'Setup' %}</h1>
     <p>{% blocktrans %}To start using this application you must first create a superuser account.{% endblocktrans %}</p>
 
     <form action="." method="post">
         {% csrf_token %}
-        {{ form|crispy }}
-        <button class="btn btn-success" type="submit"><i class="fas fa-save"></i> {% trans 'Create Superuser account' %}</button>
+        {{ form }}
+        <button class="btn btn-success mt-2" type="submit"><i class="fas fa-save"></i> {% trans 'Create Superuser account' %}</button>
     </form>
 
-     <script>
-        $('#id_name').focus()
-    </script>
 
-{% endblock %}
+</div>
+<script type="application/javascript">
+    $('#id_name').focus()
+</script>
+
+
+</body>
+</html>
+
+
