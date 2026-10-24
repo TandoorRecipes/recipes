@@ -340,8 +340,8 @@ def invite_link(request, token):
         else:
             request.session['signup_token'] = str(token)
             if settings.SOCIALACCOUNT_ONLY:
-                return HttpResponseRedirect('/account/login/')
-            return HttpResponseRedirect('/account/signup/')
+                return HttpResponseRedirect(settings.SCRIPT_NAME + '/account/login/')
+            return HttpResponseRedirect(settings.SCRIPT_NAME + '/account/signup/')
 
     return HttpResponseRedirect(reverse('index'))
 
