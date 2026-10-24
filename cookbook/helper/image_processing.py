@@ -7,10 +7,16 @@ from PIL import Image, ImageOps
 def rescale_image_jpeg(image_object, base_width=1020):
     img = ImageOps.exif_transpose(Image.open(image_object))
     icc_profile = img.info.get('icc_profile')  # remember color profile to not mess up colors
-    width_percent = (base_width / float(img.size[0]))
+    width_percent = min(1, base_width / float(img.size[0]))
     height = int((float(img.size[1]) * float(width_percent)))
 
-    img = img.resize((base_width, height), Image.LANCZOS)
+    img = img.resize((max(1, int(img.size[0] * width_percent)), max(1, height)), Image.LANCZOS)
+    if img.mode in ('RGBA', 'LA'):
+        background = Image.new('RGB', img.size, 'white')
+        background.paste(img, mask=img.getchannel('A'))
+        img = background
+    elif img.mode != 'RGB':
+        img = img.convert('RGB')
     img_bytes = BytesIO()
     img.save(img_bytes, 'JPEG', quality=90, optimize=True, icc_profile=icc_profile)
 
@@ -19,9 +25,9 @@ def rescale_image_jpeg(image_object, base_width=1020):
 
 def rescale_image_png(image_object, base_width=1020):
     image_object = ImageOps.exif_transpose(Image.open(image_object))
-    wpercent = (base_width / float(image_object.size[0]))
+    wpercent = min(1, base_width / float(image_object.size[0]))
     hsize = int((float(image_object.size[1]) * float(wpercent)))
-    img = image_object.resize((base_width, hsize), Image.LANCZOS)
+    img = image_object.resize((max(1, int(image_object.size[0] * wpercent)), max(1, hsize)), Image.LANCZOS)
 
     im_io = BytesIO()
     img.save(im_io, 'PNG', quality=90)
@@ -30,9 +36,9 @@ def rescale_image_png(image_object, base_width=1020):
 
 def rescale_image_webp(image_object, base_width=1020):
     image_object = ImageOps.exif_transpose(Image.open(image_object))
-    wpercent = (base_width / float(image_object.size[0]))
+    wpercent = min(1, base_width / float(image_object.size[0]))
     hsize = int((float(image_object.size[1]) * float(wpercent)))
-    img = image_object.resize((base_width, hsize), Image.LANCZOS)
+    img = image_object.resize((max(1, int(image_object.size[0] * wpercent)), max(1, hsize)), Image.LANCZOS)
 
     im_io = BytesIO()
     img.save(im_io, 'WEBP', quality=90)
@@ -46,9 +52,9 @@ def rescale_image_gif(image_object, base_width=1020):
     if getattr(image_object, "is_animated", False):
         image_object.save(im_io, 'GIF', save_all=True)
     else:
-        wpercent = (base_width / float(image_object.size[0]))
+        wpercent = min(1, base_width / float(image_object.size[0]))
         hsize = int((float(image_object.size[1]) * float(wpercent)))
-        img = image_object.convert('RGBA').resize((base_width, hsize), Image.LANCZOS).convert('P', dither=Image.NONE)
+        img = image_object.convert('RGBA').resize((max(1, int(image_object.size[0] * wpercent)), max(1, hsize)), Image.LANCZOS).convert('P', dither=Image.NONE)
         img.save(im_io, 'GIF')
     return im_io
 
@@ -107,6 +113,7 @@ def handle_image(request, image_object, filetype):
         return None
 
     file_format = None
+    filetype = (filetype or '').lower()
     if filetype == '.jpeg' or filetype == '.jpg':
         file_format = 'JPEG'
     elif filetype == '.png':
