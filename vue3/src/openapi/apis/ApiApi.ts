@@ -2839,13 +2839,8 @@ export interface ApiUserFileCascadingListRequest {
 
 export interface ApiUserFileCreateRequest {
     name: string;
-    fileDownload: string;
-    preview: string;
-    fileSizeKb: number;
-    createdBy: User;
-    createdAt: Date;
     id?: number;
-    file?: string;
+    file?: Blob;
 }
 
 export interface ApiUserFileDestroyRequest {
@@ -2872,12 +2867,7 @@ export interface ApiUserFilePartialUpdateRequest {
     id: number;
     id2?: number;
     name?: string;
-    file?: string;
-    fileDownload?: string;
-    preview?: string;
-    fileSizeKb?: number;
-    createdBy?: User;
-    createdAt?: Date;
+    file?: Blob;
 }
 
 export interface ApiUserFileProtectingListRequest {
@@ -2894,13 +2884,8 @@ export interface ApiUserFileRetrieveRequest {
 export interface ApiUserFileUpdateRequest {
     id: number;
     name: string;
-    fileDownload: string;
-    preview: string;
-    fileSizeKb: number;
-    createdBy: User;
-    createdAt: Date;
     id2?: number;
-    file?: string;
+    file?: Blob;
 }
 
 export interface ApiUserListRequest {
@@ -23061,41 +23046,6 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['fileDownload'] == null) {
-            throw new runtime.RequiredError(
-                'fileDownload',
-                'Required parameter "fileDownload" was null or undefined when calling apiUserFileCreate().'
-            );
-        }
-
-        if (requestParameters['preview'] == null) {
-            throw new runtime.RequiredError(
-                'preview',
-                'Required parameter "preview" was null or undefined when calling apiUserFileCreate().'
-            );
-        }
-
-        if (requestParameters['fileSizeKb'] == null) {
-            throw new runtime.RequiredError(
-                'fileSizeKb',
-                'Required parameter "fileSizeKb" was null or undefined when calling apiUserFileCreate().'
-            );
-        }
-
-        if (requestParameters['createdBy'] == null) {
-            throw new runtime.RequiredError(
-                'createdBy',
-                'Required parameter "createdBy" was null or undefined when calling apiUserFileCreate().'
-            );
-        }
-
-        if (requestParameters['createdAt'] == null) {
-            throw new runtime.RequiredError(
-                'createdAt',
-                'Required parameter "createdAt" was null or undefined when calling apiUserFileCreate().'
-            );
-        }
-
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -23111,7 +23061,7 @@ export class ApiApi extends runtime.BaseAPI {
         const canConsumeForm = runtime.canConsumeForm(consumes);
 
         let formParams: { append(param: string, value: any): any };
-        let useForm = false;
+        let useForm = true;
         if (useForm) {
             formParams = new FormData();
         } else {
@@ -23129,27 +23079,6 @@ export class ApiApi extends runtime.BaseAPI {
         if (requestParameters['file'] != null) {
             formParams.append('file', requestParameters['file'] as any);
         }
-
-        if (requestParameters['fileDownload'] != null) {
-            formParams.append('file_download', requestParameters['fileDownload'] as any);
-        }
-
-        if (requestParameters['preview'] != null) {
-            formParams.append('preview', requestParameters['preview'] as any);
-        }
-
-        if (requestParameters['fileSizeKb'] != null) {
-            formParams.append('file_size_kb', requestParameters['fileSizeKb'] as any);
-        }
-
-        if (requestParameters['createdBy'] != null) {
-            formParams.append('created_by', new Blob([JSON.stringify(UserToJSON(requestParameters['createdBy']))], { type: "application/json", }));
-                    }
-
-        if (requestParameters['createdAt'] != null) {
-            formParams.append('created_at', (requestParameters['createdAt'] as any).toISOString());
-        }
-
 
         let urlPath = `/api/user-file/`;
 
@@ -23348,7 +23277,7 @@ export class ApiApi extends runtime.BaseAPI {
         const canConsumeForm = runtime.canConsumeForm(consumes);
 
         let formParams: { append(param: string, value: any): any };
-        let useForm = false;
+        let useForm = true;
         if (useForm) {
             formParams = new FormData();
         } else {
@@ -23366,27 +23295,6 @@ export class ApiApi extends runtime.BaseAPI {
         if (requestParameters['file'] != null) {
             formParams.append('file', requestParameters['file'] as any);
         }
-
-        if (requestParameters['fileDownload'] != null) {
-            formParams.append('file_download', requestParameters['fileDownload'] as any);
-        }
-
-        if (requestParameters['preview'] != null) {
-            formParams.append('preview', requestParameters['preview'] as any);
-        }
-
-        if (requestParameters['fileSizeKb'] != null) {
-            formParams.append('file_size_kb', requestParameters['fileSizeKb'] as any);
-        }
-
-        if (requestParameters['createdBy'] != null) {
-            formParams.append('created_by', new Blob([JSON.stringify(UserToJSON(requestParameters['createdBy']))], { type: "application/json", }));
-                    }
-
-        if (requestParameters['createdAt'] != null) {
-            formParams.append('created_at', (requestParameters['createdAt'] as any).toISOString());
-        }
-
 
         let urlPath = `/api/user-file/{id}/`;
         urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
@@ -23522,41 +23430,6 @@ export class ApiApi extends runtime.BaseAPI {
             );
         }
 
-        if (requestParameters['fileDownload'] == null) {
-            throw new runtime.RequiredError(
-                'fileDownload',
-                'Required parameter "fileDownload" was null or undefined when calling apiUserFileUpdate().'
-            );
-        }
-
-        if (requestParameters['preview'] == null) {
-            throw new runtime.RequiredError(
-                'preview',
-                'Required parameter "preview" was null or undefined when calling apiUserFileUpdate().'
-            );
-        }
-
-        if (requestParameters['fileSizeKb'] == null) {
-            throw new runtime.RequiredError(
-                'fileSizeKb',
-                'Required parameter "fileSizeKb" was null or undefined when calling apiUserFileUpdate().'
-            );
-        }
-
-        if (requestParameters['createdBy'] == null) {
-            throw new runtime.RequiredError(
-                'createdBy',
-                'Required parameter "createdBy" was null or undefined when calling apiUserFileUpdate().'
-            );
-        }
-
-        if (requestParameters['createdAt'] == null) {
-            throw new runtime.RequiredError(
-                'createdAt',
-                'Required parameter "createdAt" was null or undefined when calling apiUserFileUpdate().'
-            );
-        }
-
         const queryParameters: any = {};
 
         const headerParameters: runtime.HTTPHeaders = {};
@@ -23572,7 +23445,7 @@ export class ApiApi extends runtime.BaseAPI {
         const canConsumeForm = runtime.canConsumeForm(consumes);
 
         let formParams: { append(param: string, value: any): any };
-        let useForm = false;
+        let useForm = true;
         if (useForm) {
             formParams = new FormData();
         } else {
@@ -23590,27 +23463,6 @@ export class ApiApi extends runtime.BaseAPI {
         if (requestParameters['file'] != null) {
             formParams.append('file', requestParameters['file'] as any);
         }
-
-        if (requestParameters['fileDownload'] != null) {
-            formParams.append('file_download', requestParameters['fileDownload'] as any);
-        }
-
-        if (requestParameters['preview'] != null) {
-            formParams.append('preview', requestParameters['preview'] as any);
-        }
-
-        if (requestParameters['fileSizeKb'] != null) {
-            formParams.append('file_size_kb', requestParameters['fileSizeKb'] as any);
-        }
-
-        if (requestParameters['createdBy'] != null) {
-            formParams.append('created_by', new Blob([JSON.stringify(UserToJSON(requestParameters['createdBy']))], { type: "application/json", }));
-                    }
-
-        if (requestParameters['createdAt'] != null) {
-            formParams.append('created_at', (requestParameters['createdAt'] as any).toISOString());
-        }
-
 
         let urlPath = `/api/user-file/{id}/`;
         urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters['id'])));
