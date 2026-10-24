@@ -136,4 +136,4 @@ class ScopeMiddleware:
                 return JsonResponse({'detail': 'Authentication credentials were not provided or access is forbidden.'}, status=403)
 
             # redirect everything that wasn't handled above to login
-            return HttpResponseRedirect('/account/login/?next=' + request.path)
+            return HttpResponseRedirect(prefix + '/account/login/?next=' + request.path)
