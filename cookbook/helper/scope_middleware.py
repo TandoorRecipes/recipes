@@ -52,6 +52,7 @@ class ScopeMiddleware:
                          '/openapi',  # api client is public
                          '/api/server-settings/current',  # server settings are needed to control layout on login page
                          '/metrics',  # prometheus metrics view (not secure as per prometheus default)
+                         '/e/stripe/webhook/', # for hosted instance, need to add plugin ability to define no auth urls
                          # views for unauthenticated users
                          '/account/login',
                          '/account/signup',
