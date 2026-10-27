@@ -51,6 +51,7 @@ class ScopeMiddleware:
                          '/_allauth',  # auth apis have their own auth handling
                          '/openapi',  # api client is public
                          '/api/server-settings/current',  # server settings are needed to control layout on login page
+                         '/metrics',  # prometheus metrics view (not secure as per prometheus default)
                          # views for unauthenticated users
                          '/account/login',
                          '/account/signup',
@@ -112,7 +113,7 @@ class ScopeMiddleware:
                     return self.get_response(request)
 
             # if unauthenticated requests come to the API try authenticating the user trough the OAuth (bearer) token or the session token (django allauth)
-            if request.path.startswith(prefix + '/api/') or request.path.startswith(prefix + '/_allauth/') :
+            if request.path.startswith(prefix + '/api/') or request.path.startswith(prefix + '/_allauth/'):
                 authenticators = (
                     OAuth2Authentication(),
                     XSessionTokenAuthentication(),
@@ -136,4 +137,4 @@ class ScopeMiddleware:
                 return JsonResponse({'detail': 'Authentication credentials were not provided or access is forbidden.'}, status=403)
 
             # redirect everything that wasn't handled above to login
-            return HttpResponseRedirect('/account/login/?next=' + request.path)
+            return HttpResponseRedirect(prefix + '/account/login/?next=' + request.path)

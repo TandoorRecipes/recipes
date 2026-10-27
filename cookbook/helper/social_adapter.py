@@ -9,7 +9,7 @@ from django.contrib.auth.models import Group
 from django.utils import timezone
 
 from cookbook.helper.permission_helper import create_space_for_user, process_invite_token
-from cookbook.models import Space, UserSpace
+from cookbook.models import Space, UserSpace, InviteLink
 
 _ERROR_FILE = os.path.join(settings.MEDIA_ROOT, '.social_login_errors.json')
 _MAX_ERRORS = 50
@@ -54,6 +54,10 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
         """
         Whether to allow sign-ups.
         """
+        if 'signup_token' in request.session:
+            if InviteLink.objects.filter(valid_until__gte=timezone.now().date(), used_by=None, uuid=request.session['signup_token']).first():
+                return True
+
         if not settings.ENABLE_SIGNUP:
             return False
 

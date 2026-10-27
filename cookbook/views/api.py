@@ -2925,6 +2925,12 @@ class AiImportView(APIView):
 
             try:
                 data_json = json.loads(response_text)
+
+                if '@context' not in data_json:
+                    data_json['@context'] = 'https://schema.org'
+                if '@type' not in data_json:
+                    data_json['@type'] = 'Recipe'
+
                 data = "<script type='application/ld+json'>" + json.dumps(data_json) + "</script>"
 
                 scrape = scrape_html(html=data, org_url='https://urlnotfound.none', supported_only=False)

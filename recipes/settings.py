@@ -317,7 +317,7 @@ ACCOUNT_RATE_LIMITS = {
     "change_password": "1/m/user",
     "reset_password": "1/m/ip,1/m/key",
     "reset_password_from_key": "1/m/ip",
-    "signup": "1/m/ip",
+    "signup": "2/m/ip",
     "login": "3/m/ip",
 }
 

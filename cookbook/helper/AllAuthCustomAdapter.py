@@ -22,6 +22,10 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
         """
         Whether to allow sign-ups.
         """
+        if 'signup_token' in request.session:
+            if InviteLink.objects.filter(valid_until__gte=timezone.now().date(), used_by=None, uuid=request.session['signup_token']).first():
+                return True
+
         if not settings.ENABLE_SIGNUP:
             return False
 
