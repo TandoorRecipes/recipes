@@ -24,6 +24,7 @@ from django.templatetags.static import static
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
 from django.utils.translation import gettext as _
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django_scopes import scopes_disabled
 from drf_spectacular.views import SpectacularRedocView, SpectacularSwaggerView
 
@@ -37,6 +38,7 @@ from cookbook.version_info import VERSION_INFO
 from recipes.settings import PLUGINS, BASE_DIR
 
 
+@ensure_csrf_cookie
 def index(request, path=None, resource=None):
     # show setup page when no users exist
     with scopes_disabled():
@@ -80,6 +82,7 @@ def search(request):
 
 def no_groups(request):
     return render(request, 'no_groups_info.html')
+
 
 @login_required
 def switch_space(request, space_id):
@@ -340,8 +343,8 @@ def invite_link(request, token):
         else:
             request.session['signup_token'] = str(token)
             if settings.SOCIALACCOUNT_ONLY:
-                return HttpResponseRedirect('/account/login/')
-            return HttpResponseRedirect('/account/signup/')
+                return HttpResponseRedirect(settings.SCRIPT_NAME + '/account/login/')
+            return HttpResponseRedirect(settings.SCRIPT_NAME + '/account/signup/')
 
     return HttpResponseRedirect(reverse('index'))
 

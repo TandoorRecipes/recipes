@@ -93,7 +93,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, r)
             }
         }).catch(err => {
-            if (err.response.status != 403) {
+            if (![401, 403].includes(err.response?.status)) {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
             }
         })
@@ -114,7 +114,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
                     }
                 })
             }).catch(err => {
-                if (err.response.status != 403) {
+                if (![401, 403].includes(err.response?.status)) {
                     useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
                 }
             })
@@ -146,7 +146,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         return api.apiServerSettingsCurrentRetrieve().then(r => {
             serverSettings.value = r
         }).catch(err => {
-            if (err.response.status != 403) {
+            if (![401, 403].includes(err.response?.status)) {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
             }
         })
@@ -160,7 +160,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         return api.apiSpaceCurrentRetrieve().then(r => {
             activeSpace.value = r
         }).catch(err => {
-            if (err.response.status != 403) {
+            if (![401, 403].includes(err.response?.status)) {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
             }
         })
@@ -174,7 +174,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         return api.apiUserSpaceAllPersonalList().then(r => {
             userSpaces.value = r
         }).catch(err => {
-            if (err.response.status != 403) {
+            if (![401, 403].includes(err.response?.status)) {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
             }
         })
@@ -190,7 +190,7 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         return api.apiSpaceList().then(r => {
             spaces.value = r.results
         }).catch(err => {
-            if (err.response.status != 403) {
+            if (![401, 403].includes(err.response?.status)) {
                 useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
             }
         })

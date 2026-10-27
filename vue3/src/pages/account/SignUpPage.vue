@@ -26,7 +26,7 @@
                             <v-text-field :label="$t('Username')" v-model="username" :error-messages="usernameError" :error="!!usernameError"
                                           @change="usernameManuallyChanged = true"></v-text-field>
 
-                            <v-checkbox v-model="consent" :error="!!consentError" :error-messages="consentError"class="mb-4">
+                            <v-checkbox v-model="consent" :error="!!consentError" :error-messages="consentError" class="mb-4" v-if="showAcceptCheckbox">
                                 <template #label>
                                     {{ $t('AcceptPrivacyTerms') }}
                                 </template>
@@ -56,7 +56,7 @@
 
 <script setup lang="ts">
 
-import {onMounted, ref, watch} from "vue";
+import {computed, onMounted, ref, watch} from "vue";
 import {AuthenticationAccountApi} from "@/authapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useI18n} from "vue-i18n";
@@ -79,6 +79,10 @@ const usernameError = ref('')
 const consentError = ref('')
 
 const awaitingEmailConfirmation = ref(false)
+
+const showAcceptCheckbox = computed(() => {
+    return (useUserPreferenceStore().serverSettings.termsUrl || useUserPreferenceStore().serverSettings.privacyUrl)
+})
 
 watch(() => email.value, (newValue) => {
     if (!usernameManuallyChanged.value && email.value.length > 0 && email.value.split('@').length > 0) {
@@ -109,6 +113,8 @@ function createAccount() {
                 err.response.json().then(responseJson => {
                     if (responseJson.status == 429) {
                         generalError.value = t('RateLimitHelp')
+                    } else if (responseJson.status == 403){
+                        generalError.value = t('SignupDisabled')
                     } else if (responseJson.status == 401) {
                         if (responseJson.meta.is_authenticated) {
                             router.push({name: 'StartPage'})
