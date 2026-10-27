@@ -34,6 +34,11 @@ class ScopeMiddleware:
                 and request.method in ('GET', 'HEAD', 'OPTIONS')):
             with scopes_disabled():
                 request.space = None
+                # keep the space of logged-in users, permission checks and serializers need it
+                if request.user.is_authenticated:
+                    if user_space := request.user.userspace_set.filter(active=True).first():
+                        request.space = user_space.space
+                        request.user_space = user_space
                 return self.get_response(request)
 
         # views that should be served with scopes_disabled

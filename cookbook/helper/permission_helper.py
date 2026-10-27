@@ -47,6 +47,9 @@ def has_group_permission(request, groups, no_cache=False):
     """
     if not request.user.is_authenticated:
         return False
+    # groups belong to a space, no space (e.g. token auth on a share link request) means no groups
+    if getattr(request, 'space', None) is None:
+        return False
     groups_allowed = get_allowed_groups(groups)
 
     CACHE_KEY = f'GROUP_CACHE_{request.user.pk}_{request.space.pk}'
