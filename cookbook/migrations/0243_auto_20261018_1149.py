@@ -11,8 +11,8 @@ def apply_migration(apps, schema_editor):
 
         for user in User.objects.filter(is_superuser=True):
             if EmailAddress.objects.filter(user=user, verified=True).count() == 0:
-                EmailAddress.objects.create(user=user, email=f'{user.username}@default-adminmail.tandoor', primary=True, verified=True)
-
+                has_primary = EmailAddress.objects.filter(user=user, primary=True).exists()
+                EmailAddress.objects.create(user=user, email=f'{user.username}@default-adminmail.tandoor', primary=not has_primary, verified=True)
 
 class Migration(migrations.Migration):
 
