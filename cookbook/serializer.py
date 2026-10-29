@@ -297,12 +297,9 @@ class UserFileSerializer(serializers.ModelSerializer):
                 raise ValidationError(_('You have reached your file upload limit.'))
 
     def check_file_type(self, validated_data):
-        print('checking file type')
         if 'file' in validated_data:
-            print('filke present in data')
             if not is_file_type_allowed(validated_data['file'].name, image_only=False):
-                print('is not allowed')
-                raise ValidationError(_('The given file type is not allowed.'))
+                raise ValidationError(_('The given file type is not allowed. Allowed types are PDF, DOCX, XLSX, CSS, MP4, MOV, PNG, JPG, JPEG, GIF, and WEBP.'))
 
     def create(self, validated_data):
         self.check_file_limit(validated_data)
@@ -1239,14 +1236,15 @@ class RecipeImageSerializer(WritableNestedModelSerializer):
     image = serializers.ImageField(required=False, allow_null=True)
     image_url = serializers.CharField(max_length=4096, required=False, allow_null=True)
 
+    def validate(self, attrs):
+        if 'image' in attrs and not is_file_type_allowed(attrs['image'].name, image_only=True):
+            raise serializers.ValidationError({'image': _('Only PNG, JPG, JPEG, GIF, and WEBP images are supported.')})
+        return attrs
+
     def create(self, validated_data):
-        if 'image' in validated_data and not is_file_type_allowed(validated_data['image'].name, image_only=True):
-            return None
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        if 'image' in validated_data and not is_file_type_allowed(validated_data['image'].name, image_only=True):
-            return None
         return super().update(instance, validated_data)
 
     class Meta:
