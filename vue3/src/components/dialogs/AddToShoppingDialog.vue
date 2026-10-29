@@ -150,7 +150,9 @@ function createShoppingListRecipe() {
 
     let shoppingListEntries = {
         entries: [],
-        shoppingListsIds: selectedShoppingLists.value.map(sl => sl.id!)
+        shoppingListsIds: selectedShoppingLists.value.length > 0
+            ? selectedShoppingLists.value.map(sl => sl.id!)
+            : useUserPreferenceStore().deviceSettings.shopping_selected_shopping_lists
     } as ShoppingListEntryBulkCreate
 
     dialogRecipes.value.forEach(dialogRecipe => {
