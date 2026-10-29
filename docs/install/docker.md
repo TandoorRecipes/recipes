@@ -22,11 +22,28 @@ There are different versions (tags) released on [Docker Hub](https://hub.docker.
 
 The docker image (`vabene1111/recipes`) simply exposes the application on the container's port `80` through the integrated nginx webserver.
 
+When using plain `docker run`, you also need a PostgreSQL container reachable via `POSTGRES_HOST`.
+The example below uses a shared Docker network and a database container named `db_recipes`.
+
+```shell
+docker network create recipes-net
+
+docker run -d \
+    --name db_recipes \
+    --network recipes-net \
+    -e POSTGRES_DB=djangodb \
+    -e POSTGRES_USER=djangodb \
+    -e POSTGRES_PASSWORD=YOUR_POSTGRES_SECRET_KEY \
+    -v recipes-db:/var/lib/postgresql/data \
+    postgres:16-alpine
+```
+
 ```shell
 docker run -d \
     -v "$(pwd)"/staticfiles:/opt/recipes/staticfiles \
     -v "$(pwd)"/mediafiles:/opt/recipes/mediafiles \
     -p 80:80 \
+    --network recipes-net \
     -e SECRET_KEY=YOUR_SECRET_KEY \
     -e DB_ENGINE=django.db.backends.postgresql \
     -e POSTGRES_HOST=db_recipes \
