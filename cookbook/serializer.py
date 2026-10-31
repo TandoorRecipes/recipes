@@ -1375,8 +1375,8 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
         return obj
 
     def update(self, instance, validated_data):
-        book = validated_data['book']
-        recipe = validated_data['recipe']
+        book = validated_data.get('book', instance.book)
+        recipe = validated_data.get('recipe', instance.recipe)
         if not book.get_owner() == self.context['request'].user and not self.context['request'].user in book.get_shared():
             raise NotFound(detail=None, code=None)
 
