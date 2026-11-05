@@ -1,4 +1,4 @@
-The documentation is built from the markdown files in the [docs](https://github.com/vabene1111/recipes/tree/develop/docs)
+The documentation is built from the markdown files in the [docs](https://github.com/TandoorRecipes/recipes/tree/develop/docs)
 folder of the GitHub repository.
 
 In order to contribute to the documentation, there are a couple of methods that you can use.
@@ -22,5 +22,5 @@ If you want to test the documentation, locally run `mkdocs serve` from the proje
 
 ## Super Low Tech
 
-Create your documentation in any work processor (or even create a video!) and [open a feature request](https://github.com/vabene1111/recipes/issues)
+Create your documentation in any work processor (or even create a video!) and [open a feature request](https://github.com/TandoorRecipes/recipes/issues)
 attaching your document and requesting that someone add the documentation to Tandoor.
