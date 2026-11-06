@@ -48,6 +48,20 @@ def test_add(arg, request, obj_1, recipe_1_s1):
         assert response['recipe'] == recipe_1_s1.pk
 
 
+def test_add_without_recipe_or_mealplan(u1_s1):
+    r = u1_s1.post(reverse(LIST_URL), {'name': 'Party', 'recipe': None, 'mealplan': None, 'servings': 1}, content_type='application/json')
+    assert r.status_code == 201
+    assert json.loads(r.content)['recipe'] is None
+
+
+def test_update_clears_recipe(u1_s1, obj_1):
+    r = u1_s1.patch(reverse(DETAIL_URL, args={obj_1.id}), {'recipe': None}, content_type='application/json')
+    assert r.status_code == 200
+    with scopes_disabled():
+        obj_1.refresh_from_db()
+        assert obj_1.recipe is None
+
+
 def test_delete(u1_s1, u1_s2, obj_1):
     r = u1_s2.delete(reverse(DETAIL_URL, args={obj_1.id}))
     assert r.status_code == 404
