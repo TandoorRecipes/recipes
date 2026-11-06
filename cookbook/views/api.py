@@ -1320,8 +1320,11 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             foods = Food.objects.filter(id__in=serializer.validated_data['foods'], space=self.request.space)
             safe_food_ids = Food.objects.filter(id__in=serializer.validated_data['foods'], space=self.request.space).values_list('id', flat=True)
 
-            if 'category' in serializer.validated_data and SupermarketCategory.objects.filter(id=serializer.validated_data['category'], space=request.space).exists():
-                foods.update(supermarket_category_id=serializer.validated_data['category'])
+            if 'category' in serializer.validated_data:
+                category = serializer.validated_data['category']
+                # null clears the category, an id must belong to this space
+                if category is None or SupermarketCategory.objects.filter(id=category, space=request.space).exists():
+                    foods.update(supermarket_category_id=category)
 
             if 'ignore_shopping' in serializer.validated_data and serializer.validated_data['ignore_shopping'] is not None:
                 foods.update(ignore_shopping=serializer.validated_data['ignore_shopping'])
