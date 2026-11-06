@@ -1492,12 +1492,12 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
     created_by = UserSerializer(read_only=True)
 
     def validate_mealplan(self, mealplan):
-        if not has_meal_plan_permission(self.context['request'], mealplan):
+        if mealplan is not None and not has_meal_plan_permission(self.context['request'], mealplan):
             raise ValidationError('Permission Denied')
         return mealplan
 
     def validate_recipe(self, recipe):
-        if not has_recipe_permission(self.context['request'], recipe):
+        if recipe is not None and not has_recipe_permission(self.context['request'], recipe):
             raise ValidationError('Permission Denied')
         return recipe
 
