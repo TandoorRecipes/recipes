@@ -42,6 +42,20 @@ def test_list_space(obj_1, obj_2, u1_s1, u1_s2, space_2):
     assert json.loads(u1_s2.get(reverse(LIST_URL)).content)['count'] == 1
 
 
+def test_list_filter_category(obj_1, obj_2, u1_s1):
+    obj_1.category = PropertyType.NUTRITION
+    obj_1.save()
+    obj_2.category = PropertyType.ALLERGEN
+    obj_2.save()
+
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?category={PropertyType.NUTRITION}').content)
+    assert response['count'] == 1
+    assert response['results'][0]['id'] == obj_1.id
+
+    response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?category={PropertyType.NUTRITION}&category={PropertyType.ALLERGEN}').content)
+    assert response['count'] == 2
+
+
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 403],

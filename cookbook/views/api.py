@@ -2190,11 +2190,11 @@ class PropertyTypeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMix
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        # TODO add tests for filter
+        queryset = self.queryset.filter(space=self.request.space)
         category = self.request.query_params.getlist('category', [])
         if category:
-            self.queryset.filter(category__in=category)
-        return self.queryset.filter(space=self.request.space)
+            queryset = queryset.filter(category__in=category)
+        return queryset
 
 
 class PropertyViewSet(LoggingMixin, viewsets.ModelViewSet):
