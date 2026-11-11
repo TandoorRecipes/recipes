@@ -44,6 +44,7 @@ class ImportExportBase(forms.Form):
     PDF = 'PDF'  # Deprecated: pyppeteer removed, kept for DB/migration compat
     GOURMET = 'GOURMET'
     PESTLE = 'PESTLE'
+    MARKDOWN = 'MARKDOWN'
 
     type = forms.ChoiceField(
         choices=((DEFAULT, _('Default')), (PAPRIKA, 'Paprika'), (NEXTCLOUD, 'Nextcloud Cookbook'), (MEALIE, 'Mealie'), (MEALIE1, 'Mealie1'), (CHOWDOWN, 'Chowdown'),
@@ -51,7 +52,7 @@ class ImportExportBase(forms.Form):
                  (MEALMASTER, 'MealMaster'), (REZKONV, 'RezKonv'), (OPENEATS, 'Openeats'), (RECIPEKEEPER, 'Recipe Keeper'), (PLANTOEAT, 'Plantoeat'), (COOKBOOKAPP, 'CookBookApp'),
                  # (COOKLANG, 'Cooklang Markdown'), (COPYMETHAT, 'CopyMeThat'), (PDF, 'PDF'), (MELARECIPES, 'Melarecipes'), (COOKMATE, 'Cookmate'),
                  (COOKLANG, 'Cooklang Markdown'), (COPYMETHAT, 'CopyMeThat'), (MELARECIPES, 'Melarecipes'), (COOKMATE, 'Cookmate'),
-                 (REZEPTSUITEDE, 'Recipesuite.de'), (GOURMET, 'Gourmet'), (PESTLE, 'Pestle'))
+                 (REZEPTSUITEDE, 'Recipesuite.de'), (GOURMET, 'Gourmet'), (PESTLE, 'Pestle'), (MARKDOWN, 'Markdown'))
     )
 
 
