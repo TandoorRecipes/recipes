@@ -12,7 +12,7 @@ from django.contrib.auth.models import AnonymousUser, Group, User
 from django.core.cache import caches
 from django.core.mail import send_mail
 from django.db.models import Q, QuerySet, Sum
-from django.http import BadHeaderError
+from django.http import BadHeaderError, Http404
 from django.urls import reverse
 from django.utils import timezone
 from django_scopes import scopes_disabled
@@ -23,6 +23,7 @@ from PIL import Image
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.fields import IntegerField
+from rest_framework.status import HTTP_403_FORBIDDEN
 
 from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
@@ -407,7 +408,14 @@ class SpaceSerializer(WritableNestedModelSerializer):
     recipe_count = serializers.SerializerMethodField('get_recipe_count', read_only=True)
     file_size_mb = serializers.SerializerMethodField('get_file_size_mb', read_only=True)
     ai_monthly_credits_used = serializers.SerializerMethodField('get_ai_monthly_credits_used', read_only=True)
-    ai_default_provider = AiProviderSerializer(required=False, allow_null=True)
+    ai_default_provider = AiProviderSerializer(read_only=True)
+    ai_default_provider_id = serializers.PrimaryKeyRelatedField(
+        queryset=AiProvider.objects.all(),
+        source='ai_default_provider',
+        write_only=True,
+        required=False,
+        allow_null=True
+    )
     food_inherit = FoodInheritFieldSerializer(many=True, required=False)
     image = UserFileViewSerializer(required=False, many=False, allow_null=True)
     nav_logo = UserFileViewSerializer(required=False, many=False, allow_null=True)
@@ -471,6 +479,15 @@ class SpaceSerializer(WritableNestedModelSerializer):
 
         return validated_data
 
+    def validate_ai_default_provider_id(self, value):
+        if value is not None:
+            request = self.context.get('request', None)
+            target_space = request.space
+            if value.space is not None and (target_space is None or value.space != target_space):
+                if not (request and request.user and request.user.is_superuser):
+                    raise serializers.ValidationError(_('Permission Denied'))
+        return value
+
     class Meta:
         model = Space
         fields = (
@@ -478,7 +495,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
             'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
             'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color',
             'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg', 'ai_credits_monthly',
-            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider', 'space_setup_completed', 'household_setup_completed')
+            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider', 'ai_default_provider_id', 'space_setup_completed', 'household_setup_completed')
         read_only_fields = (
             'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
             'demo', 'ai_monthly_credits_used')
@@ -1063,6 +1080,11 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
+    def validate_step_recipe(self, recipe):
+        if recipe and not has_recipe_permission(self.context['request'], recipe):
+            raise Http404()
+        return recipe
+
     @extend_schema_field(str)
     def get_instructions_markdown(self, obj):
         return obj.get_instruction_render()
@@ -1076,7 +1098,7 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
     def get_step_recipe_data(self, obj):
         # check if root type is recipe to prevent infinite recursion
         # can be improved later to allow multi level embedding
-        if obj.step_recipe and isinstance(self.parent.root, RecipeSerializer):
+        if obj.step_recipe and isinstance(self.parent.root, RecipeSerializer) and has_recipe_permission(self.context['request'], obj.step_recipe):
             return StepRecipeSerializer(obj.step_recipe, context={'request': self.context['request']}).data
 
     class Meta:
@@ -1402,6 +1424,11 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     addshopping = serializers.BooleanField(write_only=True, required=False)
 
     to_date = serializers.DateTimeField(required=False)
+
+    def validate_recipe(self, recipe):
+        if not has_recipe_permission(self.context['request'], recipe):
+            raise ValidationError('Permission Denied')
+        return recipe
 
     @extend_schema_field(str)
     def get_note_markdown(self, obj):

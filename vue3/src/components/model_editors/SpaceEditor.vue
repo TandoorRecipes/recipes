@@ -65,7 +65,7 @@
                     <v-checkbox v-model="editingObj.aiEnabled" :label="$t('Enabled')" :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser" hide-details></v-checkbox>
 
                     <template v-if="editingObj.aiEnabled">
-                        <v-model-select model="AiProvider" :label="$t('Default') + ' ' + $t('AiProvider')" v-model="editingObj.aiDefaultProvider"></v-model-select>
+                        <v-model-select model="AiProvider" :label="$t('Default') + ' ' + $t('AiProvider')" v-model="editingObj.aiDefaultProviderId" :returnObject="false"></v-model-select>
 
                         <v-number-input v-model="editingObj.aiCreditsMonthly" :precision="2" :label="$t('MonthlyCredits')"
                                         :disabled="!useUserPreferenceStore().userSettings.user.isSuperuser"></v-number-input>

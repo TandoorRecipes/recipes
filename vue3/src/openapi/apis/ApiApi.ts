@@ -2437,7 +2437,7 @@ export interface ApiShoppingListUpdateRequest {
 }
 
 export interface ApiSpaceCreateRequest {
-    space?: Omit<Space, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'>;
+    space?: Omit<Space, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'|'aiDefaultProvider'>;
 }
 
 export interface ApiSpaceListRequest {
@@ -2447,7 +2447,7 @@ export interface ApiSpaceListRequest {
 
 export interface ApiSpacePartialUpdateRequest {
     id: number;
-    patchedSpace?: Omit<PatchedSpace, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'>;
+    patchedSpace?: Omit<PatchedSpace, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'|'aiDefaultProvider'>;
 }
 
 export interface ApiSpaceRetrieveRequest {
@@ -2456,7 +2456,7 @@ export interface ApiSpaceRetrieveRequest {
 
 export interface ApiSpaceUpdateRequest {
     id: number;
-    space?: Omit<Space, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'>;
+    space?: Omit<Space, 'createdBy'|'createdAt'|'maxRecipes'|'maxFileStorageMb'|'maxUsers'|'allowSharing'|'demo'|'userCount'|'recipeCount'|'fileSizeMb'|'aiMonthlyCreditsUsed'|'aiDefaultProvider'>;
 }
 
 export interface ApiStepCreateRequest {

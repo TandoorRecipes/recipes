@@ -376,7 +376,7 @@ def has_recipe_permission(request, recipe):
     Custom permission class for recipe api endpoint
     """
     share = request.query_params.get('share', None)
-    if share:
+    if share and request.method in SAFE_METHODS:
         if share_link_valid(recipe, share):
             return True
         # Invalid share link - check if user has normal access

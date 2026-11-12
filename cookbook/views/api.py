@@ -1799,8 +1799,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                     self.request.user
                 ).with_last_cooked(
                     self.request.user, self.request.space
-                ).filter(
-                    space=self.request.space).prefetch_related('keywords', 'shared', 'properties',
+                ).filter(space=self.request.space).prefetch_related('keywords', 'shared', 'properties',
                                                                'properties__property_type', 'steps',
                                                                'steps__ingredients',
                                                                'steps__ingredients__step_set',

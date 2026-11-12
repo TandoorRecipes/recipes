@@ -6,7 +6,7 @@ from django.contrib.auth.models import Group
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
-from cookbook.models import UserSpace
+from cookbook.models import UserSpace, AiProvider
 from recipes import settings
 
 LIST_URL = 'api:space-list'
@@ -146,3 +146,71 @@ def test_superuser_parameters(space_1, a1_s1, s1_s1):
     assert space_1.ai_enabled == True
     assert space_1.ai_credits_monthly == 100
     assert space_1.ai_credits_balance == 100
+
+
+def test_space_ai_default_provider(space_1, space_2, a1_s1, a1_s2, s1_s1):
+    space_1.created_by = auth.get_user(a1_s1)
+    space_1.save()
+
+    with scopes_disabled():
+        provider_space_1 = AiProvider.objects.create(name='Provider 1', space=space_1, description='Original P1')
+        provider_space_2 = AiProvider.objects.create(name='Provider 2', space=space_2, description='Original P2')
+        provider_global = AiProvider.objects.create(name='Global Provider', space=None, description='Original Global')
+
+    # 1. Update space with own provider via ai_default_provider_id
+    response = a1_s1.patch(
+        reverse(DETAIL_URL, args={space_1.id}),
+        {'ai_default_provider_id': provider_space_1.id},
+        content_type='application/json'
+    )
+    assert response.status_code == 200
+    res_data = json.loads(response.content)
+    assert res_data['ai_default_provider']['id'] == provider_space_1.id
+    assert res_data['ai_default_provider']['name'] == 'Provider 1'
+
+    space_1.refresh_from_db()
+    assert space_1.ai_default_provider == provider_space_1
+
+    # 2. Update space with global provider via ai_default_provider_id
+    response = a1_s1.patch(
+        reverse(DETAIL_URL, args={space_1.id}),
+        {'ai_default_provider_id': provider_global.id},
+        content_type='application/json'
+    )
+    assert response.status_code == 200
+    space_1.refresh_from_db()
+    assert space_1.ai_default_provider == provider_global
+
+    # 3. Setting foreign space provider as non-superuser should be rejected (400)
+    response = a1_s1.patch(
+        reverse(DETAIL_URL, args={space_1.id}),
+        {'ai_default_provider_id': provider_space_2.id},
+        content_type='application/json'
+    )
+    assert response.status_code == 400
+    space_1.refresh_from_db()
+    assert space_1.ai_default_provider == provider_global
+
+    # 4. Attempting nested mutation via ai_default_provider must not mutate the nested object
+    response = a1_s1.patch(
+        reverse(DETAIL_URL, args={space_1.id}),
+        {'ai_default_provider': {'id': provider_space_2.id, 'name': 'Hacked', 'description': 'Hacked'}},
+        content_type='application/json'
+    )
+    assert response.status_code == 200
+    with scopes_disabled():
+        provider_space_2.refresh_from_db()
+        assert provider_space_2.name == 'Provider 2'
+        assert provider_space_2.description == 'Original P2'
+
+    # 5. Unlinking provider with null
+    response = a1_s1.patch(
+        reverse(DETAIL_URL, args={space_1.id}),
+        {'ai_default_provider_id': None},
+        content_type='application/json'
+    )
+    assert response.status_code == 200
+    res_data = json.loads(response.content)
+    assert res_data['ai_default_provider'] is None
+    space_1.refresh_from_db()
+    assert space_1.ai_default_provider is None
