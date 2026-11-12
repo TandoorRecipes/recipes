@@ -7,7 +7,7 @@ from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 from pytest_factoryboy import LazyFixture, register
 
-from cookbook.models import Food, Ingredient, ShoppingListEntry, Household, UserSpace, ShoppingList
+from cookbook.models import Food, Ingredient, ShoppingListEntry, Household, UserSpace, ShoppingList, SupermarketCategory
 from cookbook.tests.factories import (FoodFactory, IngredientFactory, ShoppingListEntryFactory,
                                       SupermarketCategoryFactory)
 
@@ -759,6 +759,27 @@ def test_batch_update_substitutes(u1_s1, space_1, space_2):
     with scopes_disabled():
         assert food1.substitute.count() == 0
         assert food2.substitute.count() == 0
+
+
+def test_batch_update_category(u1_s1, space_1, space_2):
+    with scopes_disabled():
+        category = SupermarketCategory.objects.create(name='Produce', space=space_1)
+        category_foreign = SupermarketCategory.objects.create(name='Foreign', space=space_2)
+        food = FoodFactory(space=space_1, supermarket_category=category)
+
+    url = reverse('api:food-batch-update')
+
+    # A category of another space is ignored
+    r = u1_s1.put(url, {'foods': [food.id], 'category': category_foreign.id}, content_type='application/json')
+    assert r.status_code == 200
+    food.refresh_from_db()
+    assert food.supermarket_category_id == category.id
+
+    # null clears the category
+    r = u1_s1.put(url, {'foods': [food.id], 'category': None}, content_type='application/json')
+    assert r.status_code == 200
+    food.refresh_from_db()
+    assert food.supermarket_category_id is None
 
 
 def test_batch_update_shopping_lists(u1_s1, space_1, space_2):
