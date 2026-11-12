@@ -209,8 +209,8 @@ class IngredientParser:
 
         # if the string contains parenthesis early on remove it and place it at the end
         # because its likely some kind of note
-        if not detected_alternate_measurement and re.match('(.){1,6}\\s\\((.[^\\(\\)])+\\)\\s', ingredient):
-            match = re.search('\\((.[^\\(])+\\)', ingredient)
+        if not detected_alternate_measurement and re.match('(.){1,6}\\s\\([^\\(\\)]+\\)\\s', ingredient):
+            match = re.search('\\([^\\(\\)]+\\)', ingredient)
             ingredient = ingredient[:match.start()] + ingredient[match.end():] + ' ' + ingredient[match.start():match.end()]
 
         # leading spaces before commas result in extra tokens, clean them out
