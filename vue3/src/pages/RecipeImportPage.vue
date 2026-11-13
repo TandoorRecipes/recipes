@@ -425,7 +425,7 @@
                             <v-stepper-window-item value="app">
 
                                 <v-row>
-                                    <v-col cols="12" md="3" v-for="i in INTEGRATIONS">
+                                    <v-col cols="12" md="3" v-for="i in INTEGRATIONS.filter(i => i.import)">
                                         <v-card prepend-icon="fa-solid fa-carrot" :title="i.name" @click="importApp = i.id" variant="outlined" elevation="1"
                                                 :color="(importApp == i.id) ? 'primary' : ''">
                                             <template #append>

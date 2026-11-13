@@ -19,6 +19,7 @@ from cookbook.integration.copymethat import CopyMeThat
 from cookbook.integration.default import Default
 from cookbook.integration.domestica import Domestica
 from cookbook.integration.gourmet import Gourmet
+from cookbook.integration.markdownexport import Markdown
 from cookbook.integration.mealie import Mealie
 from cookbook.integration.mealie1 import Mealie1
 from cookbook.integration.mealmaster import MealMaster
@@ -94,6 +95,8 @@ def get_integration(request, export_type):
         return Gourmet(request, export_type)
     if export_type == ImportExportBase.PESTLE:
         return Pestle(request, export_type)
+    if export_type == ImportExportBase.MARKDOWN:
+        return Markdown(request, export_type)
 
 
 def export_file(request, pk):

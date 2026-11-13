@@ -18,6 +18,7 @@ export const INTEGRATIONS: Array<Integration> = [
     {id: 'COOKMATE', name: "Cookmate", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#cookmate'},
     {id: 'COPYMETHAT', name: "CopyMeThat", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#copymethat'},
     {id: 'DOMESTICA', name: "Domestica", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#domestica'},
+    {id: 'MARKDOWN', name: "Markdown", import: false, export: true, helpUrl: 'https://docs.tandoor.dev/features/import_export/#markdown'},
     {id: 'MEALIE', name: "Mealie 0.x", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#mealie'},
     {id: 'MEALIE1', name: "Mealie 1.x", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#mealie'},
     {id: 'MEALMASTER', name: "Mealmaster", import: true, export: false, helpUrl: 'https://docs.tandoor.dev/features/import_export/#mealmaster'},
