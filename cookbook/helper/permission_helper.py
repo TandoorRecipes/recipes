@@ -394,7 +394,7 @@ def has_recipe_permission(request, recipe):
 def has_meal_plan_permission(request, mealplan):
     household_ids = get_household_user_ids(request.user_space)
 
-    if request.user == mealplan.created_by or mealplan.created_by in household_ids:
+    if request.user == mealplan.created_by or mealplan.created_by_id in household_ids:
         if mealplan.recipe:
             return has_recipe_permission(request, mealplan.recipe)
         else:
