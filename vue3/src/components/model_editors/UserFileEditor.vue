@@ -13,17 +13,9 @@
         <v-card-text>
             <v-form :disabled="loading || fileApiLoading">
 
-                <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
-                <!--                <v-file-input :label="$t('File')" v-model="editingObj.file" @change="uploadFile()"></v-file-input>-->
+                <user-file-upload-input v-model:name="editingObj.name" v-model:file="file" />
 
                 <v-row>
-                    <v-col cols="12" md="6">
-                        <v-file-upload v-model="file" @update:modelValue="updateUserFileName"
-                                       :title="$t('DragToUpload')"
-                                       :browse-text="$t('Select_File')"
-                                       :divider-text="$t('or')"
-                        ></v-file-upload>
-                    </v-col>
                     <v-col cols="12" md="6">
                         <v-label> {{ $t('Preview') }}</v-label>
                         <v-img max-height="25vh" rounded :src="editingObj.preview"></v-img>
@@ -49,11 +41,11 @@
 <script setup lang="ts">
 
 import {onMounted, PropType, shallowRef, watch} from "vue";
-import {UserFile, UserSpace} from "@/openapi";
+import {UserFile} from "@/openapi";
 import ModelEditorBase from "@/components/model_editors/ModelEditorBase.vue";
 import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import {DateTime} from "luxon";
-import {VFileUpload} from 'vuetify/labs/VFileUpload'
+import UserFileUploadInput from "@/components/inputs/UserFileUploadInput.vue";
 import {useFileApi} from "@/composables/useFileApi";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
 
@@ -110,15 +102,6 @@ function saveFile() {
         editingObjChanged.value = false
         loading.value = false
     })
-}
-
-/**
- * set name based on file name if name is empty
- */
-function updateUserFileName() {
-    if (file.value != null && (editingObj.value.name == '' || editingObj.value.name == undefined)) {
-        editingObj.value.name = file.value.name
-    }
 }
 
 </script>

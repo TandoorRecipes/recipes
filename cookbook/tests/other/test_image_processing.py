@@ -30,3 +30,14 @@ def test_strip_image_meta_applies_exif_orientation():
     with Image.open(result) as image:
         assert image.size == (10, 20)
         assert image.getexif().get(0x0112) is None
+
+
+def test_rescale_image_jpeg_does_not_upscale_small_images():
+    image_bytes = BytesIO()
+    Image.new('RGB', (20, 10)).save(image_bytes, 'JPEG')
+    image_bytes.seek(0)
+
+    result = rescale_image_jpeg(image_bytes, base_width=1020)
+
+    with Image.open(result) as image:
+        assert image.size == (20, 10)

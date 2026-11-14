@@ -58,8 +58,7 @@
                 <v-tabs-window-item>
                     <v-card>
                         <v-card-text>
-                            <v-text-field :label="$t('Name')" v-model="newUserFile.name"></v-text-field>
-                            <v-file-input :label="$t('File')" v-model="newUserFile.file"></v-file-input>
+                            <user-file-upload-input v-model:name="newFileName" v-model:file="newFile" />
 
 
                         </v-card-text>
@@ -97,12 +96,13 @@
 
 <script setup lang="ts">
 
-import {ApiApi, UserFile, UserFileFromJSON} from "@/openapi";
+import {ApiApi, UserFile} from "@/openapi";
 import {onMounted, ref, watch} from "vue";
 import {DateTime} from "luxon";
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
-import {getCookie} from "@/utils/cookie";
 import {useI18n} from "vue-i18n";
+import UserFileUploadInput from "@/components/inputs/UserFileUploadInput.vue";
+import {useFileApi} from "@/composables/useFileApi";
 
 const emit = defineEmits(['update:modelValue', 'create'])
 
@@ -118,8 +118,10 @@ const {t} = useI18n()
 
 const dialog = ref(false)
 const tab = ref(0)
-const newUserFile = ref({} as UserFile)
+const newFileName = ref('')
+const newFile = ref<File | null>(null)
 const userFiles = ref([] as UserFile[])
+const {createOrUpdateUserFile} = useFileApi()
 
 const tableSearch = ref('')
 const tableHeaders = ref([
@@ -151,20 +153,13 @@ function loadFiles() {
 }
 
 function uploadFile() {
+    if (!newFile.value) {
+        useMessageStore().addError(ErrorMessageType.CREATE_ERROR, new Error('A file is required'))
+        return
+    }
 
-    let formData = new FormData()
-    formData.append('file', newUserFile.value.file)
-    formData.append('name', newUserFile.value.name)
-
-    //TODO proper URL finding (sub path setups)
-    fetch('/api/user-file/', {
-        method: 'POST',
-        headers: {'X-CSRFToken': getCookie('csrftoken')},
-        body: formData
-    }).then(r => { // TODO maybe better use existing URL clients response functions for parsing
-        r.json().then(r => {
-            model.value = UserFileFromJSON(r)
-        })
+    createOrUpdateUserFile(newFileName.value, newFile.value).then(r => {
+        model.value = r
         useMessageStore().addPreparedMessage(PreparedMessage.CREATE_SUCCESS)
     }).catch(err => {
         useMessageStore().addError(ErrorMessageType.CREATE_ERROR, err)
