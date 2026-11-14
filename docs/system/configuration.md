@@ -336,7 +336,9 @@ You can find some examples on the [dedicated docs page](https://docs.tandoor.dev
 
 > default `0` (disabled) - options `0`, `1`
 
-When enabled, new social login users will automatically join the first existing space with the group configured in `SOCIAL_DEFAULT_GROUP`.
+When enabled, new social login, LDAP, and remote-user users without existing memberships automatically join
+an existing space with the group configured in `SOCIAL_DEFAULT_GROUP`, without creating a personal space.
+Social signup through configured providers is allowed even when public registration is closed (`ENABLE_SIGNUP=0`).
 
 !!! danger
     With public signup enabled this will give everyone access to the data in the given space. You should probably only use this when using a trusted 
@@ -352,11 +354,32 @@ SOCIAL_DEFAULT_ACCESS = 1
 SOCIAL_DEFAULT_GROUP=guest
 ```
 
+> default unset (first existing space) - numeric ID of an existing space
+
+Set `SOCIAL_DEFAULT_SPACE_ID` to select the space new users should join rather than the first space.
+Invalid or nonexistent IDs raise a configuration error instead of falling back to another space.
+If the default space or group is unavailable, no membership or personal space is created.
+Existing memberships and permissions are preserved.
+
+For example, to place new LDAP/social users only in space 2 while public registration is closed:
+
+```ini
+SOCIAL_DEFAULT_ACCESS=1
+SOCIAL_DEFAULT_SPACE_ID=2
+SOCIAL_DEFAULT_GROUP=user
+ENABLE_SIGNUP=0
+```
+
+This controls initial membership, not whether users may later create or join other spaces.
+Valid invite links continue to take precedence over default access.
+
 #### Enable Signup
 
 > default `0` - options `0`, `1`
 
-Allows creation of accounts, both local (username/password) and social accounts trough third party providers.
+Allows public creation of local (username/password) and social accounts through third-party providers.
+With `ENABLE_SIGNUP=0`, valid invites still allow registration, and `SOCIAL_DEFAULT_ACCESS=1` allows
+social registration through configured providers without opening local registration.
 
 
 ```

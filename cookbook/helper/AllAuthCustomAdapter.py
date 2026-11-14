@@ -37,7 +37,10 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
         """
         create a default space for new users
         """
-        user = super(AllAuthCustomAdapter, self).save_user(request, user, form)
+        user = super(AllAuthCustomAdapter, self).save_user(request, user, form, commit=commit)
+        if not commit or getattr(form, 'sociallogin', None) is not None:
+            # Social signup provisions membership in its own adapter.
+            return user
         create_space_for_user(user)
 
         if 'signup_token' in request.session:

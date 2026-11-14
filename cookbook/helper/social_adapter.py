@@ -5,11 +5,12 @@ from datetime import timedelta
 
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.conf import settings
-from django.contrib.auth.models import Group
 from django.utils import timezone
+from django_scopes import scopes_disabled
 
+from cookbook.helper.default_access import ensure_default_access
 from cookbook.helper.permission_helper import create_space_for_user, process_invite_token
-from cookbook.models import Space, UserSpace, InviteLink
+from cookbook.models import InviteLink
 
 _ERROR_FILE = os.path.join(settings.MEDIA_ROOT, '.social_login_errors.json')
 _MAX_ERRORS = 50
@@ -55,8 +56,13 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
         Whether to allow sign-ups.
         """
         if 'signup_token' in request.session:
-            if InviteLink.objects.filter(valid_until__gte=timezone.now().date(), used_by=None, uuid=request.session['signup_token']).first():
-                return True
+            with scopes_disabled():
+                if InviteLink.objects.filter(valid_until__gte=timezone.now().date(), used_by=None, uuid=request.session['signup_token']).first():
+                    return True
+
+        # Trusted external signup can join a shared space even when public signup is closed.
+        if settings.SOCIAL_DEFAULT_ACCESS:
+            return True
 
         if not settings.ENABLE_SIGNUP:
             return False
@@ -138,19 +144,15 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
         """
         user = super().save_user(request, sociallogin, form=form)
 
-        if settings.SOCIAL_DEFAULT_ACCESS:
-            space = Space.objects.first()
-            group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
-            if space and group:
-                user_space = UserSpace.objects.create(space=space, user=request.user, active=False)
-                user_space.groups.add(group)
-
         if 'signup_token' in request.session:
             value = request.session['signup_token']
             del request.session['signup_token']
             request.session.modified = True
             process_invite_token(user, value)
 
-        create_space_for_user(user)
+        if settings.SOCIAL_DEFAULT_ACCESS:
+            ensure_default_access(user)
+        else:
+            create_space_for_user(user)
 
         return user
