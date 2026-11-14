@@ -1,6 +1,8 @@
 import re
 
 from allauth.headless.contrib.rest_framework.authentication import XSessionTokenAuthentication
+from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.http import HttpResponseRedirect, JsonResponse
@@ -9,9 +11,9 @@ from django_scopes import scope, scopes_disabled
 from oauth2_provider.contrib.rest_framework import OAuth2Authentication
 from rest_framework.exceptions import AuthenticationFailed
 
+from cookbook.helper.default_access import ensure_default_access
 from cookbook.helper.permission_helper import create_space_for_user
 from cookbook.views import views
-from recipes import settings
 
 
 class ScopeMiddleware:
@@ -88,7 +90,12 @@ class ScopeMiddleware:
                     # if user is authenticated, has no space but a signup token (InviteLink) is present, redirect to invite link logic
                     return HttpResponseRedirect(reverse('view_invite', args=[request.session.pop('signup_token', '')]))
                 else:
-                    return self.get_response(request)
+                    # LDAP/remote-user signup bypasses the allauth social adapter.
+                    user_space = ensure_default_access(request.user)
+                    if not user_space:
+                        if settings.SOCIAL_DEFAULT_ACCESS and request.path.startswith(prefix + '/api/'):
+                            return JsonResponse({'detail': 'No space access is available.'}, status=403)
+                        return self.get_response(request)
 
             request.space = user_space.space
             request.user_space = user_space
@@ -126,11 +133,15 @@ class ScopeMiddleware:
                             user = auth[0]
                             request.user = user
                             user_space = user.userspace_set.filter(active=True).first()
+                            if not user_space and not user.userspace_set.exists():
+                                user_space = ensure_default_access(user)
                             if user_space:
                                 request.space = user_space.space
                                 request.user_space = user_space
                                 with scope(space=request.space):
                                     return self.get_response(request)
+                    except ImproperlyConfigured:
+                        raise
                     except Exception:
                         pass
 

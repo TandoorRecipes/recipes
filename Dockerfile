@@ -18,13 +18,14 @@ COPY requirements.txt ./
 
 # remove Development dependencies from requirements.txt
 RUN sed -i '/# Development/,$d' requirements.txt
-RUN apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl rust && \
+RUN ulimit -c 0 && apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev zlib-dev jpeg-dev libwebp-dev openssl-dev libffi-dev cargo openldap-dev python3-dev xmlsec-dev xmlsec build-base g++ curl rust && \
     python -m venv venv && \
     /opt/recipes/venv/bin/python -m pip install --upgrade pip && \
     venv/bin/pip debug -v && \
     venv/bin/pip install wheel==0.48.0 && \
     venv/bin/pip install setuptools_rust==1.13.0 && \
     venv/bin/pip install -r requirements.txt --no-cache-dir &&\
+    find /opt/recipes -type f -name 'qemu_*.core' -delete && \
     apk --purge del .build-deps
 
 #Copy project and execute it.
