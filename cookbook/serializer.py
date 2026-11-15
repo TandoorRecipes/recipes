@@ -412,7 +412,6 @@ class SpaceSerializer(WritableNestedModelSerializer):
     ai_default_provider_id = serializers.PrimaryKeyRelatedField(
         queryset=AiProvider.objects.all(),
         source='ai_default_provider',
-        write_only=True,
         required=False,
         allow_null=True
     )
