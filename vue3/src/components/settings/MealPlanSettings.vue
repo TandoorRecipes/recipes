@@ -5,7 +5,7 @@
 
         <closable-help-alert :text="$t('HouseholdSettingsHelp')" :title="$t('Household')"></closable-help-alert>
 
-        <v-model-select model="MealType" v-model="useUserPreferenceStore().userSettings.defaultMealType"></v-model-select>
+        <v-model-select model="MealType" v-model="useUserPreferenceStore().userSettings.defaultMealTypeId" :return-object="false"></v-model-select>
 
         <v-btn class="mt-3" color="success" @click="useUserPreferenceStore().updateUserSettings()" prepend-icon="$save">{{ $t('Save') }}</v-btn>
 

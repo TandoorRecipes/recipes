@@ -22,12 +22,12 @@
             <v-tabs-window v-model="tab">
 
                 <v-tabs-window-item value="book">
-
+{{editingObj}}
                     <v-form :disabled="loading">
                         <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
                         <v-textarea :label="$t('Description')" v-model="editingObj.description" rows="3"></v-textarea>
                         <v-model-select model="User" v-model="editingObj.shared" chips multiple></v-model-select>
-                        <v-model-select model="CustomFilter" v-model="editingObj.filter"></v-model-select>
+                        <v-model-select model="CustomFilter" v-model="editingObj.filterId" :return-object="false" clearable></v-model-select>
                         <v-number-input :label="$t('Order')" :hint="$t('OrderInformation')" v-model="editingObj.order"></v-number-input>
                     </v-form>
                 </v-tabs-window-item>

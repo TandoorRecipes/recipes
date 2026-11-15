@@ -212,7 +212,13 @@ export interface PatchedUserPreference {
      * @type {MealType}
      * @memberof PatchedUserPreference
      */
-    defaultMealType?: MealType | null;
+    readonly defaultMealType?: MealType;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedUserPreference
+     */
+    defaultMealTypeId?: number | null;
     /**
      * 
      * @type {boolean}
@@ -288,6 +294,7 @@ export function PatchedUserPreferenceFromJSONTyped(json: any, ignoreDiscriminato
         'csvPrefix': json['csv_prefix'] == null ? undefined : json['csv_prefix'],
         'shoppingUpdateFoodLists': json['shopping_update_food_lists'] == null ? undefined : json['shopping_update_food_lists'],
         'defaultMealType': json['default_meal_type'] == null ? undefined : MealTypeFromJSON(json['default_meal_type']),
+        'defaultMealTypeId': json['default_meal_type_id'] == null ? undefined : json['default_meal_type_id'],
         'filterToSupermarket': json['filter_to_supermarket'] == null ? undefined : json['filter_to_supermarket'],
         'shoppingAddOnhand': json['shopping_add_onhand'] == null ? undefined : json['shopping_add_onhand'],
         'leftHanded': json['left_handed'] == null ? undefined : json['left_handed'],
@@ -300,7 +307,7 @@ export function PatchedUserPreferenceToJSON(json: any): PatchedUserPreference {
     return PatchedUserPreferenceToJSONTyped(json, false);
 }
 
-export function PatchedUserPreferenceToJSONTyped(value?: Omit<PatchedUserPreference, 'user'|'food_inherit_default'|'food_children_exist'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedUserPreferenceToJSONTyped(value?: Omit<PatchedUserPreference, 'user'|'food_inherit_default'|'default_meal_type'|'food_children_exist'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -328,7 +335,7 @@ export function PatchedUserPreferenceToJSONTyped(value?: Omit<PatchedUserPrefere
         'csv_delim': value['csvDelim'],
         'csv_prefix': value['csvPrefix'],
         'shopping_update_food_lists': value['shoppingUpdateFoodLists'],
-        'default_meal_type': MealTypeToJSON(value['defaultMealType']),
+        'default_meal_type_id': value['defaultMealTypeId'],
         'filter_to_supermarket': value['filterToSupermarket'],
         'shopping_add_onhand': value['shoppingAddOnhand'],
         'left_handed': value['leftHanded'],

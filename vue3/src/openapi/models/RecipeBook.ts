@@ -69,7 +69,13 @@ export interface RecipeBook {
      * @type {CustomFilter}
      * @memberof RecipeBook
      */
-    filter?: CustomFilter | null;
+    readonly filter: CustomFilter | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof RecipeBook
+     */
+    filterId?: number | null;
     /**
      * 
      * @type {number}
@@ -85,6 +91,7 @@ export function instanceOfRecipeBook(value: object): value is RecipeBook {
     if (!('name' in value) || value['name'] === undefined) return false;
     if (!('shared' in value) || value['shared'] === undefined) return false;
     if (!('createdBy' in value) || value['createdBy'] === undefined) return false;
+    if (!('filter' in value) || value['filter'] === undefined) return false;
     return true;
 }
 
@@ -103,7 +110,8 @@ export function RecipeBookFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         'description': json['description'] == null ? undefined : json['description'],
         'shared': ((json['shared'] as Array<any>).map(UserFromJSON)),
         'createdBy': UserFromJSON(json['created_by']),
-        'filter': json['filter'] == null ? undefined : CustomFilterFromJSON(json['filter']),
+        'filter': CustomFilterFromJSON(json['filter']),
+        'filterId': json['filter_id'] == null ? undefined : json['filter_id'],
         'order': json['order'] == null ? undefined : json['order'],
     };
 }
@@ -112,7 +120,7 @@ export function RecipeBookToJSON(json: any): RecipeBook {
     return RecipeBookToJSONTyped(json, false);
 }
 
-export function RecipeBookToJSONTyped(value?: Omit<RecipeBook, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
+export function RecipeBookToJSONTyped(value?: Omit<RecipeBook, 'created_by'|'filter'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -123,7 +131,7 @@ export function RecipeBookToJSONTyped(value?: Omit<RecipeBook, 'created_by'> | n
         'name': value['name'],
         'description': value['description'],
         'shared': ((value['shared'] as Array<any>).map(UserToJSON)),
-        'filter': CustomFilterToJSON(value['filter']),
+        'filter_id': value['filterId'],
         'order': value['order'],
     };
 }

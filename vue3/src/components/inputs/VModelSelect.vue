@@ -228,8 +228,8 @@ watch(autoselectValue, (newValue, oldValue) => {
  */
 watch(() => props.modelValue, (newValue, oldValue) => {
     // do not trigger update if value has not actually changed
-    if(newValue == oldValue ||
-        (Array.isArray(newValue) && Array.isArray(oldValue) && newValue.length === oldValue.length && newValue.every((item:number) => oldValue.includes(item)))){
+    if (newValue == oldValue ||
+        (Array.isArray(newValue) && Array.isArray(oldValue) && newValue.length === oldValue.length && newValue.every((item: number) => oldValue.includes(item)))) {
         return
     }
 
@@ -444,6 +444,8 @@ function updateModelValue(newValue: EditorSupportedTypes | EditorSupportedTypes[
             emit('update:modelValue', newValue.flatMap(item => item.id))
         } else if (newValue) {
             emit('update:modelValue', newValue.id)
+        } else {
+            emit('update:modelValue', null)
         }
     } else {
         emit('update:modelValue', newValue)

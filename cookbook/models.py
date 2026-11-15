@@ -569,6 +569,7 @@ class Household(models.Model, PermissionModelMixin):
     name = models.CharField(max_length=128)
 
     space = models.ForeignKey(Space, on_delete=models.CASCADE)
+    objects = ScopedManager(space='space')
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

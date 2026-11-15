@@ -69,7 +69,13 @@ export interface PatchedRecipeBook {
      * @type {CustomFilter}
      * @memberof PatchedRecipeBook
      */
-    filter?: CustomFilter | null;
+    readonly filter?: CustomFilter | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedRecipeBook
+     */
+    filterId?: number | null;
     /**
      * 
      * @type {number}
@@ -101,6 +107,7 @@ export function PatchedRecipeBookFromJSONTyped(json: any, ignoreDiscriminator: b
         'shared': json['shared'] == null ? undefined : ((json['shared'] as Array<any>).map(UserFromJSON)),
         'createdBy': json['created_by'] == null ? undefined : UserFromJSON(json['created_by']),
         'filter': json['filter'] == null ? undefined : CustomFilterFromJSON(json['filter']),
+        'filterId': json['filter_id'] == null ? undefined : json['filter_id'],
         'order': json['order'] == null ? undefined : json['order'],
     };
 }
@@ -109,7 +116,7 @@ export function PatchedRecipeBookToJSON(json: any): PatchedRecipeBook {
     return PatchedRecipeBookToJSONTyped(json, false);
 }
 
-export function PatchedRecipeBookToJSONTyped(value?: Omit<PatchedRecipeBook, 'created_by'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedRecipeBookToJSONTyped(value?: Omit<PatchedRecipeBook, 'created_by'|'filter'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -120,7 +127,7 @@ export function PatchedRecipeBookToJSONTyped(value?: Omit<PatchedRecipeBook, 'cr
         'name': value['name'],
         'description': value['description'],
         'shared': value['shared'] == null ? undefined : ((value['shared'] as Array<any>).map(UserToJSON)),
-        'filter': CustomFilterToJSON(value['filter']),
+        'filter_id': value['filterId'],
         'order': value['order'],
     };
 }
