@@ -65,6 +65,19 @@ def test_shopping_food_delete(request, arg, food, ids=lambda arg: arg[0]):
         assert len(json.loads(c.get(reverse(SHOPPING_LIST_URL)).content)['results']) == 0
 
 
+def test_shopping_food_null_amount(u1_s1, food):
+    r = u1_s1.put(
+        reverse(SHOPPING_FOOD_URL, args=[food.id]),
+        {'amount': None},
+        content_type='application/json'
+    )
+
+    assert r.status_code == 204
+
+    entries = json.loads(u1_s1.get(reverse(SHOPPING_LIST_URL)).content)['results']
+    assert len(entries) == 1
+    assert entries[0]['amount'] == 1
+
 # def test_shopping_food_share(u1_s1, u2_s1, food, space_1):
 #     with scope(space=space_1):
 #         user1 = auth.get_user(u1_s1)
