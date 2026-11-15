@@ -698,7 +698,7 @@ class GroupViewSet(LoggingMixin, viewsets.ModelViewSet):
 class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
-    permission_classes = [((IsReadOnlyDRF | IsCreateDRF) & CustomIsGuest) | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
+    permission_classes = [(((IsReadOnlyDRF | IsCreateDRF) & CustomIsGuest ) | (CustomIsOwner & CustomIsAdmin)) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
     http_method_names = ['get', 'post', 'put', 'patch']
 
@@ -1968,6 +1968,9 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
             safe_recipe_ids = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space).filter(
                 Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).values_list('id', flat=True)
 
+            owned_recipe_ids = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space).filter(
+                Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user)))).values_list('id', flat=True)
+
             if 'keywords_add' in serializer.validated_data:
                 safe_keyword_ids = Keyword.objects.filter(id__in=serializer.validated_data['keywords_add'], space=request.space).values_list('id', flat=True)
                 keyword_relations = []
@@ -2006,24 +2009,25 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 recipes.update(servings_text=serializer.validated_data['servings_text'])
 
             if 'private' in serializer.validated_data and serializer.validated_data['private'] is not None:
-                recipes.update(private=serializer.validated_data['private'])
+                recipes.filter(id__in=owned_recipe_ids).update(private=serializer.validated_data['private'])
 
             if 'shared_add' in serializer.validated_data:
                 shared_relation = []
                 space_user_ids = UserSpace.objects.filter(space=request.space).values_list('user_id', flat=True)
                 for r in recipes:
-                    for u in serializer.validated_data['shared_add']:
-                        if u in space_user_ids:
-                            shared_relation.append(Recipe.shared.through(recipe_id=r.pk, user_id=u))
+                    if r.pk in owned_recipe_ids:
+                        for u in serializer.validated_data['shared_add']:
+                            if u in space_user_ids:
+                                shared_relation.append(Recipe.shared.through(recipe_id=r.pk, user_id=u))
                 Recipe.shared.through.objects.bulk_create(shared_relation, ignore_conflicts=True, unique_fields=('recipe_id', 'user_id',))
 
             if 'shared_remove' in serializer.validated_data:
                 for s in serializer.validated_data['shared_remove']:
-                    Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids, user_id=s).delete()
+                    Recipe.shared.through.objects.filter(recipe_id__in=owned_recipe_ids, user_id=s).delete()
 
             if 'shared_set' in serializer.validated_data and len(serializer.validated_data['shared_set']) > 0:
                 shared_relation = []
-                Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
+                Recipe.shared.through.objects.filter(recipe_id__in=owned_recipe_ids).delete()
                 space_user_ids = UserSpace.objects.filter(space=request.space).values_list('user_id', flat=True)
                 for r in recipes:
                     for u in serializer.validated_data['shared_set']:
@@ -2032,7 +2036,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 Recipe.shared.through.objects.bulk_create(shared_relation, ignore_conflicts=True, unique_fields=('recipe_id', 'user_id',))
 
             if 'shared_remove_all' in serializer.validated_data and serializer.validated_data['shared_remove_all']:
-                Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
+                Recipe.shared.through.objects.filter(recipe_id__in=owned_recipe_ids).delete()
 
             if 'clear_description' in serializer.validated_data and serializer.validated_data['clear_description']:
                 recipes.update(description='')
@@ -2252,7 +2256,7 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
                                     | Q(entries__created_by=self.request.user)
                                     | Q(entries__created_by__in=household_ids)).distinct().all()
 
-    @decorators.action(detail=True, methods=['POST'], serializer_class=ShoppingListEntryBulkCreateSerializer, permission_classes=[CustomIsUser])
+    @decorators.action(detail=True, methods=['POST'], serializer_class=ShoppingListEntryBulkCreateSerializer, permission_classes=[CustomIsUser & CustomTokenHasReadWriteScope])
     def bulk_create_entries(self, request, pk):
         obj = self.get_object()
         if obj.get_space() != request.space:
@@ -2412,7 +2416,7 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
             return self.queryset[:1000]
 
     @decorators.action(detail=False, methods=['POST'], serializer_class=ShoppingListEntryBulkSerializer,
-                       permission_classes=[CustomIsUser])
+                       permission_classes=[CustomIsUser & CustomTokenHasReadWriteScope])
     def bulk(self, request):
         serializer = self.serializer_class(data=request.data)
 

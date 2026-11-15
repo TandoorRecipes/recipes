@@ -100,7 +100,7 @@ def export_file(request, pk):
     if not has_group_permission(request, ['user']):
         return redirect(reverse('index'))
 
-    el = get_object_or_404(ExportLog, pk=pk, space=request.space)
+    el = get_object_or_404(ExportLog, pk=pk, space=request.space, created_by=request.user)
 
     cacheData = cache.get(f'export_file_{el.pk}')
 
