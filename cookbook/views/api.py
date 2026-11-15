@@ -1911,7 +1911,9 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
         if self.request.space.demo:
             raise PermissionDenied(detail='Not available in demo', code=None)
         obj = self.get_object()
-        ingredients = request.data.get('ingredients', None)
+
+        ingredients = Ingredient.objects.filter(id__in=request.data.get('ingredients', None)).filter(
+                Q(step__recipe__private=False) | (Q(step__recipe__private=True) & (Q(step__recipe__created_by=self.request.user) | Q(step__recipe__shared=self.request.user)))).values_list('id', flat=True)
 
         servings = request.data.get('servings', None)
         list_recipe = request.data.get('list_recipe', None)
@@ -2504,7 +2506,7 @@ class CookLogViewSet(LoggingMixin, viewsets.ModelViewSet):
 class ImportLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ImportLog.objects
     serializer_class = ImportLogSerializer
-    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
