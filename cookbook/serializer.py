@@ -243,6 +243,19 @@ class SpaceFilterSerializer(serializers.ListSerializer):
 class UserSerializer(WritableNestedModelSerializer):
     display_name = serializers.SerializerMethodField('get_user_label')
 
+    def to_representation(self, instance):
+        # only return display name if user is anonymous
+        if isinstance(self.context['request'].user, AnonymousUser):
+            return {"display_name": instance.get_user_display_name()}
+        else:
+            return super().to_representation(instance)
+
+    def update(self, instance, validated_data):
+        # Prevent updates if this serializer is nested under another serializer
+        if self.parent is not None:
+            return instance
+        return super().update(instance, validated_data)
+
     @extend_schema_field(str)
     def get_user_label(self, obj):
         return obj.get_user_display_name()

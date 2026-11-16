@@ -1,6 +1,8 @@
 import io
 import os
 import tempfile
+from uuid import uuid4
+
 from django.utils import timezone
 
 import webdav3.client as wc
@@ -111,7 +113,7 @@ class Nextcloud(Provider):
     def get_file(recipe):
         client = Nextcloud.get_client(recipe.storage)
 
-        tmp_file_path = tempfile.gettempdir() + '/' + recipe.name + '.pdf'
+        tmp_file_path = tempfile.gettempdir() + '/' + str(uuid4()) + '.pdf'
 
         client.download_file(
             remote_path=recipe.file_path,
