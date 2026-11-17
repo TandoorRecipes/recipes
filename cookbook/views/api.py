@@ -2510,7 +2510,7 @@ class ImportLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.space)
+        return self.queryset.filter(space=self.request.space, created_by=self.request.user)
 
 
 class ExportLogViewSet(LoggingMixin, viewsets.ModelViewSet):

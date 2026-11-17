@@ -112,3 +112,24 @@ def test_delete(u1_s1, u1_s2, obj_1):
     assert r.status_code == 204
     with scopes_disabled():
         assert CookLog.objects.count() == 0
+
+
+def test_add_private_and_foreign(u1_s1,u2_s1, recipe_1_s2, recipe_1_s1):
+    with scopes_disabled():
+        recipe_1_s1.private = True
+        recipe_1_s1.created_by = auth.get_user(u2_s1)
+        recipe_1_s1.save()
+
+    r = u1_s1.post(
+        reverse(LIST_URL),
+        {'recipe': recipe_1_s1.id},
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+
+    r = u1_s1.post(
+        reverse(LIST_URL),
+        {'recipe': recipe_1_s2.id},
+        content_type='application/json'
+    )
+    assert r.status_code == 400

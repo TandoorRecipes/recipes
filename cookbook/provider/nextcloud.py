@@ -18,6 +18,9 @@ class Nextcloud(Provider):
 
     @staticmethod
     def get_client(storage):
+        # do a safe request first, will fail on local connections breaking the rest of the execution
+        safe_request('GET', storage.url)
+
         options = {
             'webdav_hostname': storage.url,
             'webdav_login': storage.username,

@@ -127,6 +127,20 @@ class WritableNestedModelSerializer(WNMS):
                         print('scoped model was passed to writable nested')
         return super().to_internal_value(data)
 
+class ValidateRecipeMixin:
+    def validate_recipe(self, recipe):
+        if recipe is not None:
+            if isinstance(recipe, dict):
+                recipe_id = recipe.get('id')
+                if recipe_id:
+                    recipe_obj = Recipe.objects.filter(id=recipe_id, space=self.context['request'].space).first()
+                    if recipe_obj and not has_recipe_permission(self.context['request'], recipe_obj):
+                        raise ValidationError('Permission Denied')
+            else:
+                if not has_recipe_permission(self.context['request'], recipe):
+                    raise ValidationError('Permission Denied')
+        return recipe
+
 
 class ExtendedRecipeMixin(serializers.ModelSerializer):
     # adds image and recipe count to serializer when query param extended=1
@@ -1024,7 +1038,7 @@ class FoodSimpleSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'plural_name')
 
 
-class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin, OpenDataModelMixin):
+class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin, OpenDataModelMixin, ValidateRecipeMixin):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
     shopping = serializers.CharField(source='shopping_status', read_only=True)
@@ -1626,7 +1640,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
         fields = ('id', 'book', 'book_content', 'recipe', 'recipe_content',)
 
 
-class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
+class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer, ValidateRecipeMixin):
     recipe = RecipeOverviewSerializer(required=False, allow_null=True)
     recipe_name = serializers.CharField(source='recipe.name', read_only=True)
     meal_type = MealTypeSerializer()
@@ -1637,19 +1651,6 @@ class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     addshopping = serializers.BooleanField(write_only=True, required=False)
 
     to_date = serializers.DateTimeField(required=False)
-
-    def validate_recipe(self, recipe):
-        if recipe is not None:
-            if isinstance(recipe, dict):
-                recipe_id = recipe.get('id')
-                if recipe_id:
-                    recipe_obj = Recipe.objects.filter(id=recipe_id, space=self.context['request'].space).first()
-                    if recipe_obj and not has_recipe_permission(self.context['request'], recipe_obj):
-                        raise ValidationError('Permission Denied')
-            else:
-                if not has_recipe_permission(self.context['request'], recipe):
-                    raise ValidationError('Permission Denied')
-        return recipe
 
     @extend_schema_field(str)
     def get_note_markdown(self, obj):
@@ -1733,7 +1734,7 @@ class AutoMealPlanSerializer(serializers.Serializer):
     addshopping = serializers.BooleanField()
 
 
-class ShoppingListRecipeSerializer(serializers.ModelSerializer):
+class ShoppingListRecipeSerializer(serializers.ModelSerializer, ValidateRecipeMixin):
     recipe_data = RecipeOverviewSerializer(source='recipe', read_only=True, required=False)
     meal_plan_data = MealPlanSerializer(source='mealplan', read_only=True, required=False)
     servings = CustomDecimalField()
@@ -1743,11 +1744,6 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         if not has_meal_plan_permission(self.context['request'], mealplan):
             raise ValidationError('Permission Denied')
         return mealplan
-
-    def validate_recipe(self, recipe):
-        if not has_recipe_permission(self.context['request'], recipe):
-            raise ValidationError('Permission Denied')
-        return recipe
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -1935,7 +1931,7 @@ class ShareLinkSerializer(SpacedModelSerializer):
         fields = '__all__'
 
 
-class CookLogSerializer(serializers.ModelSerializer):
+class CookLogSerializer(serializers.ModelSerializer, ValidateRecipeMixin):
     created_by = UserSerializer(read_only=True)
 
     def create(self, validated_data):
@@ -1949,7 +1945,8 @@ class CookLogSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_by')
 
 
-class ViewLogSerializer(serializers.ModelSerializer):
+class ViewLogSerializer(serializers.ModelSerializer, ValidateRecipeMixin):
+
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space

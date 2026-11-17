@@ -864,7 +864,7 @@ class Food(ExportModelOperationsMixin('food'), TreeModel, PermissionModelMixin):
 
         # remove all inherited fields from food
         through = Food.inherit_fields.through
-        through.objects.all().delete()
+        through.objects.filter(food__space=space).all().delete()
 
         # food is going to inherit attributes
         if len(inherit) > 0:
