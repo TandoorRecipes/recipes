@@ -285,3 +285,36 @@ def test_case5_recipe_book_custom_filter_isolation(space_1, g1_s1, u1_s1, u2_s1)
     assert r.status_code == 201
     res = json.loads(r.content)
     assert res['filter']['id'] == guest_filter.id
+
+
+def test_cant_write_nested_user(u1_s1, u1_s2, space_1):
+    u1_s1_user = auth.get_user(u1_s1)
+    u2_s2_user = auth.get_user(u1_s2)
+
+    url = reverse('api:recipebook-list')
+
+    # attemt to change a foreign user by sending a nested object
+    r = u1_s1.post(
+        url,
+        {
+            'name': 'Guest Book',
+            'shared': [
+                {'id': u1_s1_user.id, 'first_name': 'CHANGED_BY_API_CALL'},
+                {'id': u2_s2_user.id, 'first_name': 'CHANGED_BY_API_CALL'},
+            ],
+            'filter': None
+        },
+        content_type='application/json'
+    )
+
+    # book should be created
+    assert r.status_code == 201
+
+    # user should not be changed
+    u2_s2_user.refresh_from_db()
+    assert u2_s2_user.first_name != 'CHANGED_BY_API_CALL'
+
+    # shared list should be emtpy because you should not be able to share to foreign space
+    res = json.loads(r.content)
+    assert len(res['shared']) == 1
+    assert res['shared'][0]['id'] == u1_s1_user.id

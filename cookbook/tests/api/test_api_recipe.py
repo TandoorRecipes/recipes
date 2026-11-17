@@ -55,7 +55,7 @@ def test_list_space(recipe_1_s1, u1_s1, u1_s2, space_2):
     assert len(json.loads(u1_s2.get(reverse(LIST_URL)).content)['results']) == 1
 
 
-def test_share_permission(recipe_1_s1,ext_recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u, space_1):
+def test_share_permission(recipe_1_s1, ext_recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u, space_1):
     # Same space user can access
     assert u1_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 200
     # Different space user cannot access without share link
@@ -103,7 +103,7 @@ def test_share_permission(recipe_1_s1,ext_recipe_1_s1, u1_s1, u1_s2, u2_s1, a_u,
 
         ext_recipe_1_s1.shared.add(auth.get_user(u2_s1))
         ext_recipe_1_s1.save()
-    
+
     assert u2_s1.get(reverse(DETAIL_URL, args=[recipe_1_s1.pk])).status_code == 200
     assert u2_s1.get(reverse('api_get_recipe_file', args=[recipe_1_s1.pk])).status_code == 200
     assert u2_s1.get(reverse('api_get_external_file_link', args=[ext_recipe_1_s1.pk])).status_code == 200
@@ -314,3 +314,44 @@ def test_batch_update_keywords(u1_s1, space_1, space_2, recipe_1_s1):
 
     with scopes_disabled():
         assert recipe_1_s1.keywords.count() == 0
+
+
+def test_private_recipe_nested_permission(u1_s1, u2_s1, space_1, space_2, recipe_1_s1, recipe_2_s1, recipe_1_s2):
+    private_step_id = 0
+    private_recipe = recipe_2_s1
+    with scopes_disabled():
+        private_recipe.private = True
+        private_recipe.created_by = auth.get_user(u2_s1)
+        private_recipe.save()
+        private_step_id = private_recipe.steps.first().id
+        normal_step_id = recipe_1_s1.steps.first().id
+        space2_step_id = recipe_1_s2.steps.first().id
+
+        private_ingredient_id = private_recipe.steps.first().ingredients.first().id
+        normal_ingredient_id = recipe_1_s1.steps.first().ingredients.first().id
+        space2_ingredient_id = recipe_1_s2.steps.first().ingredients.first().id
+
+    r = u1_s1.patch(reverse(DETAIL_URL, args={recipe_1_s1.id}), {'steps': [{'id': space2_step_id, 'name': 'space2_step_id', 'ingredients': []}, ]}, content_type='application/json')
+    assert r.status_code == 400
+
+    r = u1_s1.patch(reverse(DETAIL_URL, args={recipe_1_s1.id}), {'steps': [{'id': private_step_id, 'name': 'private_step_id', 'ingredients': []}, ]},
+                    content_type='application/json')
+    assert r.status_code == 400
+
+    r = u1_s1.patch(reverse(DETAIL_URL, args={recipe_1_s1.id}), {'steps': [{'id': normal_step_id, 'name': 'normal_step_id', 'ingredients': []}, ]}, content_type='application/json')
+    assert r.status_code == 200
+
+    r = u1_s1.patch(reverse(DETAIL_URL, args={recipe_1_s1.id}),
+                    {'steps': [{'id': normal_step_id, 'name': 'normal_step_id', 'ingredients': [{'id': space2_ingredient_id, 'note': 'space2_ingredient_id'}]}, ]},
+                    content_type='application/json')
+    assert r.status_code == 400
+
+    r = u1_s1.patch(reverse(DETAIL_URL, args={recipe_1_s1.id}),
+                    {'steps': [{'id': normal_step_id, 'name': 'normal_step_id', 'ingredients': [{'id': private_ingredient_id, 'note': 'private_ingredient_id'}]}, ]},
+                    content_type='application/json')
+    assert r.status_code == 400
+
+    r = u1_s1.patch(reverse(DETAIL_URL, args={recipe_1_s1.id}),
+                    {'steps': [{'id': normal_step_id, 'name': 'normal_step_id', 'ingredients': [{'id': normal_ingredient_id, 'note': 'normal_ingredient_id'}]}, ]},
+                    content_type='application/json')
+    assert r.status_code == 200

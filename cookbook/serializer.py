@@ -250,9 +250,12 @@ class UserSerializer(WritableNestedModelSerializer):
         else:
             return super().to_representation(instance)
 
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
     def update(self, instance, validated_data):
-        # Prevent updates if this serializer is nested under another serializer
-        if self.parent is not None:
+        # Prevent updates if this is not called by the endpoint itself
+        if self.context['view'].basename != 'user':
             return instance
         return super().update(instance, validated_data)
 
@@ -1182,10 +1185,24 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
-    def validate_step_recipe(self, recipe):
-        if recipe and not has_recipe_permission(self.context['request'], recipe):
+    def validate_ingredients(self, ingredients):
+        if hasattr(self, 'initial_data') and 'ingredients' in self.initial_data:
+            ingredients = self.initial_data.get('ingredients')
+            ids = [s['id'] for s in ingredients if 'id' in s]
+
+            allowed_ids = Ingredient.objects.filter(space=self.context['request'].space, id__in=ids).filter(
+                Q(step__recipe__private=False) | Q(step__recipe__isnull=True) | Q(step__recipe__created_by=self.context['request'].user) | Q(
+                    step__recipe__shared=self.context['request'].user)).values_list(
+                'id', flat=True)
+
+            if len(set(ids) - set(allowed_ids)) > 0:
+                raise serializers.ValidationError("Forbidden")
+
+    # check the permission for sub recipes as well
+    def validate_step_recipe(self, step_recipe):
+        if step_recipe and not has_recipe_permission(self.context['request'], step_recipe):
             raise Http404()
-        return recipe
+        return step_recipe
 
     @extend_schema_field(str)
     def get_instructions_markdown(self, obj):
@@ -1338,14 +1355,17 @@ class RecipeSerializer(RecipeBaseSerializer):
         fph = FoodPropertyHelper(obj.space)  # initialize with object space since recipes might be viewed anonymously
         return fph.calculate_recipe_properties(obj)
 
-    class Meta:
-        model = Recipe
-        fields = (
-            'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
-            'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings', 'file_path', 'servings_text', 'diameter', 'diameter_text', 'rating',
-            'last_cooked', 'private', 'shared'
-        )
-        read_only_fields = ['image', 'created_by', 'created_at', 'food_properties', 'file_path', ]
+    def validate_steps(self, steps):
+        if hasattr(self, 'initial_data') and 'steps' in self.initial_data:
+            steps = self.initial_data.get('steps')
+            step_ids = [s['id'] for s in steps if 'id' in s]
+
+            allowed_ids = Step.objects.filter(space=self.context['request'].space, id__in=step_ids).filter(
+                Q(recipe__private=False) | Q(recipe__isnull=True) | Q(recipe__created_by=self.context['request'].user) | Q(recipe__shared=self.context['request'].user)).values_list(
+                'id', flat=True)
+
+            if len(set(step_ids) - set(allowed_ids)) > 0:
+                raise serializers.ValidationError("Forbidden")
 
     def validate(self, data):
         above_limit, msg = above_space_limit(self.context['request'].space)
@@ -1357,6 +1377,15 @@ class RecipeSerializer(RecipeBaseSerializer):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
+            'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings', 'file_path', 'servings_text', 'diameter', 'diameter_text', 'rating',
+            'last_cooked', 'private', 'shared'
+        )
+        read_only_fields = ['image', 'created_by', 'created_at', 'food_properties', 'file_path', ]
 
 
 class RecipeImageSerializer(WritableNestedModelSerializer):

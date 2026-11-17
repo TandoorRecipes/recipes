@@ -219,6 +219,10 @@ def recipe_2_s1(space_1, u1_s1):
 
 
 @pytest.fixture
+def recipe_1_s2(space_2, u1_s1):
+    return get_random_recipe(space_2, u1_s1)
+
+@pytest.fixture
 def ext_recipe_1_s1(space_1, u1_s1):
     r = get_random_recipe(space_1, u1_s1)
     r.internal = False
