@@ -1,13 +1,18 @@
 import uuid
+from concurrent.futures import ThreadPoolExecutor
 from datetime import timedelta
+from threading import Barrier
 
 import pytest
 from django.contrib.auth.models import Group, User
+from django.core.exceptions import PermissionDenied
+from django.db import close_old_connections
 from django.test import RequestFactory, override_settings
 from django.utils import timezone
 from django_scopes import scopes_disabled
 
 from cookbook.helper.AllAuthCustomAdapter import AllAuthCustomAdapter
+from cookbook.helper.permission_helper import process_invite_token
 from cookbook.helper.social_adapter import TandoorSocialAccountAdapter, _mask_email
 from cookbook.models import InviteLink, Space, UserSpace
 
@@ -362,3 +367,136 @@ def test_on_authentication_error_includes_chained_cause(rf, tmp_path):
     assert 'JWT audience mismatch' in errors[0]['exception']
     assert 'Invalid id_token' in errors[0]['exception']
     assert '→' in errors[0]['exception']
+
+
+# ---------------------- INVITE TOKEN SECURITY TESTS -----------------------
+
+
+def test_single_use_invite_cannot_be_claimed_by_two_users(invite_link, invite_space):
+    """A single-use invite must only grant membership to its first user."""
+    first_user = User.objects.create_user(username='first_invitee', password='test')
+    second_user = User.objects.create_user(username='second_invitee', password='test')
+
+    with scopes_disabled():
+        first_result = process_invite_token(first_user, str(invite_link.uuid))
+        second_result = process_invite_token(second_user, str(invite_link.uuid))
+
+        invite_link.refresh_from_db()
+
+        assert first_result is True
+        assert second_result is False
+        assert invite_link.used_by == first_user
+
+        assert UserSpace.objects.filter(
+            user=first_user,
+            space=invite_space,
+        ).count() == 1
+
+        assert not UserSpace.objects.filter(
+            user=second_user,
+            space=invite_space,
+        ).exists()
+
+
+def test_reusable_invite_can_be_used_by_multiple_users(invite_link, invite_space):
+    """Reusable invite links must remain usable by multiple users."""
+    invite_link.reusable = True
+    invite_link.save()
+
+    first_user = User.objects.create_user(username='reusable_first', password='test')
+    second_user = User.objects.create_user(username='reusable_second', password='test')
+
+    with scopes_disabled():
+        first_result = process_invite_token(first_user, str(invite_link.uuid))
+        second_result = process_invite_token(second_user, str(invite_link.uuid))
+
+        invite_link.refresh_from_db()
+
+        assert first_result is True
+        assert second_result is True
+        assert invite_link.used_by is None
+
+        assert UserSpace.objects.filter(
+            space=invite_space,
+            user__in=[first_user, second_user],
+        ).count() == 2
+
+
+def test_invite_claim_is_rolled_back_if_membership_creation_fails(
+    invite_link,
+    monkeypatch,
+):
+    """A failed membership creation must not consume a single-use invite."""
+    user = User.objects.create_user(username='rollback_invitee', password='test')
+
+    def fail_membership_creation(*args, **kwargs):
+        raise RuntimeError('Simulated membership creation failure')
+
+    monkeypatch.setattr(
+        UserSpace.objects,
+        'create',
+        fail_membership_creation,
+    )
+
+    with scopes_disabled():
+        with pytest.raises(RuntimeError, match='Simulated membership creation failure'):
+            process_invite_token(user, str(invite_link.uuid))
+
+        invite_link.refresh_from_db()
+        assert invite_link.used_by is None
+
+
+@pytest.mark.django_db(transaction=True)
+def test_single_use_invite_race_creates_exactly_one_membership(invite_link, invite_space):
+    """Concurrent claims of one invite must result in one successful membership."""
+    first_user = User.objects.create_user(username='racing_first', password='test')
+    second_user = User.objects.create_user(username='racing_second', password='test')
+    barrier = Barrier(2)
+
+    def claim_invite(user_id):
+        close_old_connections()
+        try:
+            with scopes_disabled():
+                user = User.objects.get(pk=user_id)
+            barrier.wait(timeout=10)
+            with scopes_disabled():
+                return process_invite_token(user, str(invite_link.uuid))
+        finally:
+            close_old_connections()
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        results = list(executor.map(claim_invite, [first_user.pk, second_user.pk]))
+
+    assert sorted(results) == [False, True]
+    with scopes_disabled():
+        assert UserSpace.objects.filter(
+            invite_link=invite_link,
+            space=invite_space,
+        ).count() == 1
+
+
+def test_signup_rolls_back_when_invite_claim_fails(adapter, signup_request, invite_link, monkeypatch):
+    """A signup must not persist when the invite is lost to a concurrent claim."""
+    import importlib
+
+    module = importlib.import_module('cookbook.helper.AllAuthCustomAdapter')
+
+    class Session(dict):
+        modified = False
+
+    signup_request.session = Session(signup_token=str(invite_link.uuid))
+    user = User(username='rejected_invitee')
+
+    def save_user(self, request, user, form):
+        user.save()
+        return user
+
+    monkeypatch.setattr(AllAuthCustomAdapter.__mro__[1], 'save_user', save_user)
+    monkeypatch.setattr(module, 'create_space_for_user', lambda user: None)
+    monkeypatch.setattr(module, 'process_invite_token', lambda user, token: False)
+
+    with scopes_disabled():
+        with pytest.raises(PermissionDenied):
+            adapter.save_user(signup_request, user, form=None)
+
+        assert not User.objects.filter(username='rejected_invitee').exists()
