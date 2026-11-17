@@ -124,7 +124,6 @@ class WritableNestedModelSerializer(WNMS):
 
                         # Retain only valid entries while safely handling missing 'id' keys
                         data[f] = [x for x in data[f] if 'id' not in x or x.get('id') in allowed_set]
-                        print('scoped model was passed to writable nested')
         return super().to_internal_value(data)
 
 class ValidateRecipeMixin:
