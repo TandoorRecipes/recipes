@@ -219,6 +219,8 @@ class MergeModelMixin:
 
 
 class PermissionModelMixin:
+    scoped_model = True
+
     @staticmethod
     def get_space_key():
         return ('space',)

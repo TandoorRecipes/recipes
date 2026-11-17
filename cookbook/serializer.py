@@ -72,16 +72,37 @@ class WritableNestedModelSerializer(WNMS):
 
     # overload to_internal_value to allow using PK only on nested object
     def to_internal_value(self, data):
+        """
+        override default to_internal_value to facilitate two things
+        - check that spaced models do not escape scope trough writable nested serializer
+        - allow writing IDs into nested serializers without having the object
+        :param data: dict that was passed to the serializer
+        :return: object from dict (trough super call)
+        """
         # iterate through every field on the posted object
         for f in list(data):
             if f not in self.fields:
                 continue
             elif issubclass(self.fields[f].__class__, serializers.Serializer):
+                required_fields = ['id'] + [field_name for field_name, field in self.fields[f].__class__().fields.items() if field.required]
                 # if the field is a serializer and an integer, assume its an ID of an existing object
                 if isinstance(data[f], int):
-                    # only retrieve serializer required fields
-                    required_fields = ['id'] + [field_name for field_name, field in self.fields[f].__class__().fields.items() if field.required]
-                    data[f] = model_to_dict(self.fields[f].Meta.model.objects.get(id=data[f]), fields=required_fields)
+                    # retrieve from DB based on ID
+                    if hasattr(self.fields[f].Meta.model, 'scoped_model'):
+                        instance = self.fields[f].Meta.model.objects.filter(id=data[f], space=self.context['request'].space).first()
+                    else:
+                        instance = self.fields[f].Meta.model.objects.filter(id=data[f]).first()
+
+                    # if instance exists (on space) return back to dict and keep data, else discard
+                    if instance:
+                        data[f] = model_to_dict(instance, fields=required_fields)
+                    else:
+                        del data[f]
+                else:
+                    if hasattr(self.fields[f].Meta.model, 'scoped_model') and 'id' in data[f]:
+                        # if its a scoped model but the given ID does not exist in the space, remove from request as if it was never passed
+                        if not self.fields[f].Meta.model.objects.filter(id=data[f]['id'], space=self.context['request'].space).exists():
+                            del data[f]
             elif issubclass(self.fields[f].__class__, serializers.ListSerializer):
                 # if the field is a ListSerializer get dict values of PKs provided
                 if any(isinstance(x, int) for x in data[f]):
@@ -90,8 +111,20 @@ class WritableNestedModelSerializer(WNMS):
                     # filter values to integer values
                     pk_data = [x for x in data[f] if isinstance(x, int)]
                     # merge non-pk values with retrieved values
-                    data[f] = [x for x in data[f] if not isinstance(x, int)] \
-                              + list(self.fields[f].child.Meta.model.objects.filter(id__in=pk_data).values(*required_fields))
+                    if hasattr(self.fields[f].child.Meta.model, 'scoped_model'):
+                        data[f] = [x for x in data[f] if not isinstance(x, int)] \
+                                  + list(self.fields[f].child.Meta.model.objects.filter(id__in=pk_data, space=self.context['request'].space).values(*required_fields))
+                    else:
+                        data[f] = [x for x in data[f] if not isinstance(x, int)] \
+                                  + list(self.fields[f].child.Meta.model.objects.filter(id__in=pk_data).values(*required_fields))
+                else:
+                    if hasattr(self.fields[f].child.Meta.model, 'scoped_model'):
+                        # find set of allowed IDs from given ID's
+                        allowed_set = set(self.fields[f].child.Meta.model.objects.filter(id__in=[x['id'] for x in data[f] if 'id' in x]).values_list('id', flat=True))
+
+                        # Retain only valid entries while safely handling missing 'id' keys
+                        data[f] = [x for x in data[f] if 'id' not in x or x.get('id') in allowed_set]
+                        print('scoped model was passed to writable nested')
         return super().to_internal_value(data)
 
 
@@ -555,7 +588,7 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
     household = HouseholdSerializer(allow_null=True, required=False)
 
     def validate(self, data):
-        if len(data['groups']) == 0:
+        if 'groups' in data and len(data['groups']) == 0:
             raise ValidationError(_('You must select at least one group.'))
         return super().validate(data)
 
@@ -1186,6 +1219,10 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         return super().create(validated_data)
 
     def validate_ingredients(self, ingredients):
+        """
+        extra validator for ingredients to not only check for space (which is done by generic writable nested serializer)
+        but also check that the object does not belong to a private recipe that the user does not have access to
+        """
         if hasattr(self, 'initial_data') and 'ingredients' in self.initial_data:
             ingredients = self.initial_data.get('ingredients')
             ids = [s['id'] for s in ingredients if 'id' in s]
@@ -1356,12 +1393,17 @@ class RecipeSerializer(RecipeBaseSerializer):
         return fph.calculate_recipe_properties(obj)
 
     def validate_steps(self, steps):
+        """
+        extra validator for ingredients to not only check for space (which is done by generic writable nested serializer)
+         but also check that the object does not belong to a private recipe that the user does not have access to
+         """
         if hasattr(self, 'initial_data') and 'steps' in self.initial_data:
             steps = self.initial_data.get('steps')
             step_ids = [s['id'] for s in steps if 'id' in s]
 
             allowed_ids = Step.objects.filter(space=self.context['request'].space, id__in=step_ids).filter(
-                Q(recipe__private=False) | Q(recipe__isnull=True) | Q(recipe__created_by=self.context['request'].user) | Q(recipe__shared=self.context['request'].user)).values_list(
+                Q(recipe__private=False) | Q(recipe__isnull=True) | Q(recipe__created_by=self.context['request'].user) | Q(
+                    recipe__shared=self.context['request'].user)).values_list(
                 'id', flat=True)
 
             if len(set(step_ids) - set(allowed_ids)) > 0:

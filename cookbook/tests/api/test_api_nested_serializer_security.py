@@ -1,12 +1,13 @@
 import json
 import pytest
 from django.contrib import auth
+from django.db.models import Model
 from django.urls import reverse
 from django_scopes import scopes_disabled
 
 from cookbook.models import (
     CustomFilter, Food, Household, InventoryEntry, InventoryLocation,
-    MealPlan, MealType, Recipe, RecipeBook, ShoppingList, ShoppingListEntry
+    MealPlan, MealType, Recipe, RecipeBook, ShoppingList, ShoppingListEntry, UserSpace
 )
 
 
@@ -318,3 +319,49 @@ def test_cant_write_nested_user(u1_s1, u1_s2, space_1):
     res = json.loads(r.content)
     assert len(res['shared']) == 1
     assert res['shared'][0]['id'] == u1_s1_user.id
+
+
+def test_can_nested_fk_escape_space(o_s1, space_1, space_2):
+    user_space_id = 0
+    with scopes_disabled():
+        household_space_1 = Household.objects.create(name='Household Space 1', space=space_1)
+        household_space_2 = Household.objects.create(name='Household Space 2', space=space_2)
+        user_space_id = UserSpace.objects.get(user=auth.get_user(o_s1)).id
+
+    url = reverse('api:userspace-detail', args=[user_space_id])
+    r = o_s1.patch(
+        url,
+        {'household': {'id': household_space_2.id, 'name': 'Hacked Household S2'}, 'groups': [{'id': 3, 'name': 'admin'}] },
+        content_type='application/json'
+    )
+    assert r.status_code == 200
+    response = json.loads(r.content)
+    print(response)
+    assert response['household'] == None
+
+    with scopes_disabled():
+        household_space_2.refresh_from_db()
+        assert household_space_2.name != 'Hacked Household S2'
+
+
+def test_can_nested_m2m_escape_space(u1_s1, space_1, space_2):
+    with scopes_disabled():
+        food_space_1 = Food.objects.create(name='Food Space 1', space=space_1)
+        food_space_2 = Food.objects.create(name='Food Space 2', space=space_2)
+
+    url = reverse('api:food-detail', args=[food_space_1.id])
+    r = u1_s1.patch(
+        url,
+        {'substitute': [{'id': food_space_2.id, 'name': 'Hacked Food S2'}]},
+        content_type='application/json'
+    )
+    assert r.status_code == 200
+    response = json.loads(r.content)
+    print(response)
+    assert response['substitute'] == []
+
+    with scopes_disabled():
+        food_space_2.refresh_from_db()
+        assert food_space_2.name != 'Hacked Food S2'
+        food_space_1.refresh_from_db()
+        assert not food_space_1.substitute.filter(id=food_space_2.id).exists()

@@ -339,6 +339,22 @@ def s1_s1(client, space_1):
 
 
 @pytest.fixture()
+def o_s1(client, space_1):
+    client = create_user(client, space_1, group='admin')
+    user = auth.get_user(client)
+    space_1.created_by = user
+    space_1.save()
+    return client
+
+@pytest.fixture()
+def o_s2(client, space_2):
+    client = create_user(client, space_2, group='admin')
+    user = auth.get_user(client)
+    space_2.created_by = user
+    space_2.save()
+    return client
+
+@pytest.fixture()
 def household_1(space_1):
     with scopes_disabled():
         return HouseholdFactory(space=space_1)
