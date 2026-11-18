@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django_scopes import scopes_disabled
 
-from cookbook.models import ShoppingListEntry, ShoppingListRecipe, Food, Unit, Ingredient, ShoppingList, MealType, MealPlan
+from cookbook.models import ShoppingListEntry, ShoppingListRecipe, Food, Unit, Ingredient, ShoppingList, MealType, MealPlan, UserSpace
 
 LIST_URL = 'api:shoppinglistrecipe-list'
 DETAIL_URL = 'api:shoppinglistrecipe-detail'
@@ -46,6 +46,23 @@ def test_add(arg, request, obj_1, recipe_1_s1):
     assert r.status_code == arg[1]
     if r.status_code == 201:
         assert response['recipe'] == recipe_1_s1.pk
+
+
+@pytest.mark.parametrize('in_household, expected', [(True, 201), (False, 400)])
+def test_add_mealplan_of_other_users_household(space_1, u1_s1, u2_s1, household_1, recipe_1_s1, in_household, expected):
+    owner = auth.get_user(u1_s1)
+    member = auth.get_user(u2_s1)
+    with scopes_disabled():
+        for user_space in UserSpace.objects.filter(space=space_1, user__in=[owner, member] if in_household else [owner]):
+            user_space.household = household_1
+            user_space.save()
+        meal_type = MealType.objects.create(name='Lunch', created_by=owner, space=space_1)
+        mealplan = MealPlan.objects.create(recipe=recipe_1_s1, meal_type=meal_type, from_date=timezone.now(), to_date=timezone.now(),
+                                           created_by=owner, space=space_1)
+
+    r = u2_s1.post(reverse(LIST_URL), {'mealplan': mealplan.pk, 'servings': 1}, content_type='application/json')
+
+    assert r.status_code == expected
 
 
 def test_delete(u1_s1, u1_s2, obj_1):
