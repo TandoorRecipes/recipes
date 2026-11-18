@@ -205,10 +205,36 @@ class Integration:
                             il.total_recipes += len(file_list)
 
                         if isinstance(self, cookbook.integration.cookmate.Cookmate):
+                            # Safe upper bounds to preserve server stability and prevent memory exhaustion
+                            MAX_IMPORT_RECIPES = 1000
+                            MAX_TOTAL_XML_BYTES = 50 * 1024 * 1024  # 50 MB uncompressed XML limit
+
                             new_file_list = []
+                            total_bytes_read = 0
+                            budget_exceeded = False
+
                             for file in file_list:
+                                # Check cumulative raw byte budget before reading/parsing
+                                file_bytes = self.safe_read(import_zip, file.filename)
+                                total_bytes_read += len(file_bytes)
+
+                                if total_bytes_read > MAX_TOTAL_XML_BYTES:
+                                    il.msg += f'WARNING: Cumulative file size exceeded {MAX_TOTAL_XML_BYTES // (1024 * 1024)} MB limit. Remaining files skipped.\n'
+                                    break
+
                                 parser = etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False)
-                                new_file_list += etree.parse(BytesIO(self.safe_read(import_zip, file.filename)), parser=parser).getroot().getchildren()
+                                file_root = etree.parse(BytesIO(file_bytes), parser=parser).getroot()
+
+                                for child in file_root.iterchildren():
+                                    if len(new_file_list) >= MAX_IMPORT_RECIPES:
+                                        il.msg += f'WARNING: Recipe import limit reached ({MAX_IMPORT_RECIPES} recipes). Additional recipes in file skipped.\n'
+                                        budget_exceeded = True
+                                        break
+
+                                    new_file_list.append(child)
+
+                                if budget_exceeded:
+                                    break
                             il.total_recipes = len(new_file_list)
                             file_list = new_file_list
 

@@ -82,7 +82,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, Cus
                                                above_space_limit,
                                                has_group_permission, is_space_owner,
                                                switch_user_active_space, CustomAiProviderPermission, IsCreateDRF, CustomIsOwnerDestroyOnly, CustomIsHousehold,
-                                               get_household_user_ids)
+                                               get_household_user_ids, has_recipe_permission)
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
@@ -2277,6 +2277,7 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
             safe_unit_ids = set(Unit.objects.filter(space_id=request.space.id, id__in=requested_unit_ids).values_list('id', flat=True))
             safe_food_ids = set(Food.objects.filter(space_id=request.space.id, id__in=requested_food_ids).values_list('id', flat=True))
             safe_ingredient_ids = set(Ingredient.objects.filter(space_id=request.space.id, id__in=requested_ingredient_ids).values_list('id', flat=True))
+            safe_shopping_list_ids = set(ShoppingList.objects.filter(space_id=request.space.id, id__in=shopping_lists_ids).values_list('id', flat=True))
 
             entries = []
             for e in entries_data:
@@ -2300,9 +2301,9 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
             created_entries = ShoppingListEntry.objects.bulk_create(entries)
 
             list_relations = []
-            if shopping_lists_ids:
+            if safe_shopping_list_ids:
                 for e in created_entries:
-                    for sLId in shopping_lists_ids:
+                    for sLId in safe_shopping_list_ids:
                         list_relations.append(ShoppingListEntry.shopping_lists.through(shoppinglistentry_id=e.pk, shoppinglist_id=sLId))
             else:
                 food_to_lists = {}
@@ -3200,7 +3201,7 @@ def switch_active_space(request, space_id):
         space = get_object_or_404(Space, id=space_id)
         user_space = switch_user_active_space(request.user, space)
         if user_space:
-            return Response(UserSpaceSerializer().to_representation(instance=user_space), status=status.HTTP_200_OK)
+            return Response(UserSpaceSerializer(context={'request': request}).to_representation(instance=user_space), status=status.HTTP_200_OK)
         else:
             return Response("not found", status=status.HTTP_404_NOT_FOUND)
     except Exception:
@@ -3513,9 +3514,8 @@ def share_link(request, pk):
     if request.space.allow_sharing and has_group_permission(request, ('user',)):
         recipe = get_object_or_404(Recipe, pk=pk)
         # manual object permission check for FBV
-        for permission in [CustomRecipePermission()]:
-            if not permission.has_object_permission(request, share_link, recipe):
-                raise PermissionDenied()
+        if not has_recipe_permission(request, recipe, allow_shared=False):
+            raise PermissionDenied()
 
         link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
         return JsonResponse({'pk': pk, 'share': link.uuid,

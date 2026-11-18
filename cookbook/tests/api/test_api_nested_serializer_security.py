@@ -365,3 +365,20 @@ def test_can_nested_m2m_escape_space(u1_s1, space_1, space_2):
         assert food_space_2.name != 'Hacked Food S2'
         food_space_1.refresh_from_db()
         assert not food_space_1.substitute.filter(id=food_space_2.id).exists()
+
+def test_can_add_foreign_user_to_shared(u1_s1, u1_s2, space_1):
+    with scopes_disabled():
+        book = RecipeBook.objects.create(space=space_1, created_by=auth.get_user(u1_s1), name='Test Recipe Book')
+
+    url = reverse('api:recipebook-detail', args=[book.id])
+    r = u1_s1.patch(
+        url,
+        {'shared': [{'id': auth.get_user(u1_s2).id,}]},
+        content_type='application/json'
+    )
+
+    # status is ok but shared set is filtered on the server to exclude foreign users
+    assert r.status_code == 200
+    with scopes_disabled():
+        book.refresh_from_db()
+        assert len(book.shared.all()) == 0
