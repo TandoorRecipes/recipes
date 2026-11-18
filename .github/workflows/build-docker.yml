@@ -86,6 +86,7 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           pull: true
+          no-cache: true
           push: ${{ github.secret_source == 'Actions' }}
           platforms: ${{ matrix.platforms }}
           tags: ${{ steps.meta.outputs.tags }}
