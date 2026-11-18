@@ -1,12 +1,87 @@
+import ipaddress
 import re
+import socket
 from decimal import Decimal
+from urllib.parse import urlparse
 
 from django.utils import timezone
 from django.db.models import Sum
-from litellm import CustomLogger
+from litellm import CustomLogger, get_llm_provider
 
 from cookbook.models import AiLog
 from recipes import settings
+
+
+PUBLIC_DEFAULT_PROVIDERS = {
+    'openai',
+    'text-completion-openai',
+    'anthropic',
+    'gemini',
+    'vertex_ai',
+    'bedrock',
+    'azure',
+    'azure_ai',
+    'cohere',
+    'cohere_chat',
+    'openrouter',
+    'mistral',
+    'ai21',
+    'huggingface',
+    'watsonx',
+    'sagemaker',
+}
+
+
+def _is_local_url(url):
+    host = urlparse(url).hostname
+    if not host:
+        return True
+
+    try:
+        addresses = [ipaddress.ip_address(host)]
+    except ValueError:
+        try:
+            resolved_addresses = socket.getaddrinfo(host, None)
+            addresses = [ipaddress.ip_address(result[4][0]) for result in resolved_addresses]
+        except (OSError, ValueError, IndexError):
+            return True
+
+    return not addresses or any(not address.is_global for address in addresses)
+
+
+def get_ai_api_base(ai_provider):
+    if ai_provider.url:
+        if ai_provider.url not in settings.AI_ALLOWED_URLS:
+            raise ValueError(f'AI provider URL not allowed: {ai_provider.url}')
+        return ai_provider.url
+
+    try:
+        _, provider, _, api_base = get_llm_provider(model=ai_provider.model_name)
+    except Exception as error:
+        raise ValueError(f'Unknown AI model/provider: {ai_provider.model_name}') from error
+
+    if api_base:
+        if api_base not in settings.AI_ALLOWED_URLS and _is_local_url(api_base):
+            raise ValueError(f'AI provider "{provider}" uses local URL {api_base}; add it to AI_ALLOWED_URLS')
+        return api_base
+
+    if provider not in PUBLIC_DEFAULT_PROVIDERS:
+        raise ValueError(f'AI provider "{provider}" requires an explicit, allowed URL')
+
+    return None
+
+
+def build_ai_request(ai_provider, messages, **extra):
+    ai_request = {
+        'api_key': ai_provider.api_key,
+        'model': ai_provider.model_name,
+        'messages': messages,
+        **extra,
+    }
+    api_base = get_ai_api_base(ai_provider)
+    if api_base:
+        ai_request['api_base'] = api_base
+    return ai_request
 
 
 def get_monthly_token_usage(space):

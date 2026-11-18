@@ -124,13 +124,14 @@ class ScopeMiddleware:
                         # if the user could be authenticated annotate the space to the request
                         if auth := authenticator.authenticate(request):
                             user = auth[0]
-                            request.user = user
-                            user_space = user.userspace_set.filter(active=True).first()
-                            if user_space:
-                                request.space = user_space.space
-                                request.user_space = user_space
-                                with scope(space=request.space):
-                                    return self.get_response(request)
+                            if user.is_active:
+                                request.user = user
+                                user_space = user.userspace_set.filter(active=True).first()
+                                if user_space:
+                                    request.space = user_space.space
+                                    request.user_space = user_space
+                                    with scope(space=request.space):
+                                        return self.get_response(request)
                     except Exception:
                         pass
 

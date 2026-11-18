@@ -98,10 +98,13 @@ class WritableNestedModelSerializer(WNMS):
                         data[f] = model_to_dict(instance, fields=required_fields)
                     else:
                         del data[f]
-                else:
+                elif data[f]:
                     if hasattr(self.fields[f].Meta.model, 'scoped_model') and 'id' in data[f]:
                         # if its a scoped model but the given ID does not exist in the space, remove from request as if it was never passed
                         if not self.fields[f].Meta.model.objects.filter(id=data[f]['id'], space=self.context['request'].space).exists():
+                            del data[f]
+                    elif self.fields[f].Meta.model.__name__ == 'User':
+                        if not UserSpace.objects.filter(user_id=data[f]['id'], space=self.context['request'].space).exists():
                             del data[f]
             elif issubclass(self.fields[f].__class__, serializers.ListSerializer):
                 # if the field is a ListSerializer get dict values of PKs provided
@@ -117,10 +120,16 @@ class WritableNestedModelSerializer(WNMS):
                     else:
                         data[f] = [x for x in data[f] if not isinstance(x, int)] \
                                   + list(self.fields[f].child.Meta.model.objects.filter(id__in=pk_data).values(*required_fields))
-                else:
+                elif data[f]:
                     if hasattr(self.fields[f].child.Meta.model, 'scoped_model'):
                         # find set of allowed IDs from given ID's
                         allowed_set = set(self.fields[f].child.Meta.model.objects.filter(id__in=[x['id'] for x in data[f] if 'id' in x]).values_list('id', flat=True))
+
+                        # Retain only valid entries while safely handling missing 'id' keys
+                        data[f] = [x for x in data[f] if 'id' not in x or x.get('id') in allowed_set]
+                    elif self.fields[f].child.Meta.model.__name__ == 'User':
+                        # get list of allowed users from space members
+                        allowed_set = set(UserSpace.objects.filter(space=self.context['request'].space).values_list('user_id', flat=True))
 
                         # Retain only valid entries while safely handling missing 'id' keys
                         data[f] = [x for x in data[f] if 'id' not in x or x.get('id') in allowed_set]

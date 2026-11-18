@@ -12,6 +12,10 @@ class Rezeptsuitede(Integration):
 
     def split_recipe_file(self, file):
         parser = etree.XMLParser(resolve_entities=False, no_network=True, load_dtd=False)
+        if isinstance(file, str):
+            file = file.encode('utf-8')
+        if isinstance(file, bytes):
+            return etree.fromstring(file, parser=parser).getchildren()
         return etree.parse(file, parser=parser).getroot().getchildren()
 
     def get_recipe_from_file(self, file):
