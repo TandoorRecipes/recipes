@@ -263,10 +263,7 @@ def test_food_properties_skipped_on_create(u1_s1, space_1):
 
 def test_create_with_null_unit_ingredient(u1_s1):
     # ingredients like "2 eggs" have no unit, which nested writes must accept
-    recipe_data = {
-        "name": "Test Recipe",
-        "steps": [{"instruction": "Mix", "ingredients": [{"food": {"name": "egg"}, "unit": None, "amount": 2}]}]
-    }
+    recipe_data = {"name": "Test Recipe", "steps": [{"instruction": "Mix", "ingredients": [{"food": {"name": "egg"}, "unit": None, "amount": 2}]}]}
 
     r = u1_s1.post(reverse(LIST_URL), recipe_data, content_type='application/json')
     assert r.status_code == 201
