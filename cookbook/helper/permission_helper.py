@@ -214,7 +214,7 @@ class GroupRequiredMixin(object):
         if not has_group_permission(request, self.groups_required):
             if not request.user.is_authenticated:
                 messages.add_message(request, messages.ERROR, _('You are not logged in and therefore cannot view this page!'))
-                return HttpResponseRedirect(reverse_lazy('account_login') + '?next=' + request.path)
+                return HttpResponseRedirect(settings.SCRIPT_NAME + '/account/login/?next=' + request.path)
             else:
                 messages.add_message(request, messages.ERROR, _('You do not have the required permissions to view this page!'))
                 return HttpResponseRedirect(reverse_lazy('index'))
@@ -235,7 +235,7 @@ class OwnerRequiredMixin(object):
         if not request.user.is_authenticated:
             messages.add_message(request, messages.ERROR,
                                  _('You are not logged in and therefore cannot view this page!'))
-            return HttpResponseRedirect(reverse_lazy('account_login') + '?next=' + request.path)
+            return HttpResponseRedirect(settings.SCRIPT_NAME + '/account/login/?next=' + request.path)
         else:
             if not is_object_owner(request.user, self.get_object()):
                 messages.add_message(request, messages.ERROR,
