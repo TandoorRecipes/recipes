@@ -84,7 +84,13 @@ export interface InventoryLocation {
      * @type {Household}
      * @memberof InventoryLocation
      */
-    household: Household;
+    readonly household: Household;
+    /**
+     * 
+     * @type {number}
+     * @memberof InventoryLocation
+     */
+    householdId?: number;
 }
 
 /**
@@ -110,6 +116,7 @@ export function InventoryLocationFromJSONTyped(json: any, ignoreDiscriminator: b
         'name': json['name'],
         'isFreezer': json['is_freezer'] == null ? undefined : json['is_freezer'],
         'household': HouseholdFromJSON(json['household']),
+        'householdId': json['household_id'] == null ? undefined : json['household_id'],
     };
 }
 
@@ -117,7 +124,7 @@ export function InventoryLocationToJSON(json: any): InventoryLocation {
     return InventoryLocationToJSONTyped(json, false);
 }
 
-export function InventoryLocationToJSONTyped(value?: InventoryLocation | null, ignoreDiscriminator: boolean = false): any {
+export function InventoryLocationToJSONTyped(value?: Omit<InventoryLocation, 'household'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -127,7 +134,7 @@ export function InventoryLocationToJSONTyped(value?: InventoryLocation | null, i
         'id': value['id'],
         'name': value['name'],
         'is_freezer': value['isFreezer'],
-        'household': HouseholdToJSON(value['household']),
+        'household_id': value['householdId'],
     };
 }
 

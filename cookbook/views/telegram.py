@@ -14,7 +14,7 @@ from cookbook.models import ShoppingListEntry, TelegramBot
 
 
 def setup_bot(request, pk):
-    if not has_group_permission(request, ['user']):
+    if not has_group_permission(request, ['admin']):
         return redirect(reverse('index'))
 
     bot = get_object_or_404(TelegramBot, pk=pk, space=request.space)
@@ -24,13 +24,13 @@ def setup_bot(request, pk):
     create_response = safe_request('GET', f'https://api.telegram.org/bot{bot.token}/setWebhook?url={hook_url}')
     info_response = safe_request('GET', f'https://api.telegram.org/bot{bot.token}/getWebhookInfo')
 
-    return JsonResponse({'hook_url': hook_url, 'create_response': json.loads(create_response.content.decode()),
+    return JsonResponse({'create_response': json.loads(create_response.content.decode()),
                         'info_response': json.loads(info_response.content.decode())}, json_dumps_params={'indent': 4})
 
 
 
 def remove_bot(request, pk):
-    if not has_group_permission(request, ['user']):
+    if not has_group_permission(request, ['admin']):
         return redirect(reverse('index'))
 
     bot = get_object_or_404(TelegramBot, pk=pk, space=request.space)

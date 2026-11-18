@@ -84,7 +84,13 @@ export interface PatchedInventoryLocation {
      * @type {Household}
      * @memberof PatchedInventoryLocation
      */
-    household?: Household;
+    readonly household?: Household;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedInventoryLocation
+     */
+    householdId?: number;
 }
 
 /**
@@ -108,6 +114,7 @@ export function PatchedInventoryLocationFromJSONTyped(json: any, ignoreDiscrimin
         'name': json['name'] == null ? undefined : json['name'],
         'isFreezer': json['is_freezer'] == null ? undefined : json['is_freezer'],
         'household': json['household'] == null ? undefined : HouseholdFromJSON(json['household']),
+        'householdId': json['household_id'] == null ? undefined : json['household_id'],
     };
 }
 
@@ -115,7 +122,7 @@ export function PatchedInventoryLocationToJSON(json: any): PatchedInventoryLocat
     return PatchedInventoryLocationToJSONTyped(json, false);
 }
 
-export function PatchedInventoryLocationToJSONTyped(value?: PatchedInventoryLocation | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedInventoryLocationToJSONTyped(value?: Omit<PatchedInventoryLocation, 'household'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -125,7 +132,7 @@ export function PatchedInventoryLocationToJSONTyped(value?: PatchedInventoryLoca
         'id': value['id'],
         'name': value['name'],
         'is_freezer': value['isFreezer'],
-        'household': HouseholdToJSON(value['household']),
+        'household_id': value['householdId'],
     };
 }
 

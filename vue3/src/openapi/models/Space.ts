@@ -253,7 +253,13 @@ export interface Space {
      * @type {AiProvider}
      * @memberof Space
      */
-    aiDefaultProvider?: AiProvider | null;
+    readonly aiDefaultProvider: AiProvider;
+    /**
+     * 
+     * @type {number}
+     * @memberof Space
+     */
+    aiDefaultProviderId?: number | null;
     /**
      * 
      * @type {boolean}
@@ -285,6 +291,7 @@ export function instanceOfSpace(value: object): value is Space {
     if (!('recipeCount' in value) || value['recipeCount'] === undefined) return false;
     if (!('fileSizeMb' in value) || value['fileSizeMb'] === undefined) return false;
     if (!('aiMonthlyCreditsUsed' in value) || value['aiMonthlyCreditsUsed'] === undefined) return false;
+    if (!('aiDefaultProvider' in value) || value['aiDefaultProvider'] === undefined) return false;
     return true;
 }
 
@@ -329,7 +336,8 @@ export function SpaceFromJSONTyped(json: any, ignoreDiscriminator: boolean): Spa
         'aiCreditsBalance': json['ai_credits_balance'] == null ? undefined : json['ai_credits_balance'],
         'aiMonthlyCreditsUsed': json['ai_monthly_credits_used'],
         'aiEnabled': json['ai_enabled'] == null ? undefined : json['ai_enabled'],
-        'aiDefaultProvider': json['ai_default_provider'] == null ? undefined : AiProviderFromJSON(json['ai_default_provider']),
+        'aiDefaultProvider': AiProviderFromJSON(json['ai_default_provider']),
+        'aiDefaultProviderId': json['ai_default_provider_id'] == null ? undefined : json['ai_default_provider_id'],
         'spaceSetupCompleted': json['space_setup_completed'] == null ? undefined : json['space_setup_completed'],
         'householdSetupCompleted': json['household_setup_completed'] == null ? undefined : json['household_setup_completed'],
     };
@@ -339,7 +347,7 @@ export function SpaceToJSON(json: any): Space {
     return SpaceToJSONTyped(json, false);
 }
 
-export function SpaceToJSONTyped(value?: Omit<Space, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'|'ai_monthly_credits_used'> | null, ignoreDiscriminator: boolean = false): any {
+export function SpaceToJSONTyped(value?: Omit<Space, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'|'ai_monthly_credits_used'|'ai_default_provider'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -366,7 +374,7 @@ export function SpaceToJSONTyped(value?: Omit<Space, 'created_by'|'created_at'|'
         'ai_credits_monthly': value['aiCreditsMonthly'],
         'ai_credits_balance': value['aiCreditsBalance'],
         'ai_enabled': value['aiEnabled'],
-        'ai_default_provider': AiProviderToJSON(value['aiDefaultProvider']),
+        'ai_default_provider_id': value['aiDefaultProviderId'],
         'space_setup_completed': value['spaceSetupCompleted'],
         'household_setup_completed': value['householdSetupCompleted'],
     };

@@ -253,7 +253,13 @@ export interface PatchedSpace {
      * @type {AiProvider}
      * @memberof PatchedSpace
      */
-    aiDefaultProvider?: AiProvider | null;
+    readonly aiDefaultProvider?: AiProvider;
+    /**
+     * 
+     * @type {number}
+     * @memberof PatchedSpace
+     */
+    aiDefaultProviderId?: number | null;
     /**
      * 
      * @type {boolean}
@@ -319,6 +325,7 @@ export function PatchedSpaceFromJSONTyped(json: any, ignoreDiscriminator: boolea
         'aiMonthlyCreditsUsed': json['ai_monthly_credits_used'] == null ? undefined : json['ai_monthly_credits_used'],
         'aiEnabled': json['ai_enabled'] == null ? undefined : json['ai_enabled'],
         'aiDefaultProvider': json['ai_default_provider'] == null ? undefined : AiProviderFromJSON(json['ai_default_provider']),
+        'aiDefaultProviderId': json['ai_default_provider_id'] == null ? undefined : json['ai_default_provider_id'],
         'spaceSetupCompleted': json['space_setup_completed'] == null ? undefined : json['space_setup_completed'],
         'householdSetupCompleted': json['household_setup_completed'] == null ? undefined : json['household_setup_completed'],
     };
@@ -328,7 +335,7 @@ export function PatchedSpaceToJSON(json: any): PatchedSpace {
     return PatchedSpaceToJSONTyped(json, false);
 }
 
-export function PatchedSpaceToJSONTyped(value?: Omit<PatchedSpace, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'|'ai_monthly_credits_used'> | null, ignoreDiscriminator: boolean = false): any {
+export function PatchedSpaceToJSONTyped(value?: Omit<PatchedSpace, 'created_by'|'created_at'|'max_recipes'|'max_file_storage_mb'|'max_users'|'allow_sharing'|'demo'|'user_count'|'recipe_count'|'file_size_mb'|'ai_monthly_credits_used'|'ai_default_provider'> | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }
@@ -355,7 +362,7 @@ export function PatchedSpaceToJSONTyped(value?: Omit<PatchedSpace, 'created_by'|
         'ai_credits_monthly': value['aiCreditsMonthly'],
         'ai_credits_balance': value['aiCreditsBalance'],
         'ai_enabled': value['aiEnabled'],
-        'ai_default_provider': AiProviderToJSON(value['aiDefaultProvider']),
+        'ai_default_provider_id': value['aiDefaultProviderId'],
         'space_setup_completed': value['spaceSetupCompleted'],
         'household_setup_completed': value['householdSetupCompleted'],
     };

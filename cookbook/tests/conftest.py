@@ -219,6 +219,10 @@ def recipe_2_s1(space_1, u1_s1):
 
 
 @pytest.fixture
+def recipe_1_s2(space_2, u1_s1):
+    return get_random_recipe(space_2, u1_s1)
+
+@pytest.fixture
 def ext_recipe_1_s1(space_1, u1_s1):
     r = get_random_recipe(space_1, u1_s1)
     r.internal = False
@@ -333,6 +337,22 @@ def s1_s1(client, space_1):
     user.save()
     return client
 
+
+@pytest.fixture()
+def o_s1(client, space_1):
+    client = create_user(client, space_1, group='admin')
+    user = auth.get_user(client)
+    space_1.created_by = user
+    space_1.save()
+    return client
+
+@pytest.fixture()
+def o_s2(client, space_2):
+    client = create_user(client, space_2, group='admin')
+    user = auth.get_user(client)
+    space_2.created_by = user
+    space_2.save()
+    return client
 
 @pytest.fixture()
 def household_1(space_1):

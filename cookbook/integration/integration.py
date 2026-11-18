@@ -1,3 +1,4 @@
+import gzip
 import traceback
 import uuid
 from io import BytesIO
@@ -92,6 +93,22 @@ class Integration:
             raise Exception(_('File in zip too large') + ' ' + str(info.file_size) + '/' + str(MAX_ZIP_FILE_SIZE) )
 
         return zip_file.read(info)
+
+    def safe_gzip_read(self, file, max_size=MAX_ZIP_FILE_SIZE):
+        """
+        Safely decompress a gzip file and check the decompressed size.
+        :param file: in memory file, file-like object, or bytes
+        :param max_size: maximum decompressed size allowed
+        :return: bytes
+        """
+        if isinstance(file, bytes):
+            file = BytesIO(file)
+
+        with gzip.open(file, 'rb') as gz:
+            data = gz.read(max_size + 1)
+            if len(data) > max_size:
+                raise Exception(_('Decompressed file exceeds maximum allowed file size.') + f' > {max_size}')
+            return data
 
     def do_export(self, recipes, el):
 

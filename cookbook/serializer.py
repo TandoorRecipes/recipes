@@ -12,7 +12,7 @@ from django.contrib.auth.models import AnonymousUser, Group, User
 from django.core.cache import caches
 from django.core.mail import send_mail
 from django.db.models import Q, QuerySet, Sum
-from django.http import BadHeaderError
+from django.http import BadHeaderError, Http404
 from django.urls import reverse
 from django.utils import timezone
 from django_scopes import scopes_disabled
@@ -23,13 +23,14 @@ from PIL import Image
 from rest_framework import serializers
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.fields import IntegerField
+from rest_framework.status import HTTP_403_FORBIDDEN
 
 from cookbook.helper.CustomStorageClass import CachedS3Boto3Storage
 from cookbook.helper.HelperFunctions import str2bool
 from cookbook.helper.ai_helper import get_monthly_token_usage
 from cookbook.helper.image_processing import is_file_type_allowed
 from cookbook.helper.permission_helper import above_space_limit, create_space_for_user, get_household_user_ids, CustomRecipePermission, has_meal_plan_permission, \
-    has_recipe_permission
+    has_recipe_permission, has_group_permission
 from cookbook.helper.property_helper import FoodPropertyHelper
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
 from cookbook.helper.unit_conversion_helper import UnitConversionHelper
@@ -46,20 +47,62 @@ from cookbook.templatetags.custom_tags import markdown
 from recipes.settings import AWS_ENABLED, MEDIA_URL, EMAIL_HOST
 
 
+class ScopedPrimaryKeyRelatedField(serializers.PrimaryKeyRelatedField):
+    def __init__(self, model=None, **kwargs):
+        self.model = model
+        kwargs.pop('queryset', None)
+        super().__init__(**kwargs)
+
+    def get_queryset(self):
+        if self.model:
+            request = self.context.get('request', None)
+            space = getattr(request, 'space', None) if request else None
+            if not space and request and request.user and request.user.is_authenticated:
+                try:
+                    space = request.user.get_active_space()
+                except Exception:
+                    space = None
+            if space:
+                return self.model.objects.filter(space=space)
+            return self.model.objects.all()
+        return super().get_queryset()
+
+
 class WritableNestedModelSerializer(WNMS):
 
     # overload to_internal_value to allow using PK only on nested object
     def to_internal_value(self, data):
+        """
+        override default to_internal_value to facilitate two things
+        - check that spaced models do not escape scope trough writable nested serializer
+        - allow writing IDs into nested serializers without having the object
+        :param data: dict that was passed to the serializer
+        :return: object from dict (trough super call)
+        """
         # iterate through every field on the posted object
         for f in list(data):
             if f not in self.fields:
                 continue
             elif issubclass(self.fields[f].__class__, serializers.Serializer):
+                required_fields = ['id'] + [field_name for field_name, field in self.fields[f].__class__().fields.items() if field.required]
                 # if the field is a serializer and an integer, assume its an ID of an existing object
                 if isinstance(data[f], int):
-                    # only retrieve serializer required fields
-                    required_fields = ['id'] + [field_name for field_name, field in self.fields[f].__class__().fields.items() if field.required]
-                    data[f] = model_to_dict(self.fields[f].Meta.model.objects.get(id=data[f]), fields=required_fields)
+                    # retrieve from DB based on ID
+                    if hasattr(self.fields[f].Meta.model, 'scoped_model'):
+                        instance = self.fields[f].Meta.model.objects.filter(id=data[f], space=self.context['request'].space).first()
+                    else:
+                        instance = self.fields[f].Meta.model.objects.filter(id=data[f]).first()
+
+                    # if instance exists (on space) return back to dict and keep data, else discard
+                    if instance:
+                        data[f] = model_to_dict(instance, fields=required_fields)
+                    else:
+                        del data[f]
+                else:
+                    if hasattr(self.fields[f].Meta.model, 'scoped_model') and 'id' in data[f]:
+                        # if its a scoped model but the given ID does not exist in the space, remove from request as if it was never passed
+                        if not self.fields[f].Meta.model.objects.filter(id=data[f]['id'], space=self.context['request'].space).exists():
+                            del data[f]
             elif issubclass(self.fields[f].__class__, serializers.ListSerializer):
                 # if the field is a ListSerializer get dict values of PKs provided
                 if any(isinstance(x, int) for x in data[f]):
@@ -68,9 +111,34 @@ class WritableNestedModelSerializer(WNMS):
                     # filter values to integer values
                     pk_data = [x for x in data[f] if isinstance(x, int)]
                     # merge non-pk values with retrieved values
-                    data[f] = [x for x in data[f] if not isinstance(x, int)] \
-                              + list(self.fields[f].child.Meta.model.objects.filter(id__in=pk_data).values(*required_fields))
+                    if hasattr(self.fields[f].child.Meta.model, 'scoped_model'):
+                        data[f] = [x for x in data[f] if not isinstance(x, int)] \
+                                  + list(self.fields[f].child.Meta.model.objects.filter(id__in=pk_data, space=self.context['request'].space).values(*required_fields))
+                    else:
+                        data[f] = [x for x in data[f] if not isinstance(x, int)] \
+                                  + list(self.fields[f].child.Meta.model.objects.filter(id__in=pk_data).values(*required_fields))
+                else:
+                    if hasattr(self.fields[f].child.Meta.model, 'scoped_model'):
+                        # find set of allowed IDs from given ID's
+                        allowed_set = set(self.fields[f].child.Meta.model.objects.filter(id__in=[x['id'] for x in data[f] if 'id' in x]).values_list('id', flat=True))
+
+                        # Retain only valid entries while safely handling missing 'id' keys
+                        data[f] = [x for x in data[f] if 'id' not in x or x.get('id') in allowed_set]
         return super().to_internal_value(data)
+
+class ValidateRecipeMixin:
+    def validate_recipe(self, recipe):
+        if recipe is not None:
+            if isinstance(recipe, dict):
+                recipe_id = recipe.get('id')
+                if recipe_id:
+                    recipe_obj = Recipe.objects.filter(id=recipe_id, space=self.context['request'].space).first()
+                    if recipe_obj and not has_recipe_permission(self.context['request'], recipe_obj):
+                        raise ValidationError('Permission Denied')
+            else:
+                if not has_recipe_permission(self.context['request'], recipe):
+                    raise ValidationError('Permission Denied')
+        return recipe
 
 
 class ExtendedRecipeMixin(serializers.ModelSerializer):
@@ -220,6 +288,22 @@ class SpaceFilterSerializer(serializers.ListSerializer):
 
 class UserSerializer(WritableNestedModelSerializer):
     display_name = serializers.SerializerMethodField('get_user_label')
+
+    def to_representation(self, instance):
+        # only return display name if user is anonymous
+        if isinstance(self.context['request'].user, AnonymousUser):
+            return {"display_name": instance.get_user_display_name()}
+        else:
+            return super().to_representation(instance)
+
+    def create(self, validated_data):
+        raise ValidationError('Cannot create using this endpoint')
+
+    def update(self, instance, validated_data):
+        # Prevent updates if this is not called by the endpoint itself
+        if self.context['view'].basename != 'user':
+            return instance
+        return super().update(instance, validated_data)
 
     @extend_schema_field(str)
     def get_user_label(self, obj):
@@ -407,7 +491,13 @@ class SpaceSerializer(WritableNestedModelSerializer):
     recipe_count = serializers.SerializerMethodField('get_recipe_count', read_only=True)
     file_size_mb = serializers.SerializerMethodField('get_file_size_mb', read_only=True)
     ai_monthly_credits_used = serializers.SerializerMethodField('get_ai_monthly_credits_used', read_only=True)
-    ai_default_provider = AiProviderSerializer(required=False, allow_null=True)
+    ai_default_provider = AiProviderSerializer(read_only=True)
+    ai_default_provider_id = serializers.PrimaryKeyRelatedField(
+        queryset=AiProvider.objects.all(),
+        source='ai_default_provider',
+        required=False,
+        allow_null=True
+    )
     food_inherit = FoodInheritFieldSerializer(many=True, required=False)
     image = UserFileViewSerializer(required=False, many=False, allow_null=True)
     nav_logo = UserFileViewSerializer(required=False, many=False, allow_null=True)
@@ -471,6 +561,15 @@ class SpaceSerializer(WritableNestedModelSerializer):
 
         return validated_data
 
+    def validate_ai_default_provider_id(self, value):
+        if value is not None:
+            request = self.context.get('request', None)
+            target_space = request.space
+            if value.space is not None and (target_space is None or value.space != target_space):
+                if not (request and request.user and request.user.is_superuser):
+                    raise serializers.ValidationError(_('Permission Denied'))
+        return value
+
     class Meta:
         model = Space
         fields = (
@@ -478,7 +577,7 @@ class SpaceSerializer(WritableNestedModelSerializer):
             'allow_sharing', 'demo', 'food_inherit', 'user_count', 'recipe_count', 'file_size_mb',
             'image', 'nav_logo', 'space_theme', 'custom_space_theme', 'nav_bg_color', 'nav_text_color',
             'logo_color_32', 'logo_color_128', 'logo_color_144', 'logo_color_180', 'logo_color_192', 'logo_color_512', 'logo_color_svg', 'ai_credits_monthly',
-            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider', 'space_setup_completed', 'household_setup_completed')
+            'ai_credits_balance', 'ai_monthly_credits_used', 'ai_enabled', 'ai_default_provider', 'ai_default_provider_id', 'space_setup_completed', 'household_setup_completed')
         read_only_fields = (
             'id', 'created_by', 'created_at', 'max_recipes', 'max_file_storage_mb', 'max_users', 'allow_sharing',
             'demo', 'ai_monthly_credits_used')
@@ -502,7 +601,7 @@ class UserSpaceSerializer(WritableNestedModelSerializer):
     household = HouseholdSerializer(allow_null=True, required=False)
 
     def validate(self, data):
-        if len(data['groups']) == 0:
+        if 'groups' in data and len(data['groups']) == 0:
             raise ValidationError(_('You must select at least one group.'))
         return super().validate(data)
 
@@ -526,8 +625,22 @@ class ShoppingListSerializer(SpacedModelSerializer, WritableNestedModelSerialize
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
         space = validated_data.pop('space', self.context['request'].space)
+        obj = ShoppingList.objects.filter(name__iexact=validated_data['name'], space=space).first()
+        if obj:
+            return obj
+        if not has_group_permission(self.context['request'], ['user']):
+            raise ValidationError(_('You do not have the required permissions to create shopping lists.'))
         obj, created = ShoppingList.objects.get_or_create(name__iexact=validated_data['name'], space=space, defaults=validated_data)
         return obj
+
+    def update(self, instance, validated_data):
+        name = validated_data.get('name', '').strip()
+        if name and name.lower() != instance.name.lower():
+            if not has_group_permission(self.context['request'], ['user']):
+                raise ValidationError(_('You do not have the required permissions to update shopping lists.'))
+        if not has_group_permission(self.context['request'], ['user']):
+            return instance
+        return super().update(instance, validated_data)
 
     class Meta:
         model = ShoppingList
@@ -540,9 +653,23 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     def create(self, validated_data):
         validated_data['name'] = validated_data['name'].strip()
         space = validated_data.pop('space', self.context['request'].space)
+        obj = MealType.objects.filter(name__iexact=validated_data['name'], space=space).first()
+        if obj:
+            return obj
+        if not has_group_permission(self.context['request'], ['user']):
+            raise ValidationError(_('You do not have the required permissions to create meal types.'))
         validated_data['created_by'] = self.context['request'].user
         obj, created = MealType.objects.get_or_create(name__iexact=validated_data['name'], space=space, created_by=self.context['request'].user, defaults=validated_data)
         return obj
+
+    def update(self, instance, validated_data):
+        name = validated_data.get('name', '').strip()
+        if name and name.lower() != instance.name.lower():
+            if not has_group_permission(self.context['request'], ['user']):
+                raise ValidationError(_('You do not have the required permissions to update meal types.'))
+        if not has_group_permission(self.context['request'], ['user']):
+            return instance
+        return super().update(instance, validated_data)
 
     class Meta:
         list_serializer_class = SpaceFilterSerializer
@@ -554,7 +681,13 @@ class MealTypeSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
 class UserPreferenceSerializer(WritableNestedModelSerializer):
     user = UserSerializer(read_only=True)
     food_inherit_default = serializers.SerializerMethodField('get_food_inherit_defaults')
-    default_meal_type = MealTypeSerializer(required=False, allow_null=True)
+    default_meal_type = MealTypeSerializer(read_only=True)
+    default_meal_type_id = ScopedPrimaryKeyRelatedField(
+        model=MealType,
+        source='default_meal_type',
+        required=False,
+        allow_null=True
+    )
     food_children_exist = serializers.SerializerMethodField('get_food_children_exist')
     image = UserFileViewSerializer(required=False, allow_null=True, many=False)
 
@@ -566,6 +699,32 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
     def get_food_children_exist(self, obj):
         space = getattr(self.context.get('request', None), 'space', None)
         return Food.objects.filter(depth__gt=0, space=space).exists()
+
+    def validate_default_meal_type_id(self, value):
+        if value is not None:
+            request = self.context.get('request', None)
+            target_space = getattr(request, 'space', None)
+            if not target_space and request and request.user and request.user.is_authenticated:
+                try:
+                    target_space = request.user.get_active_space()
+                except Exception:
+                    target_space = None
+            if target_space and value.space != target_space:
+                raise serializers.ValidationError(_('Permission Denied'))
+        return value
+
+    def to_internal_value(self, data):
+        if isinstance(data, dict) and 'default_meal_type' in data and 'default_meal_type_id' not in data:
+            if isinstance(data['default_meal_type'], int):
+                data = data.copy()
+                data['default_meal_type_id'] = data['default_meal_type']
+            elif isinstance(data['default_meal_type'], dict) and 'id' in data['default_meal_type']:
+                data = data.copy()
+                data['default_meal_type_id'] = data['default_meal_type']['id']
+            elif data['default_meal_type'] is None:
+                data = data.copy()
+                data['default_meal_type_id'] = None
+        return super().to_internal_value(data)
 
     def update(self, instance, validated_data):
         with scopes_disabled():
@@ -583,7 +742,7 @@ class UserPreferenceSerializer(WritableNestedModelSerializer):
             'ingredient_decimals', 'comments', 'shopping_auto_sync', 'mealplan_autoadd_shopping',
             'food_inherit_default', 'default_delay',
             'mealplan_autoinclude_related', 'mealplan_autoexclude_onhand', 'shopping_recent_days',
-            'csv_delim', 'csv_prefix', 'shopping_update_food_lists', 'default_meal_type',
+            'csv_delim', 'csv_prefix', 'shopping_update_food_lists', 'default_meal_type', 'default_meal_type_id',
             'filter_to_supermarket', 'shopping_add_onhand', 'left_handed', 'show_step_ingredients',
             'food_children_exist'
         )
@@ -878,7 +1037,7 @@ class FoodSimpleSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'plural_name')
 
 
-class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin, OpenDataModelMixin):
+class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedRecipeMixin, OpenDataModelMixin, ValidateRecipeMixin):
     supermarket_category = SupermarketCategorySerializer(allow_null=True, required=False)
     recipe = RecipeSimpleSerializer(allow_null=True, required=False)
     shopping = serializers.CharField(source='shopping_status', read_only=True)
@@ -923,6 +1082,9 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
         if food := Food.objects.filter(Q(name__iexact=name) | Q(plural_name__iexact=name)).first():
             return food
 
+        if not has_group_permission(self.context['request'], ['user']):
+            raise ValidationError(_('You do not have the required permissions to create food.'))
+
         space = validated_data.pop('space', self.context['request'].space)
         # supermarket category needs to be handled manually as food.get or create does not create nested serializers unlike a super.create of serializer
         if 'supermarket_category' in validated_data and validated_data['supermarket_category']:
@@ -965,9 +1127,15 @@ class FoodSerializer(UniqueFieldsMixin, WritableNestedModelSerializer, ExtendedR
 
     def update(self, instance, validated_data):
         if name := validated_data.get('name', None):
-            validated_data['name'] = name.strip()
+            name = name.strip()
+            if name and name.lower() != instance.name.lower():
+                if not has_group_permission(self.context['request'], ['user']):
+                    raise ValidationError(_('You do not have the required permissions to update food.'))
+            validated_data['name'] = name
         if plural_name := validated_data.get('plural_name', None):
             validated_data['plural_name'] = plural_name.strip()
+        if not has_group_permission(self.context['request'], ['user']):
+            return instance
         # assuming if on hand for user also onhand for household members
         onhand = validated_data.get('food_onhand', None)
         reset_inherit = self.initial_data.get('reset_inherit', False)
@@ -1063,6 +1231,29 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
 
+    def validate_ingredients(self, ingredients):
+        """
+        extra validator for ingredients to not only check for space (which is done by generic writable nested serializer)
+        but also check that the object does not belong to a private recipe that the user does not have access to
+        """
+        if hasattr(self, 'initial_data') and 'ingredients' in self.initial_data:
+            ingredients = self.initial_data.get('ingredients')
+            ids = [s['id'] for s in ingredients if 'id' in s]
+
+            allowed_ids = Ingredient.objects.filter(space=self.context['request'].space, id__in=ids).filter(
+                Q(step__recipe__private=False) | Q(step__recipe__isnull=True) | Q(step__recipe__created_by=self.context['request'].user) | Q(
+                    step__recipe__shared=self.context['request'].user)).values_list(
+                'id', flat=True)
+
+            if len(set(ids) - set(allowed_ids)) > 0:
+                raise serializers.ValidationError("Forbidden")
+
+    # check the permission for sub recipes as well
+    def validate_step_recipe(self, step_recipe):
+        if step_recipe and not has_recipe_permission(self.context['request'], step_recipe):
+            raise Http404()
+        return step_recipe
+
     @extend_schema_field(str)
     def get_instructions_markdown(self, obj):
         return obj.get_instruction_render()
@@ -1076,7 +1267,7 @@ class StepSerializer(WritableNestedModelSerializer, ExtendedRecipeMixin):
     def get_step_recipe_data(self, obj):
         # check if root type is recipe to prevent infinite recursion
         # can be improved later to allow multi level embedding
-        if obj.step_recipe and isinstance(self.parent.root, RecipeSerializer):
+        if obj.step_recipe and isinstance(self.parent.root, RecipeSerializer) and has_recipe_permission(self.context['request'], obj.step_recipe):
             return StepRecipeSerializer(obj.step_recipe, context={'request': self.context['request']}).data
 
     class Meta:
@@ -1214,14 +1405,22 @@ class RecipeSerializer(RecipeBaseSerializer):
         fph = FoodPropertyHelper(obj.space)  # initialize with object space since recipes might be viewed anonymously
         return fph.calculate_recipe_properties(obj)
 
-    class Meta:
-        model = Recipe
-        fields = (
-            'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
-            'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings', 'file_path', 'servings_text', 'diameter', 'diameter_text', 'rating',
-            'last_cooked', 'private', 'shared'
-        )
-        read_only_fields = ['image', 'created_by', 'created_at', 'food_properties', 'file_path', ]
+    def validate_steps(self, steps):
+        """
+        extra validator for ingredients to not only check for space (which is done by generic writable nested serializer)
+         but also check that the object does not belong to a private recipe that the user does not have access to
+         """
+        if hasattr(self, 'initial_data') and 'steps' in self.initial_data:
+            steps = self.initial_data.get('steps')
+            step_ids = [s['id'] for s in steps if 'id' in s]
+
+            allowed_ids = Step.objects.filter(space=self.context['request'].space, id__in=step_ids).filter(
+                Q(recipe__private=False) | Q(recipe__isnull=True) | Q(recipe__created_by=self.context['request'].user) | Q(
+                    recipe__shared=self.context['request'].user)).values_list(
+                'id', flat=True)
+
+            if len(set(step_ids) - set(allowed_ids)) > 0:
+                raise serializers.ValidationError("Forbidden")
 
     def validate(self, data):
         above_limit, msg = above_space_limit(self.context['request'].space)
@@ -1233,6 +1432,15 @@ class RecipeSerializer(RecipeBaseSerializer):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
         return super().create(validated_data)
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id', 'name', 'description', 'image', 'keywords', 'steps', 'working_time', 'waiting_time', 'created_by', 'created_at', 'updated_at', 'source_url',
+            'internal', 'show_ingredient_overview', 'nutrition', 'properties', 'food_properties', 'servings', 'file_path', 'servings_text', 'diameter', 'diameter_text', 'rating',
+            'last_cooked', 'private', 'shared'
+        )
+        read_only_fields = ['image', 'created_by', 'created_at', 'food_properties', 'file_path', ]
 
 
 class RecipeImageSerializer(WritableNestedModelSerializer):
@@ -1324,6 +1532,13 @@ class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerialize
         validated_data['created_by'] = self.context['request'].user
         return super().create(validated_data)
 
+    def update(self, instance, validated_data):
+        request = self.context.get('request', None)
+        if request and request.user:
+            if instance.created_by != request.user and not request.user.is_superuser:
+                raise ValidationError(_('Permission Denied'))
+        return super().update(instance, validated_data)
+
     class Meta:
         model = CustomFilter
         fields = ('id', 'name', 'search', 'shared', 'created_by')
@@ -1333,7 +1548,40 @@ class CustomFilterSerializer(SpacedModelSerializer, WritableNestedModelSerialize
 class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
     created_by = UserSerializer(read_only=True)
     shared = UserSerializer(many=True)
-    filter = CustomFilterSerializer(allow_null=True, required=False)
+    filter = CustomFilterSerializer(read_only=True, allow_null=True, required=False)
+    filter_id = ScopedPrimaryKeyRelatedField(
+        model=CustomFilter,
+        source='filter',
+        required=False,
+        allow_null=True
+    )
+
+    def validate_filter_id(self, value):
+        if value is not None:
+            request = self.context.get('request', None)
+            if request and request.user:
+                space = getattr(request, 'space', None)
+                if not space and request.user.is_authenticated:
+                    try:
+                        space = request.user.get_active_space()
+                    except Exception:
+                        space = None
+                if (space and value.space != space) or not (value.created_by == request.user or request.user in value.shared.all() or request.user.is_superuser):
+                    raise serializers.ValidationError(_('Permission Denied'))
+        return value
+
+    def to_internal_value(self, data):
+        if isinstance(data, dict) and 'filter' in data and 'filter_id' not in data:
+            if isinstance(data['filter'], int):
+                data = data.copy()
+                data['filter_id'] = data['filter']
+            elif isinstance(data['filter'], dict) and 'id' in data['filter']:
+                data = data.copy()
+                data['filter_id'] = data['filter']['id']
+            elif data['filter'] is None:
+                data = data.copy()
+                data['filter_id'] = None
+        return super().to_internal_value(data)
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -1341,7 +1589,7 @@ class RecipeBookSerializer(SpacedModelSerializer, WritableNestedModelSerializer)
 
     class Meta:
         model = RecipeBook
-        fields = ('id', 'name', 'description', 'shared', 'created_by', 'filter', 'order')
+        fields = ('id', 'name', 'description', 'shared', 'created_by', 'filter', 'filter_id', 'order')
         read_only_fields = ('created_by',)
 
 
@@ -1391,7 +1639,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
         fields = ('id', 'book', 'book_content', 'recipe', 'recipe_content',)
 
 
-class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer):
+class MealPlanSerializer(SpacedModelSerializer, WritableNestedModelSerializer, ValidateRecipeMixin):
     recipe = RecipeOverviewSerializer(required=False, allow_null=True)
     recipe_name = serializers.CharField(source='recipe.name', read_only=True)
     meal_type = MealTypeSerializer()
@@ -1485,7 +1733,7 @@ class AutoMealPlanSerializer(serializers.Serializer):
     addshopping = serializers.BooleanField()
 
 
-class ShoppingListRecipeSerializer(serializers.ModelSerializer):
+class ShoppingListRecipeSerializer(serializers.ModelSerializer, ValidateRecipeMixin):
     recipe_data = RecipeOverviewSerializer(source='recipe', read_only=True, required=False)
     meal_plan_data = MealPlanSerializer(source='mealplan', read_only=True, required=False)
     servings = CustomDecimalField()
@@ -1495,11 +1743,6 @@ class ShoppingListRecipeSerializer(serializers.ModelSerializer):
         if not has_meal_plan_permission(self.context['request'], mealplan):
             raise ValidationError('Permission Denied')
         return mealplan
-
-    def validate_recipe(self, recipe):
-        if not has_recipe_permission(self.context['request'], recipe):
-            raise ValidationError('Permission Denied')
-        return recipe
 
     def create(self, validated_data):
         validated_data['space'] = self.context['request'].space
@@ -1532,6 +1775,9 @@ class FoodShoppingSerializer(serializers.ModelSerializer):
         if food := Food.objects.filter(Q(name__iexact=name) | Q(plural_name__iexact=name)).first():
             return food
 
+        if not has_group_permission(self.context['request'], ['user']):
+            raise ValidationError(_('You do not have the required permissions to create food.'))
+
         space = validated_data.pop('space', self.context['request'].space)
         # supermarket category needs to be handled manually as food.get or create does not create nested serializers unlike a super.create of serializer
         if 'supermarket_category' in validated_data and validated_data['supermarket_category']:
@@ -1549,6 +1795,15 @@ class FoodShoppingSerializer(serializers.ModelSerializer):
                                                   defaults=validated_data)
 
         return obj
+
+    def update(self, instance, validated_data):
+        name = validated_data.get('name', '').strip()
+        if name and name.lower() != instance.name.lower():
+            if not has_group_permission(self.context['request'], ['user']):
+                raise ValidationError(_('You do not have the required permissions to update food.'))
+        if not has_group_permission(self.context['request'], ['user']):
+            return instance
+        return super().update(instance, validated_data)
 
     class Meta:
         model = Food
@@ -1675,7 +1930,7 @@ class ShareLinkSerializer(SpacedModelSerializer):
         fields = '__all__'
 
 
-class CookLogSerializer(serializers.ModelSerializer):
+class CookLogSerializer(serializers.ModelSerializer, ValidateRecipeMixin):
     created_by = UserSerializer(read_only=True)
 
     def create(self, validated_data):
@@ -1689,7 +1944,8 @@ class CookLogSerializer(serializers.ModelSerializer):
         read_only_fields = ('id', 'created_by')
 
 
-class ViewLogSerializer(serializers.ModelSerializer):
+class ViewLogSerializer(serializers.ModelSerializer, ValidateRecipeMixin):
+
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
         validated_data['space'] = self.context['request'].space
@@ -1753,7 +2009,22 @@ class AutomationSerializer(serializers.ModelSerializer):
 
 
 class InventoryLocationSerializer(UniqueFieldsMixin, SpacedModelSerializer, WritableNestedModelSerializer):
-    household = HouseholdSerializer()
+    household = HouseholdSerializer(read_only=True)
+    household_id = ScopedPrimaryKeyRelatedField(
+        model=Household,
+        source='household',
+        required=False,
+    )
+
+    def to_internal_value(self, data):
+        if isinstance(data, dict) and 'household' in data and 'household_id' not in data:
+            if isinstance(data['household'], int):
+                data = data.copy()
+                data['household_id'] = data['household']
+            elif isinstance(data['household'], dict) and 'id' in data['household']:
+                data = data.copy()
+                data['household_id'] = data['household']['id']
+        return super().to_internal_value(data)
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user
@@ -1762,7 +2033,7 @@ class InventoryLocationSerializer(UniqueFieldsMixin, SpacedModelSerializer, Writ
 
     class Meta:
         model = InventoryLocation
-        fields = ('id', 'name', 'is_freezer', 'household')
+        fields = ('id', 'name', 'is_freezer', 'household', 'household_id')
 
 
 class InventoryEntrySerializer(SpacedModelSerializer, WritableNestedModelSerializer):

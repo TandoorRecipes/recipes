@@ -1,0 +1,367 @@
+import json
+import pytest
+from django.contrib import auth
+from django.db.models import Model
+from django.urls import reverse
+from django_scopes import scopes_disabled
+
+from cookbook.models import (
+    CustomFilter, Food, Household, InventoryEntry, InventoryLocation,
+    MealPlan, MealType, Recipe, RecipeBook, ShoppingList, ShoppingListEntry, UserSpace
+)
+
+
+def test_case1_inventory_location_household_isolation(space_1, space_2, u1_s1, u1_s2, a1_s1):
+    """
+    Case 1: InventoryLocation / InventoryEntry -> Household
+    Prevent cross-Space Household mutation and unauthorized Household mutation.
+    """
+    with scopes_disabled():
+        hh_space_1 = Household.objects.create(name='Household S1', space=space_1)
+        hh_space_2 = Household.objects.create(name='Household S2', space=space_2)
+        loc_1 = InventoryLocation.objects.create(name='Pantry', space=space_1, household=hh_space_1, created_by=auth.get_user(u1_s1))
+
+    # 1. Attempt cross-Space Household rename via nested PATCH
+    r = u1_s1.patch(
+        reverse('api:inventorylocation-detail', args=[loc_1.id]),
+        {'household': {'id': hh_space_2.id, 'name': 'Hacked Household S2'}},
+        content_type='application/json'
+    )
+    with scopes_disabled():
+        hh_space_2.refresh_from_db()
+        assert hh_space_2.name == 'Household S2'
+
+    # 2. Attempt setting foreign household_id should be rejected
+    r = u1_s1.patch(
+        reverse('api:inventorylocation-detail', args=[loc_1.id]),
+        {'household_id': hh_space_2.id},
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+
+    # 3. Attempt same-Space Household rename via nested PATCH
+    r = u1_s1.patch(
+        reverse('api:inventorylocation-detail', args=[loc_1.id]),
+        {'household': {'id': hh_space_1.id, 'name': 'Renamed Household S1'}},
+        content_type='application/json'
+    )
+    with scopes_disabled():
+        hh_space_1.refresh_from_db()
+        assert hh_space_1.name == 'Household S1'
+
+    # 4. Valid linking of own household works
+    r = a1_s1.patch(
+        reverse('api:inventorylocation-detail', args=[loc_1.id]),
+        {'household_id': hh_space_1.id},
+        content_type='application/json'
+    )
+    assert r.status_code == 200
+    res = json.loads(r.content)
+    assert res['household']['id'] == hh_space_1.id
+
+
+def test_case2_user_preference_meal_type_isolation(space_1, space_2, g1_s1, u1_s1):
+    """
+    Case 2: UserPreference -> MealType
+    Prevent cross-Space MealType mutation and linking.
+    """
+    user_g = auth.get_user(g1_s1)
+    with scopes_disabled():
+        mt_space_1 = MealType.objects.create(name='Dinner S1', space=space_1, created_by=auth.get_user(u1_s1))
+        mt_space_2 = MealType.objects.create(name='Dinner S2', space=space_2, created_by=auth.get_user(u1_s1))
+
+    pref_url = reverse('api:userpreference-detail', args=[user_g.id])
+
+    # 1. Attempt cross-Space MealType rename via nested PATCH
+    r = g1_s1.patch(
+        pref_url,
+        {'default_meal_type': {'id': mt_space_2.id, 'name': 'Hacked MealType S2'}},
+        content_type='application/json'
+    )
+    with scopes_disabled():
+        mt_space_2.refresh_from_db()
+        assert mt_space_2.name == 'Dinner S2'
+
+    # 2. Attempt setting foreign default_meal_type_id directly should fail
+    r = g1_s1.patch(
+        pref_url,
+        {'default_meal_type_id': mt_space_2.id},
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+
+    # 3. Setting own space meal type via default_meal_type_id or default_meal_type dict works
+    r = g1_s1.patch(
+        pref_url,
+        {'default_meal_type_id': mt_space_1.id},
+        content_type='application/json'
+    )
+    assert r.status_code == 200
+    res = json.loads(r.content)
+    assert res['default_meal_type']['id'] == mt_space_1.id
+
+    user_g.refresh_from_db()
+    assert user_g.userpreference.default_meal_type == mt_space_1
+
+
+def test_case3_shopping_list_entry_guest_creation_blocked(space_1, g1_s1, u1_s1):
+    """
+    Case 3: ShoppingListEntry -> Food / ShoppingList (same-Space only)
+    Guests must be blocked from creating new Food and ShoppingList records via nested entry creation.
+    """
+    with scopes_disabled():
+        existing_food = Food.objects.create(name='Existing Apple', space=space_1)
+        existing_list = ShoppingList.objects.create(name='Existing List', space=space_1)
+
+    url = reverse('api:shoppinglistentry-list')
+
+    # 1. Guest attempts to create a new Food via nested field -> Rejected (400)
+    r = g1_s1.post(
+        url,
+        {
+            'food': {'name': 'New Guest Food'},
+            'amount': '1',
+            'shopping_lists': [{'id': existing_list.id}]
+        },
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+    with scopes_disabled():
+        assert not Food.objects.filter(name='New Guest Food', space=space_1).exists()
+
+    # 2. Guest attempts to create a new ShoppingList via nested field -> Rejected (400)
+    r = g1_s1.post(
+        url,
+        {
+            'food': {'id': existing_food.id, 'name': existing_food.name},
+            'amount': '1',
+            'shopping_lists': [{'name': 'New Guest List'}]
+        },
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+    with scopes_disabled():
+        assert not ShoppingList.objects.filter(name='New Guest List', space=space_1).exists()
+
+    # 3. Guest using existing Food and existing ShoppingList -> Succeeds (201)
+    r = g1_s1.post(
+        url,
+        {
+            'food': {'id': existing_food.id, 'name': existing_food.name},
+            'amount': '2',
+            'shopping_lists': [{'id': existing_list.id}]
+        },
+        content_type='application/json'
+    )
+    assert r.status_code == 201
+
+    # 4. User (non-guest) CAN create new food / shopping list via nested field
+    r = u1_s1.post(
+        url,
+        {
+            'food': {'name': 'New User Food'},
+            'amount': '1',
+            'shopping_lists': [{'name': 'New User List'}]
+        },
+        content_type='application/json'
+    )
+    assert r.status_code == 201
+    with scopes_disabled():
+        assert Food.objects.filter(name='New User Food', space=space_1).exists()
+        assert ShoppingList.objects.filter(name='New User List', space=space_1).exists()
+
+
+def test_case4_meal_plan_guest_meal_type_creation_blocked(space_1, g1_s1, u1_s1):
+    """
+    Case 4: MealPlan -> MealType (same-Space only)
+    Guests must be blocked from creating new MealType records via nested meal plan creation.
+    """
+    with scopes_disabled():
+        existing_mt = MealType.objects.create(name='Existing Lunch', space=space_1, created_by=auth.get_user(u1_s1))
+
+    url = reverse('api:mealplan-list')
+
+    # 1. Guest attempts to create a new MealType via nested field -> Rejected (400)
+    r = g1_s1.post(
+        url,
+        {
+            'meal_type': {'name': 'New Guest MealType'},
+            'from_date': '2026-11-20T12:00:00Z',
+            'to_date': '2026-11-20T13:00:00Z',
+            'servings': 1,
+        },
+        content_type='application/json'
+    )
+    assert r.status_code == 400
+    with scopes_disabled():
+        assert not MealType.objects.filter(name='New Guest MealType', space=space_1).exists()
+
+    # 2. Guest creating a MealPlan with existing MealType -> Succeeds (201)
+    r = g1_s1.post(
+        url,
+        {
+            'meal_type': {'id': existing_mt.id, 'name': existing_mt.name},
+            'from_date': '2026-11-20T12:00:00Z',
+            'to_date': '2026-11-20T13:00:00Z',
+            'servings': 1,
+        },
+        content_type='application/json'
+    )
+    assert r.status_code == 201
+
+    # 3. User creating a MealPlan with a new MealType -> Succeeds (201)
+    r = u1_s1.post(
+        url,
+        {
+            'meal_type': {'name': 'New User MealType'},
+            'from_date': '2026-11-20T12:00:00Z',
+            'to_date': '2026-11-20T13:00:00Z',
+            'servings': 1,
+        },
+        content_type='application/json'
+    )
+    assert r.status_code == 201
+    with scopes_disabled():
+        assert MealType.objects.filter(name='New User MealType', space=space_1).exists()
+
+
+def test_case5_recipe_book_custom_filter_isolation(space_1, g1_s1, u1_s1, u2_s1):
+    """
+    Case 5: RecipeBook -> CustomFilter (cross-user, same Space)
+    Prevent unauthorized mutation and access to other users' CustomFilters.
+    """
+    user_victim = auth.get_user(u1_s1)
+    user_guest = auth.get_user(g1_s1)
+
+    with scopes_disabled():
+        victim_filter = CustomFilter.objects.create(
+            name='Victim Filter',
+            search='keyword=secret',
+            space=space_1,
+            created_by=user_victim
+        )
+        guest_filter = CustomFilter.objects.create(
+            name='Guest Filter',
+            search='keyword=guest',
+            space=space_1,
+            created_by=user_guest
+        )
+
+    url = reverse('api:recipebook-list')
+
+    # 1. Guest attempts to rename/mutate victim's CustomFilter via nested object -> Must not mutate
+    r = g1_s1.post(
+        url,
+        {
+            'name': 'Guest Book',
+            'shared': [],
+            'filter': {
+                'id': victim_filter.id,
+                'name': 'Hacked Filter Name',
+                'search': 'hacked'
+            }
+        },
+        content_type='application/json'
+    )
+    # The request should either be rejected or should not mutate the victim's filter
+    with scopes_disabled():
+        victim_filter.refresh_from_db()
+        assert victim_filter.name == 'Victim Filter'
+        assert victim_filter.search == 'keyword=secret'
+        assert victim_filter.created_by == user_victim
+
+    # 2. Guest cannot link to victim's unshared filter
+    assert r.status_code == 400
+
+    # 3. Guest can create a RecipeBook with their own filter
+    r = g1_s1.post(
+        url,
+        {
+            'name': 'Guest Book 2',
+            'shared': [],
+            'filter_id': guest_filter.id,
+        },
+        content_type='application/json'
+    )
+    assert r.status_code == 201
+    res = json.loads(r.content)
+    assert res['filter']['id'] == guest_filter.id
+
+
+def test_cant_write_nested_user(u1_s1, u1_s2, space_1):
+    u1_s1_user = auth.get_user(u1_s1)
+    u2_s2_user = auth.get_user(u1_s2)
+
+    url = reverse('api:recipebook-list')
+
+    # attemt to change a foreign user by sending a nested object
+    r = u1_s1.post(
+        url,
+        {
+            'name': 'Guest Book',
+            'shared': [
+                {'id': u1_s1_user.id, 'first_name': 'CHANGED_BY_API_CALL'},
+                {'id': u2_s2_user.id, 'first_name': 'CHANGED_BY_API_CALL'},
+            ],
+            'filter': None
+        },
+        content_type='application/json'
+    )
+
+    # book should be created
+    assert r.status_code == 201
+
+    # user should not be changed
+    u2_s2_user.refresh_from_db()
+    assert u2_s2_user.first_name != 'CHANGED_BY_API_CALL'
+
+    # shared list should be emtpy because you should not be able to share to foreign space
+    res = json.loads(r.content)
+    assert len(res['shared']) == 1
+    assert res['shared'][0]['id'] == u1_s1_user.id
+
+
+def test_can_nested_fk_escape_space(o_s1, space_1, space_2):
+    user_space_id = 0
+    with scopes_disabled():
+        household_space_1 = Household.objects.create(name='Household Space 1', space=space_1)
+        household_space_2 = Household.objects.create(name='Household Space 2', space=space_2)
+        user_space_id = UserSpace.objects.get(user=auth.get_user(o_s1)).id
+
+    url = reverse('api:userspace-detail', args=[user_space_id])
+    r = o_s1.patch(
+        url,
+        {'household': {'id': household_space_2.id, 'name': 'Hacked Household S2'}, 'groups': [{'id': 3, 'name': 'admin'}] },
+        content_type='application/json'
+    )
+    assert r.status_code == 200
+    response = json.loads(r.content)
+    print(response)
+    assert response['household'] == None
+
+    with scopes_disabled():
+        household_space_2.refresh_from_db()
+        assert household_space_2.name != 'Hacked Household S2'
+
+
+def test_can_nested_m2m_escape_space(u1_s1, space_1, space_2):
+    with scopes_disabled():
+        food_space_1 = Food.objects.create(name='Food Space 1', space=space_1)
+        food_space_2 = Food.objects.create(name='Food Space 2', space=space_2)
+
+    url = reverse('api:food-detail', args=[food_space_1.id])
+    r = u1_s1.patch(
+        url,
+        {'substitute': [{'id': food_space_2.id, 'name': 'Hacked Food S2'}]},
+        content_type='application/json'
+    )
+    assert r.status_code == 200
+    response = json.loads(r.content)
+    print(response)
+    assert response['substitute'] == []
+
+    with scopes_disabled():
+        food_space_2.refresh_from_db()
+        assert food_space_2.name != 'Hacked Food S2'
+        food_space_1.refresh_from_db()
+        assert not food_space_1.substitute.filter(id=food_space_2.id).exists()
