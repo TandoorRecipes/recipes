@@ -261,6 +261,20 @@ def test_food_properties_skipped_on_create(u1_s1, space_1):
     assert len(get_response['food_properties']) > 0
 
 
+def test_create_with_null_unit_ingredient(u1_s1):
+    # ingredients like "2 eggs" have no unit, which nested writes must accept
+    recipe_data = {
+        "name": "Test Recipe",
+        "steps": [{"instruction": "Mix", "ingredients": [{"food": {"name": "egg"}, "unit": None, "amount": 2}]}]
+    }
+
+    r = u1_s1.post(reverse(LIST_URL), recipe_data, content_type='application/json')
+    assert r.status_code == 201
+    ingredient = json.loads(r.content)['steps'][0]['ingredients'][0]
+    assert ingredient['unit'] is None
+    assert ingredient['food']['name'] == 'egg'
+
+
 def test_batch_update_keywords(u1_s1, space_1, space_2, recipe_1_s1):
     with scopes_disabled():
         kw1 = Keyword.objects.create(name='Keyword 1', space=space_1)
