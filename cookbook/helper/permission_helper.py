@@ -1,4 +1,5 @@
 import inspect
+import time
 
 from django.conf import settings
 from django.contrib import messages
@@ -6,6 +7,7 @@ from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import Group
 from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist, ValidationError
+from django.db import OperationalError, connection, transaction
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.utils import timezone
@@ -602,21 +604,57 @@ def create_space_for_user(user, name=None):
 
 def process_invite_token(user, token):
     """
-    given a user and a token, process the invite link and create the appropriate user space
-    :param user:
-    :param token:
-    :return:
+    Process an invite link and create the appropriate user space.
+
+    A non-reusable invite link can only be claimed by one user.
+    The claim and membership creation are performed atomically.
     """
-    if link := InviteLink.objects.filter(valid_until__gte=timezone.now().date(), used_by=None, uuid=token).first():
-        if user.is_authenticated:
-            if not user.userspace_set.filter(space=link.space).exists():
+    if not user.is_authenticated:
+        return False
+
+    today = timezone.now().date()
+
+    for attempt in range(5):
+        try:
+            link = InviteLink.objects.filter(
+                valid_until__gte=today,
+                used_by__isnull=True,
+                uuid=token,
+            ).first()
+
+            if not link:
+                return False
+
+            if user.userspace_set.filter(space=link.space).exists():
+                return False
+
+            with transaction.atomic():
                 if not link.reusable:
-                    link.used_by = user
-                    link.save()
+                    claimed = InviteLink.objects.filter(
+                        pk=link.pk,
+                        uuid=token,
+                        valid_until__gte=today,
+                        used_by__isnull=True,
+                    ).update(used_by=user)
+
+                    if claimed != 1:
+                        return False
 
                 UserSpace.objects.filter(user=user).update(active=False)
-                user_space = UserSpace.objects.create(user=user, space=link.space, internal_note=link.internal_note, invite_link=link, household=link.household,
-                                                      active=True)
+
+                user_space = UserSpace.objects.create(
+                    user=user,
+                    space=link.space,
+                    internal_note=link.internal_note,
+                    invite_link=link,
+                    household=link.household,
+                    active=True,
+                )
+
                 user_space.groups.add(link.group)
-                return True
-    return False
+
+            return True
+        except OperationalError as error:
+            if connection.vendor != "sqlite" or "locked" not in str(error).lower() or attempt == 4:
+                raise
+            time.sleep(0.01 * (2 ** attempt))
