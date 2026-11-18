@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: recipes
+    tier: database
+  name: recipes-postgresql
+spec:
+  ports:
+  - name: postgresql
+    port: 5432
+    protocol: TCP
+    targetPort: postgresql
+  selector:
+    app: recipes
+    tier: database
+  sessionAffinity: None
+  type: ClusterIP
