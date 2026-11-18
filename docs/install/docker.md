@@ -76,7 +76,7 @@ If you use Traefik, this configuration is the one for you.
 !!! info
     Traefik can be a little confusing to setup.
     Please refer to [their excellent documentation](https://doc.traefik.io/traefik/). If that does not help,
-    [this little example](traefik.md) might be for you.
+    the Docker Compose example below might help.
 
 ```shell
 wget https://raw.githubusercontent.com/vabene1111/recipes/develop/docs/install/docker/traefik-nginx/docker-compose.yml
