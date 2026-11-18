@@ -70,7 +70,7 @@ from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, safe_request
-from cookbook.helper.ai_helper import can_perform_ai_request, AiCallbackHandler, strip_json_fences
+from cookbook.helper.ai_helper import can_perform_ai_request, AiCallbackHandler, build_ai_request, strip_json_fences
 from cookbook.helper.batch_edit_helper import add_to_relation, remove_from_relation, remove_all_from_relation, set_relation
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
@@ -126,7 +126,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
 from recipes import settings
-from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT, AI_ALLOWED_URLS
+from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT
 
 DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
 BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
@@ -1269,16 +1269,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             ]
 
             try:
-                ai_request = {
-                    'api_key': ai_provider.api_key,
-                    'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
-                    'messages': messages,
-                }
-                if ai_provider.url:
-                    if not ai_provider.url in AI_ALLOWED_URLS:
-                        raise Exception(f'AI provider URL not allowed: {ai_provider.url}')
-                    ai_request['api_base'] = ai_provider.url
+                ai_request = build_ai_request(ai_provider, messages, response_format={"type": "json_object"})
                 ai_response = completion(**ai_request)
 
                 response_text = ai_response.choices[0].message.content
@@ -2105,16 +2096,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
             ]
 
             try:
-                ai_request = {
-                    'api_key': ai_provider.api_key,
-                    'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
-                    'messages': messages,
-                }
-                if ai_provider.url:
-                    if not ai_provider.url in AI_ALLOWED_URLS:
-                        raise Exception(f'AI provider URL not allowed: {ai_provider.url}')
-                    ai_request['api_base'] = ai_provider.url
+                ai_request = build_ai_request(ai_provider, messages, response_format={"type": "json_object"})
                 ai_response = completion(**ai_request)
 
                 response_text = ai_response.choices[0].message.content
@@ -2897,16 +2879,7 @@ class AiImportView(APIView):
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
 
             try:
-                ai_request = {
-                    'api_key': ai_provider.api_key,
-                    'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
-                    'messages': messages,
-                }
-                if ai_provider.url:
-                    if not ai_provider.url in AI_ALLOWED_URLS:
-                        raise Exception(f'AI provider URL not allowed: {ai_provider.url}')
-                    ai_request['api_base'] = ai_provider.url
+                ai_request = build_ai_request(ai_provider, messages, response_format={"type": "json_object"})
                 ai_response = completion(**ai_request)
             except ServiceUnavailableError:
                 response = {
@@ -3024,16 +2997,7 @@ class AiStepSortView(APIView):
             ]
 
             try:
-                ai_request = {
-                    'api_key': ai_provider.api_key,
-                    'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
-                    'messages': messages,
-                }
-                if ai_provider.url:
-                    if not ai_provider.url in AI_ALLOWED_URLS:
-                        raise Exception(f'AI provider URL not allowed: {ai_provider.url}')
-                    ai_request['api_base'] = ai_provider.url
+                ai_request = build_ai_request(ai_provider, messages, response_format={"type": "json_object"})
                 ai_response = completion(**ai_request)
 
                 response_text = ai_response.choices[0].message.content

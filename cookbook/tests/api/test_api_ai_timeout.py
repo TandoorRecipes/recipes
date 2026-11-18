@@ -18,7 +18,7 @@ def ai_provider(space_1):
         name='test_provider',
         space=space_1,
         api_key='test-key',
-        model_name='test-model',
+        model_name='gpt-4o',
     )
 
 
@@ -41,7 +41,7 @@ def ai_space(space_1, ai_provider):
 
 TIMEOUT_SIDE_EFFECT = Timeout(
     message='Request timed out after 120 seconds',
-    model='test-model',
+    model='gpt-4o',
     llm_provider='test',
 )
 
