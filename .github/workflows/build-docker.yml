@@ -86,11 +86,11 @@ jobs:
           context: .
           file: ${{ matrix.dockerfile }}
           pull: true
-          no-cache: true
           push: ${{ github.secret_source == 'Actions' }}
           platforms: ${{ matrix.platforms }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          no-cache: false # switch to disable caching especially when security updates need to be included
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
