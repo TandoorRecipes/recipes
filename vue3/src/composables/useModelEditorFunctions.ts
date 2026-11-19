@@ -184,7 +184,6 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
         }
 
         if (name == '') {
-            console.warn('No string keys given model type ', modelName)
             return t(modelClass.value.model.localizationKey)
         }
 

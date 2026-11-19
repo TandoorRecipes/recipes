@@ -11,6 +11,7 @@
         item-value="id"
         :label="label"
         :hint="props.hint"
+        :persistent-hint="props.persistentHint"
         :hide-details="props.hideDetails"
         :density="props.density"
         :clearable="props.clearable"
@@ -138,6 +139,7 @@ const props = defineProps({
     // default props
     label: {type: String, default: ''},
     hint: {type: String, default: ''},
+    persistentHint: {type: Boolean, default: false},
     hideDetails: {type: Boolean, default: false},
     density: {type: String as PropType<Density | undefined>},
     clearable: {type: Boolean, default: false},

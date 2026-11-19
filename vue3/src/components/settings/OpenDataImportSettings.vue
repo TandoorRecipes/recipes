@@ -1,16 +1,18 @@
 <template>
-    <p class="text-h4">{{ $t('Open_Data_Import') }}</p>
-    <v-divider></v-divider>
-    <p class="text-subtitle-1">{{ $t('Data_Import_Info') }} <a href="https://github.com/TandoorRecipes/open-tandoor-data" target="_blank" rel="noreferrer nofollow">{{ $t('Learn_More') }}</a></p>
+    <template v-if="!hideHeader">
+        <p class="text-h4">{{ $t('Open_Data_Import') }}</p>
+        <v-divider></v-divider>
+        <p class="text-subtitle-1">{{ $t('Data_Import_Info') }} <a href="https://github.com/TandoorRecipes/open-tandoor-data" target="_blank" rel="noreferrer nofollow">{{ $t('Learn_More') }}</a></p>
+    </template>
 
     <v-select :items="metadata.versions" :label="$t('Language')" class="mt-4" v-model="requestData.selectedVersion" :loading="loading"></v-select>
 
     <v-row v-if="requestData.selectedVersion">
         <v-col>
-            <v-checkbox :label="$t('Update_Existing_Data')" v-model="requestData.updateExisting" hide-details></v-checkbox>
+            <v-checkbox :label="$t('Update_Existing_Data')" v-model="requestData.updateExisting" hide-details v-if="!props.hideUpdateExisting"></v-checkbox>
             <v-checkbox :label="$t('Use_Metric')" v-model="requestData.useMetric" hide-details></v-checkbox>
 
-            <v-table>
+            <v-table v-if="!props.hideDetails">
                 <thead>
                 <tr>
                     <th>{{ $t('Import') }}</th>
@@ -49,6 +51,14 @@
 import {ApiApi, ImportOpenData, ImportOpenDataMetaData, ImportOpenDataResponse} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {onMounted, ref} from "vue";
+
+const emit = defineEmits(['importDone'])
+
+const props = defineProps({
+    hideHeader: {type: Boolean, default: false},
+    hideDetails: {type: Boolean, default: false},
+    hideUpdateExisting: {type: Boolean, default: false},
+})
 
 let loading = ref(false)
 let metadata = ref({} as ImportOpenDataMetaData)
@@ -106,6 +116,7 @@ function importOpenData() {
         useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
     }).finally(() => {
         loading.value = false
+        emit('importDone')
     })
 
 }

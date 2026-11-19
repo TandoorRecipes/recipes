@@ -12,18 +12,20 @@
         :editing-object="editingObj">
         <v-card-text>
             <v-form :disabled="loading">
-                <v-text-field :label="$t('Email')" v-model="editingObj.email"></v-text-field>
-                <v-select :label="$t('Role')" :items="groups" item-value="id" item-title="name" return-object v-model="editingObj.group"></v-select>
-                <v-model-select model="Household" v-model="editingObj.household" create></v-model-select>
-                <v-date-input :label="$t('Valid Until')" v-model="editingObj.validUntil">
+                <user-group-input v-model="editingObj.group"></user-group-input>
+
+                <v-model-select model="Household" :hint="$t('Optional')" persistent-hint v-model="editingObj.household" create></v-model-select>
+                <v-text-field :label="$t('Email')" v-model="editingObj.email" :hint="$t('InviteLinkEmailHelp')" persistent-hint class="mt-2"></v-text-field>
+                <v-date-input :label="$t('Valid Until')" class="mt-2" v-model="editingObj.validUntil">
                     <template #append-inner>
                         <v-btn variant="plain" icon="fa-solid fa-calendar-xmark" @click="editingObj.validUntil = new Date('01-01-1970')"></v-btn>
                     </template>
                 </v-date-input>
-                <v-textarea :label="$t('Note')" v-model="editingObj.internalNote"></v-textarea>
-                <v-checkbox :label="$t('Reusable')" v-model="editingObj.reusable"></v-checkbox>
-                <v-text-field :label="$t('Link')" readonly :model-value="inviteLinkUrl(editingObj)" v-if="isUpdate()">
+                <v-textarea :label="$t('InternalNote')" v-model="editingObj.internalNote" rows="2"></v-textarea>
+                <v-checkbox :label="$t('Reusable')" v-model="editingObj.reusable" :hint="$t('InviteLinkReusableHelp')" persistent-hint></v-checkbox>
+                <v-text-field :label="$t('Link')" readonly :model-value="inviteLinkUrl(editingObj)" v-if="isUpdate()" class="mt-2">
                     <template #append-inner>
+                        <v-btn variant="plain" icon="fa-solid fa-share-nodes" @click="shareIntend()"></v-btn>
                         <btn-copy variant="plain" color="undefined" :copy-value="inviteLinkUrl(editingObj)"></btn-copy>
                     </template>
                 </v-text-field>
@@ -47,6 +49,7 @@ import {useDjangoUrls} from "@/composables/useDjangoUrls.ts";
 import {useI18n} from "vue-i18n";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import VModelSelect from "@/components/inputs/VModelSelect.vue";
+import UserGroupInput from "@/components/inputs/UserGroupInput.vue";
 
 const {t} = useI18n()
 
@@ -69,7 +72,6 @@ watch([() => props.item, () => props.itemId], () => {
 })
 
 // object specific data (for selects/display)
-const groups = ref([] as Group[])
 
 onMounted(() => {
     initializeEditor()
@@ -78,22 +80,12 @@ onMounted(() => {
 /**
  * component specific state setup logic
  */
-function initializeEditor(){
-     const api = new ApiApi()
-
-    api.apiGroupList().then(r => {
-        groups.value = r
-
-        setupState(props.item, props.itemId, {
-            newItemFunction: () => {
-                editingObj.value.validUntil = DateTime.now().plus({month: 1}).toJSDate()
-                editingObj.value.group = groups.value[0]
-            },
-            itemDefaults: props.itemDefaults
-        })
-
-    }).catch(err => {
-        useMessageStore().addError(ErrorMessageType.FETCH_ERROR, err)
+function initializeEditor() {
+    setupState(props.item, props.itemId, {
+        newItemFunction: () => {
+            editingObj.value.validUntil = DateTime.now().plus({month: 1}).toJSDate()
+        },
+        itemDefaults: props.itemDefaults
     })
 }
 
@@ -124,6 +116,18 @@ function saveObject() {
         }
         return r
     })
+}
+
+/**
+ * trigger navigator share event
+ */
+function shareIntend() {
+    let shareData = {
+        title: t("Invitation"),
+        text: t("JoinTandoor"),
+        url: inviteLinkUrl(editingObj.value),
+    }
+    navigator.share(shareData)
 }
 
 </script>
