@@ -98,7 +98,6 @@ class WritableNestedModelSerializer(WNMS):
                         data[f] = model_to_dict(instance, fields=required_fields)
                     else:
                         del data[f]
-
                 elif data[f]:
                     if hasattr(self.fields[f].Meta.model, 'scoped_model') and isinstance(data[f], dict) and 'id' in data[f]:
                         # if its a scoped model but the given ID does not exist in the space, remove from request as if it was never passed
