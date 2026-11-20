@@ -6,6 +6,8 @@ from datetime import timedelta
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.conf import settings
 from django.contrib.auth.models import Group
+from django.core.exceptions import PermissionDenied
+from django.db import transaction
 from django.utils import timezone
 
 from cookbook.helper.permission_helper import create_space_for_user, process_invite_token
@@ -132,6 +134,7 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
 
         super().on_authentication_error(request, provider, error=error, exception=exception, extra_context=extra_context)
 
+    @transaction.atomic
     def save_user(self, request, sociallogin, form=None):
         """
         create a default space for new users
@@ -149,7 +152,8 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
             value = request.session['signup_token']
             del request.session['signup_token']
             request.session.modified = True
-            process_invite_token(user, value)
+            if not process_invite_token(user, value):
+                raise PermissionDenied("This invitation link is no longer available.")
 
         create_space_for_user(user)
 
