@@ -1,5 +1,5 @@
 import {ErrorMessageType, PreparedMessage, useMessageStore} from "@/stores/MessageStore";
-import {onBeforeMount, onMounted, ref, shallowRef, watch} from "vue";
+import {nextTick, onBeforeMount, onMounted, ref, shallowRef, watch} from "vue";
 import {EditorSupportedModels, GenericModel, getGenericModelFromString} from "@/types/Models";
 import {useI18n} from "vue-i18n";
 import {ResponseError} from "@/openapi";
@@ -19,6 +19,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
     const editingObjChanged = ref(false)
     let onBeforeSaveCallback: (() => Promise<any> | any) | undefined = undefined
     let onAfterSaveCallback: (() => Promise<any> | any) | undefined = undefined
+    let setupComplete = ref(false)
 
     const {t} = useI18n()
     const title = useTitle()
@@ -28,7 +29,7 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
      * set editingObjChanged to true when a change is detected
      */
     watch(() => editingObj.value, (newValue, oldValue) => {
-        if (Object.keys(oldValue).length > 0) {
+        if (Object.keys(oldValue).length > 0 && setupComplete.value) {
             editingObjChanged.value = true
         }
     }, {deep: true})
@@ -99,6 +100,8 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                         } = {}
     ): Promise<T | undefined> {
 
+        setupComplete.value = false
+
         const {
             itemDefaults = {} as T,
             newItemFunction = () => {
@@ -123,7 +126,11 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
 
             loading.value = false
             title.value = editingObjName()
-            editingObjChanged.value = false
+
+            nextTick(() => {
+                setupComplete.value = true
+            })
+
             return Promise.resolve(editingObj.value)
         } else if (item !== null) {
             // item is given so return that
@@ -131,7 +138,11 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
             existingItemFunction()
             loading.value = false
             title.value = editingObjName()
-            editingObjChanged.value = false
+
+            nextTick(() => {
+                setupComplete.value = true
+            })
+
             return Promise.resolve(editingObj.value)
         } else if (itemId !== undefined && itemId != '') {
             // itemId is given => fetch from server and return item
@@ -155,7 +166,10 @@ export function useModelEditorFunctions<T>(modelName: EditorSupportedModels, emi
                 return Promise.resolve(undefined)
             }).finally(() => {
                 loading.value = false
-                editingObjChanged.value = false
+
+                nextTick(() => {
+                    setupComplete.value = true
+                })
             })
         }
         return Promise.resolve(undefined)
