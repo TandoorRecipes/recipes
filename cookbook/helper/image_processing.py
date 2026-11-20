@@ -76,7 +76,11 @@ def is_file_type_allowed(filename, image_only=False):
 
 
 def strip_image_meta(image_object, file_format):
+    MAX_IMAGE_PIXELS = 15_000_000
+
     image_object = Image.open(image_object)
+    if image_object.width * image_object.height > MAX_IMAGE_PIXELS:
+        return None
 
     if file_format == 'GIF':
         im_io = BytesIO()

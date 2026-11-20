@@ -792,7 +792,7 @@ export const TInviteLink = {
     disableSearch: true,
     isPaginated: true,
     isAdvancedDelete: true,
-    toStringKeys: ['email', 'role'],
+    toStringKeys: [],
 
     tableHeaders: [
         {title: 'Email', key: 'email'},
