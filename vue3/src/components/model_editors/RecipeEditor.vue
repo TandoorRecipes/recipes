@@ -285,7 +285,7 @@ function saveRecipeImage(){
             loading.value = true
             updateRecipeImage(editingObj.value.id, file.value).then(r => {
                 file.value = null
-                setupState(props.item, props.itemId)
+                initializeEditor()
             }).catch(err => {
                 useMessageStore().addMessage(MessageType.ERROR, {title: t('UPDATE_ERROR'), text: t('ErrorUpdatingImage')} as StructuredMessage, 8000)
             }).finally(() => {
@@ -299,7 +299,7 @@ function saveRecipeImage(){
  */
 function deleteImage() {
     updateRecipeImage(editingObj.value.id!, null).then(r => {
-        setupState(props.item, props.itemId)
+        initializeEditor()
     })
 }
 
