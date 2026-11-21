@@ -247,25 +247,11 @@
                                 <v-row>
                                     <v-col class="text-center">
                                         <v-btn-group border divided>
-                                            <ai-action-button
-                                                :text="$t('Auto_Sort')"
-                                                prepend-icon="$ai"
-                                                :loading="aiStepSortLoading"
-                                                @selected="aiStepSort"
-                                                :disabled="!importResponse.recipe?.steps || importResponse.recipe.steps.length < 1">
-                                            </ai-action-button>
-
-                                            <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps()">
-                                                <span v-if="!mobile">{{ $t('Split') }}</span>
-                                            </v-btn>
-
-                                            <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps()">
-                                                <span v-if="!mobile">{{ $t('Merge') }}</span>
-                                            </v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-square-check" @click="setAllKeywordsImportStatus(true)">{{ $t('SelectAll') }}</v-btn>
+                                            <v-btn prepend-icon="fa-solid fa-square-minus" @click="setAllKeywordsImportStatus(false)">{{ $t('SelectNone') }}</v-btn>
                                         </v-btn-group>
                                     </v-col>
                                 </v-row>
-
                                 <v-row>
                                     <v-col>
                                         <v-model-select model="Keyword" v-model="keywordSelect" create>
@@ -298,15 +284,22 @@
                                 </v-stepper-actions>
                             </v-stepper-window-item>
                             <v-stepper-window-item value="step_editor">
-                                <v-row>
-                                    <v-col class="text-center">
-                                        <v-btn-group border divided>
-                                            <v-btn prepend-icon="fa-solid fa-shuffle" @click="autoSortIngredients()"><span v-if="!mobile">{{ $t('Auto_Sort') }}</span></v-btn>
-                                            <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps()"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
-                                            <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps()"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
-                                        </v-btn-group>
-                                    </v-col>
-                                </v-row>
+                            <v-row>
+                                <v-col class="text-center">
+                                    <v-btn-group border divided>
+                                        <v-btn prepend-icon="fa-solid fa-shuffle" @click="autoSortIngredients()"><span v-if="!mobile">{{ $t('Auto_Sort') }}</span></v-btn>
+                                        <ai-action-button
+                                            :text="!mobile ? $t('Auto_Sort') : ''"
+                                            prepend-icon="$ai"
+                                            :loading="aiStepSortLoading"
+                                            @selected="aiStepSort"
+                                            :disabled="!importResponse.recipe?.steps || importResponse.recipe.steps.length < 1">
+                                        </ai-action-button>
+                                        <v-btn prepend-icon="fa-solid fa-maximize" @click="handleSplitAllSteps()"><span v-if="!mobile">{{ $t('Split') }}</span></v-btn>
+                                        <v-btn prepend-icon="fa-solid fa-minimize" @click="handleMergeAllSteps()"><span v-if="!mobile">{{ $t('Merge') }}</span></v-btn>
+                                    </v-btn-group>
+                                </v-col>
+                            </v-row>
                                 <v-row v-for="(s, stepIndex) in importResponse.recipe.steps" :key="stepIndex">
                                     <v-col cols="12">
                                         <v-chip color="primary">#{{ stepIndex + 1 }}</v-chip>
@@ -571,6 +564,7 @@
 
 <script lang="ts" setup>
 
+import AiActionButton from "@/components/buttons/AiActionButton.vue";
 import {useI18n} from "vue-i18n";
 import {computed, onMounted, ref} from "vue";
 import {
