@@ -1109,6 +1109,8 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             return Response(content, status=status.HTTP_204_NO_CONTENT)
 
         amount = request.data.get('amount', 1)
+        if amount is None:
+            amount = 1
         unit = request.data.get('unit', None)
         content = {'msg': _(f'{obj.name} was added to the shopping list.')}
 
