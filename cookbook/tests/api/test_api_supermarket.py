@@ -58,6 +58,26 @@ def test_list_filter(obj_1, obj_2, u1_s1):
     assert response['count'] == 1
 
 
+def test_list_random_false_is_not_shuffled(space_1, u1_s1):
+    # https://github.com/TandoorRecipes/recipes/issues/4931
+    # `random=false` (and `random=0` / `random=no`) must return the normal
+    # sorted list, not a shuffled one.
+    for i in range(10):
+        Supermarket.objects.create(name=f'market-{i:02d}', space=space_1)
+
+    def names(query):
+        response = json.loads(u1_s1.get(f'{reverse(LIST_URL)}?limit=10{query}').content)
+        assert response['count'] == 10
+        return [x['name'] for x in response['results']]
+
+    baseline = names('')
+    assert baseline == sorted(baseline)
+    for value in ['false', '0', 'no']:
+        assert names(f'&random={value}') == baseline
+    # `random=true` must still return the same items, in any order
+    assert sorted(names('&random=true')) == baseline
+
+
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 403],
