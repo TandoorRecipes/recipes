@@ -40,3 +40,10 @@ Generate a meal plan based on complex criteria and optionally insert it into an 
 Maintained by [featurecreep-cron](https://github.com/featurecreep-cron/morsl)
 
 Automate meal planning for Tandoor. Set up profiles with filter rules — rating, books, tags, recently cooked — and generate meal plans that sync directly to Tandoor. Supports automatic generation and a shareable menu for household members.
+
+## Cook Mode for Kiosk Satellite
+
+Maintained by [vednolacni](https://github.com/vednolacni/kiosk-satellite-cook-mode)
+
+A cook mode for kitchen tablets. It is a plugin for [Kiosk Satellite](https://github.com/jxlarrea/kiosk-satellite), an Android kiosk app for Home Assistant, and needs it to run.
+It shows today's meal plan and every recipe, one large step at a time, with scaled ingredients, timers from the step text, reading aloud and an entry in the cook log at the end.
