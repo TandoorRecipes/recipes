@@ -205,7 +205,7 @@ class StandardFilterModelViewSet(viewsets.ModelViewSet):
                 raise APIException(_('Parameter updated_at incorrectly formatted'))
 
         limit = self.request.query_params.get('limit', None)
-        random = self.request.query_params.get('random', False)
+        random = str2bool(self.request.query_params.get('random', False))
         if limit is not None:
             if random:
                 queryset = queryset.order_by("?")[:int(limit)]
@@ -334,7 +334,7 @@ class FuzzyFilterMixin(viewsets.ModelViewSet, ExtendedRecipeMixin):
                 raise APIException(_('Parameter updated_at incorrectly formatted'))
 
         limit = self.request.query_params.get('limit', None)
-        random = self.request.query_params.get('random', False)
+        random = str2bool(self.request.query_params.get('random', False))
         if random:
             self.queryset = self.queryset.order_by("?")
         if limit is not None:
