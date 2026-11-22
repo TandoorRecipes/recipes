@@ -11,6 +11,7 @@
         item-value="id"
         :label="label"
         :hint="props.hint"
+        :persistent-hint="props.persistentHint"
         :hide-details="props.hideDetails"
         :density="props.density"
         :clearable="props.clearable"
@@ -21,9 +22,9 @@
         :placeholder="props.placeholder"
         :loading="loading"
         return-object
-        @keydown.enter.exact="createItem(search, false); console.log('triggered enter keydown')"
-        @keydown.shift.enter="createItem(search, true); console.log('triggered shift enter keydown')"
-        @keydown.shift.e.prevent="editDialog = true"
+        @keydown.enter.exact="createItem(search, false);"
+        @keydown.shift.enter="createItem(search, true);"
+        @keydown.shift.ctrl.e.prevent="editDialog = true"
         @blur="hasFocus = false"
         @focus="hasFocus = true; "
     >
@@ -48,8 +49,8 @@
         <template v-slot:item="{ props, item }">
             <v-list-item v-if="item.raw.id == undefined"
                          :title="item.title"
-                         @click.exact="createItem(search, false); console.log('triggered click ITEM')"
-                         @click.shift="createItem(search, true); console.log('triggered click ITEM SHIFT')"
+                         @click.exact="createItem(search, false);"
+                         @click.shift="createItem(search, true);"
             >
                 <template #append>
                     <v-icon icon="$create" color="success">
@@ -84,6 +85,7 @@
             <v-list-item>
                 <span v-if="!props.multiple">
                     <v-chip size="x-small" class="mr-1" label><i class="fas fa-arrow-up"></i></v-chip>
+                    <v-chip size="x-small" class="mr-1" label>{{$t('Ctrl')}}</v-chip>
                     <v-chip size="x-small" class="mr-1" label>E</v-chip>
                     <span>{{ $t('Editor') }}</span>
                 </span>
@@ -138,6 +140,7 @@ const props = defineProps({
     // default props
     label: {type: String, default: ''},
     hint: {type: String, default: ''},
+    persistentHint: {type: Boolean, default: false},
     hideDetails: {type: Boolean, default: false},
     density: {type: String as PropType<Density | undefined>},
     clearable: {type: Boolean, default: false},
@@ -228,8 +231,8 @@ watch(autoselectValue, (newValue, oldValue) => {
  */
 watch(() => props.modelValue, (newValue, oldValue) => {
     // do not trigger update if value has not actually changed
-    if(newValue == oldValue ||
-        (Array.isArray(newValue) && Array.isArray(oldValue) && newValue.length === oldValue.length && newValue.every((item:number) => oldValue.includes(item)))){
+    if (newValue == oldValue ||
+        (Array.isArray(newValue) && Array.isArray(oldValue) && newValue.length === oldValue.length && newValue.every((item: number) => oldValue.includes(item)))) {
         return
     }
 
@@ -444,6 +447,8 @@ function updateModelValue(newValue: EditorSupportedTypes | EditorSupportedTypes[
             emit('update:modelValue', newValue.flatMap(item => item.id))
         } else if (newValue) {
             emit('update:modelValue', newValue.id)
+        } else {
+            emit('update:modelValue', null)
         }
     } else {
         emit('update:modelValue', newValue)

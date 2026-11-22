@@ -98,7 +98,8 @@ class NextcloudCookbook(Integration):
             if '.zip' in f['name']:
                 import_zip = self.get_zip_file(f['file'])
                 for z in import_zip.filelist:
-                    if re.match(f'^(.)+{recipe.name}/full.jpg$', z.filename):
+                    target_suffix = f"{recipe.name}/full.jpg"
+                    if z.filename == target_suffix or z.filename.endswith(f"/{target_suffix}"):
                         self.import_recipe_image(recipe, BytesIO(self.safe_read(import_zip, z.filename)), filetype=get_filetype(z.filename))
 
         return recipe

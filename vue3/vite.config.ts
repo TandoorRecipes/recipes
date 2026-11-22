@@ -54,6 +54,7 @@ export default defineConfig(async ({command, mode, isSsrBuild, isPreview}) => {
         },
         optimizeDeps: {
             exclude: ['vue-simple-calendar'],
+            include: ['vuetify/components/!(VOverflowBtn)', 'vuetify/directives/**', 'vuetify/labs/**'],
         },
         server: {
             host: '0.0.0.0', // only needed to expose dev server to network bound IPs
@@ -90,7 +91,7 @@ function localeCoveragePlugin(): Plugin {
             const en = JSON.parse(readFileSync(join(localesDir, 'en.json'), 'utf-8'))
             const totalKeys = Object.keys(en).length
 
-            const coverage: Record<string, {fe: number, be: number}> = {}
+            const coverage: Record<string, { fe: number, be: number }> = {}
             const qualified: string[] = []
 
             for (const file of readdirSync(localesDir)) {

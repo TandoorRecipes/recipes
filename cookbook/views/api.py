@@ -70,7 +70,7 @@ from cookbook.connectors.connector_manager import ConnectorManager, ActionType
 from cookbook.forms import ImportForm, ImportExportBase
 from cookbook.helper import recipe_url_import as helper
 from cookbook.helper.HelperFunctions import str2bool, safe_request
-from cookbook.helper.ai_helper import can_perform_ai_request, AiCallbackHandler, strip_json_fences
+from cookbook.helper.ai_helper import can_perform_ai_request, AiCallbackHandler, build_ai_request, strip_json_fences
 from cookbook.helper.batch_edit_helper import add_to_relation, remove_from_relation, remove_all_from_relation, set_relation
 from cookbook.helper.image_processing import handle_image
 from cookbook.helper.ingredient_parser import IngredientParser
@@ -82,7 +82,7 @@ from cookbook.helper.permission_helper import (CustomIsAdmin, CustomIsOwner, Cus
                                                above_space_limit,
                                                has_group_permission, is_space_owner,
                                                switch_user_active_space, CustomAiProviderPermission, IsCreateDRF, CustomIsOwnerDestroyOnly, CustomIsHousehold,
-                                               get_household_user_ids)
+                                               get_household_user_ids, has_recipe_permission)
 from cookbook.helper.recipe_search import RecipeSearch
 from cookbook.helper.recipe_url_import import clean_dict, get_from_youtube_scraper, get_images_from_soup
 from cookbook.helper.shopping_helper import RecipeShoppingEditor
@@ -126,7 +126,7 @@ from cookbook.serializer import (AccessTokenSerializer, AutomationSerializer, Au
 from cookbook.version_info import TANDOOR_VERSION
 from cookbook.views.import_export import get_integration
 from recipes import settings
-from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT, AI_ALLOWED_URLS
+from recipes.settings import DRF_THROTTLE_RECIPE_URL_IMPORT, FDC_API_KEY, AI_RATELIMIT
 
 DateExample = OpenApiExample('Date Format', value='1972-12-05', request_only=True)
 BeforeDateExample = OpenApiExample('Before Date Format', value='-1972-12-05', request_only=True)
@@ -698,7 +698,7 @@ class GroupViewSet(LoggingMixin, viewsets.ModelViewSet):
 class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
-    permission_classes = [((IsReadOnlyDRF | IsCreateDRF) & CustomIsGuest) | CustomIsOwner & CustomIsAdmin & CustomTokenHasReadWriteScope]
+    permission_classes = [(((IsReadOnlyDRF | IsCreateDRF) & CustomIsGuest ) | (CustomIsOwner & CustomIsAdmin)) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
     http_method_names = ['get', 'post', 'put', 'patch']
 
@@ -1269,16 +1269,7 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
             ]
 
             try:
-                ai_request = {
-                    'api_key': ai_provider.api_key,
-                    'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
-                    'messages': messages,
-                }
-                if ai_provider.url:
-                    if not ai_provider.url in AI_ALLOWED_URLS:
-                        raise Exception(f'AI provider URL not allowed: {ai_provider.url}')
-                    ai_request['api_base'] = ai_provider.url
+                ai_request = build_ai_request(ai_provider, messages, response_format={"type": "json_object"})
                 ai_response = completion(**ai_request)
 
                 response_text = ai_response.choices[0].message.content
@@ -1911,7 +1902,9 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
         if self.request.space.demo:
             raise PermissionDenied(detail='Not available in demo', code=None)
         obj = self.get_object()
-        ingredients = request.data.get('ingredients', None)
+
+        ingredients = Ingredient.objects.filter(id__in=request.data.get('ingredients', None)).filter(
+                Q(step__recipe__private=False) | (Q(step__recipe__private=True) & (Q(step__recipe__created_by=self.request.user) | Q(step__recipe__shared=self.request.user)))).values_list('id', flat=True)
 
         servings = request.data.get('servings', None)
         list_recipe = request.data.get('list_recipe', None)
@@ -1968,6 +1961,9 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
             safe_recipe_ids = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space).filter(
                 Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).values_list('id', flat=True)
 
+            owned_recipe_ids = Recipe.objects.filter(id__in=serializer.validated_data['recipes'], space=self.request.space).filter(
+                Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user)))).values_list('id', flat=True)
+
             if 'keywords_add' in serializer.validated_data:
                 safe_keyword_ids = Keyword.objects.filter(id__in=serializer.validated_data['keywords_add'], space=request.space).values_list('id', flat=True)
                 keyword_relations = []
@@ -2006,24 +2002,25 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 recipes.update(servings_text=serializer.validated_data['servings_text'])
 
             if 'private' in serializer.validated_data and serializer.validated_data['private'] is not None:
-                recipes.update(private=serializer.validated_data['private'])
+                recipes.filter(id__in=owned_recipe_ids).update(private=serializer.validated_data['private'])
 
             if 'shared_add' in serializer.validated_data:
                 shared_relation = []
                 space_user_ids = UserSpace.objects.filter(space=request.space).values_list('user_id', flat=True)
                 for r in recipes:
-                    for u in serializer.validated_data['shared_add']:
-                        if u in space_user_ids:
-                            shared_relation.append(Recipe.shared.through(recipe_id=r.pk, user_id=u))
+                    if r.pk in owned_recipe_ids:
+                        for u in serializer.validated_data['shared_add']:
+                            if u in space_user_ids:
+                                shared_relation.append(Recipe.shared.through(recipe_id=r.pk, user_id=u))
                 Recipe.shared.through.objects.bulk_create(shared_relation, ignore_conflicts=True, unique_fields=('recipe_id', 'user_id',))
 
             if 'shared_remove' in serializer.validated_data:
                 for s in serializer.validated_data['shared_remove']:
-                    Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids, user_id=s).delete()
+                    Recipe.shared.through.objects.filter(recipe_id__in=owned_recipe_ids, user_id=s).delete()
 
             if 'shared_set' in serializer.validated_data and len(serializer.validated_data['shared_set']) > 0:
                 shared_relation = []
-                Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
+                Recipe.shared.through.objects.filter(recipe_id__in=owned_recipe_ids).delete()
                 space_user_ids = UserSpace.objects.filter(space=request.space).values_list('user_id', flat=True)
                 for r in recipes:
                     for u in serializer.validated_data['shared_set']:
@@ -2032,7 +2029,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 Recipe.shared.through.objects.bulk_create(shared_relation, ignore_conflicts=True, unique_fields=('recipe_id', 'user_id',))
 
             if 'shared_remove_all' in serializer.validated_data and serializer.validated_data['shared_remove_all']:
-                Recipe.shared.through.objects.filter(recipe_id__in=safe_recipe_ids).delete()
+                Recipe.shared.through.objects.filter(recipe_id__in=owned_recipe_ids).delete()
 
             if 'clear_description' in serializer.validated_data and serializer.validated_data['clear_description']:
                 recipes.update(description='')
@@ -2099,16 +2096,7 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
             ]
 
             try:
-                ai_request = {
-                    'api_key': ai_provider.api_key,
-                    'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
-                    'messages': messages,
-                }
-                if ai_provider.url:
-                    if not ai_provider.url in AI_ALLOWED_URLS:
-                        raise Exception(f'AI provider URL not allowed: {ai_provider.url}')
-                    ai_request['api_base'] = ai_provider.url
+                ai_request = build_ai_request(ai_provider, messages, response_format={"type": "json_object"})
                 ai_response = completion(**ai_request)
 
                 response_text = ai_response.choices[0].message.content
@@ -2252,7 +2240,7 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
                                     | Q(entries__created_by=self.request.user)
                                     | Q(entries__created_by__in=household_ids)).distinct().all()
 
-    @decorators.action(detail=True, methods=['POST'], serializer_class=ShoppingListEntryBulkCreateSerializer, permission_classes=[CustomIsUser])
+    @decorators.action(detail=True, methods=['POST'], serializer_class=ShoppingListEntryBulkCreateSerializer, permission_classes=[CustomIsUser & CustomTokenHasReadWriteScope])
     def bulk_create_entries(self, request, pk):
         obj = self.get_object()
         if obj.get_space() != request.space:
@@ -2271,6 +2259,7 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
             safe_unit_ids = set(Unit.objects.filter(space_id=request.space.id, id__in=requested_unit_ids).values_list('id', flat=True))
             safe_food_ids = set(Food.objects.filter(space_id=request.space.id, id__in=requested_food_ids).values_list('id', flat=True))
             safe_ingredient_ids = set(Ingredient.objects.filter(space_id=request.space.id, id__in=requested_ingredient_ids).values_list('id', flat=True))
+            safe_shopping_list_ids = set(ShoppingList.objects.filter(space_id=request.space.id, id__in=shopping_lists_ids).values_list('id', flat=True))
 
             entries = []
             for e in entries_data:
@@ -2294,9 +2283,9 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
             created_entries = ShoppingListEntry.objects.bulk_create(entries)
 
             list_relations = []
-            if shopping_lists_ids:
+            if safe_shopping_list_ids:
                 for e in created_entries:
-                    for sLId in shopping_lists_ids:
+                    for sLId in safe_shopping_list_ids:
                         list_relations.append(ShoppingListEntry.shopping_lists.through(shoppinglistentry_id=e.pk, shoppinglist_id=sLId))
             else:
                 food_to_lists = {}
@@ -2412,7 +2401,7 @@ class ShoppingListEntryViewSet(LoggingMixin, viewsets.ModelViewSet):
             return self.queryset[:1000]
 
     @decorators.action(detail=False, methods=['POST'], serializer_class=ShoppingListEntryBulkSerializer,
-                       permission_classes=[CustomIsUser])
+                       permission_classes=[CustomIsUser & CustomTokenHasReadWriteScope])
     def bulk(self, request):
         serializer = self.serializer_class(data=request.data)
 
@@ -2500,11 +2489,11 @@ class CookLogViewSet(LoggingMixin, viewsets.ModelViewSet):
 class ImportLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = ImportLog.objects
     serializer_class = ImportLogSerializer
-    permission_classes = [CustomIsUser & CustomTokenHasReadWriteScope]
+    permission_classes = [CustomIsOwner & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        return self.queryset.filter(space=self.request.space)
+        return self.queryset.filter(space=self.request.space, created_by=self.request.user)
 
 
 class ExportLogViewSet(LoggingMixin, viewsets.ModelViewSet):
@@ -2890,16 +2879,7 @@ class AiImportView(APIView):
                 return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_400_BAD_REQUEST)
 
             try:
-                ai_request = {
-                    'api_key': ai_provider.api_key,
-                    'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
-                    'messages': messages,
-                }
-                if ai_provider.url:
-                    if not ai_provider.url in AI_ALLOWED_URLS:
-                        raise Exception(f'AI provider URL not allowed: {ai_provider.url}')
-                    ai_request['api_base'] = ai_provider.url
+                ai_request = build_ai_request(ai_provider, messages, response_format={"type": "json_object"})
                 ai_response = completion(**ai_request)
             except ServiceUnavailableError:
                 response = {
@@ -3017,16 +2997,7 @@ class AiStepSortView(APIView):
             ]
 
             try:
-                ai_request = {
-                    'api_key': ai_provider.api_key,
-                    'model': ai_provider.model_name,
-                    'response_format': {"type": "json_object"},
-                    'messages': messages,
-                }
-                if ai_provider.url:
-                    if not ai_provider.url in AI_ALLOWED_URLS:
-                        raise Exception(f'AI provider URL not allowed: {ai_provider.url}')
-                    ai_request['api_base'] = ai_provider.url
+                ai_request = build_ai_request(ai_provider, messages, response_format={"type": "json_object"})
                 ai_response = completion(**ai_request)
 
                 response_text = ai_response.choices[0].message.content
@@ -3194,7 +3165,7 @@ def switch_active_space(request, space_id):
         space = get_object_or_404(Space, id=space_id)
         user_space = switch_user_active_space(request.user, space)
         if user_space:
-            return Response(UserSpaceSerializer().to_representation(instance=user_space), status=status.HTTP_200_OK)
+            return Response(UserSpaceSerializer(context={'request': request}).to_representation(instance=user_space), status=status.HTTP_200_OK)
         else:
             return Response("not found", status=status.HTTP_404_NOT_FOUND)
     except Exception:
@@ -3507,9 +3478,8 @@ def share_link(request, pk):
     if request.space.allow_sharing and has_group_permission(request, ('user',)):
         recipe = get_object_or_404(Recipe, pk=pk)
         # manual object permission check for FBV
-        for permission in [CustomRecipePermission()]:
-            if not permission.has_object_permission(request, share_link, recipe):
-                raise PermissionDenied()
+        if not has_recipe_permission(request, recipe, allow_shared=False):
+            raise PermissionDenied()
 
         link = ShareLink.objects.create(recipe=recipe, created_by=request.user, space=request.space)
         return JsonResponse({'pk': pk, 'share': link.uuid,

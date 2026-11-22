@@ -1531,7 +1531,7 @@ export interface ApiInventoryLocationCascadingListRequest {
 }
 
 export interface ApiInventoryLocationCreateRequest {
-    inventoryLocation: InventoryLocation;
+    inventoryLocation: Omit<InventoryLocation, 'household'>;
 }
 
 export interface ApiInventoryLocationDestroyRequest {
@@ -1552,7 +1552,7 @@ export interface ApiInventoryLocationNullingListRequest {
 
 export interface ApiInventoryLocationPartialUpdateRequest {
     id: number;
-    patchedInventoryLocation?: PatchedInventoryLocation;
+    patchedInventoryLocation?: Omit<PatchedInventoryLocation, 'household'>;
 }
 
 export interface ApiInventoryLocationProtectingListRequest {
@@ -1568,7 +1568,7 @@ export interface ApiInventoryLocationRetrieveRequest {
 
 export interface ApiInventoryLocationUpdateRequest {
     id: number;
-    inventoryLocation: InventoryLocation;
+    inventoryLocation: Omit<InventoryLocation, 'household'>;
 }
 
 export interface ApiInventoryLogListRequest {
@@ -2079,7 +2079,7 @@ export interface ApiRecipeBookCascadingListRequest {
 }
 
 export interface ApiRecipeBookCreateRequest {
-    recipeBook: Omit<RecipeBook, 'createdBy'>;
+    recipeBook: Omit<RecipeBook, 'createdBy'|'filter'>;
 }
 
 export interface ApiRecipeBookDestroyRequest {
@@ -2135,7 +2135,7 @@ export interface ApiRecipeBookNullingListRequest {
 
 export interface ApiRecipeBookPartialUpdateRequest {
     id: number;
-    patchedRecipeBook?: Omit<PatchedRecipeBook, 'createdBy'>;
+    patchedRecipeBook?: Omit<PatchedRecipeBook, 'createdBy'|'filter'>;
 }
 
 export interface ApiRecipeBookProtectingListRequest {
@@ -2151,7 +2151,7 @@ export interface ApiRecipeBookRetrieveRequest {
 
 export interface ApiRecipeBookUpdateRequest {
     id: number;
-    recipeBook: Omit<RecipeBook, 'createdBy'>;
+    recipeBook: Omit<RecipeBook, 'createdBy'|'filter'>;
 }
 
 export interface ApiRecipeCascadingListRequest {
@@ -2914,7 +2914,7 @@ export interface ApiUserPartialUpdateRequest {
 
 export interface ApiUserPreferencePartialUpdateRequest {
     user: number;
-    patchedUserPreference?: Omit<PatchedUserPreference, 'user'|'foodInheritDefault'|'foodChildrenExist'>;
+    patchedUserPreference?: Omit<PatchedUserPreference, 'user'|'foodInheritDefault'|'defaultMealType'|'foodChildrenExist'>;
 }
 
 export interface ApiUserPreferenceRetrieveRequest {
