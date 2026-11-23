@@ -314,11 +314,11 @@ SITE_ID = int(os.getenv('ALLAUTH_SITE_ID', 1))
 ACCOUNT_ADAPTER = 'cookbook.helper.AllAuthCustomAdapter'
 
 ACCOUNT_RATE_LIMITS = {
-    "change_password": "1/m/user",
-    "reset_password": "1/m/ip,1/m/key",
-    "reset_password_from_key": "1/m/ip",
-    "signup": "2/m/ip",
-    "login": "3/m/ip",
+    "change_password": "4/m/user",
+    "reset_password": "4/m/ip,4/m/key",
+    "reset_password_from_key": "4/m/ip",
+    "signup": "5/m/ip",
+    "login": "5/m/ip",
 }
 
 HEADLESS_FRONTEND_URLS = {
