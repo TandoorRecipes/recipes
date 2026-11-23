@@ -12,7 +12,8 @@
         :editing-object="editingObj">
         <v-card-text>
             <v-form>
-                <v-select :label="$t('Role')" :items="groups" item-value="id" item-title="name" return-object multiple v-model="editingObj.groups"></v-select>
+                 <user-group-input multiple v-model="editingObj.groups"></user-group-input>
+
                 <v-model-select model="Household" v-model="editingObj.household" create></v-model-select>
 
                 <v-spacer class="mt-10"></v-spacer>
@@ -35,6 +36,7 @@ import {useModelEditorFunctions} from "@/composables/useModelEditorFunctions";
 import ModelSelect from "@/components/inputs/ModelSelect.vue";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import VModelSelect from "@/components/inputs/VModelSelect.vue";
+import UserGroupInput from "@/components/inputs/UserGroupInput.vue";
 
 const props = defineProps({
     item: {type: {} as PropType<UserSpace>, required: false, default: null},

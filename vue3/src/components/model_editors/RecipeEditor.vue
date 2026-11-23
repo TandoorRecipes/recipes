@@ -24,16 +24,15 @@
                 <v-tabs-window-item value="recipe">
 
                     <v-form :disabled="loading || fileApiLoading">
-                        <v-text-field :label="$t('Name')" v-model="editingObj.name"></v-text-field>
+                        <v-text-field :label="$t('Name') + '*'" v-model="editingObj.name"></v-text-field>
                         <v-textarea :label="$t('Description')" v-model="editingObj.description" clearable counter="512" maxlength="512" rows="2" auto-grow></v-textarea>
 
                         <v-row>
                             <v-col cols="12" md="6">
                                 <v-file-upload v-model="file"
-                                               :title="(mobile) ? $t('Select_File') : $t('DragToUpload')"
-                                               :browse-text="$t('Select_File')"
-                                               :divider-text="$t('or')"
-                                               :density="(mobile) ? 'compact' : 'comfortable'"
+                                               :title="$t('RecipeImageUpload')"
+                                               density="compact"
+                                               icon="fa-solid fa-image"
                                 >
                                 </v-file-upload>
                             </v-col>
@@ -67,15 +66,6 @@
                             </v-col>
                             <v-col cols="12" md="6">
                                 <v-text-field :label="$t('ServingsText')" v-model="editingObj.servingsText" clearable></v-text-field>
-                            </v-col>
-                            <v-col cols="12">
-                                <closable-help-alert :text="$t('ScalingHelp')"></closable-help-alert>
-                            </v-col>
-                            <v-col cols="12" md="6">
-                                <v-number-input :label="$t('Diameter')" v-model="editingObj.diameter"></v-number-input>
-                            </v-col>
-                            <v-col cols="12" md="6">
-                                <v-text-field :label="$t('DiameterUnit')" v-model="editingObj.diameterText"></v-text-field>
                             </v-col>
                         </v-row>
 
@@ -133,13 +123,25 @@
                 </v-tabs-window-item>
                 <v-tabs-window-item value="settings">
                     <v-form :disabled="loading || fileApiLoading">
+                        <v-row>
+                            <v-col cols="12">
+                                <closable-help-alert :text="$t('ScalingHelp')"></closable-help-alert>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-number-input :label="$t('Diameter')" :min="0" v-model="editingObj.diameter"></v-number-input>
+                            </v-col>
+                            <v-col cols="12" md="6">
+                                <v-text-field :label="$t('DiameterUnit')" v-model="editingObj.diameterText"></v-text-field>
+                            </v-col>
+                        </v-row>
+
                         <v-checkbox :label="$t('show_ingredient_overview')"
                                     v-model="editingObj.showIngredientOverview"></v-checkbox>
 
                         <v-text-field :label="$t('Imported_From')" v-model="editingObj.sourceUrl"></v-text-field>
                         <v-checkbox :label="$t('Private_Recipe')" persistent-hint :hint="$t('Private_Recipe_Help')" v-model="editingObj._private"></v-checkbox>
                         <v-model-select chips multiple model="User" :label="$t('Share')" persistent-hint v-model="editingObj.shared"
-                                      append-to-body v-if="editingObj._private"></v-model-select>
+                                        append-to-body v-if="editingObj._private"></v-model-select>
 
                         <div class="mt-2" v-if="editingObj.filePath">
                             {{ $t('ExternalRecipe') }}
@@ -266,7 +268,11 @@ function initializeEditor() {
             saveRecipeImage()
         },
         onBeforeSave: () => {
+            if (editingObj.value.diameter == null) {
+                editingObj.value.diameter = 0
+            }
             editingObj.value.steps.forEach(step => {
+
                 step.ingredients.forEach(ingredient => {
                     if (!ingredient.amount) {
                         ingredient.amount = 0
@@ -280,18 +286,18 @@ function initializeEditor() {
 /**
  * checks if a file has been selected and upload it
  */
-function saveRecipeImage(){
+function saveRecipeImage() {
     if (file.value != null && editingObj.value.id) {
-            loading.value = true
-            updateRecipeImage(editingObj.value.id, file.value).then(r => {
-                file.value = null
-                initializeEditor()
-            }).catch(err => {
-                useMessageStore().addMessage(MessageType.ERROR, {title: t('UPDATE_ERROR'), text: t('ErrorUpdatingImage')} as StructuredMessage, 8000)
-            }).finally(() => {
-                loading.value = false
-            })
-        }
+        loading.value = true
+        updateRecipeImage(editingObj.value.id, file.value).then(r => {
+            file.value = null
+            initializeEditor()
+        }).catch(err => {
+            useMessageStore().addMessage(MessageType.ERROR, {title: t('UPDATE_ERROR'), text: t('ErrorUpdatingImage')} as StructuredMessage, 8000)
+        }).finally(() => {
+            loading.value = false
+        })
+    }
 }
 
 /**

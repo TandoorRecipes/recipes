@@ -85,7 +85,7 @@ watch(() => props.id, (newValue, oldValue) => {
  */
 function objectCreated(obj: any) {
     if (obj.id) {
-        router.push({name: 'ModelEditPage', params: {model: props.model, id: obj.id}})
+        router.replace({name: 'ModelEditPage', params: {model: props.model, id: obj.id}})
     }
 }
 

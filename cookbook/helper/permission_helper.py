@@ -383,12 +383,15 @@ class CustomIsShare(permissions.BasePermission):
         return False
 
 
-def has_recipe_permission(request, recipe):
+def has_recipe_permission(request, recipe, allow_shared=True):
     """
     Custom permission class for recipe api endpoint
+    :param request request that holds context data (especially space and share parameter)
+    :param recipe to check permission for
+    :param allow_shared if True, share links are allowed, default True
     """
     share = request.query_params.get('share', None)
-    if share and request.method in SAFE_METHODS:
+    if share and request.method in SAFE_METHODS and allow_shared:
         if share_link_valid(recipe, share):
             return True
         # Invalid share link - check if user has normal access
