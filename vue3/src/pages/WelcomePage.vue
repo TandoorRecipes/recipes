@@ -9,9 +9,11 @@
                 <v-divider></v-divider>
                 <v-stepper-item :title="$t('Open Data')" value="2"></v-stepper-item>
                 <v-divider></v-divider>
-                <v-stepper-item :title="$t('Invites')" value="3"></v-stepper-item>
+                <v-stepper-item :title="$t('Household')" value="3"></v-stepper-item>
                 <v-divider></v-divider>
-                <v-stepper-item :title="$t('GettingStarted')" value="4"></v-stepper-item>
+                <v-stepper-item :title="$t('Invites')" value="4"></v-stepper-item>
+                <v-divider></v-divider>
+                <v-stepper-item :title="$t('GettingStarted')" value="5"></v-stepper-item>
             </v-stepper-header>
 
             <v-stepper-window>
@@ -22,7 +24,7 @@
                         <v-card-text v-if="space">
                             <p class="text-subtitle-1 mb-4">{{ $t('WelcomeSettingsHelp') }}</p>
 
-                            <v-text-field v-model="space.name" :label="$t('Name')"></v-text-field>
+                            <v-text-field v-model="space.name" :label="$t('SpaceName')"></v-text-field>
 
                             <v-select :label="$t('Theme')" v-model="useUserPreferenceStore().userSettings.theme"
                                       :items="[{title: $t('Light'), value: 'TANDOOR'}, {title: $t('Dark'), value: 'TANDOOR_DARK'}, ]">
@@ -38,7 +40,7 @@
                             <v-spacer></v-spacer>
                         </template>
                         <template #next>
-                            <v-btn @click="finishWelcome()" color="warning" class="me-2" :loading="loading">{{ $t('Skip') }}</v-btn>
+                            <v-btn @click="finishWelcome()" color="warning" class="me-2" :loading="loading">{{ $t('SkipIntroduction') }}</v-btn>
                             <v-btn @click="updateSpaceAndUserSettings()" :loading="loading" color="success">{{ $t('Next') }}</v-btn>
                         </template>
                     </v-stepper-actions>
@@ -48,7 +50,38 @@
                 <v-stepper-window-item value="2">
                     <v-card flat>
                         <v-card-text>
-                            <open-data-import-settings></open-data-import-settings>
+                            <v-card
+                                variant="outlined"
+                                prepend-icon="fa-solid fa-cloud-arrow-down">
+                                <template #title>
+                                    <span class="text-h6">{{ $t('CommunityData') }}</span>
+                                </template>
+                                <template #subtitle>
+                                    <p class="text-wrap text-body-1">
+                                        {{ $t('StartWithOpenData') }}
+                                    </p>
+                                </template>
+                                <v-card-text>
+                                    <open-data-import-settings hide-details hide-update-existing hide-header @importDone="stepper = '3'" :button-text="$t('StartWithData')"></open-data-import-settings>
+                                </v-card-text>
+                            </v-card>
+
+                            <v-card
+                                variant="outlined"
+                                @click="stepper = '3'"
+                                prepend-icon="fa-solid fa-file"
+                                append-icon="fa-solid fa-arrow-right"
+                                class="mt-4">
+                                <template #title>
+                                    <span class="text-h6">{{ $t('Empty') }}</span>
+                                </template>
+                                <template #subtitle>
+                                    <p class="text-wrap text-body-1">
+                                        {{ $t('StartEmpty') }}
+                                    </p>
+                                </template>
+                            </v-card>
+
                         </v-card-text>
                     </v-card>
 
@@ -57,7 +90,7 @@
                             <v-btn @click="stepper = '1'">{{ $t('Back') }}</v-btn>
                         </template>
                         <template #next>
-                            <v-btn @click="stepper = '3'" color="success">{{ $t('Next') }}</v-btn>
+
                         </template>
                     </v-stepper-actions>
 
@@ -65,52 +98,59 @@
 
                 <v-stepper-window-item value="3">
                     <v-card flat>
-                        <v-card-text class="text-center">
-                            <v-card variant="outlined">
-                                <v-card-title class="text-h4 pb-0 mb-0 text-center">{{ $t('Space') }}</v-card-title>
-                                <v-card-subtitle class="text-subtitle-1 text-center mb-4 text-wrap">{{ $t('SpaceHelp') }}</v-card-subtitle>
-                                <v-card-text>
-                                    <v-row>
-                                        <v-col class="text-center" v-for="model in [TRecipe, TFood, TUnit, TSupermarket, TKeyword]">
-                                            <v-icon :icon="model.icon" size="x-large"></v-icon>
-                                            <p class="text-h6">{{ $t(model.localizationKey) }}</p>
-                                        </v-col>
-                                        <v-col class="text-center">
-                                            <v-icon icon="fa-solid fa-ellipsis" size="x-large"></v-icon>
-                                            <p class="text-h6">{{ $t('More') }}</p>
-                                        </v-col>
-                                    </v-row>
-
-                                    <div class="border-md border-opacity-75 border-dotted rounded mt-5 w-md-75 ml-auto mr-auto">
-                                        <v-card-subtitle class="text-subtitle-1 text-center mb-4 mt-2 text-wrap">
-                                            {{ $t('SpaceHouseholdHelp') }}
-                                        </v-card-subtitle>
-                                        <v-row>
-                                            <v-col class="text-center" v-for="model in [TMealPlan, TShoppingListEntry, TInventoryEntry]">
-                                                <v-icon :icon="model.icon" size="x-large"></v-icon>
-                                                <p class="text-h6">{{ $t(model.localizationKey) }}</p>
-                                            </v-col>
-                                        </v-row>
-                                    </div>
-                                </v-card-text>
-                            </v-card>
-
-                            <v-row class="mt-2" v-if="useUserPreferenceStore().activeUserSpace?.household == undefined">
-                                <v-col>
-                                    <p class="text-body-1">{{ $t('HouseholdWelcome') }}</p>
-                                    <v-text-field v-model="householdName" :label="$t('Household')"></v-text-field>
+                        <v-card-text>
+                            <v-row>
+                                <v-col cols="12" md="6">
+                                    <v-card :prepend-icon="TSpace.icon" variant="outlined" class="h-100">
+                                        <template #title>
+                                            <span class="text-h6">{{ $t('Space') }}</span>
+                                        </template>
+                                        <template #subtitle>
+                                            <p class="text-wrap text-body-1">{{ $t('SpaceHelp') }}</p>
+                                        </template>
+                                        <v-card-text class="d-flex flex-wrap ga-2">
+                                            <v-chip v-for="model in [TRecipe, TFood, TUnit, TSupermarket, TKeyword]" :key="model.name" variant="tonal">
+                                                <v-icon :icon="model.icon" color="tandoor" size="large" class="me-2"></v-icon>
+                                                {{ $t(model.localizationKey) }}
+                                            </v-chip>
+                                            <v-chip variant="tonal">
+                                                <v-icon icon="fa-solid fa-ellipsis" color="tandoor" size="large" class="me-2"></v-icon>
+                                                {{ $t('More') }}
+                                            </v-chip>
+                                        </v-card-text>
+                                    </v-card>
+                                </v-col>
+                                <v-col cols="12" md="6">
+                                    <v-card :prepend-icon="THousehold.icon" variant="outlined" class="h-100">
+                                        <template #title>
+                                            <span class="text-h6">{{ $t('Household') }}</span>
+                                        </template>
+                                        <template #subtitle>
+                                            <p class="text-wrap text-body-1">{{ $t('SpaceHouseholdHelp') }}</p>
+                                        </template>
+                                        <v-card-text>
+                                            <div class="d-flex flex-wrap ga-2 mb-4">
+                                                <v-chip v-for="model in [TMealPlan, TShoppingListEntry, TInventoryEntry]" :key="model.name" variant="tonal">
+                                                    <v-icon :icon="model.icon" color="tandoor" size="large" class="me-2"></v-icon>
+                                                    {{ $t(model.localizationKey) }}
+                                                </v-chip>
+                                            </div>
+                                            <v-text-field v-if="useUserPreferenceStore().activeUserSpace?.household == undefined" v-model="householdName" :label="$t('Household')"
+                                                          hide-details></v-text-field>
+                                            <div v-else class="d-flex align-center text-body-1">
+                                                <v-icon :icon="THousehold.icon" class="me-2"></v-icon>
+                                                {{ useUserPreferenceStore().activeUserSpace?.household?.name }}
+                                            </div>
+                                        </v-card-text>
+                                    </v-card>
                                 </v-col>
                             </v-row>
-
-                            <v-btn size="x-large" class="mt-4" variant="outlined">{{ $t('CreateInvitation') }}
-                                <model-edit-dialog model="InviteLink" :close-after-create="false" :close-after-save="false"></model-edit-dialog>
-                            </v-btn>
                         </v-card-text>
                     </v-card>
 
                     <v-stepper-actions>
                         <template #prev>
-                            <v-btn @click="stepper = '2'" color="success">{{ $t('Back') }}</v-btn>
+                            <v-btn @click="stepper = '2'">{{ $t('Back') }}</v-btn>
                         </template>
                         <template #next>
                             <v-btn @click="householdAndNext('4')" color="success" :loading="loading">{{ $t('Next') }}</v-btn>
@@ -120,31 +160,80 @@
 
                 <v-stepper-window-item value="4">
                     <v-card flat>
+                        <v-card-text>
+                            <v-card
+                                variant="outlined"
+                                :prepend-icon="TInviteLink.icon"
+                                @click="">
+                                <template #title>
+                                    <span class="text-h6">{{ $t('Invite') }}</span>
+                                </template>
+                                <template #subtitle>
+                                    <p class="text-wrap text-body-1">
+                                        {{ $t('InviteWelcomeHelp') }}
+                                    </p>
+                                </template>
+                                <model-edit-dialog model="InviteLink" activator="parent" :close-after-create="false" :close-after-save="false" @create="stepper='5'"></model-edit-dialog>
+                            </v-card>
+
+                            <v-card
+                                variant="outlined"
+                                @click="stepper = '5'"
+                                prepend-icon="fa-solid fa-file"
+                                append-icon="fa-solid fa-arrow-right"
+                                class="mt-4">
+                                <template #title>
+                                    <span class="text-h6">{{ $t('Skip') }}</span>
+                                </template>
+                                <template #subtitle>
+                                    <p class="text-wrap text-body-1">
+                                        {{ $t('SkipInviteWelcome') }}
+                                    </p>
+                                </template>
+                            </v-card>
+                        </v-card-text>
+                    </v-card>
+                    <v-stepper-actions>
+                        <template #prev>
+                            <v-btn @click="stepper = '3'">{{ $t('Back') }}</v-btn>
+                        </template>
+                        <template #next>
+                            <v-btn @click="stepper = '5'" color="success" :loading="loading">{{ $t('Next') }}</v-btn>
+                        </template>
+                    </v-stepper-actions>
+                </v-stepper-window-item>
+
+                <v-stepper-window-item value="5">
+                    <v-card flat>
 
                         <v-card-text>
 
                             <v-card
-                                :title="$t('Create Recipe')"
                                 variant="outlined"
                                 @click="finishWelcome({name: 'ModelEditPage', params: {model: 'Recipe'}})"
                                 prepend-icon="$recipes"
                                 append-icon="fa-solid fa-arrow-right"
                                 class="mb-4">
+                                <template #title>
+                                    <span class="text-h6">{{ $t('Create Recipe') }}</span>
+                                </template>
                                 <template #subtitle>
-                                    <p class="text-wrap">
+                                    <p class="text-wrap text-body-1">
                                         {{ $t('CreateFirstRecipe') }}
                                     </p>
                                 </template>
                             </v-card>
 
                             <v-card
-                                :title="$t('Import')"
                                 variant="outlined"
                                 @click="finishWelcome({name: 'RecipeImportPage', params: {}})"
                                 prepend-icon="$import"
                                 append-icon="fa-solid fa-arrow-right">
+                                <template #title>
+                                    <span class="text-h6">{{ $t('Import') }}</span>
+                                </template>
                                 <template #subtitle>
-                                    <p class="text-wrap">
+                                    <p class="text-wrap text-body-1">
                                         {{ $t('ImportFirstRecipe') }}
                                     </p>
                                 </template>
@@ -156,7 +245,7 @@
 
                     <v-stepper-actions>
                         <template #prev>
-                            <v-btn @click="stepper = '3'" color="success">{{ $t('Back') }}</v-btn>
+                            <v-btn @click="stepper = '4'">{{ $t('Back') }}</v-btn>
                         </template>
                         <template #next>
                             <v-btn @click="finishWelcome()" color="success" :disabled="false">{{ $t('Finish') }}</v-btn>
@@ -180,11 +269,13 @@ import {onMounted, ref} from "vue";
 import {ErrorMessageType, MessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {useUserPreferenceStore} from "@/stores/UserPreferenceStore.ts";
 import OpenDataImportSettings from "@/components/settings/OpenDataImportSettings.vue";
-import {TFood, TInventoryEntry, TInventoryLocation, TKeyword, TMealPlan, TRecipe, TRecipeBook, TShoppingListEntry, TSupermarket, TUnit} from "@/types/Models.ts";
+import {TFood, THousehold, TInventoryEntry, TInventoryLocation, TInviteLink, TKeyword, TMealPlan, TRecipe, TRecipeBook, TShoppingListEntry, TSpace, TSupermarket, TUnit} from "@/types/Models.ts";
 import ModelEditDialog from "@/components/dialogs/ModelEditDialog.vue";
 import {RouteLocationRaw, useRouter} from "vue-router";
+import {useI18n} from "vue-i18n";
 
 const router = useRouter()
+const {t} = useI18n()
 
 const space = ref<undefined | Space>(undefined)
 const householdName = ref("")
@@ -193,6 +284,8 @@ const loading = ref(false)
 
 onMounted(() => {
     loadSpace()
+
+    householdName.value = useUserPreferenceStore().activeUserSpace?.user.displayName + '\'s ' + t('Household')
 })
 
 /**
@@ -205,7 +298,7 @@ function finishWelcome(target: RouteLocationRaw = {name: 'StartPage'}) {
         space.value.householdSetupCompleted = true
         loading.value = true
         updateSpace().then(() => {
-            router.push(target)
+            router.replace(target)
             loading.value = false
         })
     } else {

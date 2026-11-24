@@ -20,6 +20,15 @@ const OFFLINE_CACHE_NAME = 'offline-html';
 const scope = self.registration?.scope ? new URL(self.registration.scope).pathname : '/'
 const OFFLINE_PAGE_URL = scope.endsWith('/') ? scope + 'offline/' : scope + '/offline/';
 
+// allauth routes (login/signup pages, provider callback, headless API). Requests to these
+// must be handled by the browser instead of the service worker: the provider callback
+// answers with a redirect and sets the session cookie, and WebKit does not reliably persist
+// cookies set by a redirect that was followed inside a service worker fetch(), which makes
+// the first login after a service worker update fail on the signup/error page.
+const AUTH_PATH_PREFIXES = ['accounts/', 'account/', '_allauth/']
+    .map(path => scope.endsWith('/') ? scope + path : scope + '/' + path)
+const isAuthRequest = (url: URL) => AUTH_PATH_PREFIXES.some(prefix => url.pathname.startsWith(prefix))
+
 self.addEventListener('install', async (event) => {
     event.waitUntil(
         caches.open(OFFLINE_CACHE_NAME).then((cache) => cache.add(new Request(OFFLINE_PAGE_URL, {cache: "reload"})))
@@ -135,7 +144,7 @@ registerRoute(
 )
 
 registerRoute(
-    ({request}) => request.destination === 'document',
+    ({request, url}) => request.destination === 'document' && !isAuthRequest(url),
     new NetworkFirst({
         cacheName: 'html',
         plugins: [
