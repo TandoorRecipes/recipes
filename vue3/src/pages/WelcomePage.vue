@@ -62,7 +62,7 @@
                                     </p>
                                 </template>
                                 <v-card-text>
-                                    <open-data-import-settings hide-details hide-update-existing hide-header @importDone="stepper = '3'"></open-data-import-settings>
+                                    <open-data-import-settings hide-details hide-update-existing hide-header @importDone="stepper = '3'" :button-text="$t('StartWithData')"></open-data-import-settings>
                                 </v-card-text>
                             </v-card>
 
@@ -173,7 +173,7 @@
                                         {{ $t('InviteWelcomeHelp') }}
                                     </p>
                                 </template>
-                                <model-edit-dialog model="InviteLink" activator="parent" :close-after-create="false" :close-after-save="false"></model-edit-dialog>
+                                <model-edit-dialog model="InviteLink" activator="parent" :close-after-create="false" :close-after-save="false" @create="stepper='5'"></model-edit-dialog>
                             </v-card>
 
                             <v-card

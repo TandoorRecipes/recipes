@@ -39,7 +39,10 @@
                 </tr>
                 </tbody>
             </v-table>
-            <v-btn @click="importOpenData()" class="mt-2 float-right" color="success" :loading="loading">{{ $t('Import') }}</v-btn>
+            <v-btn @click="importOpenData()" class="mt-2 float-right" color="success" :loading="loading">
+                <template v-if="props.buttonText">{{props.buttonText}}</template>
+                <template v-else>{{$t('Import')}}</template>
+            </v-btn>
         </v-col>
     </v-row>
 
@@ -51,6 +54,9 @@
 import {ApiApi, ImportOpenData, ImportOpenDataMetaData, ImportOpenDataResponse} from "@/openapi";
 import {ErrorMessageType, useMessageStore} from "@/stores/MessageStore.ts";
 import {onMounted, ref} from "vue";
+import {useI18n} from "vue-i18n";
+
+const {t} = useI18n()
 
 const emit = defineEmits(['importDone'])
 
@@ -58,6 +64,7 @@ const props = defineProps({
     hideHeader: {type: Boolean, default: false},
     hideDetails: {type: Boolean, default: false},
     hideUpdateExisting: {type: Boolean, default: false},
+    buttonText: {type: String, default: ""},
 })
 
 let loading = ref(false)

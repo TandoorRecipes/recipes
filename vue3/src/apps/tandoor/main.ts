@@ -13,6 +13,7 @@ import {createRulesPlugin} from 'vuetify/labs/rules'
 import {setupI18n} from "@/i18n";
 import MealPlanPage from "@/pages/MealPlanPage.vue";
 import {TANDOOR_PLUGINS, TandoorPlugin} from "@/types/Plugins.ts";
+import {setupChunkReloadRecovery} from "@/utils/chunk_reload_utils";
 
 let routes = [
     {path: '/', component: () => import("@/pages/StartPage.vue"), name: 'StartPage'},
@@ -86,6 +87,9 @@ const router = createRouter({
     history: createWebHistory(),
     routes,
 })
+
+// reload the target page when a lazy loaded route chunk is missing (e.g. after a new deployment)
+setupChunkReloadRecovery(router)
 
 let i18n = setupI18n()
 
