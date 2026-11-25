@@ -16,7 +16,7 @@ Update the repositories and upgrade your OS: `sudo apt update && sudo apt upgrad
 
 Install all prerequisits `sudo apt install -y git curl python3 python3-pip python3-venv nginx`
 
-Get the last version from the repository: `git clone https://github.com/vabene1111/recipes.git -b master`
+Get the last version from the repository: `git clone https://github.com/TandoorRecipes/recipes.git -b master`
 
 Move it to the `/var/www` directory: `mv recipes /var/www`
 
@@ -113,7 +113,7 @@ exit
 
 Download the `.env` configuration file and **edit it accordingly**.
 ```shell
-wget https://raw.githubusercontent.com/vabene1111/recipes/develop/.env.template -O /var/www/recipes/.env
+wget https://raw.githubusercontent.com/TandoorRecipes/recipes/develop/.env.template -O /var/www/recipes/.env
 ```
 
 Things to edit:

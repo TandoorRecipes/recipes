@@ -9,12 +9,12 @@
 <h4 align="center">The recipe manager that allows you to manage your ever growing collection of digital recipes.</h4>
 
 <p align="center">
-<a href="https://github.com/vabene1111/recipes/actions" target="_blank" rel="noopener noreferrer"><img src="https://github.com/vabene1111/recipes/workflows/Continuous%20Integration/badge.svg?branch=master" ></a>
-<a href="https://github.com/vabene1111/recipes/stargazers" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/stars/vabene1111/recipes" ></a>
-<a href="https://github.com/vabene1111/recipes/network/members" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/forks/vabene1111/recipes" ></a>
+<a href="https://github.com/TandoorRecipes/recipes" target="_blank" rel="noopener noreferrer"><img src="https://github.com/TandoorRecipes/recipes/workflows/Continuous%20Integration/badge.svg?branch=master" ></a>
+<a href="https://github.com/TandoorRecipes/recipes/stargazers" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/stars/TandoorRecipes/recipes" ></a>
+<a href="https://github.com/TandoorRecipes/recipes/network/members" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/github/forks/TandoorRecipes/recipes" ></a>
 <a href="https://discord.gg/RhzBrfWgtp" target="_blank" rel="noopener noreferrer"><img src="https://badgen.net/badge/icon/discord?icon=discord&label" ></a>
-<a href="https://hub.docker.com/r/vabene1111/recipes" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/docker/pulls/vabene1111/recipes" ></a>
-<a href="https://github.com/vabene1111/recipes/releases/latest" rel="noopener noreferrer"><img src="https://img.shields.io/github/v/release/vabene1111/recipes" ></a>
+<a href="https://hub.docker.com/r/TandoorRecipes/recipes" target="_blank" rel="noopener noreferrer"><img src="https://img.shields.io/docker/pulls/TandoorRecipes/recipes" ></a>
+<a href="https://github.com/TandoorRecipes/recipes/releases/latest" rel="noopener noreferrer"><img src="https://img.shields.io/github/v/release/TandoorRecipes/recipes" ></a>
 <a href="https://app.tandoor.dev/e/demo-auto-login/" rel="noopener noreferrer"><img src="https://img.shields.io/badge/demo-available-success" ></a>
 </p>
 
@@ -102,7 +102,7 @@ Beginning with version 0.10.0 the code in this repository is licensed under the 
 
 > NOTE: There appears to be a whole range of legal issues with licensing anything other than the standard completely open licenses.
 > I am in the process of getting some professional legal advice to sort out these issues. 
-> Please also see [Issue 238](https://github.com/vabene1111/recipes/issues/238) for some discussion and **reasoning** regarding the topic.
+> Please also see [Issue 238](https://github.com/TandoorRecipes/recipes/issues/238) for some discussion and **reasoning** regarding the topic.
 
 **Reasoning**
 **This software and *all* its features are and will always be free for everyone to use and enjoy.**
