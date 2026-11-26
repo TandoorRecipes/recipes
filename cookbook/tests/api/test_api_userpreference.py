@@ -5,7 +5,7 @@ from django.contrib import auth
 from django.urls import reverse
 from django_scopes import scope, scopes_disabled
 
-from cookbook.models import Food, UserPreference
+from cookbook.models import Food, MealType, UserPreference
 
 LIST_URL = 'api:userpreference-list'
 DETAIL_URL = 'api:userpreference-detail'
@@ -89,6 +89,33 @@ def test_preference_update(u1_s1, u2_s1):
     assert r.status_code == 404
     with scopes_disabled():
         assert not UserPreference.objects.filter(user=auth.get_user(u2_s1)).exists()
+
+
+def test_preference_update_default_meal_type(u1_s1, space_1, space_2):
+    # regression test for #4966: PATCH with default_meal_type (int or dict) returned 500
+    # because /api/user-preference/ is served without request.space being set
+    user = auth.get_user(u1_s1)
+    with scopes_disabled():
+        mt_space_1 = MealType.objects.create(name='Dinner S1', space=space_1, created_by=user)
+        mt_space_2 = MealType.objects.create(name='Dinner S2', space=space_2, created_by=user)
+
+    pref_url = reverse(DETAIL_URL, args={user.id})
+
+    # setting own space meal type by ID works
+    r = u1_s1.patch(pref_url, {'default_meal_type': mt_space_1.id}, content_type='application/json')
+    assert r.status_code == 200
+    assert json.loads(r.content)['default_meal_type']['id'] == mt_space_1.id
+
+    # setting own space meal type by dict works
+    r = u1_s1.patch(pref_url, {'default_meal_type': {'id': mt_space_1.id}}, content_type='application/json')
+    assert r.status_code == 200
+    assert json.loads(r.content)['default_meal_type']['id'] == mt_space_1.id
+
+    # setting a meal type from another space is rejected and does not change the preference
+    r = u1_s1.patch(pref_url, {'default_meal_type': mt_space_2.id}, content_type='application/json')
+    assert r.status_code == 400
+    user.refresh_from_db()
+    assert user.userpreference.default_meal_type == mt_space_1
 
 
 def test_preference_delete(u1_s1, u2_s1):
