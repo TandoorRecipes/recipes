@@ -7,6 +7,31 @@ from django.db import connection
 
 class CustomRemoteUser(RemoteUserMiddleware):
     header = getenv('PROXY_HEADER', 'HTTP_REMOTE_USER')
+    
+    # Add this method to capture extra headers
+    def process_request(self, request):
+        if not settings.REMOTE_USER_AUTH:
+            return
+            
+        # Standard Django RemoteUserMiddleware logic
+        super().process_request(request)
+        
+        # If user is authenticated, sync the new fields
+        if request.user.is_authenticated:
+            email = request.META.get('HTTP_REMOTE_EMAIL')
+            name = request.META.get('HTTP_REMOTE_NAME')
+            
+            updated = False
+            if email and request.user.email != email:
+                request.user.email = email
+                updated = True
+            if name and request.user.first_name != name:
+                request.user.first_name = name
+                updated = True
+            
+            if updated:
+                request.user.save()
+
 
 
 """
