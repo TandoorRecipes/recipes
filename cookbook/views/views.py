@@ -77,7 +77,7 @@ def search(request):
         if request.user.is_authenticated:
             return HttpResponseRedirect(reverse('view_no_group'))
         else:
-            return HttpResponseRedirect(reverse('account_login') + '?next=' + request.path)
+            return HttpResponseRedirect(settings.SCRIPT_NAME + '/account/login/?next=' + request.path)
 
 
 def no_groups(request):
@@ -94,7 +94,7 @@ def switch_space(request, space_id):
 def no_perm(request):
     if not request.user.is_authenticated:
         messages.add_message(request, messages.ERROR, _('You are not logged in and therefore cannot view this page!'))
-        return HttpResponseRedirect(reverse('account_login') + '?next=' + request.GET.get('next', '/search/'))
+        return HttpResponseRedirect(settings.SCRIPT_NAME + '/account/login/?next=' + request.GET.get('next', '/search/'))
     return render(request, 'no_perm_info.html')
 
 
@@ -300,7 +300,7 @@ def setup(request):
                 request, messages.ERROR,
                 _('The setup page can only be used to create the first user! \
                     If you have forgotten your superuser credentials please consult the django documentation on how to reset passwords.'))
-            return HttpResponseRedirect(reverse('account_login'))
+            return HttpResponseRedirect(settings.SCRIPT_NAME + '/account/login/')
 
         if request.method == 'POST':
             form = UserCreateForm(request.POST)
