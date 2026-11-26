@@ -7,6 +7,8 @@ from allauth.account.adapter import DefaultAccountAdapter
 from django.conf import settings
 from django.contrib import messages
 from django.core.cache import caches
+from django.core.exceptions import PermissionDenied
+from django.db import transaction
 from django.utils import timezone
 from django_scopes import scopes_disabled
 
@@ -33,6 +35,7 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
         return super(AllAuthCustomAdapter, self).is_open_for_signup(request)
 
 
+    @transaction.atomic
     def save_user(self, request, user, form, commit: bool = True):
         """
         create a default space for new users
@@ -44,7 +47,8 @@ class AllAuthCustomAdapter(DefaultAccountAdapter):
             value = request.session['signup_token']
             del request.session['signup_token']
             request.session.modified = True
-            process_invite_token(user, value)
+            if not process_invite_token(user, value):
+                raise PermissionDenied(_("This invitation link is no longer available."))
         return user
 
     def send_mail(self, template_prefix, email, context):
