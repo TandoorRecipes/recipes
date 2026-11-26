@@ -142,7 +142,7 @@ class TandoorSocialAccountAdapter(DefaultSocialAccountAdapter):
             space = Space.objects.first()
             group = Group.objects.filter(name=settings.SOCIAL_DEFAULT_GROUP).first()
             if space and group:
-                user_space = UserSpace.objects.create(space=space, user=request.user, active=False)
+                user_space = UserSpace.objects.create(space=space, user=user, active=False)
                 user_space.groups.add(group)
 
         if 'signup_token' in request.session:

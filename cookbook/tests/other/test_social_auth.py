@@ -2,7 +2,8 @@ import uuid
 from datetime import timedelta
 
 import pytest
-from django.contrib.auth.models import Group, User
+from allauth.socialaccount.models import EmailAddress, SocialAccount, SocialLogin
+from django.contrib.auth.models import AnonymousUser, Group, User
 from django.test import RequestFactory, override_settings
 from django.utils import timezone
 from django_scopes import scopes_disabled
@@ -362,3 +363,62 @@ def test_on_authentication_error_includes_chained_cause(rf, tmp_path):
     assert 'JWT audience mismatch' in errors[0]['exception']
     assert 'Invalid id_token' in errors[0]['exception']
     assert '→' in errors[0]['exception']
+
+
+# ---------------------- SOCIAL ADAPTER save_user TESTS -----------------------
+
+def _make_sociallogin(username='google_newbie', email='newbie@example.com'):
+    """Build an unsaved SocialLogin as allauth hands it to save_user."""
+    user = User(username=username, email=email)
+    account = SocialAccount(user=user, provider='google', uid='12345', extra_data={})
+    email_address = EmailAddress(email=email, verified=True, primary=True)
+    return SocialLogin(user=user, account=account, email_addresses=[email_address])
+
+
+def _make_signup_request():
+    """Anonymous signup request: the new user is not logged in yet."""
+    request = RequestFactory().get('/accounts/google/login/callback/')
+    request.session = {}
+    request.user = AnonymousUser()
+    return request
+
+
+@override_settings(SOCIAL_DEFAULT_ACCESS=True, SOCIAL_DEFAULT_GROUP='guest')
+def test_save_user_with_default_access_uses_new_user():
+    """Regression test for #4902: with SOCIAL_DEFAULT_ACCESS on, a first-time
+    social signup must not crash. save_user runs before the new user is logged
+    in, so request.user is still AnonymousUser; the default-space UserSpace
+    must be created for the user returned by super().save_user()."""
+    with scopes_disabled():
+        Space.objects.create(name='Community Space')
+        Group.objects.get_or_create(name='guest')
+        Group.objects.get_or_create(name='admin')
+
+    adapter = TandoorSocialAccountAdapter()
+
+    with scopes_disabled():
+        user = adapter.save_user(_make_signup_request(), _make_sociallogin())
+
+    assert user.pk is not None
+    assert user.username == 'google_newbie'
+    with scopes_disabled():
+        user_space = UserSpace.objects.get(user=user, space__name='Community Space')
+        assert user_space.active is False
+        assert user_space.groups.filter(name='guest').exists()
+
+
+@override_settings(SOCIAL_DEFAULT_ACCESS=False)
+def test_save_user_without_default_access_creates_own_space():
+    """With SOCIAL_DEFAULT_ACCESS off, signup still creates the user's own
+    space and does not touch the (absent) default space."""
+    with scopes_disabled():
+        Group.objects.get_or_create(name='admin')
+
+    adapter = TandoorSocialAccountAdapter()
+
+    with scopes_disabled():
+        user = adapter.save_user(_make_signup_request(), _make_sociallogin())
+
+    assert user.pk is not None
+    with scopes_disabled():
+        assert UserSpace.objects.filter(user=user).exists()
