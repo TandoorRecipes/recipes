@@ -45,6 +45,7 @@ Overview of the capabilities of the different integrations.
 | PDF (experimental) | ⌚️     | ✔️     | ✔️     |
 | Gourmet            | ✔️     | ❌     | ✔️     |
 | Pestle             | ✔️     | ❌     | ✔️     |
+| Markdown           | ❌     | ✔️     | ✔️     |
 
 
 ✔️ = implemented, ❌ = not implemented and not possible/planned, ⌚ = not yet implemented
@@ -322,3 +323,35 @@ If available the following information will be imported: Name, Description, Serv
 > Other fields like: Rating, Author, Notes, Cuisine or Video will be lost.
 
 Export is not supported because Pestle needs image URLs which are not included in the import.
+
+## Markdown
+
+The Markdown integration exports your recipes as plain markdown files that you can read in any text editor,
+publish on a static site or keep in a notes app. It is export only.
+
+Every recipe becomes one `.md` file in the exported zip. The metadata (servings, working and waiting time,
+source and keywords) is stored in a YAML front matter block at the top of the file. The ingredients follow as a list
+and every step gets its own heading. Recipe images are placed in an `images` folder and linked from the recipe file.
+
+```md
+---
+title: "Gochujang Tofu"
+servings: "4 portions"
+working_time: "20 min"
+keywords:
+  - "Vegan"
+---
+
+# Gochujang Tofu
+
+![Gochujang Tofu](images/gochujang-tofu.jpeg)
+
+## Ingredients
+
+- 300 g firm tofu, crumbled
+- 1 tbsp gochujang
+
+## Instructions
+
+Crumble the tofu and fry it with the gochujang.
+```
