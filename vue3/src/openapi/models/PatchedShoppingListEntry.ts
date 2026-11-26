@@ -93,6 +93,12 @@ export interface PatchedShoppingListEntry {
     amount?: number;
     /**
      * 
+     * @type {string}
+     * @memberof PatchedShoppingListEntry
+     */
+    note?: string;
+    /**
+     * 
      * @type {number}
      * @memberof PatchedShoppingListEntry
      */
@@ -176,6 +182,7 @@ export function PatchedShoppingListEntryFromJSONTyped(json: any, ignoreDiscrimin
         'food': json['food'] == null ? undefined : FoodShoppingFromJSON(json['food']),
         'unit': json['unit'] == null ? undefined : UnitFromJSON(json['unit']),
         'amount': json['amount'] == null ? undefined : json['amount'],
+        'note': json['note'] == null ? undefined : json['note'],
         'order': json['order'] == null ? undefined : json['order'],
         'checked': json['checked'] == null ? undefined : json['checked'],
         'ingredient': json['ingredient'] == null ? undefined : json['ingredient'],
@@ -206,6 +213,7 @@ export function PatchedShoppingListEntryToJSONTyped(value?: Omit<PatchedShopping
         'food': FoodShoppingToJSON(value['food']),
         'unit': UnitToJSON(value['unit']),
         'amount': value['amount'],
+        'note': value['note'],
         'order': value['order'],
         'checked': value['checked'],
         'ingredient': value['ingredient'],
