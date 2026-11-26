@@ -14,8 +14,13 @@ class Local(Provider):
     @staticmethod
     def import_all(monitor):
         if not Local.is_path_allowed(monitor.path):
-            return False
-
+            log_entry = SyncLog(
+                status='ERROR',
+                msg='Path not allowed',
+                sync=monitor,
+            )
+            log_entry.save()
+            return log_entry
         files = [f for f in listdir(monitor.path) if isfile(join(monitor.path, f))]
 
         import_count = 0
