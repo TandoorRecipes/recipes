@@ -172,24 +172,19 @@ def share_link_valid(recipe, share):
     :return: true if a share link with the given recipe and uuid exists
     """
     try:
-        CACHE_KEY = f'recipe_share_{recipe.pk}_{share}'
-        if c := cache.get(CACHE_KEY, False):
-            return c
-
         # validate if the share exists directly for the given recipe
         if link := ShareLink.objects.filter(recipe=recipe, uuid=share, abuse_blocked=False).first():
-            if 0 < settings.SHARING_LIMIT < link.request_count and not link.space.no_sharing_limit:
+            if 0 < settings.SHARING_LIMIT <= link.request_count and not link.space.no_sharing_limit:
                 return False
             link.request_count += 1
             link.save()
-            cache.set(CACHE_KEY, True, timeout=3)
             return True
 
         # validate if the share exists for a parent recipe
         for step in Step.objects.filter(step_recipe=recipe):
             for parent_recipe in step.recipe_set.all():
                 if link := ShareLink.objects.filter(recipe=parent_recipe, uuid=share, abuse_blocked=False).first():
-                    if 0 < settings.SHARING_LIMIT < link.request_count and not link.space.no_sharing_limit:
+                    if 0 < settings.SHARING_LIMIT <= link.request_count and not link.space.no_sharing_limit:
                         return False
                     link.request_count += 1
                     link.save()
