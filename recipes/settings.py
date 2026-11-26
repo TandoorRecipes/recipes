@@ -282,6 +282,7 @@ SOCIALACCOUNT_ONLY = extract_bool('SOCIALACCOUNT_ONLY', False)
 
 SOCIAL_DEFAULT_ACCESS = extract_bool('SOCIAL_DEFAULT_ACCESS', False)
 SOCIAL_DEFAULT_GROUP = os.getenv('SOCIAL_DEFAULT_GROUP', 'guest')
+SOCIAL_DEFAULT_SPACE_ID = os.getenv('SOCIAL_DEFAULT_SPACE_ID', '').strip() or None
 
 ##################################################################
 ####### AllAuth specific auth settings
