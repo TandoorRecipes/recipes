@@ -97,6 +97,9 @@
             :categories="useShoppingStore().supermarketCategories"
             @update="batchUpdateCategories"
         ></category-select-chip>
+
+        <v-btn size="small" variant="outlined" class="ms-1" @click="batchDeleteEntries"><v-icon icon="$delete"></v-icon></v-btn>
+        <v-btn size="small" variant="outlined" class="ms-1" @click="batchCheckEntries"><v-icon icon="fa-solid fa-check-double"></v-icon></v-btn>
     </v-banner>
 
     <shopping-export-dialog v-model="exportDialog" activator="model"></shopping-export-dialog>
@@ -524,6 +527,26 @@ function batchUpdateShoppingLists() {
 
 function batchUpdateCategories(category: SupermarketCategory) {
     useShoppingStore().updateCategories(selectedLines.value, category)
+    selectedLines.value = []
+}
+
+/**
+ * delete all selected shopping list entries
+ */
+function batchDeleteEntries() {
+    const selectedEntries = selectedLines.value.flatMap(slf => Array.from(slf.entries.values()))
+    selectedEntries.forEach(entry => useShoppingStore().deleteObject(entry, true))
+    selectedLines.value = []
+}
+
+/**
+ * check all selected shopping list entries
+ */
+function batchCheckEntries() {
+    const selectedEntries = selectedLines.value.flatMap(slf => Array.from(slf.entries.values()))
+    if (selectedEntries.length) {
+        useShoppingStore().setEntriesCheckedState(selectedEntries, true, true)
+    }
     selectedLines.value = []
 }
 

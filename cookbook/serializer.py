@@ -1621,7 +1621,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         book = validated_data['book']
         recipe = validated_data['recipe']
-        if not book.get_owner() == self.context['request'].user and not self.context['request'].user in book.get_shared():
+        if not book.get_owner() == self.context['request'].user:
             raise NotFound(detail=None, code=None)
 
         crp = CustomRecipePermission()
@@ -1634,7 +1634,7 @@ class RecipeBookEntrySerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         book = validated_data['book']
         recipe = validated_data['recipe']
-        if not book.get_owner() == self.context['request'].user and not self.context['request'].user in book.get_shared():
+        if not book.get_owner() == self.context['request'].user:
             raise NotFound(detail=None, code=None)
 
         crp = CustomRecipePermission()
@@ -2024,16 +2024,6 @@ class InventoryLocationSerializer(UniqueFieldsMixin, SpacedModelSerializer, Writ
         source='household',
         required=False,
     )
-
-    def to_internal_value(self, data):
-        if isinstance(data, dict) and 'household' in data and 'household_id' not in data:
-            if isinstance(data['household'], int):
-                data = data.copy()
-                data['household_id'] = data['household']
-            elif isinstance(data['household'], dict) and 'id' in data['household']:
-                data = data.copy()
-                data['household_id'] = data['household']['id']
-        return super().to_internal_value(data)
 
     def create(self, validated_data):
         validated_data['created_by'] = self.context['request'].user

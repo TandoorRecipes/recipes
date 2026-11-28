@@ -71,6 +71,7 @@ class UserPreferenceAdmin(admin.ModelAdmin):
     list_filter = ('theme', 'default_page',)
     date_hierarchy = 'created_at'
     filter_horizontal = ('plan_share', 'shopping_share',)
+    autocomplete_fields = ('user','default_meal_type')
 
     @staticmethod
     def name(obj):

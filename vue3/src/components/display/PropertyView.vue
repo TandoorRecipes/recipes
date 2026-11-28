@@ -116,15 +116,19 @@ const hasRecipeProperties = computed(() => {
     return recipe.value.properties != undefined && recipe.value.properties.length > 0
 })
 
+const hasMissingFoodProperties = ref(false)
 /**
  * determines if the recipe has calculated properties based on its foods
  */
 const hasFoodProperties = computed(() => {
+    hasMissingFoodProperties.value = false
     let propertiesFound = false
     for (const [key, fp] of Object.entries(recipe.value.foodProperties)) {
         if (fp.total_value !== 0) {
-            console.log(fp, fp.total_value)
             propertiesFound = true
+        }
+        if(fp.missing_value){
+            hasMissingFoodProperties.value = true
         }
     }
     return propertiesFound
@@ -193,7 +197,7 @@ const dialogProperty = ref<undefined | PropertyWrapper>(undefined)
 const loading = ref(false)
 
 onMounted(() => {
-    if (!hasFoodProperties.value) {
+    if ((!hasFoodProperties.value )|| (hasMissingFoodProperties.value && hasRecipeProperties.value)) {
         sourceSelectedToShow.value = "recipe"
     }
 })

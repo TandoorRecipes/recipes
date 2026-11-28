@@ -9,7 +9,11 @@ export function roundDecimals(num: number) {
     if (decimals === undefined) {
         decimals = 2
     }
-    return Number(num.toFixed(decimals))
+    if (num) {
+        return Number(num.toFixed(decimals))
+    } else {
+        return num
+    }
 }
 
 /**

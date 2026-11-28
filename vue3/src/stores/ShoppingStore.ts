@@ -367,6 +367,8 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
                 }
             })
 
+            updateEntriesStructure()
+
             if (undo) {
                 registerChange("DESTROY", [object])
             }
@@ -551,6 +553,8 @@ export const useShoppingStore = defineStore(_STORE_ID, () => {
             entry.delayUntil = (delay ? delayDate : new Date('1970-01-01'))
             updateObject(entry)
         })
+
+        updateEntriesStructure()
     }
 
     /**

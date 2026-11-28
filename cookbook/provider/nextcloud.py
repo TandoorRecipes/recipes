@@ -1,5 +1,6 @@
 import io
 import os
+import socket
 import tempfile
 from uuid import uuid4
 
@@ -18,11 +19,12 @@ class Nextcloud(Provider):
 
     @staticmethod
     def get_client(storage):
+        provider_ip = socket.gethostbyname(storage.url)
         # do a safe request first, will fail on local connections breaking the rest of the execution
-        safe_request('GET', storage.url)
+        safe_request('GET', provider_ip)
 
         options = {
-            'webdav_hostname': storage.url,
+            'webdav_hostname': provider_ip,
             'webdav_login': storage.username,
             'webdav_password': storage.password,
             'webdav_root': '/remote.php/dav/files/' + storage.username

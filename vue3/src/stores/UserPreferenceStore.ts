@@ -205,6 +205,8 @@ export const useUserPreferenceStore = defineStore('user_preference_store', () =>
         api.apiSwitchActiveSpaceRetrieve({spaceId: space.id!}).then(r => {
             loadActiveSpace().then(() => {
                 router.push({name: 'StartPage'}).then(() => {
+                    deviceSettings.value.shopping_selected_supermarket = null
+                    deviceSettings.value.shopping_selected_shopping_lists = []
                     location.reload()
                 })
             })

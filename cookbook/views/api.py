@@ -698,7 +698,7 @@ class GroupViewSet(LoggingMixin, viewsets.ModelViewSet):
 class SpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
     queryset = Space.objects
     serializer_class = SpaceSerializer
-    permission_classes = [(((IsReadOnlyDRF | IsCreateDRF) & CustomIsGuest ) | (CustomIsOwner & CustomIsAdmin)) & CustomTokenHasReadWriteScope]
+    permission_classes = [(((IsReadOnlyDRF | IsCreateDRF) & CustomIsGuest) | (CustomIsOwner & CustomIsAdmin)) & CustomTokenHasReadWriteScope]
     pagination_class = DefaultPagination
     http_method_names = ['get', 'post', 'put', 'patch']
 
@@ -775,6 +775,16 @@ class UserSpaceViewSet(LoggingMixin, viewsets.ModelViewSet):
 
             if 'household' in serializer.validated_data:
                 if Household.objects.filter(id=serializer.validated_data['household'], space=self.request.space).exists():
+                    household_ids = user_spaces.values_list('household_id', flat=True)
+                    user_ids = user_spaces.values_list('user_id', flat=True)
+                    invalidate_cache_keys = []
+                    for user_id in user_ids:
+                        invalidate_cache_keys.append(f'household_user_ids_{self.request.space.id}_user_{user_id}')
+                    for household_id in household_ids:
+                        invalidate_cache_keys.append(f'household_user_ids_{self.request.space.id}_{household_id}')
+
+                    caches['default'].delete_many(invalidate_cache_keys)
+
                     user_spaces.update(household_id=serializer.validated_data['household'])
 
             if 'group_set' in serializer.validated_data and len(serializer.validated_data['group_set']) > 0:
@@ -1273,8 +1283,9 @@ class FoodViewSet(LoggingMixin, TreeMixin, DeleteRelationMixing):
                 ai_response = completion(**ai_request)
 
                 response_text = ai_response.choices[0].message.content
+                response_json = json.loads(strip_json_fences(response_text))
 
-                return Response(json.loads(strip_json_fences(response_text)), status=status.HTTP_200_OK)
+                return Response(response_json, status=status.HTTP_200_OK)
             except LitellmTimeout:
                 response = {
                     'error': True,
@@ -1791,29 +1802,29 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 ).with_last_cooked(
                     self.request.user, self.request.space
                 ).filter(space=self.request.space).prefetch_related('keywords', 'shared', 'properties',
-                                                               'properties__property_type', 'steps',
-                                                               'steps__ingredients',
-                                                               'steps__ingredients__step_set',
-                                                               'steps__ingredients__step_set__recipe_set',
-                                                               'steps__ingredients__food',
-                                                               'steps__ingredients__food__properties',
-                                                               'steps__ingredients__food__properties__property_type',
-                                                               'steps__ingredients__food__inherit_fields',
-                                                               'steps__ingredients__food__supermarket_category',
-                                                               'steps__ingredients__food__onhand_users',
-                                                               'steps__ingredients__food__substitute',
-                                                               'steps__ingredients__food__child_inherit_fields',
-                                                               'steps__ingredients__unit',
-                                                               'steps__ingredients__unit__unit_conversion_base_relation',
-                                                               'steps__ingredients__unit__unit_conversion_base_relation__base_unit',
-                                                               'steps__ingredients__unit__unit_conversion_base_relation__food',
-                                                               'steps__ingredients__unit__unit_conversion_base_relation__space',
-                                                               'steps__ingredients__unit__unit_conversion_converted_relation',
-                                                               'steps__ingredients__unit__unit_conversion_converted_relation__converted_unit',
-                                                               'steps__ingredients__unit__unit_conversion_converted_relation__food',
-                                                               'steps__ingredients__unit__unit_conversion_converted_relation__space',
-                                                               'cooklog_set',
-                                                               ).select_related('nutrition')
+                                                                    'properties__property_type', 'steps',
+                                                                    'steps__ingredients',
+                                                                    'steps__ingredients__step_set',
+                                                                    'steps__ingredients__step_set__recipe_set',
+                                                                    'steps__ingredients__food',
+                                                                    'steps__ingredients__food__properties',
+                                                                    'steps__ingredients__food__properties__property_type',
+                                                                    'steps__ingredients__food__inherit_fields',
+                                                                    'steps__ingredients__food__supermarket_category',
+                                                                    'steps__ingredients__food__onhand_users',
+                                                                    'steps__ingredients__food__substitute',
+                                                                    'steps__ingredients__food__child_inherit_fields',
+                                                                    'steps__ingredients__unit',
+                                                                    'steps__ingredients__unit__unit_conversion_base_relation',
+                                                                    'steps__ingredients__unit__unit_conversion_base_relation__base_unit',
+                                                                    'steps__ingredients__unit__unit_conversion_base_relation__food',
+                                                                    'steps__ingredients__unit__unit_conversion_base_relation__space',
+                                                                    'steps__ingredients__unit__unit_conversion_converted_relation',
+                                                                    'steps__ingredients__unit__unit_conversion_converted_relation__converted_unit',
+                                                                    'steps__ingredients__unit__unit_conversion_converted_relation__food',
+                                                                    'steps__ingredients__unit__unit_conversion_converted_relation__space',
+                                                                    'cooklog_set',
+                                                                    ).select_related('nutrition')
 
             return super().get_queryset()
 
@@ -1904,7 +1915,8 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
         obj = self.get_object()
 
         ingredients = Ingredient.objects.filter(id__in=request.data.get('ingredients', None)).filter(
-                Q(step__recipe__private=False) | (Q(step__recipe__private=True) & (Q(step__recipe__created_by=self.request.user) | Q(step__recipe__shared=self.request.user)))).values_list('id', flat=True)
+            Q(step__recipe__private=False) | (
+                        Q(step__recipe__private=True) & (Q(step__recipe__created_by=self.request.user) | Q(step__recipe__shared=self.request.user)))).values_list('id', flat=True)
 
         servings = request.data.get('servings', None)
         list_recipe = request.data.get('list_recipe', None)
@@ -2100,8 +2112,16 @@ class RecipeViewSet(LoggingMixin, viewsets.ModelViewSet, DeleteRelationMixing):
                 ai_response = completion(**ai_request)
 
                 response_text = ai_response.choices[0].message.content
+                response_json = json.loads(strip_json_fences(response_text))
 
-                return Response(json.loads(strip_json_fences(response_text)), status=status.HTTP_200_OK)
+                properties = []
+                for p in response_json["properties"]:
+                    if p and p.get('property_amount'):
+                        p["property_amount"] = p['property_amount'] / max(request.data['servings'], 1)
+                        properties.append(p)
+                response_json["properties"] = properties
+
+                return Response(response_json, status=status.HTTP_200_OK)
             except LitellmTimeout:
                 response = {
                     'error': True,
@@ -2217,9 +2237,9 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
         self.queryset = self.queryset.filter(
             Q(recipe__isnull=True)
             | (Q(recipe__space=self.request.space)
-            & (Q(recipe__private=False)
-            | Q(recipe__created_by=self.request.user)
-            | Q(recipe__shared=self.request.user)))
+               & (Q(recipe__private=False)
+                  | Q(recipe__created_by=self.request.user)
+                  | Q(recipe__shared=self.request.user)))
         )
 
         # check that neither the mealplan nor the recipe in the meal plan are inaccessible to the user
@@ -2227,13 +2247,13 @@ class ShoppingListRecipeViewSet(LoggingMixin, viewsets.ModelViewSet):
         self.queryset = self.queryset.filter(
             Q(mealplan__isnull=True)
             | (Q(mealplan__space=self.request.space)
-            & (Q(mealplan__created_by=self.request.user)
-            | Q(mealplan__created_by_id__in=household_ids))
-            & (Q(mealplan__recipe__isnull=True)
-            | (Q(mealplan__recipe__space=self.request.space)
-            & (Q(mealplan__recipe__private=False)
-            | Q(mealplan__recipe__created_by=self.request.user)
-            | Q(mealplan__recipe__shared=self.request.user)))))
+               & (Q(mealplan__created_by=self.request.user)
+                  | Q(mealplan__created_by_id__in=household_ids))
+               & (Q(mealplan__recipe__isnull=True)
+                  | (Q(mealplan__recipe__space=self.request.space)
+                     & (Q(mealplan__recipe__private=False)
+                        | Q(mealplan__recipe__created_by=self.request.user)
+                        | Q(mealplan__recipe__shared=self.request.user)))))
         )
 
         return self.queryset.filter(Q(entries__isnull=True)
@@ -2481,6 +2501,8 @@ class CookLogViewSet(LoggingMixin, viewsets.ModelViewSet):
     pagination_class = DefaultPagination
 
     def get_queryset(self):
+        self.queryset = self.queryset.filter(Q(recipe__private=False) | (Q(recipe__private=True) & (Q(recipe__created_by=self.request.user) | Q(recipe__shared=self.request.user))) )
+
         if self.request.query_params.get('recipe', None):
             self.queryset = self.queryset.filter(recipe=self.request.query_params.get('recipe'))
         return self.queryset.filter(space=self.request.space)
@@ -2664,7 +2686,7 @@ class RecipeUrlImportView(APIView):
                 if re.match('^(https?://)?(www\\.youtube\\.com|youtu\\.be)/.+$', url):
                     response['recipe'] = get_from_youtube_scraper(url, request)
                     if url and url.strip() != '':
-                        response['duplicates'] = Recipe.objects.filter(space=request.space, source_url=url.strip()).values('id', 'name').all()
+                        response['duplicates'] = Recipe.objects.filter(space=request.space, source_url=url.strip()).filter(Q(private=False) | (Q(private=True) & (Q(created_by=self.request.user) | Q(shared=self.request.user)))).values('id', 'name').all()
                     return Response(RecipeFromSourceResponseSerializer(context={'request': request}).to_representation(response), status=status.HTTP_200_OK)
 
                 tandoor_url = None
