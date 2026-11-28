@@ -22,6 +22,8 @@ def test_ingredient_parser(arg, u1_s1):
         "5 Zwiebeln": (5, None, "Zwiebeln", ""),
         "3 Zwiebeln, gehackt": (3, None, "Zwiebeln", "gehackt"),
         "5 Zwiebeln (gehackt)": (5, None, "Zwiebeln", "gehackt"),
+        "1 (14 oz) can diced tomatoes": (1, "can", "diced tomatoes", "14 oz"),
+        "2 (15 ounce) cans black beans": (2, "cans", "black beans", "15 ounce"),
         "1 Zwiebel(n)": (1, None, "Zwiebel(n)", ""),
         "4 1/2 Zwiebeln": (4.5, None, "Zwiebeln", ""),
         "4 ½ Zwiebeln": (4.5, None, "Zwiebeln", ""),
