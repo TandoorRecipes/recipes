@@ -79,6 +79,22 @@ def test_update(arg, request, recipe_1_s1):
             assert response['note'] == 'new'
 
 
+def test_update_null_quantity(u1_s1, request, recipe_1_s1):
+    with scopes_disabled():
+        i = recipe_1_s1.steps.first().ingredients.first()
+        r = u1_s1.patch(reverse(DETAIL_URL, args=[i.id]), {'unit': None}, content_type='application/json')
+
+        assert r.status_code == 200
+
+        response = json.loads(r.content)
+
+        if r.status_code == 200:
+            assert response['unit'] is None
+
+        i.refresh_from_db()
+        assert i.unit is None
+
+
 @pytest.mark.parametrize("arg", [
     ['a_u', 403],
     ['g1_s1', 403],
